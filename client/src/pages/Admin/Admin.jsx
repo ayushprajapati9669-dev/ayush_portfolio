@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useAuth } from '../../app/providers/AuthProvider';
 import { TechLogo } from '../../components/common/TechLogos';
-import { uploadImageViaCloudinary } from '../../services/api';
+import { uploadImageViaCloudinary, uploadResumeFile } from '../../services/api';
 import { getDefaultPortfolioState } from '../../services/defaultPortfolioState';
 import {
   validateProjectForm,
@@ -23,6 +23,9 @@ export function AdminPage() {
 
   const [forgotForm, setForgotForm] = useState({ email: '', phone: '', newPass: '', confirmPass: '' });
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  const [resumeUploadLoading, setResumeUploadLoading] = useState(false);
+  const [resumeDirectUrl, setResumeDirectUrl] = useState('');
 
   const [editingProjId, setEditingProjId] = useState(null);
   const [projForm, setProjForm] = useState({
@@ -990,63 +993,337 @@ export function AdminPage() {
       )}
 
       {activeTab === 'profile' && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            showToast('Profile & Resume saved to MongoDB.');
-          }}
-          className="glass-card rounded-3xl p-6 sm:p-8 space-y-5"
-        >
-          <h2 className="font-display text-xl font-bold text-alabaster">Edit Profile, Contact Info & Resume PDF</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div>
-              <label className="block font-mono text-xs text-stonewarm mb-1">Full Name *</label>
-              <input
-                type="text"
-                value={appState.profile?.name || ''}
-                onChange={(e) =>
-                  updateAppState((prev) => ({
-                    ...prev,
-                    profile: { ...prev.profile, name: e.target.value }
-                  }), session.token)
-                }
-                className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
-              />
+        <div className="space-y-6">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              updateAppState((prev) => ({ ...prev }), session.token);
+              showToast('Profile & Resume settings saved to MongoDB.');
+            }}
+            className="glass-card rounded-3xl p-6 sm:p-8 space-y-6"
+          >
+            <div className="border-b hairline-border pb-4 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-vermilion">PROFILE & CONTACT INFO</span>
+                <h2 className="font-display text-xl font-bold text-alabaster">General Profile Information</h2>
+              </div>
             </div>
-            <div>
-              <label className="block font-mono text-xs text-stonewarm mb-1">Navbar Brand Title</label>
-              <input
-                type="text"
-                value={appState.profile?.displayName || ''}
-                onChange={(e) =>
-                  updateAppState((prev) => ({
-                    ...prev,
-                    profile: { ...prev.profile, displayName: e.target.value }
-                  }), session.token)
-                }
-                className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
-              />
-            </div>
-            <div>
-              <label className="block font-mono text-xs text-stonewarm mb-1">Navbar Subtitle</label>
-              <input
-                type="text"
-                value={appState.profile?.headerSubtitle || ''}
-                onChange={(e) =>
-                  updateAppState((prev) => ({
-                    ...prev,
-                    profile: { ...prev.profile, headerSubtitle: e.target.value }
-                  }), session.token)
-                }
-                className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
-              />
-            </div>
-          </div>
 
-          <button type="submit" className="focus-ring rounded-full bg-vermilion px-6 py-3 text-xs font-bold text-obsidian">
-            Save Profile & Resume Settings
-          </button>
-        </form>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Full Name *</label>
+                <input
+                  type="text"
+                  value={appState.profile?.name || ''}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      profile: { ...prev.profile, name: e.target.value }
+                    }), session.token)
+                  }
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+              </div>
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Navbar Brand Title</label>
+                <input
+                  type="text"
+                  value={appState.profile?.displayName || ''}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      profile: { ...prev.profile, displayName: e.target.value }
+                    }), session.token)
+                  }
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+              </div>
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Navbar Subtitle</label>
+                <input
+                  type="text"
+                  value={appState.profile?.headerSubtitle || ''}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      profile: { ...prev.profile, headerSubtitle: e.target.value }
+                    }), session.token)
+                  }
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+              </div>
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Email Address</label>
+                <input
+                  type="email"
+                  value={appState.profile?.email || ''}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      profile: { ...prev.profile, email: e.target.value }
+                    }), session.token)
+                  }
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+              </div>
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Phone Number</label>
+                <input
+                  type="text"
+                  value={appState.profile?.phone || ''}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      profile: { ...prev.profile, phone: e.target.value }
+                    }), session.token)
+                  }
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+              </div>
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">College & Degree</label>
+                <input
+                  type="text"
+                  value={appState.profile?.education?.college || ''}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      profile: {
+                        ...prev.profile,
+                        education: { ...prev.profile?.education, college: e.target.value }
+                      }
+                    }), session.token)
+                  }
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+              </div>
+            </div>
+
+            {/* Dedicated Resume & PDF Management Section */}
+            <div className="pt-6 border-t hairline-border space-y-5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span className="font-mono text-xs uppercase tracking-widest text-cyanglow">RESUME STORAGE</span>
+                  <h2 className="font-display text-xl font-bold text-alabaster">
+                    Upload & Manage Resume (MongoDB <code className="text-cyanglow font-mono text-sm">resumes</code> Collection)
+                  </h2>
+                  <p className="text-xs text-stonewarm mt-1">
+                    Upload your official PDF resume or paste a link. Stored permanently in MongoDB Atlas under the <strong className="text-alabaster font-mono">resumes</strong> collection.
+                  </p>
+                </div>
+              </div>
+
+              {/* Current Active Resume Status Card */}
+              {(() => {
+                const activeResume = (appState.resumes || []).find((r) => r.isActive) || (appState.resumes || [])[0];
+                const activeUrl = activeResume?.fileUrl || appState.profile?.resumeUrl;
+                const fileName = activeResume?.fileName || (activeUrl ? 'Ayush_Prajapati_Resume.pdf' : null);
+
+                if (fileName && activeUrl) {
+                  return (
+                    <div className="rounded-2xl border border-cyanglow/30 bg-obsidian p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+                      <div className="flex items-start gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-cyanglow/15 border border-cyanglow/30 flex items-center justify-center shrink-0 text-cyanglow">
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h4 className="font-display text-base font-bold text-alabaster">{fileName}</h4>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-sage/20 border border-sage/40 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-sage">
+                              <span className="h-1.5 w-1.5 rounded-full bg-sage animate-pulse" />
+                              Active in MongoDB resumes
+                            </span>
+                          </div>
+                          <p className="font-mono text-xs text-stonewarm">
+                            {activeResume?.sizeBytes ? `${(activeResume.sizeBytes / 1024).toFixed(1)} KB · ` : ''}
+                            {activeResume?.uploadedAt ? `Updated: ${new Date(activeResume.uploadedAt).toLocaleDateString()}` : 'Ready for download'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2.5">
+                        <a
+                          href={activeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="focus-ring inline-flex items-center gap-2 rounded-full bg-cyanglow px-4 py-2 font-mono text-xs font-bold text-obsidian shadow-md hover:opacity-90"
+                        >
+                          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          <span>Preview / Open PDF</span>
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            openConfirmModal(
+                              'Remove Resume',
+                              'Are you sure you want to remove this resume from MongoDB and the portfolio?',
+                              () => {
+                                updateAppState((prev) => ({
+                                  ...prev,
+                                  profile: { ...prev.profile, resumeUrl: '' },
+                                  resumes: []
+                                }), session.token);
+                                showToast('Resume removed from MongoDB resumes collection.');
+                              }
+                            );
+                          }}
+                          className="focus-ring rounded-full border border-vermilion/40 bg-charcoal px-3.5 py-2 font-mono text-xs text-vermilion hover:bg-vermilion hover:text-obsidian transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="rounded-2xl border border-dashed border-white/20 bg-obsidian/60 p-5 text-center space-y-2">
+                    <p className="font-mono text-xs text-amberwarm font-semibold">
+                      ⚠ No resume file currently stored in MongoDB Atlas
+                    </p>
+                    <p className="text-xs text-stonewarm">
+                      Upload your PDF resume below to automatically create the <code className="text-cyanglow font-mono">resumes</code> collection in MongoDB.
+                    </p>
+                  </div>
+                );
+              })()}
+
+              {/* Upload Controls Grid */}
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {/* Method 1: Direct File Upload */}
+                <div className="rounded-2xl border border-white/10 bg-obsidian p-5 space-y-3">
+                  <span className="font-mono text-xs uppercase tracking-wider text-vermilion font-bold">OPTION A · UPLOAD RESUME FILE</span>
+                  <p className="text-xs text-stonewarm">
+                    Select a PDF from your computer. It will be uploaded and stored permanently in MongoDB:
+                  </p>
+                  <label className="block">
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx,application/pdf"
+                      disabled={resumeUploadLoading}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setResumeUploadLoading(true);
+                        try {
+                          const uploaded = await uploadResumeFile(file, appState.settings);
+                          if (uploaded && uploaded.fileUrl) {
+                            const newResume = {
+                              id: `res-${Date.now()}`,
+                              title: `${appState.profile?.name || 'Ayush Prajapati'} - Official Resume`,
+                              fileName: uploaded.fileName || file.name,
+                              fileUrl: uploaded.fileUrl,
+                              fileType: uploaded.fileType || 'application/pdf',
+                              sizeBytes: uploaded.sizeBytes || file.size || 0,
+                              uploadedAt: new Date().toISOString(),
+                              isActive: true
+                            };
+                            updateAppState((prev) => {
+                              const existing = (prev.resumes || []).map((r) => ({ ...r, isActive: false }));
+                              return {
+                                ...prev,
+                                profile: {
+                                  ...prev.profile,
+                                  resumeUrl: uploaded.fileUrl
+                                },
+                                resumes: [newResume, ...existing]
+                              };
+                            }, session.token);
+                            showToast(`"${file.name}" uploaded and saved to MongoDB resumes collection!`);
+                          }
+                        } catch (err) {
+                          showToast('Upload failed: ' + (err.message || 'Error reading file'));
+                        } finally {
+                          setResumeUploadLoading(false);
+                          e.target.value = '';
+                        }
+                      }}
+                      className="w-full text-xs text-alabaster file:mr-3 file:rounded-full file:border-0 file:bg-cyanglow file:px-4 file:py-2.5 file:font-mono file:text-xs file:font-bold file:text-obsidian hover:file:opacity-90 file:cursor-pointer"
+                    />
+                  </label>
+                  {resumeUploadLoading && (
+                    <p className="font-mono text-xs text-cyanglow animate-pulse">Uploading and writing to MongoDB resumes collection...</p>
+                  )}
+                </div>
+
+                {/* Method 2: External Direct URL */}
+                <div className="rounded-2xl border border-white/10 bg-obsidian p-5 space-y-3">
+                  <span className="font-mono text-xs uppercase tracking-wider text-cyanglow font-bold">OPTION B · DIRECT RESUME URL</span>
+                  <p className="text-xs text-stonewarm">
+                    Or enter a direct Google Drive, Cloudinary, or AWS link to your resume:
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      placeholder="https://example.com/Ayush_Resume.pdf"
+                      value={resumeDirectUrl}
+                      onChange={(e) => setResumeDirectUrl(e.target.value)}
+                      className="flex-1 rounded-xl border border-white/15 bg-charcoal px-3 py-2 text-xs text-alabaster"
+                    />
+                    <button
+                      type="button"
+                      disabled={!resumeDirectUrl.trim()}
+                      onClick={() => {
+                        const cleanUrl = resumeDirectUrl.trim();
+                        if (!cleanUrl) return;
+                        const newResume = {
+                          id: `res-${Date.now()}`,
+                          title: `${appState.profile?.name || 'Ayush Prajapati'} - Official Resume`,
+                          fileName: cleanUrl.split('/').pop()?.split('?')[0] || 'Ayush_Prajapati_Resume.pdf',
+                          fileUrl: cleanUrl,
+                          fileType: 'application/pdf',
+                          sizeBytes: 0,
+                          uploadedAt: new Date().toISOString(),
+                          isActive: true
+                        };
+                        updateAppState((prev) => {
+                          const existing = (prev.resumes || []).map((r) => ({ ...r, isActive: false }));
+                          return {
+                            ...prev,
+                            profile: { ...prev.profile, resumeUrl: cleanUrl },
+                            resumes: [newResume, ...existing]
+                          };
+                        }, session.token);
+                        setResumeDirectUrl('');
+                        showToast('Resume link saved to MongoDB resumes collection.');
+                      }}
+                      className="focus-ring rounded-xl bg-cyanglow px-4 py-2 font-mono text-xs font-bold text-obsidian disabled:opacity-40"
+                    >
+                      Save URL
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Resume Bio / Summary */}
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Resume Executive Summary</label>
+                <textarea
+                  rows={3}
+                  value={appState.profile?.resumeSummary || ''}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      profile: { ...prev.profile, resumeSummary: e.target.value }
+                    }), session.token)
+                  }
+                  placeholder="Computer Science & Engineering undergraduate at SISTec, Bhopal..."
+                  className="w-full rounded-xl border border-white/15 bg-obsidian p-3 text-xs text-alabaster leading-relaxed"
+                />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t hairline-border flex items-center justify-between">
+              <button type="submit" className="focus-ring rounded-full bg-vermilion px-7 py-3 text-xs font-bold text-obsidian shadow-lg shadow-vermilion/25 hover:opacity-95">
+                Save All Profile & Resume Settings
+              </button>
+            </div>
+          </form>
+        </div>
       )}
 
       {activeTab === 'media' && (

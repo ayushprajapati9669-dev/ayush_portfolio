@@ -63,6 +63,7 @@ export function ThemeProvider({ children }) {
             projects: Array.isArray(res.projects) ? res.projects : [],
             skills: Array.isArray(res.skills) && res.skills.length > 0 ? res.skills : prev.skills,
             certificates: Array.isArray(res.certificates) ? res.certificates : [],
+            resumes: Array.isArray(res.resumes) ? res.resumes : (prev.resumes || []),
             settings: { ...prev.settings, ...(res.settings || {}) }
           }));
         }
@@ -94,19 +95,23 @@ export function ThemeProvider({ children }) {
   }, []);
 
   const downloadOrPrintResume = useCallback(() => {
-    const pdfHref = appState.profile?.resumeUrl || '/images/Ayush_Prajapati_Resume.pdf';
+    const activeResume = (appState.resumes || []).find((r) => r.isActive) || (appState.resumes || [])[0];
+    const pdfHref = activeResume?.fileUrl || appState.profile?.resumeUrl || '/images/Ayush_Prajapati_Resume.pdf';
+    const fileName = activeResume?.fileName || 'Ayush_Prajapati_Resume.pdf';
     if (pdfHref) {
       const a = document.createElement('a');
       a.href = pdfHref;
-      a.download = 'Ayush_Prajapati_Resume.pdf';
+      a.download = fileName;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      showToast('Downloading Ayush_Prajapati_Resume.pdf...');
+      showToast(`Opening ${fileName}...`);
       return;
     }
     window.print();
-  }, [appState.profile?.resumeUrl, showToast]);
+  }, [appState.resumes, appState.profile?.resumeUrl, showToast]);
 
   return (
     <PortfolioContext.Provider

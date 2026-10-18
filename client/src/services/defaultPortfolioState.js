@@ -35,7 +35,7 @@ export function getDefaultPortfolioState() {
       homeJourneyHeading: 'Academic Qualifications & Project Highlights',
       homeBannerEyebrow: 'OPEN FOR INTERNSHIPS & FULL-STACK ROLES',
       homeBannerHeading: 'Looking for a dedicated Full-Stack MERN Developer?',
-      homeBannerSubtext: 'Reach out at ayushprajapati9669@gmail.com or (+91) 9669802554, or download my official PDF resume directly.',
+      homeBannerSubtext: 'Reach out at ayushprajapati9669@gmail.com or (+91) 9669802554 to discuss collaborations, internships, or engineering roles.',
       confirmEyebrow: 'Confirm Action',
       confirmCancel: 'Cancel',
       confirmAction: 'Confirm'
@@ -53,7 +53,7 @@ export function getDefaultPortfolioState() {
       heroDescription: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42) skilled in C, Java, JavaScript, Python, React.js, Node.js, Express.js, MySQL, and MongoDB. Winner of a college website-making competition.',
       availabilityLabel: 'CSE @ SISTec, Bhopal · CGPA: 8.42 (2026)',
       primaryCtaText: 'Explore Live Projects',
-      secondaryCtaText: 'Download Resume',
+      secondaryCtaText: "Let's Connect",
       footerTagline: 'Ayush Prajapati · ayushprajapati9669@gmail.com · (+91) 9669802554 · SISTec, Bhopal',
       resumeUrl: '/images/Ayush_Prajapati_Resume.pdf',
       resumePreviewUrl: '/images/ayush-resume-preview.jpg',
@@ -232,6 +232,7 @@ export function getDefaultPortfolioState() {
       }
     ],
     certificates: [],
+    resumes: [],
     messages: [],
     settings: {
       siteTitle: 'Ayush Prajapati — Full-Stack Developer Portfolio',

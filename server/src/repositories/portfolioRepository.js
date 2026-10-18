@@ -373,6 +373,54 @@ class PortfolioDataStore {
     return this.getSettings();
   }
 
+  // Resumes
+  getResumes() {
+    return JSON.parse(JSON.stringify(this.state.resumes || []));
+  }
+
+  upsertResume(resumeData) {
+    if (!Array.isArray(this.state.resumes)) this.state.resumes = [];
+    const now = new Date().toISOString();
+    const id = resumeData.id || `res-${crypto.randomBytes(6).toString('hex')}`;
+    const clean = {
+      id,
+      title: String(resumeData.title || 'Ayush Prajapati - Official Resume').trim(),
+      fileName: String(resumeData.fileName || 'Ayush_Prajapati_Resume.pdf').trim(),
+      fileUrl: String(resumeData.fileUrl || '').trim(),
+      fileType: String(resumeData.fileType || 'application/pdf').trim(),
+      sizeBytes: Number(resumeData.sizeBytes) || 0,
+      uploadedAt: resumeData.uploadedAt || now,
+      isActive: resumeData.isActive !== false
+    };
+
+    // If active, make sure other resumes are inactive
+    if (clean.isActive) {
+      this.state.resumes.forEach(r => { r.isActive = false; });
+      if (clean.fileUrl) {
+        if (!this.state.profile) this.state.profile = {};
+        this.state.profile.resumeUrl = clean.fileUrl;
+      }
+    }
+
+    const idx = this.state.resumes.findIndex(r => r.id === id);
+    if (idx !== -1) {
+      this.state.resumes[idx] = { ...this.state.resumes[idx], ...clean };
+    } else {
+      this.state.resumes.unshift(clean);
+    }
+    this._persist();
+    return clean;
+  }
+
+  deleteResume(id) {
+    if (!Array.isArray(this.state.resumes)) return false;
+    const idx = this.state.resumes.findIndex(r => r.id === id);
+    if (idx === -1) return false;
+    this.state.resumes.splice(idx, 1);
+    this._persist();
+    return true;
+  }
+
   // Full state sync (used by v4 Admin CMS sync)
   syncPortfolioState(payload) {
     if (payload.profile && typeof payload.profile === 'object') {
@@ -387,6 +435,9 @@ class PortfolioDataStore {
     if (Array.isArray(payload.certificates)) {
       this.state.certificates = payload.certificates;
     }
+    if (Array.isArray(payload.resumes)) {
+      this.state.resumes = payload.resumes;
+    }
     if (Array.isArray(payload.messages)) {
       this.state.messages = payload.messages;
     }
@@ -399,6 +450,7 @@ class PortfolioDataStore {
       projects: this.getAllProjectsAdmin(),
       skills: this.getSkills(),
       certificates: this.getCertificates(),
+      resumes: this.getResumes(),
       settings: this.getSettings()
     };
   }

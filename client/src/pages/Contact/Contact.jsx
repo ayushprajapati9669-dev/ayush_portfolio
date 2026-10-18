@@ -58,9 +58,9 @@ export function ContactPage() {
     setErrors({});
     setFeedback({
       type: 'success',
-      text: 'Thank you! Your message has been saved permanently in MongoDB / Portfolio CMS.'
+      text: 'Thank you! Your message has been sent successfully. Ayush will get back to you shortly.'
     });
-    showToast('Message sent and saved to database.');
+    showToast('Thank you! Your message has been sent.');
   };
 
   return (

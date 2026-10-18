@@ -76,12 +76,24 @@ const SettingSchema = new mongoose.Schema({
   contactNote: { type: String, default: '' }
 }, { timestamps: true });
 
+const ResumeSchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  title: { type: String, default: 'Ayush Prajapati - Official Resume' },
+  fileName: { type: String, default: 'Ayush_Prajapati_Resume.pdf' },
+  fileUrl: { type: String, required: true },
+  fileType: { type: String, default: 'application/pdf' },
+  sizeBytes: { type: Number, default: 0 },
+  uploadedAt: { type: String, default: () => new Date().toISOString() },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
 const Project = mongoose.models.Project || mongoose.model('Project', ProjectSchema, 'projects');
 const Certificate = mongoose.models.Certificate || mongoose.model('Certificate', CertificateSchema, 'certificates');
 const SkillCategory = mongoose.models.SkillCategory || mongoose.model('SkillCategory', SkillCategorySchema, 'skills');
 const Message = mongoose.models.Message || mongoose.model('Message', MessageSchema, 'messages');
 const Profile = mongoose.models.Profile || mongoose.model('Profile', ProfileSchema, 'profiles');
 const Setting = mongoose.models.Setting || mongoose.model('Setting', SettingSchema, 'settings');
+const Resume = mongoose.models.Resume || mongoose.model('Resume', ResumeSchema, 'resumes');
 
 module.exports = {
   Project,
@@ -89,5 +101,6 @@ module.exports = {
   SkillCategory,
   Message,
   Profile,
-  Setting
+  Setting,
+  Resume
 };

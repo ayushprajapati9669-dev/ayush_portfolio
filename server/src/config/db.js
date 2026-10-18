@@ -4,7 +4,8 @@ const {
   SkillCategory,
   Message,
   Profile,
-  Setting
+  Setting,
+  Resume
 } = require('../models/mongoModels');
 const PortfolioState = require('../models/PortfolioState');
 
@@ -108,6 +109,22 @@ async function syncStoreToMongoCollections(state) {
       );
     }
 
+    // 7. Resumes collection
+    if (Array.isArray(state.resumes)) {
+      for (const r of state.resumes) {
+        const copy = { ...r };
+        delete copy._id;
+        delete copy.__v;
+        await Resume.findOneAndUpdate(
+          { id: r.id },
+          { $set: copy },
+          { upsert: true, new: true }
+        );
+      }
+      const resumeIds = state.resumes.map(r => r.id);
+      await Resume.deleteMany({ id: { $nin: resumeIds } });
+    }
+
     // Legacy singleton update
     if (PortfolioState) {
       await PortfolioState.findOneAndUpdate(
@@ -118,6 +135,7 @@ async function syncStoreToMongoCollections(state) {
             projects: state.projects || [],
             skills: state.skills || [],
             certificates: state.certificates || [],
+            resumes: state.resumes || [],
             messages: state.messages || [],
             settings: state.settings || {},
             adminConfig: {
@@ -203,6 +221,14 @@ async function connectMongoDB(mongoUri, store) {
             return copy;
           });
         }
+
+        const existingResumes = await Resume.find({}).lean();
+        store.state.resumes = (existingResumes || []).map(r => {
+          const copy = { ...r };
+          delete copy._id;
+          delete copy.__v;
+          return copy;
+        });
 
         // Save loaded state locally
         store._persist();

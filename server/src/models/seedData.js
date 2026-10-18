@@ -142,6 +142,7 @@ const INITIAL_SEED_DATA = {
     }
   ],
   certificates: [],
+  resumes: [],
   media: [],
   messages: [],
   settings: {

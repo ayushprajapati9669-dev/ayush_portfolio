@@ -4,7 +4,7 @@ import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { SocialIconButtons } from '../common/TechLogos';
 
 export function Footer() {
-  const { appState, openResumeModal } = usePortfolio();
+  const { appState } = usePortfolio();
   const navigate = useNavigate();
 
   const p = appState.profile || {};
@@ -50,13 +50,6 @@ export function Footer() {
               {item.label}
             </button>
           ))}
-          <button
-            type="button"
-            onClick={openResumeModal}
-            className="text-cyanglow hover:underline"
-          >
-            {ui.navResume || 'Resume'}
-          </button>
           <button
             type="button"
             onClick={() => handleNav('/admin')}

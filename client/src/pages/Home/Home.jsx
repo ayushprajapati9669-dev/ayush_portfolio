@@ -9,7 +9,7 @@ import { CertificateCard } from '../../components/projects/CertificateCard';
 import { SocialIconButtons, TechLogo } from '../../components/common/TechLogos';
 
 export function HomePage() {
-  const { appState, downloadOrPrintResume } = usePortfolio();
+  const { appState } = usePortfolio();
   const navigate = useNavigate();
   const [highlightedProjectId, setHighlightedProjectId] = useState(null);
 
@@ -75,13 +75,11 @@ export function HomePage() {
               </button>
               <button
                 type="button"
-                onClick={downloadOrPrintResume}
+                onClick={() => navigate('/contact')}
                 className="focus-ring inline-flex items-center gap-2 rounded-full border border-cyanglow/40 bg-charcoal px-5 py-3.5 text-sm font-semibold text-cyanglow transition-colors hover:bg-cyanglow hover:text-obsidian"
               >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>{p.secondaryCtaText || 'Download Resume'}</span>
+                <span>{p.secondaryCtaText && p.secondaryCtaText !== 'Download Resume' ? p.secondaryCtaText : "Let's Connect"}</span>
+                <span aria-hidden="true">→</span>
               </button>
             </div>
 
@@ -280,15 +278,8 @@ export function HomePage() {
           <div className="flex flex-wrap gap-3.5 shrink-0">
             <button
               type="button"
-              onClick={downloadOrPrintResume}
-              className="focus-ring rounded-full bg-cyanglow px-7 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-cyanglow/25"
-            >
-              Download Resume PDF ↓
-            </button>
-            <button
-              type="button"
-              onClick={() => goTo('/contact')}
-              className="focus-ring rounded-full bg-vermilion px-7 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-vermilion/25"
+              onClick={() => navigate('/contact')}
+              className="focus-ring rounded-full bg-vermilion px-7 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-vermilion/25 transition-transform hover:-translate-y-0.5"
             >
               Contact Me →
             </button>

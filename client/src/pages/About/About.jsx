@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { SocialIconButtons } from '../../components/common/TechLogos';
 
 export function AboutPage() {
-  const { appState, openResumeModal, downloadOrPrintResume } = usePortfolio();
+  const { appState } = usePortfolio();
+  const navigate = useNavigate();
   const p = appState.profile || {};
 
   return (
@@ -19,17 +21,10 @@ export function AboutPage() {
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
-            onClick={openResumeModal}
-            className="focus-ring rounded-full border border-cyanglow/40 bg-charcoal px-5 py-3 text-xs font-bold text-cyanglow hover:bg-cyanglow hover:text-obsidian"
+            onClick={() => navigate('/contact')}
+            className="focus-ring rounded-full bg-vermilion px-6 py-3 text-xs font-bold text-obsidian shadow-lg shadow-vermilion/20 hover:opacity-95"
           >
-            Preview Resume
-          </button>
-          <button
-            type="button"
-            onClick={downloadOrPrintResume}
-            className="focus-ring rounded-full bg-cyanglow px-6 py-3 text-xs font-bold text-obsidian"
-          >
-            Download Resume PDF ↓
+            Get In Touch →
           </button>
         </div>
       </div>

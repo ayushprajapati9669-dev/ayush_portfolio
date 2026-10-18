@@ -18,6 +18,7 @@ function createPublicController({ store, contactLimiter }) {
         projects: store.getPublicProjects(),
         skills: store.getSkills(),
         certificates: store.getCertificates(),
+        resumes: store.getResumes ? store.getResumes() : (store.state.resumes || []),
         settings: store.getSettings()
       });
     },
@@ -63,7 +64,7 @@ function createPublicController({ store, contactLimiter }) {
       }
       const saved = store.createMessage(validation.data);
       return sendJson(res, 201, {
-        message: 'Your message has been saved to the portfolio database for Ayush to review in the Admin CMS. Note: No external email relay is configured, so this confirmation reflects verified database persistence.',
+        message: 'Thank you! Your message has been sent successfully. Ayush will get back to you shortly.',
         deliveryMode: 'database-persisted',
         record: {
           id: saved.id,

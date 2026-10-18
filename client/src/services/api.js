@@ -113,3 +113,49 @@ export async function uploadImageViaCloudinary(file, settings = {}) {
     reader.readAsDataURL(file);
   });
 }
+
+export async function uploadResumeFile(file, settings = {}) {
+  if (!file) return null;
+  const cloudName = String(settings.cloudinaryCloudName || '').trim();
+  const uploadPreset = String(settings.cloudinaryUploadPreset || '').trim();
+
+  if (cloudName && uploadPreset) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/auto/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.secure_url) {
+          return {
+            fileUrl: data.secure_url,
+            fileName: file.name,
+            fileType: file.type || 'application/pdf',
+            sizeBytes: file.size || 0
+          };
+        }
+      }
+    } catch (_err) {
+      // Fallback to FileReader data URI
+    }
+  }
+
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      resolve({
+        fileUrl: ev.target.result,
+        fileName: file.name,
+        fileType: file.type || 'application/pdf',
+        sizeBytes: file.size || 0
+      });
+    };
+    reader.onerror = err => reject(err);
+    reader.readAsDataURL(file);
+  });
+}
+
