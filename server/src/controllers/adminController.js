@@ -29,13 +29,18 @@ function createAdminController({ store, config }) {
       if (body.availabilityLabel !== undefined) patch.availabilityLabel = sanitizeText(body.availabilityLabel, 140);
       if (body.primaryCtaText !== undefined) patch.primaryCtaText = sanitizeText(body.primaryCtaText, 60);
       if (body.secondaryCtaText !== undefined) patch.secondaryCtaText = sanitizeText(body.secondaryCtaText, 60);
-      if (body.resumeUrl !== undefined) patch.resumeUrl = sanitizeText(body.resumeUrl, 2000000);
+      if (body.location !== undefined) patch.location = sanitizeText(body.location, 160);
+      if (body.footerTagline !== undefined) patch.footerTagline = sanitizeText(body.footerTagline, 200);
       if (body.education && typeof body.education === 'object') {
         patch.education = {
           degree: sanitizeText(body.education.degree, 160),
           college: sanitizeText(body.education.college, 160),
           location: sanitizeText(body.education.location, 160),
-          stage: sanitizeText(body.education.stage, 160)
+          stage: sanitizeText(body.education.stage, 160),
+          cgpa: sanitizeText(body.education.cgpa, 100),
+          schoolBoard: sanitizeText(body.education.schoolBoard, 160),
+          schoolXII: sanitizeText(body.education.schoolXII, 200),
+          schoolScore: sanitizeText(body.education.schoolScore, 100)
         };
       }
       if (Array.isArray(body.aboutBio)) {

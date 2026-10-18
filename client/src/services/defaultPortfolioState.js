@@ -55,14 +55,16 @@ export function getDefaultPortfolioState() {
       primaryCtaText: 'Explore Live Projects',
       secondaryCtaText: "Let's Connect",
       footerTagline: 'Ayush Prajapati · ayushprajapati9669@gmail.com · (+91) 9669802554 · SISTec, Bhopal',
-      resumeUrl: '/images/Ayush_Prajapati_Resume.pdf',
+      resumeUrl: '',
       resumePreviewUrl: '/images/ayush-resume-preview.jpg',
       resumeSummary: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42, 2026) with strong foundations in C, Java, JavaScript, and Python, and hands-on expertise in building full-stack web applications using HTML, CSS, Bootstrap, React.js, Node.js, Express.js, MySQL, MongoDB, and Cloudinary.',
       education: {
         degree: 'B.Tech in Computer Science & Engineering (CSE)',
         college: 'SISTec (Sagar Institute of Science and Technology), Bhopal',
         cgpa: 'CGPA: 8.42 | (2026)',
-        schoolXII: 'XII (MP Board) | Kasturba Vidhya Mandir, Jamani, Madhya Pradesh — 83.5% | 2022',
+        schoolBoard: 'Class XII (MP Board)',
+        schoolXII: 'Kasturba Vidhya Mandir, Jamani, Madhya Pradesh',
+        schoolScore: '83.5% | 2022',
         location: 'Bhopal, Madhya Pradesh, India',
         stage: 'CGPA: 8.42 · Batch of 2026'
       },

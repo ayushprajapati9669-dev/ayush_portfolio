@@ -5,7 +5,6 @@ import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { Toast } from '../components/ui/Toast';
 import { ConfirmModal } from '../components/ui/ConfirmModal';
-import { ResumeModal } from '../components/ui/ResumeModal';
 import { CertificateLightboxModal } from '../components/ui/CertificateLightboxModal';
 import { AppRouter } from './router';
 
@@ -23,7 +22,6 @@ export default function App() {
           <Header />
           <Toast />
           <ConfirmModal />
-          <ResumeModal />
           <CertificateLightboxModal />
           <main id="main-content" className="flex-1">
             <AppRouter />

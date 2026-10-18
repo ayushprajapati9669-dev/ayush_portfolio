@@ -11,6 +11,18 @@ import {
   validatePasswordStrength
 } from '../../utils/validation';
 
+function FormErrorMessage({ message }) {
+  if (!message) return null;
+  return (
+    <div className="mt-1.5 flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs text-red-300 shadow-sm backdrop-blur-sm">
+      <svg className="h-3.5 w-3.5 shrink-0 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+      </svg>
+      <span>{message}</span>
+    </div>
+  );
+}
+
 export function AdminPage() {
   const { appState, updateAppState, showToast, openConfirmModal } = usePortfolio();
   const { session, loginAdmin, logoutAdmin, resetAdminPassword, checkCurrentPassword } = useAuth();
@@ -26,6 +38,38 @@ export function AdminPage() {
 
   const [resumeUploadLoading, setResumeUploadLoading] = useState(false);
   const [resumeDirectUrl, setResumeDirectUrl] = useState('');
+
+  const handlePreviewResume = (url, fileName = 'Ayush_Prajapati_Resume.pdf') => {
+    if (!url) {
+      showToast('No resume file URL available.');
+      return;
+    }
+    if (url.startsWith('data:')) {
+      try {
+        const parts = url.split(';base64,');
+        const contentType = parts[0].split(':')[1] || 'application/pdf';
+        const raw = window.atob(parts[1]);
+        const rawLength = raw.length;
+        const uInt8Array = new Uint8Array(rawLength);
+        for (let i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        const blob = new Blob([uInt8Array], { type: contentType });
+        const blobUrl = URL.createObjectURL(blob);
+        const win = window.open(blobUrl, '_blank');
+        if (!win) {
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = fileName;
+          a.click();
+        }
+        return;
+      } catch (_err) {
+        showToast('Error opening resume preview.');
+      }
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   const [editingProjId, setEditingProjId] = useState(null);
   const [projForm, setProjForm] = useState({
@@ -173,7 +217,7 @@ export function AdminPage() {
                   placeholder="Min 8 chars, e.g. Ayush7162@"
                   className="focus-ring w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-alabaster"
                 />
-                {authErrors.newPass && <p className="mt-1.5 font-mono text-[11px] text-vermilion">⚠ {authErrors.newPass}</p>}
+                <FormErrorMessage message={authErrors.newPass} />
               </div>
 
               <div>
@@ -185,7 +229,7 @@ export function AdminPage() {
                   placeholder="Re-enter new password"
                   className="focus-ring w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-alabaster"
                 />
-                {authErrors.confirmPass && <p className="mt-1.5 font-mono text-[11px] text-vermilion">⚠ {authErrors.confirmPass}</p>}
+                <FormErrorMessage message={authErrors.confirmPass} />
               </div>
 
               <button
@@ -219,7 +263,7 @@ export function AdminPage() {
                   placeholder="ayushprajapati9669@gmail.com"
                   className="focus-ring w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-alabaster"
                 />
-                {authErrors.user && <p className="mt-1.5 font-mono text-[11px] text-vermilion">⚠ {authErrors.user}</p>}
+                <FormErrorMessage message={authErrors.user} />
               </div>
 
               <div>
@@ -243,7 +287,7 @@ export function AdminPage() {
                   placeholder="Enter your admin password"
                   className="focus-ring w-full rounded-xl border border-white/15 bg-obsidian px-4 py-2.5 text-sm text-alabaster"
                 />
-                {authErrors.pass && <p className="mt-1.5 font-mono text-[11px] text-vermilion">⚠ {authErrors.pass}</p>}
+                <FormErrorMessage message={authErrors.pass} />
               </div>
 
               <button
@@ -458,7 +502,7 @@ export function AdminPage() {
           { id: 'profile', label: 'Profile & Resume' },
           { id: 'media', label: 'Hero Portrait' },
           { id: 'messages', label: `Messages (${unreadMsgCount})` },
-          { id: 'security', label: 'Password & Database' }
+          { id: 'security', label: 'Password' }
         ].map((t) => (
           <button
             key={t.id}
@@ -502,29 +546,26 @@ export function AdminPage() {
             <button
               type="button"
               onClick={() => setActiveTab('projects')}
-              className="glass-card glass-card-hover rounded-2xl p-6 text-left space-y-2"
+              className="glass-card glass-card-hover rounded-2xl p-6 text-left space-y-1.5 transition-all hover:-translate-y-0.5"
             >
               <span className="font-mono text-xs text-vermilion font-bold">01 · MANAGE PROJECTS</span>
-              <h3 className="font-display text-lg font-bold text-white">Add / Edit Projects & Upload Images</h3>
-              <p className="text-xs text-stonewarm">Upload project screenshots via Cloudinary and set Live Demo & GitHub URLs.</p>
+              <h3 className="font-display text-lg font-bold text-white">Add / Edit Projects</h3>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('certificates')}
-              className="glass-card glass-card-hover rounded-2xl p-6 text-left space-y-2"
+              className="glass-card glass-card-hover rounded-2xl p-6 text-left space-y-1.5 transition-all hover:-translate-y-0.5"
             >
               <span className="font-mono text-xs text-cyanglow font-bold">02 · MANAGE CERTIFICATES</span>
               <h3 className="font-display text-lg font-bold text-white">Upload & Verify Certificates</h3>
-              <p className="text-xs text-stonewarm">Add new certificate photos that open in the full-screen interactive certificate viewer.</p>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('security')}
-              className="glass-card glass-card-hover rounded-2xl p-6 text-left space-y-2"
+              className="glass-card glass-card-hover rounded-2xl p-6 text-left space-y-1.5 transition-all hover:-translate-y-0.5"
             >
-              <span className="font-mono text-xs text-sage font-bold">03 · SECURITY & CLOUDINARY</span>
-              <h3 className="font-display text-lg font-bold text-white">Update Password & DB Config</h3>
-              <p className="text-xs text-stonewarm">Change your admin password and configure MongoDB & Cloudinary keys.</p>
+              <span className="font-mono text-xs text-sage font-bold">03 · SECURITY</span>
+              <h3 className="font-display text-lg font-bold text-white">Update Admin Password</h3>
             </button>
           </div>
         </div>
@@ -561,7 +602,7 @@ export function AdminPage() {
                   placeholder="e.g. Airbnb Clone — Vacation Rental Platform"
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
                 />
-                {projErrors.title && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {projErrors.title}</p>}
+                <FormErrorMessage message={projErrors.title} />
               </div>
               <div>
                 <label className="block font-mono text-xs text-stonewarm mb-1">Category *</label>
@@ -571,7 +612,7 @@ export function AdminPage() {
                   onChange={(e) => setProjForm({ ...projForm, category: e.target.value })}
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
                 />
-                {projErrors.category && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {projErrors.category}</p>}
+                <FormErrorMessage message={projErrors.category} />
               </div>
             </div>
 
@@ -584,9 +625,7 @@ export function AdminPage() {
                 placeholder="Describe what this project does..."
                 className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
               />
-              {projErrors.shortDescription && (
-                <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {projErrors.shortDescription}</p>
-              )}
+              <FormErrorMessage message={projErrors.shortDescription} />
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -598,9 +637,7 @@ export function AdminPage() {
                   onChange={(e) => setProjForm({ ...projForm, technologies: e.target.value })}
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
                 />
-                {projErrors.technologies && (
-                  <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {projErrors.technologies}</p>
-                )}
+                <FormErrorMessage message={projErrors.technologies} />
               </div>
               <div>
                 <label className="block font-mono text-xs text-stonewarm mb-1">Live Demo URL *</label>
@@ -611,9 +648,7 @@ export function AdminPage() {
                   placeholder="https://airbnbclone2-8519.onrender.com"
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
                 />
-                {projErrors.liveDemoUrl && (
-                  <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {projErrors.liveDemoUrl}</p>
-                )}
+                <FormErrorMessage message={projErrors.liveDemoUrl} />
               </div>
               <div>
                 <label className="block font-mono text-xs text-stonewarm mb-1">GitHub Code URL *</label>
@@ -623,9 +658,7 @@ export function AdminPage() {
                   onChange={(e) => setProjForm({ ...projForm, githubUrl: e.target.value })}
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
                 />
-                {projErrors.githubUrl && (
-                  <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {projErrors.githubUrl}</p>
-                )}
+                <FormErrorMessage message={projErrors.githubUrl} />
               </div>
             </div>
 
@@ -656,9 +689,7 @@ export function AdminPage() {
                   placeholder="Or paste Cloudinary / direct image URL (https://...)"
                   className="w-full rounded-xl border border-white/15 bg-charcoal px-3.5 py-2 text-xs text-alabaster"
                 />
-                {projErrors.thumbnailUrl && (
-                  <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {projErrors.thumbnailUrl}</p>
-                )}
+                <FormErrorMessage message={projErrors.thumbnailUrl} />
               </div>
               <div className="sm:col-span-4 flex flex-col items-center justify-center">
                 {projForm.thumbnailUrl ? (
@@ -772,7 +803,7 @@ export function AdminPage() {
                   placeholder="e.g. Delta (Full Stack Web Development)"
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2 text-sm text-alabaster"
                 />
-                {certErrors.title && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {certErrors.title}</p>}
+                <FormErrorMessage message={certErrors.title} />
               </div>
               <div>
                 <label className="block font-mono text-xs text-stonewarm mb-1">Issuing Organization *</label>
@@ -783,7 +814,7 @@ export function AdminPage() {
                   placeholder="e.g. Apna College"
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2 text-sm text-alabaster"
                 />
-                {certErrors.issuer && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {certErrors.issuer}</p>}
+                <FormErrorMessage message={certErrors.issuer} />
               </div>
               <div>
                 <label className="block font-mono text-xs text-stonewarm mb-1">Issue Date / Year *</label>
@@ -794,7 +825,7 @@ export function AdminPage() {
                   placeholder="e.g. 2025"
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2 text-sm text-alabaster"
                 />
-                {certErrors.issueDate && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {certErrors.issueDate}</p>}
+                <FormErrorMessage message={certErrors.issueDate} />
               </div>
             </div>
 
@@ -833,7 +864,7 @@ export function AdminPage() {
                   }}
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-1.5 text-xs text-alabaster"
                 />
-                {certErrors.imageUrl && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {certErrors.imageUrl}</p>}
+                <FormErrorMessage message={certErrors.imageUrl} />
               </div>
             </div>
 
@@ -936,7 +967,7 @@ export function AdminPage() {
                   placeholder="e.g. TypeScript"
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
                 />
-                {skillError && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {skillError}</p>}
+                <FormErrorMessage message={skillError} />
               </div>
               <div>
                 <label className="block font-mono text-xs text-stonewarm mb-1">Icon Key</label>
@@ -998,119 +1029,375 @@ export function AdminPage() {
             onSubmit={(e) => {
               e.preventDefault();
               updateAppState((prev) => ({ ...prev }), session.token);
-              showToast('Profile & Resume settings saved to MongoDB.');
+              showToast('Profile, academic, and content settings saved.');
             }}
-            className="glass-card rounded-3xl p-6 sm:p-8 space-y-6"
+            className="space-y-6"
           >
-            <div className="border-b hairline-border pb-4 flex flex-wrap items-center justify-between gap-3">
-              <div>
+            {/* Section 1: General & Contact Information */}
+            <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
+              <div className="border-b hairline-border pb-4">
                 <span className="font-mono text-xs uppercase tracking-widest text-vermilion">PROFILE & CONTACT INFO</span>
                 <h2 className="font-display text-xl font-bold text-alabaster">General Profile Information</h2>
               </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Full Name *</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.name || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, name: e.target.value }
+                      }), session.token)
+                    }
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Navbar Brand Title</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.displayName || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, displayName: e.target.value }
+                      }), session.token)
+                    }
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Navbar Subtitle</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.headerSubtitle || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, headerSubtitle: e.target.value }
+                      }), session.token)
+                    }
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Email Address</label>
+                  <input
+                    type="email"
+                    value={appState.profile?.email || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, email: e.target.value }
+                      }), session.token)
+                    }
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Phone Number</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.phone || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, phone: e.target.value }
+                      }), session.token)
+                    }
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Monogram Initials</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.monogram || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, monogram: e.target.value }
+                      }), session.token)
+                    }
+                    placeholder="e.g. AP"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Availability Status</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.availabilityLabel || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, availabilityLabel: e.target.value }
+                      }), session.token)
+                    }
+                    placeholder="AVAILABLE FOR FULL-STACK ROLES"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Footer Tagline</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.footerTagline || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, footerTagline: e.target.value }
+                      }), session.token)
+                    }
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Location</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.location || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, location: e.target.value }
+                      }), session.token)
+                    }
+                    placeholder="Bhopal, India"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {/* Section 2: Education & Academic Profile */}
+            <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
+              <div className="border-b hairline-border pb-4">
+                <span className="font-mono text-xs uppercase tracking-widest text-cyanglow">ACADEMICS & QUALIFICATIONS</span>
+                <h2 className="font-display text-xl font-bold text-alabaster">Education Details (Displayed in About Page)</h2>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">College / University Name</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.education?.college || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: {
+                          ...prev.profile,
+                          education: { ...prev.profile?.education, college: e.target.value }
+                        }
+                      }), session.token)
+                    }
+                    placeholder="SISTec (Sagar Institute of Science and Technology), Bhopal"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Degree Program</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.education?.degree || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: {
+                          ...prev.profile,
+                          education: { ...prev.profile?.education, degree: e.target.value }
+                        }
+                      }), session.token)
+                    }
+                    placeholder="B.Tech in CSE"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-sage font-bold mb-1">College CGPA / Batch</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.education?.cgpa || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: {
+                          ...prev.profile,
+                          education: { ...prev.profile?.education, cgpa: e.target.value }
+                        }
+                      }), session.token)
+                    }
+                    placeholder="CGPA: 8.42 | (2026)"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Class XII Board</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.education?.schoolBoard || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: {
+                          ...prev.profile,
+                          education: { ...prev.profile?.education, schoolBoard: e.target.value }
+                        }
+                      }), session.token)
+                    }
+                    placeholder="Class XII (MP Board)"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Class XII School Name</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.education?.schoolXII || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: {
+                          ...prev.profile,
+                          education: { ...prev.profile?.education, schoolXII: e.target.value }
+                        }
+                      }), session.token)
+                    }
+                    placeholder="Kasturba Vidhya Mandir, Jamani, Madhya Pradesh"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-cyanglow font-bold mb-1">Class XII Percentage / Year</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.education?.schoolScore || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: {
+                          ...prev.profile,
+                          education: { ...prev.profile?.education, schoolScore: e.target.value }
+                        }
+                      }), session.token)
+                    }
+                    placeholder="83.5% | 2022"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3: Home & About Headlines */}
+            <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
+              <div className="border-b hairline-border pb-4">
+                <span className="font-mono text-xs uppercase tracking-widest text-amberwarm">HEADLINES & ABOUT BIO</span>
+                <h2 className="font-display text-xl font-bold text-alabaster">Hero Copy & Biography</h2>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Hero Eyebrow Tag</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.eyebrow || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, eyebrow: e.target.value }
+                      }), session.token)
+                    }
+                    placeholder="FULL-STACK DEVELOPER & CSE UNDERGRADUATE"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-xs text-stonewarm mb-1">Animated Ticker Subtitle</label>
+                  <input
+                    type="text"
+                    value={appState.profile?.supportingHeadline || ''}
+                    onChange={(e) =>
+                      updateAppState((prev) => ({
+                        ...prev,
+                        profile: { ...prev.profile, supportingHeadline: e.target.value }
+                      }), session.token)
+                    }
+                    placeholder="Full Stack Developer · MERN · Scalable Systems"
+                    className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block font-mono text-xs text-stonewarm mb-1">Full Name *</label>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Hero Main Headline</label>
                 <input
                   type="text"
-                  value={appState.profile?.name || ''}
+                  value={appState.profile?.headline || ''}
                   onChange={(e) =>
                     updateAppState((prev) => ({
                       ...prev,
-                      profile: { ...prev.profile, name: e.target.value }
+                      profile: { ...prev.profile, headline: e.target.value }
                     }), session.token)
                   }
                   className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
                 />
               </div>
+
               <div>
-                <label className="block font-mono text-xs text-stonewarm mb-1">Navbar Brand Title</label>
-                <input
-                  type="text"
-                  value={appState.profile?.displayName || ''}
+                <label className="block font-mono text-xs text-stonewarm mb-1">Hero Description</label>
+                <textarea
+                  rows={2}
+                  value={appState.profile?.heroDescription || ''}
                   onChange={(e) =>
                     updateAppState((prev) => ({
                       ...prev,
-                      profile: { ...prev.profile, displayName: e.target.value }
+                      profile: { ...prev.profile, heroDescription: e.target.value }
                     }), session.token)
                   }
-                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                  className="w-full rounded-xl border border-white/15 bg-obsidian p-3 text-xs text-alabaster leading-relaxed"
                 />
               </div>
+
               <div>
-                <label className="block font-mono text-xs text-stonewarm mb-1">Navbar Subtitle</label>
-                <input
-                  type="text"
-                  value={appState.profile?.headerSubtitle || ''}
-                  onChange={(e) =>
-                    updateAppState((prev) => ({
-                      ...prev,
-                      profile: { ...prev.profile, headerSubtitle: e.target.value }
-                    }), session.token)
+                <label className="block font-mono text-xs text-stonewarm mb-1">
+                  About Page Bio Paragraphs (Separate paragraphs with double newlines)
+                </label>
+                <textarea
+                  rows={4}
+                  value={
+                    Array.isArray(appState.profile?.aboutBio)
+                      ? appState.profile.aboutBio.join('\n\n')
+                      : appState.profile?.aboutBio || ''
                   }
-                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
-                />
-              </div>
-              <div>
-                <label className="block font-mono text-xs text-stonewarm mb-1">Email Address</label>
-                <input
-                  type="email"
-                  value={appState.profile?.email || ''}
-                  onChange={(e) =>
-                    updateAppState((prev) => ({
-                      ...prev,
-                      profile: { ...prev.profile, email: e.target.value }
-                    }), session.token)
-                  }
-                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
-                />
-              </div>
-              <div>
-                <label className="block font-mono text-xs text-stonewarm mb-1">Phone Number</label>
-                <input
-                  type="text"
-                  value={appState.profile?.phone || ''}
-                  onChange={(e) =>
-                    updateAppState((prev) => ({
-                      ...prev,
-                      profile: { ...prev.profile, phone: e.target.value }
-                    }), session.token)
-                  }
-                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
-                />
-              </div>
-              <div>
-                <label className="block font-mono text-xs text-stonewarm mb-1">College & Degree</label>
-                <input
-                  type="text"
-                  value={appState.profile?.education?.college || ''}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const rawText = e.target.value;
+                    const paragraphs = rawText.split('\n\n').map((p) => p.trim()).filter(Boolean);
                     updateAppState((prev) => ({
                       ...prev,
                       profile: {
                         ...prev.profile,
-                        education: { ...prev.profile?.education, college: e.target.value }
+                        aboutBio: paragraphs.length > 0 ? paragraphs : [rawText]
                       }
-                    }), session.token)
-                  }
-                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                    }), session.token);
+                  }}
+                  className="w-full rounded-xl border border-white/15 bg-obsidian p-3 text-xs text-alabaster leading-relaxed"
                 />
               </div>
             </div>
 
-            {/* Dedicated Resume & PDF Management Section */}
-            <div className="pt-6 border-t hairline-border space-y-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <span className="font-mono text-xs uppercase tracking-widest text-cyanglow">RESUME STORAGE</span>
-                  <h2 className="font-display text-xl font-bold text-alabaster">
-                    Upload & Manage Resume (MongoDB <code className="text-cyanglow font-mono text-sm">resumes</code> Collection)
-                  </h2>
-                  <p className="text-xs text-stonewarm mt-1">
-                    Upload your official PDF resume or paste a link. Stored permanently in MongoDB Atlas under the <strong className="text-alabaster font-mono">resumes</strong> collection.
-                  </p>
-                </div>
+            {/* Section 4: Resume Management */}
+            <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
+              <div className="border-b hairline-border pb-4">
+                <span className="font-mono text-xs uppercase tracking-widest text-cyanglow">RESUME STORAGE</span>
+                <h2 className="font-display text-xl font-bold text-alabaster">Upload & Manage Resume</h2>
+                <p className="text-xs text-stonewarm mt-1">
+                  Upload your official PDF resume or paste a direct link. Available for instant direct download across the portfolio.
+                </p>
               </div>
 
               {/* Current Active Resume Status Card */}
@@ -1133,7 +1420,7 @@ export function AdminPage() {
                             <h4 className="font-display text-base font-bold text-alabaster">{fileName}</h4>
                             <span className="inline-flex items-center gap-1.5 rounded-full bg-sage/20 border border-sage/40 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-sage">
                               <span className="h-1.5 w-1.5 rounded-full bg-sage animate-pulse" />
-                              Active in MongoDB resumes
+                              Active & Ready for Download
                             </span>
                           </div>
                           <p className="font-mono text-xs text-stonewarm">
@@ -1144,30 +1431,29 @@ export function AdminPage() {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2.5">
-                        <a
-                          href={activeUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
+                          type="button"
+                          onClick={() => handlePreviewResume(activeUrl)}
                           className="focus-ring inline-flex items-center gap-2 rounded-full bg-cyanglow px-4 py-2 font-mono text-xs font-bold text-obsidian shadow-md hover:opacity-90"
                         >
                           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                           <span>Preview / Open PDF</span>
-                        </a>
+                        </button>
                         <button
                           type="button"
                           onClick={() => {
                             openConfirmModal(
                               'Remove Resume',
-                              'Are you sure you want to remove this resume from MongoDB and the portfolio?',
+                              'Are you sure you want to remove this resume? It will no longer be available for download.',
                               () => {
                                 updateAppState((prev) => ({
                                   ...prev,
                                   profile: { ...prev.profile, resumeUrl: '' },
                                   resumes: []
                                 }), session.token);
-                                showToast('Resume removed from MongoDB resumes collection.');
+                                showToast('Resume removed successfully.');
                               }
                             );
                           }}
@@ -1181,12 +1467,12 @@ export function AdminPage() {
                 }
 
                 return (
-                  <div className="rounded-2xl border border-dashed border-white/20 bg-obsidian/60 p-5 text-center space-y-2">
+                  <div className="rounded-2xl border border-dashed border-white/20 bg-obsidian/60 p-5 text-center space-y-1.5">
                     <p className="font-mono text-xs text-amberwarm font-semibold">
-                      ⚠ No resume file currently stored in MongoDB Atlas
+                      No resume file currently uploaded
                     </p>
                     <p className="text-xs text-stonewarm">
-                      Upload your PDF resume below to automatically create the <code className="text-cyanglow font-mono">resumes</code> collection in MongoDB.
+                      Upload your PDF resume or provide a direct link below.
                     </p>
                   </div>
                 );
@@ -1198,7 +1484,7 @@ export function AdminPage() {
                 <div className="rounded-2xl border border-white/10 bg-obsidian p-5 space-y-3">
                   <span className="font-mono text-xs uppercase tracking-wider text-vermilion font-bold">OPTION A · UPLOAD RESUME FILE</span>
                   <p className="text-xs text-stonewarm">
-                    Select a PDF from your computer. It will be uploaded and stored permanently in MongoDB:
+                    Select a PDF file from your computer:
                   </p>
                   <label className="block">
                     <input
@@ -1233,7 +1519,7 @@ export function AdminPage() {
                                 resumes: [newResume, ...existing]
                               };
                             }, session.token);
-                            showToast(`"${file.name}" uploaded and saved to MongoDB resumes collection!`);
+                            showToast(`"${file.name}" uploaded successfully!`);
                           }
                         } catch (err) {
                           showToast('Upload failed: ' + (err.message || 'Error reading file'));
@@ -1246,7 +1532,7 @@ export function AdminPage() {
                     />
                   </label>
                   {resumeUploadLoading && (
-                    <p className="font-mono text-xs text-cyanglow animate-pulse">Uploading and writing to MongoDB resumes collection...</p>
+                    <p className="font-mono text-xs text-cyanglow animate-pulse">Uploading resume...</p>
                   )}
                 </div>
 
@@ -1289,7 +1575,7 @@ export function AdminPage() {
                           };
                         }, session.token);
                         setResumeDirectUrl('');
-                        showToast('Resume link saved to MongoDB resumes collection.');
+                        showToast('Resume link saved successfully.');
                       }}
                       className="focus-ring rounded-xl bg-cyanglow px-4 py-2 font-mono text-xs font-bold text-obsidian disabled:opacity-40"
                     >
@@ -1317,9 +1603,12 @@ export function AdminPage() {
               </div>
             </div>
 
-            <div className="pt-4 border-t hairline-border flex items-center justify-between">
-              <button type="submit" className="focus-ring rounded-full bg-vermilion px-7 py-3 text-xs font-bold text-obsidian shadow-lg shadow-vermilion/25 hover:opacity-95">
-                Save All Profile & Resume Settings
+            <div className="pt-2 flex items-center justify-between">
+              <button
+                type="submit"
+                className="focus-ring rounded-full bg-vermilion px-8 py-3.5 text-xs font-bold text-obsidian shadow-lg shadow-vermilion/25 hover:opacity-95"
+              >
+                Save All Profile & Content Settings
               </button>
             </div>
           </form>
@@ -1403,7 +1692,7 @@ export function AdminPage() {
       )}
 
       {activeTab === 'security' && (
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <div className="max-w-2xl mx-auto">
           <form onSubmit={handleUpdatePassword} noValidate className="glass-card rounded-3xl p-6 sm:p-8 space-y-4">
             <p className="font-mono text-xs uppercase tracking-widest text-vermilion">ADMIN SECURITY & AUTHORIZATION</p>
             <h2 className="font-display text-xl font-bold text-alabaster">Update Admin Password</h2>
@@ -1417,7 +1706,7 @@ export function AdminPage() {
                 placeholder="Enter current password"
                 className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
               />
-              {secErrors.curPass && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {secErrors.curPass}</p>}
+              <FormErrorMessage message={secErrors.curPass} />
             </div>
 
             <div>
@@ -1429,7 +1718,7 @@ export function AdminPage() {
                 placeholder="Min 8 chars, 1 uppercase, 1 digit, 1 special char"
                 className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
               />
-              {secErrors.newPass && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {secErrors.newPass}</p>}
+              <FormErrorMessage message={secErrors.newPass} />
             </div>
 
             <div>
@@ -1441,78 +1730,12 @@ export function AdminPage() {
                 placeholder="Re-enter new password"
                 className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
               />
-              {secErrors.confirmPass && <p className="mt-1 font-mono text-[11px] text-vermilion">⚠ {secErrors.confirmPass}</p>}
+              <FormErrorMessage message={secErrors.confirmPass} />
             </div>
 
-            <button type="submit" className="focus-ring rounded-full bg-cyanglow px-6 py-2.5 text-xs font-bold text-obsidian">
+            <button type="submit" className="focus-ring rounded-full bg-cyanglow px-6 py-2.5 text-xs font-bold text-obsidian shadow-lg shadow-cyanglow/20 hover:opacity-90">
               Update Admin Password
             </button>
-          </form>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              showToast('MongoDB & Cloudinary configuration saved.');
-            }}
-            className="glass-card rounded-3xl p-6 sm:p-8 space-y-4"
-          >
-            <p className="font-mono text-xs uppercase tracking-widest text-sage">DATABASE & CLOUD MEDIA</p>
-            <h2 className="font-display text-xl font-bold text-alabaster">MongoDB & Cloudinary Settings</h2>
-
-            <div>
-              <label className="block font-mono text-xs text-stonewarm mb-1">Site Title</label>
-              <input
-                type="text"
-                value={appState.settings?.siteTitle || ''}
-                onChange={(e) =>
-                  updateAppState((prev) => ({
-                    ...prev,
-                    settings: { ...prev.settings, siteTitle: e.target.value }
-                  }), session.token)
-                }
-                className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2 text-sm text-alabaster"
-              />
-            </div>
-
-            <div>
-              <label className="block font-mono text-xs text-stonewarm mb-1">MongoDB Connection URI</label>
-              <input
-                type="text"
-                value={appState.settings?.mongodbUri || 'mongodb://127.0.0.1:27017/ayush_portfolio'}
-                onChange={(e) =>
-                  updateAppState((prev) => ({
-                    ...prev,
-                    settings: { ...prev.settings, mongodbUri: e.target.value }
-                  }), session.token)
-                }
-                className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2 text-sm text-alabaster"
-              />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button type="submit" className="focus-ring rounded-full bg-vermilion px-6 py-2.5 text-xs font-bold text-obsidian">
-                Save Database & Site Settings
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  openConfirmModal(
-                    'Reset Portfolio Content?',
-                    'All custom edits will be restored to the default portfolio state while keeping your admin password.',
-                    () => {
-                      updateAppState((prev) => ({
-                        ...getDefaultPortfolioState(),
-                        adminConfig: prev.adminConfig
-                      }), session.token);
-                      showToast('Portfolio restored to default state.');
-                    }
-                  )
-                }
-                className="focus-ring rounded-full border border-white/15 bg-obsidian px-4 py-2.5 font-mono text-xs text-stonewarm hover:text-alabaster"
-              >
-                Reset Default Data
-              </button>
-            </div>
           </form>
         </div>
       )}

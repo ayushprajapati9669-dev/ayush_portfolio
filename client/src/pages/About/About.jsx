@@ -42,14 +42,14 @@ export function AboutPage() {
             <h2 className="font-display text-2xl font-bold text-alabaster">Education Qualifications</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-white/10 bg-obsidian p-5 space-y-1">
-                <span className="font-mono text-xs text-sage font-bold">CGPA: 8.42 | (2026)</span>
-                <h3 className="font-display text-lg font-bold text-white">B.Tech in CSE</h3>
-                <p className="text-xs text-stonewarm">SISTec (Sagar Institute of Science & Technology), Bhopal</p>
+                <span className="font-mono text-xs text-sage font-bold">{p.education?.cgpa || 'CGPA: 8.42 | (2026)'}</span>
+                <h3 className="font-display text-lg font-bold text-white">{p.education?.degree || 'B.Tech in CSE'}</h3>
+                <p className="text-xs text-stonewarm">{p.education?.college || 'SISTec (Sagar Institute of Science & Technology), Bhopal'}</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-obsidian p-5 space-y-1">
-                <span className="font-mono text-xs text-cyanglow font-bold">83.5% | 2022</span>
-                <h3 className="font-display text-lg font-bold text-white">Class XII (MP Board)</h3>
-                <p className="text-xs text-stonewarm">Kasturba Vidhya Mandir, Jamani, Madhya Pradesh</p>
+                <span className="font-mono text-xs text-cyanglow font-bold">{p.education?.schoolScore || '83.5% | 2022'}</span>
+                <h3 className="font-display text-lg font-bold text-white">{p.education?.schoolBoard || 'Class XII (MP Board)'}</h3>
+                <p className="text-xs text-stonewarm">{p.education?.schoolXII || 'Kasturba Vidhya Mandir, Jamani, Madhya Pradesh'}</p>
               </div>
             </div>
           </div>
@@ -64,7 +64,9 @@ export function AboutPage() {
             />
             <div className="space-y-2">
               <h3 className="font-display text-xl font-bold text-alabaster">{p.name}</h3>
-              <p className="text-xs text-stonewarm">CSE | SISTec, Bhopal (CGPA: 8.42)</p>
+              <p className="text-xs text-stonewarm">
+                {p.education?.degree || 'CSE'} | {p.education?.college || 'SISTec, Bhopal'} ({p.education?.cgpa || 'CGPA: 8.42'})
+              </p>
               <div className="flex items-center gap-2 pt-1">
                 <SocialIconButtons socialLinks={p.socialLinks} sizeClass="h-9 w-9" />
               </div>

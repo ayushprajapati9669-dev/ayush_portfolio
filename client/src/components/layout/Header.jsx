@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 
 export function Header() {
-  const { appState, openResumeModal } = usePortfolio();
+  const { appState, downloadOrPrintResume } = usePortfolio();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ export function Header() {
         <div className="hidden md:flex items-center gap-2.5">
           <button
             type="button"
-            onClick={openResumeModal}
+            onClick={downloadOrPrintResume}
             className="focus-ring inline-flex items-center gap-2 rounded-full border border-cyanglow/40 bg-charcoal px-4 py-2 text-xs font-bold text-cyanglow transition-all hover:-translate-y-0.5 hover:bg-cyanglow hover:text-obsidian"
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
@@ -123,7 +123,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => {
-              openResumeModal();
+              downloadOrPrintResume();
               setMobileMenuOpen(false);
             }}
             className="block w-full rounded-xl border border-cyanglow/40 bg-obsidian px-3.5 py-2.5 text-left font-mono text-xs font-semibold text-cyanglow"

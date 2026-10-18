@@ -60,6 +60,9 @@ export function ContactPage() {
       type: 'success',
       text: 'Thank you! Your message has been sent successfully. Ayush will get back to you shortly.'
     });
+    setTimeout(() => {
+      setFeedback(null);
+    }, 3000);
     showToast('Thank you! Your message has been sent.');
   };
 

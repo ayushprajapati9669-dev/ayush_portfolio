@@ -96,21 +96,49 @@ export function ThemeProvider({ children }) {
 
   const downloadOrPrintResume = useCallback(() => {
     const activeResume = (appState.resumes || []).find((r) => r.isActive) || (appState.resumes || [])[0];
-    const pdfHref = activeResume?.fileUrl || appState.profile?.resumeUrl || '/images/Ayush_Prajapati_Resume.pdf';
+    const pdfHref = activeResume?.fileUrl || appState.profile?.resumeUrl;
     const fileName = activeResume?.fileName || 'Ayush_Prajapati_Resume.pdf';
-    if (pdfHref) {
-      const a = document.createElement('a');
-      a.href = pdfHref;
-      a.download = fileName;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      showToast(`Opening ${fileName}...`);
+
+    if (!pdfHref || !pdfHref.trim()) {
+      showToast('No resume uploaded yet.');
       return;
     }
-    window.print();
+
+    if (pdfHref.startsWith('data:')) {
+      try {
+        const parts = pdfHref.split(';base64,');
+        const contentType = parts[0].split(':')[1] || 'application/pdf';
+        const raw = window.atob(parts[1]);
+        const rawLength = raw.length;
+        const uInt8Array = new Uint8Array(rawLength);
+        for (let i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        const blob = new Blob([uInt8Array], { type: contentType });
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+        showToast(`Downloading ${fileName}...`);
+        return;
+      } catch (_err) {
+        // fallback to standard anchor
+      }
+    }
+
+    const a = document.createElement('a');
+    a.href = pdfHref;
+    a.download = fileName;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast(`Downloading ${fileName}...`);
   }, [appState.resumes, appState.profile?.resumeUrl, showToast]);
 
   return (
