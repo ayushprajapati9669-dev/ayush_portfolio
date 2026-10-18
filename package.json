@@ -1,0 +1,21 @@
+{
+  "name": "argon-portfolio-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ayush Prajapati \u2014 Full-Stack MERN Developer Portfolio (Argon Edition)",
+  "scripts": {
+    "start": "node server/src/index.js",
+    "dev": "node server/src/index.js",
+    "dev:server": "node server/src/index.js",
+    "dev:client": "npm --prefix client run dev",
+    "build:client": "npm --prefix client run build",
+    "setup:admin": "node server/scripts/setup-admin.js",
+    "setup-admin": "node server/scripts/setup-admin.js",
+    "seed": "node server/scripts/seed-portfolio.js",
+    "clean:demo": "node server/scripts/clean-demo-data.js",
+    "test": "node server/tests/run-tests.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

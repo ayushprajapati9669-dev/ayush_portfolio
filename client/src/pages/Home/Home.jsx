@@ -1,0 +1,300 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { usePortfolio } from '../../app/providers/ThemeProvider';
+import { PortraitParticles } from '../../components/particles/PortraitParticles';
+import { DeveloperWorkbench } from '../../components/ui/DeveloperWorkbench';
+import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
+import { ProjectCard } from '../../components/projects/ProjectCard';
+import { CertificateCard } from '../../components/projects/CertificateCard';
+import { SocialIconButtons, TechLogo } from '../../components/common/TechLogos';
+
+export function HomePage() {
+  const { appState, downloadOrPrintResume } = usePortfolio();
+  const navigate = useNavigate();
+  const [highlightedProjectId, setHighlightedProjectId] = useState(null);
+
+  const p = appState.profile || {};
+  const ui = appState.uiLabels || {};
+  const publishedProjects = (appState.projects || [])
+    .filter((proj) => proj.status === 'published')
+    .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+  const featuredProjects = publishedProjects.filter((proj) => proj.featured);
+  const displayProjects = featuredProjects.length > 0 ? featuredProjects : publishedProjects;
+  const allSkillItems = (appState.skills || []).flatMap((g) => g.items || []);
+  const doubledSkills = [...allSkillItems, ...allSkillItems];
+  const certificates = appState.certificates || [];
+
+  const goTo = (route) => {
+    navigate(route);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
+  return (
+    <div>
+      {/* Hero & Bento Stage */}
+      <section className="mx-auto max-w-7xl px-4 pt-10 pb-16 sm:px-6 lg:px-8 lg:pt-14">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
+          {/* Left Column (5 Cols) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-charcoal/90 px-3.5 py-1.5 shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sage opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-sage" />
+              </span>
+              <span className="font-mono text-xs font-medium text-alabaster">{p.availabilityLabel}</span>
+            </div>
+
+            <div className="space-y-3.5">
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-vermilion">{p.eyebrow}</p>
+              <h1 className="font-display text-4xl font-extrabold tracking-tight text-alabaster sm:text-5xl lg:text-[3.35rem] leading-[1.08]">
+                {p.headline}
+              </h1>
+
+              <div className="overflow-hidden rounded-2xl border border-cyanglow/30 bg-gradient-to-r from-charcoal via-graphite to-charcoal py-2.5 px-3 shadow-inner">
+                <div className="animate-hero-text-scroll flex items-center gap-10 whitespace-nowrap">
+                  <span className="font-display text-lg sm:text-xl font-bold text-cyanglow">{p.supportingHeadline}</span>
+                  <span className="text-vermilion font-mono text-sm">✦</span>
+                  <span className="font-display text-lg sm:text-xl font-bold text-alabaster">{p.supportingHeadline}</span>
+                  <span className="text-vermilion font-mono text-sm">✦</span>
+                  <span className="font-display text-lg sm:text-xl font-bold text-cyanglow">{p.supportingHeadline}</span>
+                  <span className="text-vermilion font-mono text-sm">✦</span>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-base leading-relaxed text-stonewarm max-w-xl">{p.heroDescription}</p>
+
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => goTo('/projects')}
+                className="focus-ring inline-flex items-center gap-2.5 rounded-full bg-vermilion px-6 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-vermilion/25 transition-all hover:-translate-y-0.5 hover:opacity-95"
+              >
+                <span>{p.primaryCtaText || 'Explore Live Projects'}</span>
+                <span aria-hidden="true">→</span>
+              </button>
+              <button
+                type="button"
+                onClick={downloadOrPrintResume}
+                className="focus-ring inline-flex items-center gap-2 rounded-full border border-cyanglow/40 bg-charcoal px-5 py-3.5 text-sm font-semibold text-cyanglow transition-colors hover:bg-cyanglow hover:text-obsidian"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>{p.secondaryCtaText || 'Download Resume'}</span>
+              </button>
+            </div>
+
+            <div className="pt-4 border-t hairline-border flex items-center gap-3.5">
+              <SocialIconButtons socialLinks={p.socialLinks} />
+            </div>
+          </div>
+
+          {/* Center Column: Portrait & Particle FX (4 Cols) */}
+          <div className="lg:col-span-4 flex flex-col items-center">
+            <PortraitParticles
+              imageUrl={p.portrait?.url || '/images/ayush-hero-portrait.jpg'}
+              alt={p.portrait?.alt || p.name}
+              name={p.name}
+              roleLabel={`${p.education?.stage || 'CGPA: 8.42 · Batch of 2026'} · SISTec, Bhopal`}
+              offsetX={p.portrait?.offsetX || 0}
+              offsetY={p.portrait?.offsetY || 0}
+              sampleGap={p.portrait?.particleDensity || 4}
+              toggleOffLabel={ui.particleToggleOff}
+              toggleOnLabel={ui.particleToggleOn}
+            />
+          </div>
+
+          {/* Right Column: Developer Workbench & Bento Cards (3 Cols) */}
+          <div className="lg:col-span-3">
+            <DeveloperWorkbench />
+          </div>
+        </div>
+
+        {/* Infinite Tech Stack Marquee Bar */}
+        {doubledSkills.length > 0 && (
+          <div className="mt-14 overflow-hidden rounded-2xl border hairline-border bg-charcoal/60 py-4 backdrop-blur-md">
+            <div className="animate-marquee flex items-center gap-6 px-4">
+              {doubledSkills.map((item, idx) => (
+                <div
+                  key={`${item.name}-${idx}`}
+                  className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-obsidian/90 px-4 py-2 text-xs font-semibold text-alabaster shadow-sm"
+                >
+                  <TechLogo name={item.logoKey || item.name} className="h-4 w-4" />
+                  <span>{item.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Main Home Content Sections */}
+      <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24 pt-6">
+        {/* Section 01: Bento Introduction & Education */}
+        <section className="scroll-reveal space-y-10 border-t hairline-border pt-16">
+          <div className="max-w-3xl space-y-3">
+            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeIntroEyebrow}</p>
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster leading-tight">{ui.homeIntroHeading}</h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+            <div className="lg:col-span-6 glass-card rounded-3xl p-7 sm:p-8 space-y-4 text-stonewarm leading-relaxed">
+              {(p.aboutBio || []).map((para, i) => (
+                <p key={i} className="text-sm sm:text-base">{para}</p>
+              ))}
+              <div className="pt-3 border-t hairline-border flex flex-wrap gap-3 text-xs font-mono text-cyanglow">
+                <span>✉ {p.email || 'ayushprajapati9669@gmail.com'}</span>
+                <span>☎ {p.phone || '(+91) 9669802554'}</span>
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {(p.focusAreas || []).map((area, idx) => (
+                <div key={idx} className="glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between space-y-3">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-vermilion/15 font-mono text-xs font-bold text-vermilion">
+                    0{idx + 1}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-alabaster">{area.title}</h3>
+                    <p className="mt-1.5 text-xs leading-relaxed text-stonewarm">{area.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Section 02: Interactive Tabbed Skills Section */}
+        <section className="scroll-reveal border-t hairline-border pt-16 space-y-10">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="space-y-2">
+              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-cyanglow">{ui.homeSkillsEyebrow}</p>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">{ui.homeSkillsHeading}</h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => goTo('/skills')}
+              className="focus-ring rounded-full border border-white/15 bg-charcoal px-5 py-2.5 font-mono text-xs font-semibold text-alabaster transition-colors hover:border-cyanglow"
+            >
+              {ui.homeSkillsCta} →
+            </button>
+          </div>
+          <InteractiveSkillsWidget />
+        </section>
+
+        {/* Section 03: Live Deployed Projects */}
+        <section className="scroll-reveal border-t hairline-border pt-16 space-y-10">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="space-y-2">
+              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeProjectsEyebrow}</p>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">{ui.homeProjectsHeading}</h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => goTo('/projects')}
+              className="focus-ring rounded-full border border-white/15 bg-charcoal px-5 py-2.5 font-mono text-xs font-semibold text-alabaster transition-colors hover:border-vermilion"
+            >
+              {ui.homeProjectsCta} ({publishedProjects.length}) →
+            </button>
+          </div>
+
+          {displayProjects.length === 0 ? (
+            <div className="glass-card rounded-2xl p-8 text-center text-stonewarm font-mono text-sm border border-white/5">
+              No projects published yet. Click "Admin CMS" in the top bar to create and publish your first project.
+            </div>
+          ) : (
+            <div className={`grid grid-cols-1 gap-8 ${displayProjects.length === 1 ? 'max-w-3xl' : 'lg:grid-cols-2'}`}>
+              {displayProjects.map((proj, idx) => (
+                <ProjectCard
+                  key={proj.id}
+                  proj={proj}
+                  indexNum={idx + 1}
+                  isSelected={highlightedProjectId === proj.id}
+                  onSelect={setHighlightedProjectId}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Section 04: Verified Certificates Showcase */}
+        <section className="scroll-reveal border-t hairline-border pt-16 space-y-10">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="space-y-2">
+              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-cyanglow">
+                {ui.homeCertsEyebrow || '04 · VERIFIED CREDENTIALS'}
+              </p>
+              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">
+                {ui.homeCertsHeading || 'Certifications & Achievements'}
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => goTo('/certificates')}
+              className="focus-ring rounded-full border border-white/15 bg-charcoal px-5 py-2.5 font-mono text-xs font-semibold text-alabaster transition-colors hover:border-cyanglow"
+            >
+              {ui.homeCertsCta || 'View Certificates'} ({certificates.length}) →
+            </button>
+          </div>
+
+          {certificates.length === 0 ? (
+            <div className="glass-card rounded-2xl p-8 text-center text-stonewarm font-mono text-sm border border-white/5">
+              No certificates added yet. Upload your credentials in the Admin CMS to showcase them here.
+            </div>
+          ) : (
+            <div className={`grid grid-cols-1 gap-8 ${certificates.length === 1 ? 'max-w-2xl' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
+              {certificates.slice(0, 3).map((cert) => (
+                <CertificateCard key={cert.id} cert={cert} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Section 05: Education & Academic Projects */}
+        <section className="scroll-reveal border-t hairline-border pt-16 space-y-10">
+          <div className="space-y-2">
+            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeJourneyEyebrow}</p>
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">{ui.homeJourneyHeading}</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {(p.learningJourney || []).map((step, i) => (
+              <div key={i} className="glass-card glass-card-hover rounded-3xl p-7 space-y-3">
+                <span className="inline-block rounded-full bg-amberwarm/15 px-3 py-1 font-mono text-xs font-semibold text-amberwarm">
+                  {step.phase}
+                </span>
+                <h3 className="font-display text-xl font-bold text-alabaster">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-stonewarm">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Section 06: Direct Resume Download & Contact CTA */}
+        <section className="scroll-reveal rounded-3xl border border-vermilion/30 bg-gradient-to-r from-charcoal via-graphite to-charcoal p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl">
+          <div className="space-y-3 max-w-2xl">
+            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeBannerEyebrow}</p>
+            <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-alabaster leading-tight">{ui.homeBannerHeading}</h2>
+            <p className="text-sm sm:text-base text-stonewarm">{ui.homeBannerSubtext}</p>
+          </div>
+          <div className="flex flex-wrap gap-3.5 shrink-0">
+            <button
+              type="button"
+              onClick={downloadOrPrintResume}
+              className="focus-ring rounded-full bg-cyanglow px-7 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-cyanglow/25"
+            >
+              Download Resume PDF ↓
+            </button>
+            <button
+              type="button"
+              onClick={() => goTo('/contact')}
+              className="focus-ring rounded-full bg-vermilion px-7 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-vermilion/25"
+            >
+              Contact Me →
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}

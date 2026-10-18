@@ -1,0 +1,49 @@
+.modern-mesh-bg {
+  background-color: var(--bg-obsidian);
+  background-image:
+    radial-gradient(at 12% 10%, rgba(0, 212, 255, 0.08) 0px, transparent 45%),
+    radial-gradient(at 85% 12%, rgba(255, 107, 74, 0.08) 0px, transparent 45%),
+    radial-gradient(at 50% 85%, rgba(99, 102, 241, 0.07) 0px, transparent 50%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 56px 56px, 56px 56px;
+}
+
+.hairline-border {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes heroHeadlineScroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-hero-text-scroll {
+  display: flex;
+  width: max-content;
+  animation: heroHeadlineScroll 18s linear infinite;
+}
+
+.animate-hero-text-scroll:hover {
+  animation-play-state: paused;
+}

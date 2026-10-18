@@ -1,0 +1,41 @@
+@import './variables.css';
+@import './layout.css';
+@import './components/cards.css';
+@import './pages/skills.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-obsidian);
+  color: var(--text-alabaster);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-display {
+  font-family: 'Outfit', 'Space Grotesk', sans-serif;
+  letter-spacing: -0.025em;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

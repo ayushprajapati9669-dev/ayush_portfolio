@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#080B14"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#FF6B4A" stroke-opacity="0.45" stroke-width="2"/>
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#FF6B4A" font-family="Outfit, Syne, sans-serif" font-weight="800" font-size="26">AP</text>
+</svg>
