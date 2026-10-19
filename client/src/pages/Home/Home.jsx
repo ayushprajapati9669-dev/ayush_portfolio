@@ -163,23 +163,8 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Section 02: Interactive Tabbed Skills Section */}
-        <section className="scroll-reveal border-t hairline-border pt-16 space-y-10">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div className="space-y-2">
-              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-cyanglow">{ui.homeSkillsEyebrow}</p>
-              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">{ui.homeSkillsHeading}</h2>
-            </div>
-            <button
-              type="button"
-              onClick={() => goTo('/skills')}
-              className="focus-ring rounded-full border border-white/15 bg-charcoal px-5 py-2.5 font-mono text-xs font-semibold text-alabaster transition-colors hover:border-cyanglow"
-            >
-              {ui.homeSkillsCta} →
-            </button>
-          </div>
-          <InteractiveSkillsWidget />
-        </section>
+        {/* Section 03: Technical Capabilities / Skills Section */}
+        <InteractiveSkillsWidget showCta={true} onCtaClick={() => goTo('/skills')} />
 
         {/* Section 03: Live Deployed Projects */}
         <section className="scroll-reveal border-t hairline-border pt-16 space-y-10">

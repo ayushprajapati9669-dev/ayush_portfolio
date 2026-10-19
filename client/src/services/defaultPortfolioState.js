@@ -25,7 +25,7 @@ export function getDefaultPortfolioState() {
       homeProjectsEyebrow: '02 · LIVE DEPLOYED PROJECTS',
       homeProjectsHeading: 'Featured Full-Stack Applications',
       homeProjectsCta: 'View All Projects',
-      homeSkillsEyebrow: '03 · TECHNICAL CAPABILITIES',
+      homeSkillsEyebrow: '03 — TECHNICAL CAPABILITIES',
       homeSkillsHeading: 'Interactive Skills & Tech Stack',
       homeSkillsCta: 'Open Full Skills View',
       homeCertsEyebrow: '04 · VERIFIED CREDENTIALS',
@@ -178,10 +178,11 @@ export function getDefaultPortfolioState() {
         id: 'skill-languages',
         category: 'Languages',
         tabIcon: 'languages',
-        description: 'Programming languages from my resume used for DSA and full-stack engineering.',
+        description: 'Programming languages used for DSA and full-stack engineering.',
         displayOrder: 1,
         items: [
           { name: 'C', logoKey: 'c' },
+          { name: 'C++', logoKey: 'cpp' },
           { name: 'Java', logoKey: 'java' },
           { name: 'JavaScript', logoKey: 'javascript' },
           { name: 'Python', logoKey: 'python' }
@@ -197,8 +198,8 @@ export function getDefaultPortfolioState() {
           { name: 'React JS', logoKey: 'react' },
           { name: 'HTML', logoKey: 'html' },
           { name: 'CSS', logoKey: 'css' },
-          { name: 'Bootstrap', logoKey: 'bootstrap' },
           { name: 'Tailwind CSS', logoKey: 'tailwind' },
+          { name: 'Bootstrap', logoKey: 'bootstrap' },
           { name: 'JavaScript', logoKey: 'javascript' },
           { name: 'Vite JS', logoKey: 'vite' },
           { name: 'Next.js', logoKey: 'nextjs' }
@@ -208,28 +209,47 @@ export function getDefaultPortfolioState() {
         id: 'skill-backend',
         category: 'Backend',
         tabIcon: 'backend',
-        description: 'Backend runtimes, REST APIs, and relational/NoSQL databases.',
+        description: 'Server runtimes and REST API architecture.',
         displayOrder: 3,
         items: [
           { name: 'Node.js', logoKey: 'nodejs' },
           { name: 'Express.js', logoKey: 'express' },
-          { name: 'MongoDB', logoKey: 'mongodb' },
-          { name: 'MySQL', logoKey: 'mysql' },
           { name: 'REST APIs', logoKey: 'postman' }
         ]
       },
       {
+        id: 'skill-databases',
+        category: 'Databases',
+        tabIcon: 'databases',
+        description: 'Relational and NoSQL document database management.',
+        displayOrder: 4,
+        items: [
+          { name: 'MongoDB', logoKey: 'mongodb' },
+          { name: 'MySQL', logoKey: 'mysql' }
+        ]
+      },
+      {
         id: 'skill-tools',
-        category: 'Tools & Others',
+        category: 'Tools & Workflow',
         tabIcon: 'tools',
         description: 'Version control, cloud media storage, and developer workflow tools.',
-        displayOrder: 4,
+        displayOrder: 5,
         items: [
           { name: 'Git', logoKey: 'git' },
           { name: 'GitHub', logoKey: 'github' },
-          { name: 'Cloudinary', logoKey: 'react' },
           { name: 'Postman', logoKey: 'postman' },
-          { name: 'VS Code', logoKey: 'vscode' }
+          { name: 'VS Code', logoKey: 'vscode' },
+          { name: 'Cloudinary', logoKey: 'cloudinary' }
+        ]
+      },
+      {
+        id: 'skill-dsa',
+        category: 'Problem Solving',
+        tabIcon: 'dsa',
+        description: 'Data structures, algorithms, and core computer science fundamentals.',
+        displayOrder: 6,
+        items: [
+          { name: 'Data Structures & Algorithms', logoKey: 'dsa' }
         ]
       }
     ],

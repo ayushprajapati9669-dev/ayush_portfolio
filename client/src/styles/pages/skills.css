@@ -1,41 +1,50 @@
+/* ==========================================================================
+   Advanced GSAP Skills Section Styles
+   Clean, compact design with cyan/mint accents
+   Strictly NO cards around individual skills, NO separators, NO badges
+   ========================================================================== */
+
+/* Category Navigation Tabs (Subtle active-state background and cyan border) */
 .skills-tab-card {
-  background: rgba(17, 22, 38, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: all 0.25s ease;
+  background: rgba(15, 21, 36, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .skills-tab-card:hover {
-  border-color: rgba(0, 212, 255, 0.45);
+  background: rgba(20, 28, 48, 0.9);
+  border-color: rgba(0, 212, 255, 0.4);
   transform: translateY(-2px);
 }
 
 .skills-tab-active {
-  background: linear-gradient(180deg, rgba(14, 42, 68, 0.92) 0%, rgba(11, 22, 42, 0.96) 100%);
-  border: 1.5px solid #00B4D8 !important;
-  box-shadow: 0 0 28px rgba(0, 180, 216, 0.22), inset 0 0 18px rgba(0, 212, 255, 0.08);
+  background: linear-gradient(180deg, rgba(14, 42, 68, 0.95) 0%, rgba(10, 20, 38, 0.98) 100%) !important;
+  border-color: #00B4D8 !important;
+  box-shadow: 0 0 24px rgba(0, 180, 216, 0.2), inset 0 0 14px rgba(0, 212, 255, 0.08) !important;
 }
 
-.skills-panel-box {
-  background: rgba(12, 16, 29, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.75);
+/* Subtle accent line container */
+.skills-accent-track {
+  height: 2px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+  overflow: hidden;
 }
 
-.skill-item-card {
-  background: rgba(18, 24, 41, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+/* Replay button hover transition */
+.skills-replay-btn {
+  transition: all 0.2s ease;
 }
 
-.skill-item-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(0, 212, 255, 0.45);
-  background: rgba(22, 30, 52, 0.98);
-  box-shadow: 0 14px 32px -10px rgba(0, 180, 216, 0.2);
+.skills-replay-btn:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  color: #00D4FF;
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
 }
 
-.sparkle-star {
-  pointer-events: none;
-  user-select: none;
-  color: rgba(148, 163, 184, 0.35);
+.skills-replay-btn:active {
+  transform: scale(0.96);
 }

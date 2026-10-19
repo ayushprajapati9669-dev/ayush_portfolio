@@ -94,57 +94,137 @@ export function SocialIconButtons({ socialLinks, sizeClass = 'h-11 w-11', iconCl
 }
 
 export function SkillCategoryTabIcon({ tabIconKey, isActive }) {
-  const strokeColor = isActive ? '#00D4FF' : '#6366F1';
+  const strokeColor = isActive ? '#00D4FF' : '#94A3B8';
   const k = String(tabIconKey || '').toLowerCase();
-  if (k === 'languages') {
+
+  // 1. Languages — code or programming brackets
+  if (k.includes('language')) {
     return (
-      <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 5h16a2 2 0 012 2v9a2 2 0 01-2 2h-5l-4 4v-4H4a2 2 0 01-2-2V7a2 2 0 012-2z" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.5 9.5L7 11.5l2.5 2m5-4l2.5 2-2.5 2m-1.5-5l-2 6" />
+      <svg className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
       </svg>
     );
   }
-  if (k === 'frontend') {
+
+  // 2. Frontend — browser, window, or interface
+  if (k.includes('frontend')) {
     return (
-      <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8">
-        <rect x="3" y="4" width="16" height="14" rx="2" />
-        <path strokeLinecap="round" d="M3 8h16M6 6h.01M9 6h.01" />
-        <circle cx="17.5" cy="16.5" r="3" fill="#0B1528" stroke={strokeColor} strokeWidth="1.8" />
-        <path strokeLinecap="round" d="M17.5 12.5v1m0 6v1m-4-4h1m6 0h1" />
+      <svg className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8" aria-hidden="true">
+        <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+        <line x1="2" y1="7" x2="22" y2="7" />
+        <circle cx="5" cy="5" r=".7" fill={strokeColor} />
+        <circle cx="8" cy="5" r=".7" fill={strokeColor} />
+        <line x1="8" y1="21" x2="16" y2="21" strokeLinecap="round" />
+        <line x1="12" y1="17" x2="12" y2="21" strokeLinecap="round" />
       </svg>
     );
   }
-  if (k === 'backend') {
+
+  // 3. Backend — server or API architecture
+  if (k.includes('backend')) {
     return (
-      <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8">
-        <rect x="3" y="4" width="16" height="13" rx="2" />
-        <path strokeLinecap="round" d="M3 8h16M6 6h.01M9 6h.01" />
-        <circle cx="12" cy="13" r="2" />
-        <circle cx="17.5" cy="17.5" r="2.5" fill="#0B1528" stroke={strokeColor} strokeWidth="1.8" />
+      <svg className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="8" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="2" y="14" width="20" height="8" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+        <line x1="6" y1="6" x2="6.01" y2="6" strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="6" y1="18" x2="6.01" y2="18" strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="10" y1="6" x2="15" y2="6" strokeLinecap="round" />
+        <line x1="10" y1="18" x2="15" y2="18" strokeLinecap="round" />
       </svg>
     );
   }
+
+  // 4. Databases — database stack
+  if (k.includes('database') || k.includes('db')) {
+    return (
+      <svg className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8" aria-hidden="true">
+        <ellipse cx="12" cy="5" rx="9" ry="3" />
+        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" strokeLinecap="round" />
+        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  // 5. Tools & Workflow — developer tools
+  if (k.includes('tool') || k.includes('workflow')) {
+    return (
+      <svg className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+      </svg>
+    );
+  }
+
+  // 6. Problem Solving — brain, algorithm, or logic
+  if (k.includes('problem') || k.includes('dsa') || k.includes('solving') || k.includes('algo')) {
+    return (
+      <svg className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8" aria-hidden="true">
+        <circle cx="12" cy="5" r="2.5" />
+        <circle cx="5" cy="18" r="2.5" />
+        <circle cx="19" cy="18" r="2.5" />
+        <path d="M10.2 7.2L6.8 15.8M13.8 7.2L17.2 15.8M7.5 18h9" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  // Default fallback
   return (
-    <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-      <circle cx="12" cy="12" r="3" />
+    <svg className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 transition-colors" viewBox="0 0 24 24" fill="none" stroke={strokeColor} strokeWidth="1.8" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
     </svg>
   );
 }
 
-export function getSkillIconBgTint(keyOrName) {
-  const k = String(keyOrName || '').toLowerCase();
-  if (k.includes('react') || k.includes('tailwind')) return 'bg-[#0E2A38] border-[#00D4FF]/20';
-  if (k.includes('vite') || k.includes('bootstrap')) return 'bg-[#211A3A] border-[#8B5CF6]/25';
-  if (k.includes('css') || k.includes('mysql') || k.includes('python') || k === 'c') return 'bg-[#122338] border-[#38BDF8]/20';
-  if (k.includes('html') || k.includes('git') || k.includes('postman') || (k.includes('java') && !k.includes('javascript'))) return 'bg-[#2C1B1E] border-[#FF6B4A]/25';
-  if (k.includes('javascript') || k === 'js') return 'bg-[#2B2818] border-[#F7DF1E]/25';
-  if (k.includes('node') || k.includes('mongo')) return 'bg-[#132A20] border-[#10B981]/25';
-  return 'bg-[#161B2A] border-white/10';
-}
+export function TechLogo({ name, className = 'h-6 w-6' }) {
+  const k = String(name || '').toLowerCase().trim();
 
-export function TechLogo({ name, className = 'h-5 w-5' }) {
-  const k = String(name || '').toLowerCase();
+  // C++ (Must check before C)
+  if (k.includes('c++') || k === 'cpp' || k.includes('cplusplus')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <path fill="#00599C" d="M11.5 2.1L3.3 6.8c-.4.2-.6.7-.6 1.1v9.5c0 .5.2.9.6 1.1l8.2 4.7c.4.2.9.2 1.3 0l8.2-4.7c.4-.2.6-.7.6-1.1V7.9c0-.5-.2-.9-.6-1.1L12.7 2.1c-.3-.2-.8-.2-1.2 0zm-1 6.3c1.7 0 2.9 1 3.4 2.4l-1.8.8c-.3-.8-.8-1.3-1.6-1.3-1.3 0-2.2 1.1-2.2 2.6s.9 2.6 2.2 2.6c.8 0 1.4-.5 1.7-1.3l1.8.8c-.6 1.4-1.8 2.4-3.5 2.4-2.4 0-4.2-1.9-4.2-4.5s1.8-4.5 4.2-4.5zm5.5 2.7h1.1v1.1h1.1v1.1h-1.1v1.1h-1.1v-1.1H15v-1.1h1v-1.1zm3.8 0h1.1v1.1h1.1v1.1h-1.1v1.1h-1.1v-1.1h-1v-1.1h1v-1.1z" />
+      </svg>
+    );
+  }
+
+  // C
+  if (k === 'c' || k === 'c-lang') {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <path fill="#60A5FA" d="M11.5 2.1L3.3 6.8c-.4.2-.6.7-.6 1.1v9.5c0 .5.2.9.6 1.1l8.2 4.7c.4.2.9.2 1.3 0l8.2-4.7c.4-.2.6-.7.6-1.1V7.9c0-.5-.2-.9-.6-1.1L12.7 2.1c-.3-.2-.8-.2-1.2 0zm.5 4.9c2.8 0 4.8 1.8 5.2 4.2h-2.5c-.3-1.2-1.4-2-2.7-2-2 0-3.3 1.5-3.3 3.6s1.3 3.6 3.3 3.6c1.3 0 2.4-.8 2.7-2h2.5c-.4 2.4-2.4 4.2-5.2 4.2-3.4 0-5.8-2.5-5.8-5.8s2.4-5.8 5.8-5.8z" />
+      </svg>
+    );
+  }
+
+  // Java
+  if (k.includes('java') && !k.includes('javascript')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <path d="M8.85 18.56s-.92.53.65.71c1.9.22 2.87.19 4.96-.21 0 0 .55.34 1.32.64-4.7 2.01-10.63-.12-6.93-1.14zm-.57-2.63s-1.03.76.54.92c2.04.21 3.65.23 6.44-.31 0 0 .39.39.99.6-5.68 1.66-12.01.13-7.97-1.21zm4.86-4.46c1.16 1.34-.3 2.54-.3 2.54s2.94-1.52 1.59-3.42c-1.26-1.77-2.23-2.65 3.01-5.68 0 0-8.22 2.05-4.3 6.56zm6.23 8.95s.68.56-.75.99c-2.72.82-11.33 1.07-13.72.03-.86-.37.75-.89 1.26-.99.53-.11.83-.09.83-.09-.95-.67-6.17 1.32-2.65 1.89 9.61 1.56 17.53-.7 15.03-1.83z" fill="#ED8B00" />
+      </svg>
+    );
+  }
+
+  // JavaScript / JS
+  if (k.includes('javascript') || k === 'js') {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <rect width="24" height="24" rx="4" fill="#F7DF1E" />
+        <path d="M6.7 19.2c.4.7 1 1.2 2.1 1.2 1.1 0 1.8-.5 1.8-1.8v-6.9h2.1v7c0 2.4-1.4 3.5-3.6 3.5-1.9 0-3-.9-3.6-2.1l1.2-.9zm7.9-.2c.5.8 1.2 1.4 2.4 1.4 1 0 1.7-.5 1.7-1.2 0-.8-.7-1.1-1.8-1.6l-.6-.3c-1.8-.8-3-1.7-3-3.7 0-1.8 1.4-3.2 3.6-3.2 1.6 0 2.7.5 3.5 1.9l-1.9 1.2c-.4-.7-.9-1-1.6-1-.7 0-1.2.5-1.2 1 0 .7.5 1 1.6 1.5l.6.3c2.1.9 3.3 1.8 3.3 3.9 0 2.2-1.8 3.4-4.1 3.4-2.3 0-3.8-1.1-4.5-2.5l2-1.1z" fill="#090A0F" />
+      </svg>
+    );
+  }
+
+  // Python
+  if (k.includes('python') || k === 'py') {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <path d="M11.88 2c-5.05 0-4.73 2.19-4.73 2.19l.01 2.27h4.82v.68H5.25S2 6.77 2 11.84c0 5.07 2.83 4.89 2.83 4.89h1.69v-2.35s-.09-2.83 2.78-2.83h4.79s2.69.04 2.69-2.6V4.61S17.18 2 11.88 2zm-2.66 1.54c.48 0 .87.39.87.87 0 .48-.39.87-.87.87-.48 0-.87-.39-.87-.87 0-.48.39-.87.87-.87z" fill="#3776AB" />
+        <path d="M12.12 22c5.05 0 4.73-2.19 4.73-2.19l-.01-2.27h-4.82v-.68h6.73S22 17.23 22 12.16c0-5.07-2.83-4.89-2.83-4.89h-1.69v2.35s.09 2.83-2.78 2.83H9.91s-2.69-.04-2.69 2.6v4.34S6.82 22 12.12 22zm2.66-1.54c-.48 0-.87-.39-.87-.87 0-.48.39-.87.87-.87.48 0 .87.39.87.87 0 .48-.39.87-.87.87z" fill="#FFD438" />
+      </svg>
+    );
+  }
+
+  // React
   if (k.includes('react')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="none" aria-hidden="true">
@@ -155,6 +235,8 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // Vite
   if (k.includes('vite')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="none" aria-hidden="true">
@@ -163,6 +245,8 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // Tailwind CSS
   if (k.includes('tailwind')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#38BDF8" aria-hidden="true">
@@ -170,31 +254,29 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // Bootstrap
   if (k.includes('bootstrap')) {
     return (
-      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#8B5CF6" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#7952B3" aria-hidden="true">
         <rect x="2" y="3" width="20" height="18" rx="4" fill="#7952B3" />
         <path d="M8.5 7.5h4.2c1.6 0 2.6.8 2.6 2.1 0 .9-.6 1.6-1.4 1.9 1.1.2 1.8 1 1.8 2.2 0 1.6-1.2 2.5-3.1 2.5H8.5V7.5zm2.1 3.4h1.7c.7 0 1.2-.4 1.2-1s-.5-1-1.2-1h-1.7v2zm0 3.7h2c.8 0 1.3-.4 1.3-1.1 0-.7-.5-1.1-1.3-1.1h-2v2.2z" fill="#FFF" />
       </svg>
     );
   }
+
+  // Next.js
   if (k.includes('next')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
-        <circle cx="12" cy="12" r="10" fill="#000000" stroke="rgba(255,255,255,0.25)" strokeWidth="1.2" />
+        <circle cx="12" cy="12" r="10" fill="#000000" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2" />
         <path d="M8.5 16V8l7.8 9.8" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
         <path d="M15.5 8v5.5" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
       </svg>
     );
   }
-  if (k.includes('javascript') || k === 'js') {
-    return (
-      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
-        <rect width="24" height="24" rx="4" fill="#F7DF1E" />
-        <path d="M6.7 19.2c.4.7 1 1.2 2.1 1.2 1.1 0 1.8-.5 1.8-1.8v-6.9h2.1v7c0 2.4-1.4 3.5-3.6 3.5-1.9 0-3-.9-3.6-2.1l1.2-.9zm7.9-.2c.5.8 1.2 1.4 2.4 1.4 1 0 1.7-.5 1.7-1.2 0-.8-.7-1.1-1.8-1.6l-.6-.3c-1.8-.8-3-1.7-3-3.7 0-1.8 1.4-3.2 3.6-3.2 1.6 0 2.7.5 3.5 1.9l-1.9 1.2c-.4-.7-.9-1-1.6-1-.7 0-1.2.5-1.2 1 0 .7.5 1 1.6 1.5l.6.3c2.1.9 3.3 1.8 3.3 3.9 0 2.2-1.8 3.4-4.1 3.4-2.3 0-3.8-1.1-4.5-2.5l2-1.1z" fill="#090A0F" />
-      </svg>
-    );
-  }
+
+  // Node.js
   if (k.includes('node')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#5FA04E" aria-hidden="true">
@@ -202,6 +284,8 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // Express.js
   if (k.includes('express')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#F8FAFC" aria-hidden="true">
@@ -209,6 +293,8 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // MongoDB
   if (k.includes('mongo')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#47A248" aria-hidden="true">
@@ -216,6 +302,8 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // MySQL / SQL
   if (k.includes('mysql') || k.includes('sql')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#38BDF8" aria-hidden="true">
@@ -223,27 +311,8 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
-  if (k.includes('python')) {
-    return (
-      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#3776AB" aria-hidden="true">
-        <path d="M11.88 2c-5.05 0-4.73 2.19-4.73 2.19l.01 2.27h4.82v.68H5.25S2 6.77 2 11.84c0 5.07 2.83 4.89 2.83 4.89h1.69v-2.35s-.09-2.83 2.78-2.83h4.79s2.69.04 2.69-2.6V4.61S17.18 2 11.88 2zm-2.66 1.54c.48 0 .87.39.87.87 0 .48-.39.87-.87.87-.48 0-.87-.39-.87-.87 0-.48.39-.87.87-.87zm2.9 18.46c5.05 0 4.73-2.19 4.73-2.19l-.01-2.27h-4.82v-.68h6.73S22 17.23 22 12.16c0-5.07-2.83-4.89-2.83-4.89h-1.69v2.35s.09 2.83-2.78 2.83H9.91s-2.69-.04-2.69 2.6v4.34S6.82 22 12.12 22zm2.66-1.54c-.48 0-.87-.39-.87-.87 0-.48.39-.87.87-.87.48 0 .87.39.87.87 0 .48-.39.87-.87.87z" />
-      </svg>
-    );
-  }
-  if (k.includes('java')) {
-    return (
-      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#ED8B00" aria-hidden="true">
-        <path d="M8.85 18.56s-.92.53.65.71c1.9.22 2.87.19 4.96-.21 0 0 .55.34 1.32.64-4.7 2.01-10.63-.12-6.93-1.14zm-.57-2.63s-1.03.76.54.92c2.04.21 3.65.23 6.44-.31 0 0 .39.39.99.6-5.68 1.66-12.01.13-7.97-1.21zm4.86-4.46c1.16 1.34-.3 2.54-.3 2.54s2.94-1.52 1.59-3.42c-1.26-1.77-2.23-2.65 3.01-5.68 0 0-8.22 2.05-4.3 6.56zm6.23 8.95s.68.56-.75.99c-2.72.82-11.33 1.07-13.72.03-.86-.37.75-.89 1.26-.99.53-.11.83-.09.83-.09-.95-.67-6.17 1.32-2.65 1.89 9.61 1.56 17.53-.7 15.03-1.83z" />
-      </svg>
-    );
-  }
-  if (k === 'c') {
-    return (
-      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#60A5FA" aria-hidden="true">
-        <path d="M16.59 9.19s-.38-3.32-3.92-3.42c-3.54-.1-5.34 2.66-5.34 6.13 0 3.47 1.94 6.34 5.43 6.34 3.49 0 3.83-3.52 3.83-3.52l3.37.2s.2 1.83-1.36 3.65c-1.56 1.83-3.71 2.52-6.15 2.52-2.44 0-5.41-.82-7.21-3.17-1.8-2.35-1.99-5.11-1.99-6.22 0-1.11.27-4.3 2.44-6.52C7.54 3.28 10.1 2.9 12.35 2.9c2.25 0 7.12.92 7.62 6.29h-3.38z" />
-      </svg>
-    );
-  }
+
+  // HTML
   if (k.includes('html')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#E34F26" aria-hidden="true">
@@ -251,6 +320,8 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // CSS
   if (k.includes('css')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#2965F1" aria-hidden="true">
@@ -258,9 +329,13 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // GitHub
   if (k.includes('github')) {
     return <SocialBrandIcon platform="github" className={className} />;
   }
+
+  // Git
   if (k.includes('git')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#F05032" aria-hidden="true">
@@ -268,6 +343,26 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // VS Code
+  if (k.includes('vscode') || k.includes('vs code')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#007ACC" aria-hidden="true">
+        <path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zM18 16.5l-6-4.5 6-4.5v9z" />
+      </svg>
+    );
+  }
+
+  // Cloudinary
+  if (k.includes('cloudinary')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#3448C5" aria-hidden="true">
+        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z" />
+      </svg>
+    );
+  }
+
+  // Postman / REST APIs
   if (k.includes('postman') || k.includes('rest')) {
     return (
       <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#FF6C37" aria-hidden="true">
@@ -275,6 +370,31 @@ export function TechLogo({ name, className = 'h-5 w-5' }) {
       </svg>
     );
   }
+
+  // Data Structures & Algorithms / Problem Solving
+  if (k.includes('dsa') || k.includes('algorithm') || k.includes('problem') || k.includes('structure')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="none" stroke="#00D4FF" strokeWidth="1.8" aria-hidden="true">
+        <circle cx="12" cy="5" r="2.8" fill="#00D4FF" fillOpacity="0.25" />
+        <circle cx="5" cy="19" r="2.8" fill="#00D4FF" fillOpacity="0.25" />
+        <circle cx="19" cy="19" r="2.8" fill="#00D4FF" fillOpacity="0.25" />
+        <path d="M10.2 7.2L6.8 16.5M13.8 7.2L17.2 16.5M7.8 19h8.4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  // Responsive UI
+  if (k.includes('responsive') || k.includes('interface')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="none" stroke="#38BDF8" strokeWidth="1.8" aria-hidden="true">
+        <rect x="2" y="4" width="14" height="12" rx="2" />
+        <path d="M6 20h6M9 16v4" strokeLinecap="round" />
+        <rect x="15" y="8" width="7" height="12" rx="1.5" />
+      </svg>
+    );
+  }
+
+  // Default clean tech cube
   return (
     <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#00D4FF" aria-hidden="true">
       <path d="M12 2L2 7l10 5 10-5-10-5zm0 7.5l-6-3 6-3 6 3-6 3zm0 2.5l-10-5v10l10 5 10-5V7l-10 5z" />
