@@ -38,8 +38,8 @@ loadDotEnvFile();
 function getEnvConfig() {
   return {
     nodeEnv: process.env.NODE_ENV || 'development',
-    port: parseInt(process.env.PORT || '5000', 10),
-    clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    port: parseInt(process.env.PORT || '6000', 10),
+    clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5174',
     mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ayush_portfolio',
     allowFileFallback: (process.env.ALLOW_FILE_DB_FALLBACK || 'true').toLowerCase() === 'true',
     sessionSecret: process.env.SESSION_SECRET || process.env.JWT_SECRET || crypto.createHash('sha256').update(process.cwd() + '-argon-dev-secret').digest('hex'),

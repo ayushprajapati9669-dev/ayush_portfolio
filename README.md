@@ -34,9 +34,9 @@ npm test
 # Seed portfolio database
 npm run seed
 
-# Start backend server (http://localhost:5000)
+# Start backend server (http://localhost:6000)
 npm run dev:server
 
-# Start frontend dev server (http://localhost:5173)
+# Start frontend dev server (http://localhost:5174)
 npm run dev:client
 ```

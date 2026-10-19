@@ -106,7 +106,7 @@
           "note": "ES6+, asynchronous workflows, DOM APIs, and full-stack application logic"
         }
       ],
-      "updatedAt": "2026-10-18T19:32:49.059Z"
+      "updatedAt": "2026-10-19T07:33:08.150Z"
     },
     {
       "id": "skill-cat-frontend",
@@ -136,7 +136,7 @@
           "note": "Cross-viewport layouts engineered for desktop, tablet, and mobile screens"
         }
       ],
-      "updatedAt": "2026-10-18T19:32:49.118Z"
+      "updatedAt": "2026-10-19T07:33:08.210Z"
     },
     {
       "id": "skill-cat-backend",
@@ -161,7 +161,7 @@
           "note": "Resource modeling, request validation, HTTP status semantics, and API testing with Postman"
         }
       ],
-      "updatedAt": "2026-10-18T19:32:49.188Z"
+      "updatedAt": "2026-10-19T07:33:08.232Z"
     },
     {
       "id": "skill-cat-databases",
@@ -181,7 +181,7 @@
           "note": "Relational schema design, normalization, joins, and SQL queries"
         }
       ],
-      "updatedAt": "2026-10-18T19:32:49.256Z"
+      "updatedAt": "2026-10-19T07:33:08.230Z"
     },
     {
       "id": "skill-cat-tools",
@@ -222,6 +222,32 @@
         }
       ],
       "updatedAt": "2026-10-18T19:32:49.380Z"
+    },
+    {
+      "id": "skill-languages",
+      "category": "Languages",
+      "createdAt": "2026-10-19T08:18:17.892Z",
+      "description": "Programming languages from my resume used for DSA and full-stack engineering.",
+      "displayOrder": 1,
+      "items": [
+        {
+          "name": "C",
+          "logoKey": "c"
+        },
+        {
+          "name": "Java",
+          "logoKey": "java"
+        },
+        {
+          "name": "JavaScript",
+          "logoKey": "javascript"
+        },
+        {
+          "name": "Python",
+          "logoKey": "python"
+        }
+      ],
+      "updatedAt": "2026-10-19T08:18:17.892Z"
     }
   ],
   "certificates": [],

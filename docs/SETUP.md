@@ -19,7 +19,7 @@ npm run seed
 # Bootstrap administrator account (min 10-character password)
 node server/scripts/setup-admin.js --username ayush --password "YourStrongAdminPassword#2026"
 
-# Start the backend API server on http://localhost:5000
+# Start the backend API server on http://localhost:6000
 npm run dev:server
 
 # Run the automated backend & security test suite
