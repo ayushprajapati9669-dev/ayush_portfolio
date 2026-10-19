@@ -46,6 +46,13 @@ function createAdminController({ store, config }) {
       if (Array.isArray(body.aboutBio)) {
         patch.aboutBio = body.aboutBio.map(p => sanitizeText(String(p), 1000)).filter(Boolean);
       }
+      if (Array.isArray(body.learningJourney)) {
+        patch.learningJourney = body.learningJourney.map(item => ({
+          phase: sanitizeText(item.phase || '', 120),
+          title: sanitizeText(item.title || '', 200),
+          description: sanitizeText(item.description || '', 1000)
+        })).filter(item => item.title || item.description);
+      }
       if (body.socialLinks && typeof body.socialLinks === 'object') {
         for (const k of ['github', 'linkedin', 'instagram']) {
           if (body.socialLinks[k] !== undefined && !isValidUrlOrEmpty(body.socialLinks[k])) {

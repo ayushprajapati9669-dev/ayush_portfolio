@@ -61,8 +61,12 @@ export function ProjectsPage({ viewMode = 'projects' }) {
     <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 pt-12 space-y-10">
       <div className="border-b hairline-border pb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeProjectsEyebrow}</p>
-          <h1 className="mt-2 font-display text-4xl sm:text-5xl font-extrabold text-alabaster">{ui.homeProjectsHeading}</h1>
+          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
+            {ui.homeProjectsEyebrow || '02 · LIVE DEPLOYED PROJECTS'}
+          </p>
+          <h1 className="mt-2 font-display text-4xl sm:text-5xl font-extrabold text-alabaster">
+            {ui.homeProjectsHeading || 'Featured Full-Stack Applications'}
+          </h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {categories.map((cat) => (

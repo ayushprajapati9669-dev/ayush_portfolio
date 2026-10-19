@@ -47,26 +47,26 @@ export function getDefaultPortfolioState() {
       headerSubtitle: 'Full-Stack Developer · CSE | SISTec, Bhopal',
       email: 'ayushprajapati9669@gmail.com',
       phone: '(+91) 9669802554',
-      eyebrow: 'FULL-STACK MERN DEVELOPER · B.TECH CSE (2026)',
+      eyebrow: 'FULL-STACK MERN DEVELOPER · B.TECH CSE (2028)',
       headline: 'Building modern, scalable full-stack web applications.',
       supportingHeadline: "Hi, I'm Ayush Prajapati — CS Undergrad & Full-Stack Developer.",
       heroDescription: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42) skilled in C, Java, JavaScript, Python, React.js, Node.js, Express.js, MySQL, and MongoDB. Winner of a college website-making competition.',
-      availabilityLabel: 'CSE @ SISTec, Bhopal · CGPA: 8.42 (2026)',
+      availabilityLabel: 'CSE @ SISTec, Bhopal · CGPA: 8.42 (2028)',
       primaryCtaText: 'Explore Live Projects',
       secondaryCtaText: "Let's Connect",
       footerTagline: 'Ayush Prajapati · ayushprajapati9669@gmail.com · (+91) 9669802554 · SISTec, Bhopal',
       resumeUrl: '',
       resumePreviewUrl: '/images/ayush-resume-preview.jpg',
-      resumeSummary: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42, 2026) with strong foundations in C, Java, JavaScript, and Python, and hands-on expertise in building full-stack web applications using HTML, CSS, Bootstrap, React.js, Node.js, Express.js, MySQL, MongoDB, and Cloudinary.',
+      resumeSummary: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42, 2028) with strong foundations in C, Java, JavaScript, and Python, and hands-on expertise in building full-stack web applications using HTML, CSS, Bootstrap, React.js, Node.js, Express.js, MySQL, MongoDB, and Cloudinary.',
       education: {
         degree: 'B.Tech in Computer Science & Engineering (CSE)',
         college: 'SISTec (Sagar Institute of Science and Technology), Bhopal',
-        cgpa: 'CGPA: 8.42 | (2026)',
+        cgpa: 'CGPA: 8.42 | (2028)',
         schoolBoard: 'Class XII (MP Board)',
         schoolXII: 'Kasturba Vidhya Mandir, Jamani, Madhya Pradesh',
         schoolScore: '83.5% | 2022',
         location: 'Bhopal, Madhya Pradesh, India',
-        stage: 'CGPA: 8.42 · Batch of 2026'
+        stage: 'CGPA: 8.42 · Batch of 2024–2028'
       },
       achievements: [
         'Won a website-making competition at college.',
@@ -93,7 +93,7 @@ export function getDefaultPortfolioState() {
         }
       ],
       aboutBio: [
-        'I am Ayush Prajapati, a Computer Science & Engineering (CSE) undergraduate at SISTec, Bhopal (2026 batch) maintaining a CGPA of 8.42, after completing my Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani, Madhya Pradesh with 83.5% in 2022.',
+        'I am Ayush Prajapati, a Computer Science & Engineering (CSE) undergraduate at SISTec, Bhopal (2024–2028 batch) maintaining a CGPA of 8.42, after completing my Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani, Madhya Pradesh with 83.5% in 2022.',
         'My core technical stack spans programming in C, Java, JavaScript, and Python alongside full-stack web engineering with HTML, CSS, Bootstrap, React.js, Node.js, Express.js, MySQL, MongoDB, Git, and GitHub.',
         'I have built and deployed real-world full-stack applications—including a live Airbnb Clone on Render, a Stock Trading Platform with Market/Limit order execution, and a ChatGPT Clone powered by the Gemini API—and won a website-making competition at my college.'
       ],
@@ -117,9 +117,9 @@ export function getDefaultPortfolioState() {
       ],
       learningJourney: [
         {
-          phase: 'EDUCATION · 2022 – 2026',
+          phase: 'EDUCATION · 2024 – 2028',
           title: 'B.Tech CSE — SISTec, Bhopal (CGPA: 8.42)',
-          description: 'Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA. Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022).'
+          description: 'Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022).'
         },
         {
           phase: 'ACADEMIC PROJECTS · MERN & AI',

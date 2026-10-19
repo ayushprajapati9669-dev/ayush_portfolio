@@ -4,6 +4,18 @@ import { SocialIconButtons } from '../../components/common/TechLogos';
 import { validateContactForm } from '../../utils/validation';
 import { apiRequest } from '../../services/api';
 
+function FormErrorMessage({ message }) {
+  if (!message) return null;
+  return (
+    <div className="mt-1.5 flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-xs text-red-300 shadow-sm backdrop-blur-sm">
+      <svg className="h-3.5 w-3.5 shrink-0 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+      </svg>
+      <span>{message}</span>
+    </div>
+  );
+}
+
 export function ContactPage() {
   const { appState, updateAppState, showToast } = usePortfolio();
   const p = appState.profile || {};
@@ -118,7 +130,7 @@ export function ContactPage() {
                     errors.name ? 'border-vermilion ring-1 ring-vermilion' : 'border-white/15'
                   }`}
                 />
-                {errors.name && <p className="mt-1.5 font-mono text-[11px] text-vermilion">⚠ {errors.name}</p>}
+                <FormErrorMessage message={errors.name} />
               </div>
 
               <div>
@@ -135,7 +147,7 @@ export function ContactPage() {
                     errors.email ? 'border-vermilion ring-1 ring-vermilion' : 'border-white/15'
                   }`}
                 />
-                {errors.email && <p className="mt-1.5 font-mono text-[11px] text-vermilion">⚠ {errors.email}</p>}
+                <FormErrorMessage message={errors.email} />
               </div>
             </div>
 
@@ -153,7 +165,7 @@ export function ContactPage() {
                   errors.subject ? 'border-vermilion ring-1 ring-vermilion' : 'border-white/15'
                 }`}
               />
-              {errors.subject && <p className="mt-1.5 font-mono text-[11px] text-vermilion">⚠ {errors.subject}</p>}
+              <FormErrorMessage message={errors.subject} />
             </div>
 
             <div>
@@ -170,7 +182,7 @@ export function ContactPage() {
                   errors.message ? 'border-vermilion ring-1 ring-vermilion' : 'border-white/15'
                 }`}
               />
-              {errors.message && <p className="mt-1.5 font-mono text-[11px] text-vermilion">⚠ {errors.message}</p>}
+              <FormErrorMessage message={errors.message} />
             </div>
 
             <button

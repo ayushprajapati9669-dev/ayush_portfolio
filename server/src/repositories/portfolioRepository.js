@@ -444,6 +444,9 @@ class PortfolioDataStore {
     if (payload.settings && typeof payload.settings === 'object') {
       this.state.settings = { ...this.state.settings, ...payload.settings };
     }
+    if (payload.uiLabels && typeof payload.uiLabels === 'object') {
+      this.state.uiLabels = { ...(this.state.uiLabels || {}), ...payload.uiLabels };
+    }
     this._persist();
     return {
       profile: this.getProfile(),
@@ -451,7 +454,8 @@ class PortfolioDataStore {
       skills: this.getSkills(),
       certificates: this.getCertificates(),
       resumes: this.getResumes(),
-      settings: this.getSettings()
+      settings: this.getSettings(),
+      uiLabels: this.state.uiLabels || {}
     };
   }
 

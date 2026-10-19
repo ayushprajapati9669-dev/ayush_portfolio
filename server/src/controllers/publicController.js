@@ -19,7 +19,8 @@ function createPublicController({ store, contactLimiter }) {
         skills: store.getSkills(),
         certificates: store.getCertificates(),
         resumes: store.getResumes ? store.getResumes() : (store.state.resumes || []),
-        settings: store.getSettings()
+        settings: store.getSettings(),
+        uiLabels: store.state.uiLabels || {}
       });
     },
 

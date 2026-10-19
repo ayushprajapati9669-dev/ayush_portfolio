@@ -96,7 +96,8 @@ export function ThemeProvider({ children }) {
             skills: Array.isArray(res.skills) && res.skills.length > 0 ? res.skills : prev.skills,
             certificates: Array.isArray(res.certificates) ? res.certificates : [],
             resumes: Array.isArray(res.resumes) ? res.resumes : (prev.resumes || []),
-            settings: { ...prev.settings, ...(res.settings || {}) }
+            settings: { ...prev.settings, ...(res.settings || {}) },
+            uiLabels: { ...prev.uiLabels, ...(res.uiLabels || {}) }
           }));
         }
       })

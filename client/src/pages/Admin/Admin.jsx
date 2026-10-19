@@ -96,6 +96,14 @@ export function AdminPage() {
   });
   const [certErrors, setCertErrors] = useState({});
 
+  const [editingJourneyIdx, setEditingJourneyIdx] = useState(null);
+  const [journeyForm, setJourneyForm] = useState({
+    phase: '',
+    title: '',
+    description: ''
+  });
+  const [journeyErrors, setJourneyErrors] = useState({});
+
   const [skillForm, setSkillForm] = useState({
     catId: appState.skills?.[0]?.id || 'skill-languages',
     name: '',
@@ -437,6 +445,102 @@ export function AdminPage() {
     showToast(`Added "${name}" to skills.`);
   };
 
+  const handleSaveJourney = (e) => {
+    e.preventDefault();
+    const errs = {};
+    if (!journeyForm.phase.trim()) errs.phase = 'Phase / Category is required (e.g. EDUCATION · 2024 – 2028).';
+    if (!journeyForm.title.trim()) errs.title = 'Title is required.';
+    if (!journeyForm.description.trim()) errs.description = 'Description is required.';
+    if (Object.keys(errs).length > 0) {
+      setJourneyErrors(errs);
+      return;
+    }
+
+    const newItem = {
+      phase: journeyForm.phase.trim(),
+      title: journeyForm.title.trim(),
+      description: journeyForm.description.trim()
+    };
+
+    updateAppState((prev) => {
+      const list = [...(prev.profile?.learningJourney || [])];
+      if (editingJourneyIdx !== null && editingJourneyIdx >= 0 && editingJourneyIdx < list.length) {
+        list[editingJourneyIdx] = newItem;
+      } else {
+        list.push(newItem);
+      }
+      return {
+        ...prev,
+        profile: {
+          ...prev.profile,
+          learningJourney: list
+        }
+      };
+    }, session.token);
+
+    showToast(editingJourneyIdx !== null ? `Milestone "${newItem.title}" updated.` : `Added new milestone "${newItem.title}".`);
+    setEditingJourneyIdx(null);
+    setJourneyForm({ phase: '', title: '', description: '' });
+    setJourneyErrors({});
+  };
+
+  const handleEditJourney = (idx) => {
+    const list = appState.profile?.learningJourney || [];
+    const item = list[idx];
+    if (item) {
+      setEditingJourneyIdx(idx);
+      setJourneyForm({
+        phase: item.phase || '',
+        title: item.title || '',
+        description: item.description || ''
+      });
+      setJourneyErrors({});
+    }
+  };
+
+  const handleDeleteJourney = (idx) => {
+    const list = appState.profile?.learningJourney || [];
+    const item = list[idx];
+    openConfirmModal(
+      'Delete Milestone',
+      `Are you sure you want to delete "${item?.title || 'this milestone'}"?`,
+      () => {
+        updateAppState((prev) => {
+          const updated = [...(prev.profile?.learningJourney || [])];
+          updated.splice(idx, 1);
+          return {
+            ...prev,
+            profile: {
+              ...prev.profile,
+              learningJourney: updated
+            }
+          };
+        }, session.token);
+        if (editingJourneyIdx === idx) {
+          setEditingJourneyIdx(null);
+          setJourneyForm({ phase: '', title: '', description: '' });
+        }
+        showToast('Milestone deleted successfully.');
+      }
+    );
+  };
+
+  const handleMoveJourney = (idx, direction) => {
+    const list = [...(appState.profile?.learningJourney || [])];
+    const targetIdx = idx + direction;
+    if (targetIdx < 0 || targetIdx >= list.length) return;
+    const temp = list[idx];
+    list[idx] = list[targetIdx];
+    list[targetIdx] = temp;
+    updateAppState((prev) => ({
+      ...prev,
+      profile: {
+        ...prev.profile,
+        learningJourney: list
+      }
+    }), session.token);
+  };
+
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
     const errs = {};
@@ -499,6 +603,7 @@ export function AdminPage() {
           { id: 'projects', label: `Projects (${publishedCount})` },
           { id: 'certificates', label: `Certificates (${certCount})` },
           { id: 'skills', label: `Skills (${(appState.skills || []).length} Tabs)` },
+          { id: 'journey', label: `About Milestones (${(appState.profile?.learningJourney || []).length})` },
           { id: 'profile', label: 'Profile & Resume' },
           { id: 'media', label: 'Hero Portrait' },
           { id: 'messages', label: `Messages (${unreadMsgCount})` },
@@ -544,7 +649,7 @@ export function AdminPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <button
               type="button"
               onClick={() => setActiveTab('projects')}
@@ -563,10 +668,18 @@ export function AdminPage() {
             </button>
             <button
               type="button"
+              onClick={() => setActiveTab('journey')}
+              className="glass-card glass-card-hover rounded-2xl p-6 text-left space-y-1.5 transition-all hover:-translate-y-0.5"
+            >
+              <span className="font-mono text-xs text-amberwarm font-bold">03 · ABOUT & MILESTONES</span>
+              <h3 className="font-display text-lg font-bold text-white">Edit Academic Highlights</h3>
+            </button>
+            <button
+              type="button"
               onClick={() => setActiveTab('security')}
               className="glass-card glass-card-hover rounded-2xl p-6 text-left space-y-1.5 transition-all hover:-translate-y-0.5"
             >
-              <span className="font-mono text-xs text-sage font-bold">03 · SECURITY</span>
+              <span className="font-mono text-xs text-sage font-bold">04 · SECURITY</span>
               <h3 className="font-display text-lg font-bold text-white">Update Admin Password</h3>
             </button>
           </div>
@@ -575,6 +688,50 @@ export function AdminPage() {
 
       {activeTab === 'projects' && (
         <div className="space-y-8">
+          {/* Live Headings Customizer for Projects Page & Home */}
+          <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-4 border border-white/10">
+            <div className="border-b hairline-border pb-3 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-vermilion font-bold">PROJECTS SECTION HEADINGS</span>
+                <h3 className="font-display text-lg font-bold text-alabaster">Live Page Titles & Subtitles</h3>
+                <p className="text-xs text-stonewarm mt-0.5">Customize the heading and eyebrow displayed on the Projects page and Home section dynamically.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Eyebrow Tag (e.g. 02 · LIVE DEPLOYED PROJECTS)</label>
+                <input
+                  type="text"
+                  value={appState.uiLabels?.homeProjectsEyebrow ?? '02 · LIVE DEPLOYED PROJECTS'}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      uiLabels: { ...prev.uiLabels, homeProjectsEyebrow: e.target.value }
+                    }), session.token)
+                  }
+                  placeholder="02 · LIVE DEPLOYED PROJECTS"
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+              </div>
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">Main Heading (e.g. Featured Full-Stack Applications)</label>
+                <input
+                  type="text"
+                  value={appState.uiLabels?.homeProjectsHeading ?? 'Featured Full-Stack Applications'}
+                  onChange={(e) =>
+                    updateAppState((prev) => ({
+                      ...prev,
+                      uiLabels: { ...prev.uiLabels, homeProjectsHeading: e.target.value }
+                    }), session.token)
+                  }
+                  placeholder="Featured Full-Stack Applications"
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+              </div>
+            </div>
+          </div>
+
           <form onSubmit={handleSaveProject} noValidate className="glass-card rounded-3xl p-6 sm:p-8 space-y-5">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-xl font-bold text-alabaster">
@@ -1021,6 +1178,179 @@ export function AdminPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'journey' && (
+        <div className="space-y-8">
+          {/* Section 1: Section Title Customization */}
+          <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-4">
+            <div className="border-b hairline-border pb-3">
+              <span className="font-mono text-xs uppercase tracking-widest text-vermilion font-bold">ABOUT PAGE SECTION HEADER</span>
+              <h2 className="font-display text-xl font-bold text-alabaster">Journey & Milestones Header</h2>
+              <p className="text-xs text-stonewarm mt-0.5">Title displayed above the achievements and academic projects cards on the About page.</p>
+            </div>
+            <div>
+              <label className="block font-mono text-xs text-stonewarm mb-1">Section Header Text</label>
+              <input
+                type="text"
+                value={appState.uiLabels?.aboutJourneyHeading ?? 'ACHIEVEMENTS & ACADEMIC PROJECTS'}
+                onChange={(e) =>
+                  updateAppState((prev) => ({
+                    ...prev,
+                    uiLabels: { ...prev.uiLabels, aboutJourneyHeading: e.target.value }
+                  }), session.token)
+                }
+                placeholder="ACHIEVEMENTS & ACADEMIC PROJECTS"
+                className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+              />
+            </div>
+          </div>
+
+          {/* Section 2: Create / Edit Milestone Card */}
+          <form onSubmit={handleSaveJourney} noValidate className="glass-card rounded-3xl p-6 sm:p-8 space-y-5">
+            <div className="flex items-center justify-between border-b hairline-border pb-3">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-amberwarm font-bold">
+                  {editingJourneyIdx !== null ? `EDIT MILESTONE #${editingJourneyIdx + 1}` : 'NEW MILESTONE'}
+                </span>
+                <h2 className="font-display text-xl font-bold text-alabaster">
+                  {editingJourneyIdx !== null ? 'Update Milestone / Academic Card' : 'Add New Academic Milestone / Achievement'}
+                </h2>
+              </div>
+              {editingJourneyIdx !== null && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingJourneyIdx(null);
+                    setJourneyForm({ phase: '', title: '', description: '' });
+                    setJourneyErrors({});
+                  }}
+                  className="font-mono text-xs text-stonewarm hover:text-alabaster"
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">
+                  Phase / Badge Tag * (e.g. EDUCATION · 2024 – 2028, ACADEMIC PROJECTS · MERN & AI)
+                </label>
+                <input
+                  type="text"
+                  value={journeyForm.phase}
+                  onChange={(e) => setJourneyForm({ ...journeyForm, phase: e.target.value })}
+                  placeholder="EDUCATION · 2024 – 2028"
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+                <FormErrorMessage message={journeyErrors.phase} />
+              </div>
+              <div>
+                <label className="block font-mono text-xs text-stonewarm mb-1">
+                  Card Title * (e.g. B.Tech CSE — SISTec, Bhopal (CGPA: 8.42))
+                </label>
+                <input
+                  type="text"
+                  value={journeyForm.title}
+                  onChange={(e) => setJourneyForm({ ...journeyForm, title: e.target.value })}
+                  placeholder="B.Tech CSE — SISTec, Bhopal (CGPA: 8.42)"
+                  className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-sm text-alabaster"
+                />
+                <FormErrorMessage message={journeyErrors.title} />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-mono text-xs text-stonewarm mb-1">Description / Summary *</label>
+              <textarea
+                rows={3}
+                value={journeyForm.description}
+                onChange={(e) => setJourneyForm({ ...journeyForm, description: e.target.value })}
+                placeholder="Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal..."
+                className="w-full rounded-xl border border-white/15 bg-obsidian p-3 text-xs text-alabaster leading-relaxed"
+              />
+              <FormErrorMessage message={journeyErrors.description} />
+            </div>
+
+            <div className="pt-2 flex items-center gap-3">
+              <button
+                type="submit"
+                className="focus-ring rounded-full bg-vermilion px-6 py-2.5 font-mono text-xs font-bold text-obsidian shadow-lg shadow-vermilion/20 hover:opacity-95"
+              >
+                {editingJourneyIdx !== null ? 'Save Milestone Changes' : '+ Add Milestone Card'}
+              </button>
+            </div>
+          </form>
+
+          {/* Section 3: Existing Milestones Cards List */}
+          <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-4">
+            <div className="border-b hairline-border pb-3 flex items-center justify-between">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-cyanglow font-bold">CURRENT ABOUT PAGE CARDS</span>
+                <h3 className="font-display text-lg font-bold text-alabaster">
+                  Active Milestones & Achievements ({(appState.profile?.learningJourney || []).length})
+                </h3>
+              </div>
+            </div>
+
+            {(!appState.profile?.learningJourney || appState.profile.learningJourney.length === 0) ? (
+              <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-stonewarm font-mono text-xs">
+                No milestone cards added yet. Use the form above to add your education, academic projects, or achievements.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {appState.profile.learningJourney.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-2xl border border-white/10 bg-obsidian/70 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4 transition-all hover:border-white/20"
+                  >
+                    <div className="space-y-1.5 flex-1 border-l-2 border-vermilion/50 pl-3">
+                      <span className="font-mono text-[11px] font-semibold text-amberwarm">{item.phase}</span>
+                      <h4 className="font-display text-base font-bold text-alabaster">{item.title}</h4>
+                      <p className="text-xs text-stonewarm leading-relaxed">{item.description}</p>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => handleMoveJourney(idx, -1)}
+                        title="Move Up"
+                        className="rounded-lg border border-white/10 bg-charcoal px-2.5 py-1.5 font-mono text-xs text-stonewarm hover:text-white disabled:opacity-30"
+                      >
+                        ↑
+                      </button>
+                      <button
+                        type="button"
+                        disabled={idx === appState.profile.learningJourney.length - 1}
+                        onClick={() => handleMoveJourney(idx, 1)}
+                        title="Move Down"
+                        className="rounded-lg border border-white/10 bg-charcoal px-2.5 py-1.5 font-mono text-xs text-stonewarm hover:text-white disabled:opacity-30"
+                      >
+                        ↓
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEditJourney(idx)}
+                        className="rounded-lg border border-cyanglow/30 bg-charcoal px-3 py-1.5 font-mono text-xs text-cyanglow hover:bg-cyanglow hover:text-obsidian transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteJourney(idx)}
+                        className="rounded-lg border border-vermilion/30 bg-charcoal px-3 py-1.5 font-mono text-xs text-vermilion hover:bg-vermilion hover:text-obsidian transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

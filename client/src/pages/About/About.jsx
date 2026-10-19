@@ -7,6 +7,7 @@ export function AboutPage() {
   const { appState } = usePortfolio();
   const navigate = useNavigate();
   const p = appState.profile || {};
+  const ui = appState.uiLabels || {};
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 pt-12 space-y-14">
@@ -75,7 +76,7 @@ export function AboutPage() {
 
           <div className="glass-card rounded-3xl p-6 space-y-4">
             <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
-              ACHIEVEMENTS & ACADEMIC PROJECTS
+              {ui.aboutJourneyHeading || 'ACHIEVEMENTS & ACADEMIC PROJECTS'}
             </p>
             <div className="space-y-4">
               {(p.learningJourney || []).map((step, i) => (

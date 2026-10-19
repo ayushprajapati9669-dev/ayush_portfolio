@@ -41,19 +41,19 @@ const INITIAL_SEED_DATA = {
     ],
     learningJourney: [
       {
-        phase: "Foundation · Year 1–2",
-        title: "Core Programming & Computer Science Fundamentals",
-        description: "Built a strong foundation in C, Java, Python, object-oriented programming, relational databases (MySQL), and HTML/CSS layouts at SISTec, Bhopal."
+        phase: "EDUCATION · 2024 – 2028",
+        title: "B.Tech CSE — SISTec, Bhopal (CGPA: 8.42)",
+        description: "Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022)."
       },
       {
-        phase: "Full-Stack Practice · Year 3",
-        title: "MERN Stack & Interactive Systems",
-        description: "Transitioned to full-stack JavaScript engineering with React.js, Node.js, Express.js, and MongoDB—building a Zerodha-inspired trading dashboard and a ChatGPT-inspired conversational AI workspace."
+        phase: "ACADEMIC PROJECTS · MERN & AI",
+        title: "Stock Trading Platform & Gemini AI ChatGPT Clone",
+        description: "Engineered a full-stack Stock Trading Platform (holdings, orders, positions, funds, Market/Limit Buy & Sell) and a ChatGPT Clone using React.js, Node.js, Express.js, MongoDB, and Gemini API."
       },
       {
-        phase: "Current Focus · Present",
-        title: "Algorithmic Depth & AI/ML Integration",
-        description: "Deepening Data Structures and Algorithms fluency while exploring practical AI/ML integration and targeting software engineering internship opportunities."
+        phase: "ACHIEVEMENTS & LIVE DEPLOYMENTS",
+        title: "Airbnb Clone Live Deployment & Competition Winner",
+        description: "Won a website-making competition at college, completed the Apna College Delta Full-Stack Web Development course, and deployed a live Airbnb Clone on Render."
       }
     ],
     socialLinks: {
