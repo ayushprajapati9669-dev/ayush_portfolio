@@ -11,27 +11,27 @@ export function validateContactForm({ name, email, subject, message }) {
   const cleanMessage = String(message || '').trim();
 
   if (!cleanName) {
-    errors.name = 'Name is required. Please enter your full name.';
+    errors.name = 'Please enter your full name.';
   } else if (cleanName.length < 2) {
-    errors.name = 'Name must be at least 2 characters long.';
+    errors.name = 'Name must be at least 2 characters.';
   }
 
   if (!cleanEmail) {
-    errors.email = 'Email address is required so Ayush can reply.';
+    errors.email = 'Please enter your email address.';
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
     errors.email = 'Please enter a valid email address (e.g. name@domain.com).';
   }
 
   if (!cleanSubject) {
-    errors.subject = 'Subject is required.';
+    errors.subject = 'Please enter a subject.';
   } else if (cleanSubject.length < 3) {
     errors.subject = 'Subject must be at least 3 characters.';
   }
 
   if (!cleanMessage) {
-    errors.message = 'Message body cannot be empty.';
+    errors.message = 'Please enter your message.';
   } else if (cleanMessage.length < 10) {
-    errors.message = 'Please write at least 10 characters in your message.';
+    errors.message = 'Message must be at least 10 characters.';
   }
 
   return {

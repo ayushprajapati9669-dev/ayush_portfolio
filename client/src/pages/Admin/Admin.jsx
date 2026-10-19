@@ -172,7 +172,7 @@ export function AdminPage() {
             <p className="text-xs leading-relaxed text-stonewarm">
               {authMode === 'forgot'
                 ? 'Verify your registered email (ayushprajapati9669@gmail.com) and phone number (9669802554) to create a new admin password.'
-                : 'Authorized access only. Sign in with your personal administrator credentials to manage projects, certificates, skills, and MongoDB/Cloudinary settings.'}
+                : 'Authorized access only. Sign in with your administrator credentials to manage projects, certificates, skills, and portfolio content.'}
             </p>
           </div>
 
@@ -367,7 +367,7 @@ export function AdminPage() {
       };
     }, session.token);
 
-    showToast(editingProjId ? `Updated "${projForm.title}" in MongoDB.` : `Created "${projForm.title}" in MongoDB.`);
+    showToast(editingProjId ? `Project "${projForm.title}" updated successfully.` : `Project "${projForm.title}" published successfully.`);
     setEditingProjId(null);
     setProjForm({
       title: '',
@@ -471,7 +471,7 @@ export function AdminPage() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b hairline-border pb-5">
         <div>
           <p className="font-mono text-xs uppercase tracking-widest text-sage">
-            ● AUTHENTICATED ADMIN · MONGODB + CLOUDINARY PERSISTENCE ACTIVE
+            ● ACTIVE SESSION · VERIFIED ADMINISTRATOR
           </p>
           <h1 className="font-display text-3xl font-extrabold text-alabaster">Portfolio Admin CMS</h1>
         </div>
@@ -537,8 +537,10 @@ export function AdminPage() {
               </p>
             </div>
             <div className="glass-card rounded-2xl p-5">
-              <p className="font-mono text-xs text-stonewarm">STORAGE ENGINE</p>
-              <p className="mt-2 font-display text-xl font-extrabold text-alabaster">MongoDB + Cloudinary</p>
+              <p className="font-mono text-xs text-stonewarm">SYSTEM STATUS</p>
+              <p className="mt-2 font-display text-base font-bold text-sage flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-sage animate-pulse" /> All Systems Online
+              </p>
             </div>
           </div>
 
@@ -665,7 +667,7 @@ export function AdminPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-12 items-center rounded-2xl border border-white/10 bg-obsidian p-4">
               <div className="sm:col-span-8 space-y-2">
                 <label className="block font-mono text-xs text-cyanglow font-bold">
-                  Project Cover Image (Upload via Cloudinary / Local File) *
+                  Project Cover Image *
                 </label>
                 <input
                   type="file"
@@ -673,7 +675,7 @@ export function AdminPage() {
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
-                    showToast('Uploading project image via Cloudinary...');
+                    showToast('Uploading project image...');
                     const url = await uploadImageViaCloudinary(file, appState.settings);
                     if (url) {
                       setProjForm((prev) => ({ ...prev, thumbnailUrl: url }));
@@ -686,7 +688,7 @@ export function AdminPage() {
                   type="text"
                   value={projForm.thumbnailUrl}
                   onChange={(e) => setProjForm({ ...projForm, thumbnailUrl: e.target.value })}
-                  placeholder="Or paste Cloudinary / direct image URL (https://...)"
+                  placeholder="Or paste direct image URL (https://...)"
                   className="w-full rounded-xl border border-white/15 bg-charcoal px-3.5 py-2 text-xs text-alabaster"
                 />
                 <FormErrorMessage message={projErrors.thumbnailUrl} />
@@ -719,7 +721,7 @@ export function AdminPage() {
                 type="submit"
                 className="focus-ring rounded-full bg-vermilion px-6 py-2.5 text-xs font-bold text-obsidian shadow-lg shadow-vermilion/20"
               >
-                {editingProjId ? 'Update Project in MongoDB' : '+ Save & Publish Project'}
+                {editingProjId ? 'Save Changes' : '+ Save & Publish Project'}
               </button>
             </div>
           </form>
@@ -765,7 +767,7 @@ export function AdminPage() {
                     onClick={() =>
                       openConfirmModal(
                         `Delete "${proj.title}"?`,
-                        'This project will be permanently removed from MongoDB.',
+                        'This project will be permanently removed from your portfolio.',
                         () => {
                           updateAppState((prev) => ({
                             ...prev,
@@ -790,7 +792,7 @@ export function AdminPage() {
         <div className="space-y-8">
           <form onSubmit={handleSaveCertificate} noValidate className="glass-card rounded-3xl p-6 sm:p-8 space-y-4">
             <h2 className="font-display text-xl font-bold text-alabaster">
-              {editingCertId ? 'Edit Certificate' : 'Upload New Certificate to Cloudinary / MongoDB'}
+              {editingCertId ? 'Edit Certificate' : 'Add New Certificate'}
             </h2>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -922,7 +924,7 @@ export function AdminPage() {
                   <button
                     type="button"
                     onClick={() =>
-                      openConfirmModal('Delete Certificate?', 'This certificate will be permanently removed from MongoDB.', () => {
+                      openConfirmModal('Delete Certificate?', 'This certificate will be permanently removed from your portfolio.', () => {
                         updateAppState((prev) => ({
                           ...prev,
                           certificates: (prev.certificates || []).filter((c) => c.id !== cert.id)
@@ -1540,7 +1542,7 @@ export function AdminPage() {
                 <div className="rounded-2xl border border-white/10 bg-obsidian p-5 space-y-3">
                   <span className="font-mono text-xs uppercase tracking-wider text-cyanglow font-bold">OPTION B · DIRECT RESUME URL</span>
                   <p className="text-xs text-stonewarm">
-                    Or enter a direct Google Drive, Cloudinary, or AWS link to your resume:
+                    Or enter a direct link to your hosted resume (Google Drive, Cloud Storage, etc.):
                   </p>
                   <div className="flex gap-2">
                     <input
@@ -1620,7 +1622,7 @@ export function AdminPage() {
           <div className="lg:col-span-7 glass-card rounded-3xl p-6 space-y-5">
             <h2 className="font-display text-xl font-bold text-alabaster">Hero Portrait Manager</h2>
             <div>
-              <label className="block font-mono text-xs text-stonewarm mb-1.5">Upload New Hero Photo (Cloudinary)</label>
+              <label className="block font-mono text-xs text-stonewarm mb-1.5">Upload New Profile Photo</label>
               <input
                 type="file"
                 accept="image/*"
@@ -1636,7 +1638,7 @@ export function AdminPage() {
                         portrait: { ...prev.profile.portrait, url }
                       }
                     }), session.token);
-                    showToast('Hero portrait uploaded via Cloudinary & saved.');
+                    showToast('Profile photo updated successfully.');
                   }
                 }}
                 className="w-full rounded-xl border border-white/15 bg-obsidian px-3.5 py-2.5 text-xs text-alabaster"

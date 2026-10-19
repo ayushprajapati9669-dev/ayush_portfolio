@@ -34,20 +34,52 @@ export function ThemeProvider({ children }) {
     }
   });
 
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastData, setToastData] = useState(null);
   const [confirmState, setConfirmState] = useState({ open: false, title: '', desc: '', onConfirm: null });
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
   const [activeCertLightbox, setActiveCertLightbox] = useState(null);
 
-  const showToast = useCallback((msg) => {
-    setToastMessage(msg);
+  const showToast = useCallback((msg, type = null) => {
+    if (!msg) {
+      setToastData(null);
+      return;
+    }
+    let detectedType = type;
+    if (!detectedType) {
+      const lower = String(msg).toLowerCase();
+      if (lower.includes('error') || lower.includes('fail') || lower.includes('invalid') || lower.includes('warning') || lower.includes('required')) {
+        detectedType = 'error';
+      } else if (lower.includes('delete') || lower.includes('remove')) {
+        detectedType = 'info';
+      } else if (
+        lower.includes('success') ||
+        lower.includes('saved') ||
+        lower.includes('updated') ||
+        lower.includes('sent') ||
+        lower.includes('created') ||
+        lower.includes('ready') ||
+        lower.includes('verified') ||
+        lower.includes('added') ||
+        lower.includes('welcome') ||
+        lower.includes('copied')
+      ) {
+        detectedType = 'success';
+      } else {
+        detectedType = 'info';
+      }
+    }
+    setToastData({ message: msg, type: detectedType });
+  }, []);
+
+  const hideToast = useCallback(() => {
+    setToastData(null);
   }, []);
 
   useEffect(() => {
-    if (!toastMessage) return undefined;
-    const t = setTimeout(() => setToastMessage(''), 4000);
+    if (!toastData) return undefined;
+    const t = setTimeout(() => setToastData(null), 4000);
     return () => clearTimeout(t);
-  }, [toastMessage]);
+  }, [toastData]);
 
   useEffect(() => {
     document.title = appState.settings?.siteTitle || `${appState.profile?.name || 'Ayush Prajapati'} — Portfolio`;
@@ -146,9 +178,10 @@ export function ThemeProvider({ children }) {
       value={{
         appState,
         updateAppState,
-        toastMessage,
+        toastMessage: toastData?.message || '',
+        toastData,
         showToast,
-        hideToast: () => setToastMessage(''),
+        hideToast,
         confirmState,
         openConfirmModal,
         closeConfirmModal,
