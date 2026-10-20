@@ -24,18 +24,7 @@ export function AdminOverview({
 
   // 3D tilt and entrance animations for stat cards
   useEffect(() => {
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-
-    if (statsGridRef.current) {
-      gsap.from(statsGridRef.current.querySelectorAll('.stat-card'), {
-        y: 25,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'back.out(1.2)'
-      });
-    }
+    // Stat cards remain 100% visible and interactive immediately
   }, []);
 
   // Assemble dynamic activities from real state + system events

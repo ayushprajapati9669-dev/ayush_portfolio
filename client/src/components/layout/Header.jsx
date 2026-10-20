@@ -37,18 +37,14 @@ export function Header() {
 
   const navItems = [
     { name: ui.navHome || 'Home', path: '/', icon: 'fa-house' },
-    { name: ui.navAbout || 'About', path: '/about', icon: 'fa-regular fa-user' },
+    { name: ui.navAbout || 'About', path: '/about', icon: 'fa-user' },
     { name: ui.navSkills || 'Skills', path: '/skills', icon: 'fa-code' },
     { name: ui.navProjects || 'Projects', path: '/projects', icon: 'fa-layer-group' },
     { name: ui.navCertificates || 'Certificates', path: '/certificates', icon: 'fa-certificate' },
-    { name: ui.navContact || 'Contact', path: '/contact', icon: 'fa-regular fa-envelope' },
-    {
-      name: ui.navAdmin || 'Admin CMS',
-      path: '/admin',
-      icon: session ? 'fa-gauge-high' : 'fa-lock',
-      isAdmin: true
-    },
+    { name: ui.navContact || 'Contact', path: '/contact', icon: 'fa-envelope' },
   ];
+
+  const isAdmin = location.pathname.startsWith('/admin');
 
   // Dynamic notifications from messages & portfolio state
   const rawNotifications = [
@@ -219,9 +215,7 @@ export function Header() {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  className={({ isActive }) =>
-                    `nav-link ${isActive ? 'active' : ''} ${item.isAdmin ? 'nav-link-admin' : ''}`
-                  }
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                   onClick={() => playTick()}
                   onMouseEnter={(e) => {
                     playTick();
@@ -229,115 +223,116 @@ export function Header() {
                   }}
                   onMouseLeave={() => updatePill()}
                 >
-                  <i className={`fa-solid ${item.icon}`} />
-                  <span>{item.name}</span>
-                  {item.isAdmin && session && (
-                    <span
-                      style={{
-                        width: '6px',
-                        height: '6px',
-                        borderRadius: '50%',
-                        background: 'var(--accent-2, #00ff88)',
-                        boxShadow: '0 0 8px var(--accent-2, #00ff88)',
-                        display: 'inline-block'
-                      }}
-                      title="Admin Logged In"
-                    />
+                  {({ isActive }) => (
+                    <>
+                      <i className={`fa-solid ${item.icon}`} />
+                      <span>{item.name}</span>
+                      {isActive && (
+                        <span className="nav-active-dot" aria-hidden="true" />
+                      )}
+                    </>
                   )}
                 </NavLink>
               ))}
             </div>
 
-            {/* Right: Notification Bell, Search (⌘K), Hire CTA, Mobile Toggle */}
+            {/* Right: Notification Bell, Search (⌘K), Hire CTA, Admin CMS, Mobile Toggle */}
             <div className="nav-right">
-              {/* Notification Bell */}
-              <div className="notif-wrap" ref={notifWrapRef}>
-                <button
-                  type="button"
-                  className={`notif-btn ${notifOpen ? 'open' : ''}`}
-                  onClick={() => {
-                    playTick();
-                    setNotifOpen((prev) => !prev);
-                  }}
-                  aria-label="Toggle notifications"
-                >
-                  <i className="fa-regular fa-bell" />
-                  {unreadCount > 0 && (
-                    <span className="notif-badge">{unreadCount}</span>
-                  )}
-                </button>
+              {/* Notification Bell (Only visible on Admin Dashboard) */}
+              {isAdmin && (
+                <div className="notif-wrap" ref={notifWrapRef}>
+                  <button
+                    type="button"
+                    className={`notif-btn ${notifOpen ? 'open' : ''}`}
+                    onClick={() => {
+                      playTick();
+                      setNotifOpen((prev) => !prev);
+                    }}
+                    aria-label="Toggle notifications"
+                  >
+                    <i className="fa-regular fa-bell" />
+                    {unreadCount > 0 && (
+                      <span className="notif-badge">{unreadCount}</span>
+                    )}
+                  </button>
 
-                <div className={`notif-dropdown ${notifOpen ? 'open' : ''}`}>
-                  <div className="notif-head">
-                    <h4>
-                      <i className="fa-solid fa-bolt" style={{ color: 'var(--accent-1)' }} />
-                      Notifications
-                      <span className="count-pill">{unreadCount} new</span>
-                    </h4>
-                    <button
-                      type="button"
-                      className="notif-mark-read"
-                      onClick={handleMarkAllRead}
-                    >
-                      Mark all read
-                    </button>
-                  </div>
-
-                  <div className="notif-list">
-                    {rawNotifications.map((n) => (
-                      <div
-                        key={n.id}
-                        className={`notif-item ${n.unread ? 'unread' : ''}`}
-                        onClick={() => {
-                          playTick();
-                          if (!readNotifIds.includes(n.id)) {
-                            setReadNotifIds((prev) => [...prev, n.id]);
-                          }
-                        }}
+                  <div className={`notif-dropdown ${notifOpen ? 'open' : ''}`}>
+                    <div className="notif-head">
+                      <h4>
+                        <i className="fa-solid fa-bolt" style={{ color: 'var(--accent-1)' }} />
+                        Notifications
+                        <span className="count-pill">{unreadCount} new</span>
+                      </h4>
+                      <button
+                        type="button"
+                        className="notif-mark-read"
+                        onClick={handleMarkAllRead}
                       >
-                        <div className="notif-ico" style={{ background: n.iconBg, color: n.iconColor }}>
-                          <i className={`fa-solid ${n.icon}`} />
-                        </div>
-                        <div className="notif-body">
-                          <div className="notif-title">{n.title}</div>
-                          <div className="notif-desc">{n.desc}</div>
-                          <div className="notif-time">
-                            <i className="fa-regular fa-clock" /> {n.time}
+                        Mark all read
+                      </button>
+                    </div>
+
+                    <div className="notif-list">
+                      {rawNotifications.map((n) => (
+                        <div
+                          key={n.id}
+                          className={`notif-item ${n.unread ? 'unread' : ''}`}
+                          onClick={() => {
+                            playTick();
+                            if (!readNotifIds.includes(n.id)) {
+                              setReadNotifIds((prev) => [...prev, n.id]);
+                            }
+                          }}
+                        >
+                          <div className="notif-ico" style={{ background: n.iconBg, color: n.iconColor }}>
+                            <i className={`fa-solid ${n.icon}`} />
+                          </div>
+                          <div className="notif-body">
+                            <div className="notif-title">{n.title}</div>
+                            <div className="notif-desc">{n.desc}</div>
+                            <div className="notif-time">
+                              <i className="fa-regular fa-clock" /> {n.time}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
 
-                  <div className="notif-foot">
-                    <Link
-                      to="/admin"
-                      onClick={() => {
-                        playTick();
-                        setNotifOpen(false);
-                      }}
-                    >
-                      <i className="fa-solid fa-arrow-right" /> View all in Admin CMS
-                    </Link>
+                    <div className="notif-foot">
+                      <Link
+                        to="/admin"
+                        onClick={() => {
+                          playTick();
+                          setNotifOpen(false);
+                        }}
+                      >
+                        <i className="fa-solid fa-arrow-right" /> View all in Admin CMS
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              {/* Command Palette Trigger (Search ⌘K) */}
-              <div className="magnetic">
-                <button
-                  type="button"
-                  className="btn-outline"
-                  onClick={() => {
-                    playTick();
-                    setCmdOpen(true);
-                  }}
-                >
-                  <i className="fa-solid fa-magnifying-glass" style={{ fontSize: '11px' }} />
-                  <span>Search</span>
-                  <span className="cmd-kbd">⌘K</span>
-                </button>
-              </div>
+              {/* Command Palette Trigger (Search ⌘K) (Only visible on Admin Dashboard) */}
+              {isAdmin && (
+                <div className="magnetic">
+                  <button
+                    type="button"
+                    className="btn-outline"
+                    onClick={() => {
+                      playTick();
+                      setCmdOpen(true);
+                    }}
+                  >
+                    <i className="fa-solid fa-magnifying-glass" style={{ fontSize: '11px' }} />
+                    <span>Search</span>
+                    <span className="cmd-kbd">⌘K</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Subtle divider before CTA (matching reference image) */}
+              {isAdmin && <span className="nav-v-divider" aria-hidden="true" />}
 
               {/* Hire / Connect CTA */}
               <div className="magnetic">
@@ -348,6 +343,18 @@ export function Header() {
                 >
                   <i className="fa-solid fa-paper-plane" style={{ fontSize: '11px' }} />
                   <span>Hire / Connect</span>
+                </Link>
+              </div>
+
+              {/* Admin CMS Button */}
+              <div className="magnetic">
+                <Link
+                  to="/admin"
+                  className={`btn-admin-cms ${isAdmin ? 'active' : ''}`}
+                  onClick={() => playTick()}
+                >
+                  <i className={`fa-solid fa-shield-halved ${isAdmin ? 'text-black' : 'text-emerald-400'}`} />
+                  <span>Admin CMS</span>
                 </Link>
               </div>
 

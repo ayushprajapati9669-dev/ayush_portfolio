@@ -173,18 +173,14 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   color: #94a3b8;
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 13px;
+  padding: 8px 14px;
   border-radius: 50px;
-  transition: color 0.3s;
+  transition: all 0.25s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   outline: none;
   white-space: nowrap;
-}
-
-.nav-link.nav-link-admin {
-  color: #fb923c;
 }
 
 .nav-link:hover,
@@ -193,12 +189,85 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   color: #ffffff;
 }
 
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-link i {
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+.nav-link.active i {
+  color: var(--accent-2, #00ff88);
+}
+
+.nav-active-dot {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-2, #00ff88);
+  box-shadow: 0 0 10px var(--accent-2, #00ff88), 0 0 4px #00ff88;
+  pointer-events: none;
+}
+
 @media (max-width: 1280px) {
   .nav-link {
-    padding: 7px 10px;
+    padding: 7px 11px;
     font-size: 12px;
     gap: 5px;
   }
+}
+
+.btn-admin-cms {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  outline: none;
+}
+
+.btn-admin-cms:hover {
+  border-color: rgba(0, 240, 255, 0.4);
+  background: rgba(0, 240, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2);
+}
+
+.btn-admin-cms.active {
+  background: linear-gradient(135deg, var(--accent-1, #00f0ff), var(--accent-2, #00ff88));
+  color: #000000 !important;
+  border-color: transparent;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-admin-cms.active i {
+  color: #000000 !important;
+}
+
+.nav-v-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 2px;
+  display: inline-block;
+  flex-shrink: 0;
 }
 
 .nav-right {

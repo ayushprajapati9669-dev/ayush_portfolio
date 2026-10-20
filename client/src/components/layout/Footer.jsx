@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 
 export function Footer() {
   const { appState, showToast } = usePortfolio();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
 
   const [timeFormat, setTimeFormat] = useState('IST');
   const [liveTimeString, setLiveTimeString] = useState('');
@@ -75,7 +77,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="dashboard-footer" id="godFooter">
+    <footer className={`dashboard-footer ${isAdmin ? 'admin-footer' : ''}`} id="godFooter">
       <div className="footer-grid-bg" id="footerGrid" aria-hidden="true" />
       <div className="footer-orb" id="footerOrb" aria-hidden="true" />
       <div className="footer-glow-line" aria-hidden="true" />

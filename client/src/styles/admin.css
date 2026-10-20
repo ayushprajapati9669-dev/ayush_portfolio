@@ -470,7 +470,7 @@
 }
 
 .admin-content-area {
-  padding: 120px 32px 48px 32px;
+  padding: 135px 32px 48px 32px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -478,7 +478,7 @@
 
 @media (max-width: 768px) {
   .admin-content-area {
-    padding: 100px 16px 32px 16px;
+    padding: 110px 16px 32px 16px;
   }
 }
 
@@ -503,26 +503,27 @@
 }
 
 .stat-card {
-  background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(16, 24, 39, 0.9), rgba(8, 12, 22, 0.95)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 20px;
   padding: 24px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 150px;
-  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-  backdrop-filter: blur(20px);
-  transform-style: preserve-3d;
+  min-height: 155px;
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   overflow: hidden;
+  opacity: 1 !important;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 1), 0 0 30px rgba(0, 240, 255, 0.05);
+  border-color: rgba(0, 240, 255, 0.4) !important;
+  box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 1), 0 0 30px rgba(0, 240, 255, 0.15);
 }
 
 .stat-header {
@@ -536,7 +537,7 @@
 .stat-label {
   font-size: 11px;
   font-family: 'JetBrains Mono', monospace;
-  color: #a0b0c0;
+  color: #cbd5e1;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
@@ -550,65 +551,68 @@
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  transform: translateZ(30px);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: inset 0 2px 5px rgba(255,255,255,0.3), inset 0 -4px 10px rgba(0,0,0,0.6), 0 10px 20px -5px rgba(0,0,0,0.8);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.3), inset 0 -4px 10px rgba(0, 0, 0, 0.6), 0 10px 20px -5px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   z-index: 2;
 }
 
 .stat-card:hover .stat-icon {
-  transform: translateZ(50px) scale(1.1);
+  transform: scale(1.1);
 }
 
 .icon-cyan {
   background: linear-gradient(135deg, #00f0ff, #0891b2);
   color: #000;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
 }
 
 .icon-purple {
-  background: linear-gradient(135deg, #a259ff, #7c3aed);
+  background: linear-gradient(135deg, #c084fc, #7c3aed);
   color: white;
+  box-shadow: 0 0 20px rgba(192, 132, 252, 0.4);
 }
 
 .icon-orange {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: white;
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  color: #000;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
 }
 
 .icon-green {
-  background: linear-gradient(135deg, #00ff88, #059669);
+  background: linear-gradient(135deg, #4ade80, #059669);
   color: #000;
+  box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
 }
 
 .stat-value {
-  font-size: 36px;
+  font-size: 38px;
   font-weight: 800;
   font-family: 'Space Grotesk', sans-serif;
   line-height: 1;
   margin-bottom: 6px;
-  transform: translateZ(20px);
   z-index: 2;
+  opacity: 1 !important;
 }
 
 .stat-value.cyan {
-  color: var(--accent-1);
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+  color: #00f0ff;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
 }
 
 .stat-value.purple {
-  color: var(--accent-3);
-  text-shadow: 0 0 20px rgba(162, 89, 255, 0.4);
+  color: #c084fc;
+  text-shadow: 0 0 20px rgba(192, 132, 252, 0.5);
 }
 
 .stat-value.orange {
-  color: #f59e0b;
-  text-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+  text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
 }
 
 .stat-value.green {
-  color: var(--accent-2);
-  text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+  color: #4ade80;
+  text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
 }
 
 .stat-trend {

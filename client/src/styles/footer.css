@@ -8,6 +8,26 @@
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   perspective: 1000px;
   z-index: 10;
+  transition: margin-left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Offset footer on Admin pages to prevent sidebar overlap */
+.dashboard-footer.admin-footer,
+body.has-admin-sidebar .dashboard-footer {
+  margin-left: 260px;
+}
+
+body.sidebar-collapsed .dashboard-footer.admin-footer,
+body.has-admin-sidebar.sidebar-collapsed .dashboard-footer {
+  margin-left: 80px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-footer.admin-footer,
+  body.has-admin-sidebar .dashboard-footer,
+  body.has-admin-sidebar.sidebar-collapsed .dashboard-footer {
+    margin-left: 0 !important;
+  }
 }
 
 .footer-grid-bg {
