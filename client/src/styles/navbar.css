@@ -173,20 +173,32 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   color: #94a3b8;
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 16px;
+  padding: 8px 13px;
   border-radius: 50px;
   transition: color 0.3s;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   outline: none;
   white-space: nowrap;
+}
+
+.nav-link.nav-link-admin {
+  color: #fb923c;
 }
 
 .nav-link:hover,
 .nav-link.active,
 .nav-link:focus-visible {
   color: #ffffff;
+}
+
+@media (max-width: 1280px) {
+  .nav-link {
+    padding: 7px 10px;
+    font-size: 12px;
+    gap: 5px;
+  }
 }
 
 .nav-right {
@@ -528,7 +540,7 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   cursor: pointer;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .nav-center {
     display: none;
   }

@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
+import { useAuth } from '../../app/providers/AuthProvider';
 import { playTick } from '../../utils/audio';
 import { CommandPalette } from '../ui/CommandPalette';
 
 export function Header() {
   const { appState, showToast } = usePortfolio();
+  const { session } = useAuth();
   const location = useLocation();
 
   const [notifOpen, setNotifOpen] = useState(false);
@@ -40,6 +42,12 @@ export function Header() {
     { name: ui.navProjects || 'Projects', path: '/projects', icon: 'fa-layer-group' },
     { name: ui.navCertificates || 'Certificates', path: '/certificates', icon: 'fa-certificate' },
     { name: ui.navContact || 'Contact', path: '/contact', icon: 'fa-regular fa-envelope' },
+    {
+      name: ui.navAdmin || 'Admin CMS',
+      path: '/admin',
+      icon: session ? 'fa-gauge-high' : 'fa-lock',
+      isAdmin: true
+    },
   ];
 
   // Dynamic notifications from messages & portfolio state
@@ -211,7 +219,9 @@ export function Header() {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  className={({ isActive }) =>
+                    `nav-link ${isActive ? 'active' : ''} ${item.isAdmin ? 'nav-link-admin' : ''}`
+                  }
                   onClick={() => playTick()}
                   onMouseEnter={(e) => {
                     playTick();
@@ -221,6 +231,19 @@ export function Header() {
                 >
                   <i className={`fa-solid ${item.icon}`} />
                   <span>{item.name}</span>
+                  {item.isAdmin && session && (
+                    <span
+                      style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        background: 'var(--accent-2, #00ff88)',
+                        boxShadow: '0 0 8px var(--accent-2, #00ff88)',
+                        display: 'inline-block'
+                      }}
+                      title="Admin Logged In"
+                    />
+                  )}
                 </NavLink>
               ))}
             </div>
@@ -369,7 +392,9 @@ export function Header() {
             <NavLink
               key={item.path}
               to={item.path}
-              className={({ isActive }) => `mobile-drawer-link ${isActive ? 'active' : ''}`}
+              className={({ isActive }) =>
+                `mobile-drawer-link ${isActive ? 'active' : ''} ${item.isAdmin ? 'text-orange-400 font-bold' : ''}`
+              }
               onClick={() => {
                 playTick();
                 setMobileMenuOpen(false);
@@ -379,18 +404,6 @@ export function Header() {
               <span>{item.name}</span>
             </NavLink>
           ))}
-          <Link
-            to="/admin"
-            className="mobile-drawer-link"
-            style={{ color: '#f97316' }}
-            onClick={() => {
-              playTick();
-              setMobileMenuOpen(false);
-            }}
-          >
-            <i className="fa-solid fa-lock" />
-            <span>Admin CMS</span>
-          </Link>
         </div>
 
         <div className="mt-auto pt-6 border-t border-white/10 flex items-center justify-between">
