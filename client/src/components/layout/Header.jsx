@@ -390,6 +390,28 @@ export function Header() {
               {/* Subtle divider before CTA (matching reference image) */}
               {isAdmin && <span className="nav-v-divider" aria-hidden="true" />}
 
+              {/* Resume Button (Only visible on Public pages per reference) */}
+              {!isAdmin && (
+                <div className="magnetic">
+                  <a
+                    href={appState.profile?.resumeUrl || '#'}
+                    target={appState.profile?.resumeUrl ? '_blank' : '_self'}
+                    rel="noreferrer"
+                    className="btn-outline"
+                    onClick={(e) => {
+                      playTick();
+                      if (!appState.profile?.resumeUrl) {
+                        e.preventDefault();
+                        showToast('Resume link can be updated in Admin CMS Profile settings');
+                      }
+                    }}
+                  >
+                    <span>Resume</span>
+                    <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '10px' }} />
+                  </a>
+                </div>
+              )}
+
               {/* Hire / Connect CTA */}
               <div className="magnetic">
                 <Link
@@ -469,28 +491,49 @@ export function Header() {
           ))}
         </div>
 
-        <div className="mt-auto pt-6 border-t border-white/10 flex items-center justify-between">
-          <button
-            type="button"
-            className="btn-outline"
-            style={{ display: 'flex' }}
-            onClick={() => {
-              playTick();
-              setMobileMenuOpen(false);
-              setCmdOpen(true);
-            }}
-          >
-            <i className="fa-solid fa-magnifying-glass" /> Search ⌘K
-          </button>
+        <div className="mt-auto pt-6 border-t border-white/10 flex items-center justify-between gap-2">
+          {!isAdmin ? (
+            <a
+              href={appState.profile?.resumeUrl || '#'}
+              target={appState.profile?.resumeUrl ? '_blank' : '_self'}
+              rel="noreferrer"
+              className="btn-outline"
+              style={{ display: 'flex', fontSize: '12px', padding: '8px 14px' }}
+              onClick={(e) => {
+                playTick();
+                setMobileMenuOpen(false);
+                if (!appState.profile?.resumeUrl) {
+                  e.preventDefault();
+                  showToast('Resume link can be updated in Admin CMS Profile settings');
+                }
+              }}
+            >
+              Resume <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '10px' }} />
+            </a>
+          ) : (
+            <button
+              type="button"
+              className="btn-outline"
+              style={{ display: 'flex', fontSize: '12px', padding: '8px 14px' }}
+              onClick={() => {
+                playTick();
+                setMobileMenuOpen(false);
+                setCmdOpen(true);
+              }}
+            >
+              <i className="fa-solid fa-magnifying-glass" /> Search ⌘K
+            </button>
+          )}
           <Link
             to="/contact"
             className="btn-primary"
+            style={{ fontSize: '12px', padding: '8px 16px' }}
             onClick={() => {
               playTick();
               setMobileMenuOpen(false);
             }}
           >
-            Hire Me
+            Hire / Connect
           </Link>
         </div>
       </div>
