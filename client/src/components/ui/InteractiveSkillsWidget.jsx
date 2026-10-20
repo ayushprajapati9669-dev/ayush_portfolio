@@ -1,524 +1,246 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
-import { SkillCategoryTabIcon, TechLogo } from '../common/TechLogos';
 
-gsap.registerPlugin(ScrollTrigger);
+// Helper to map any dynamic Database skill name to official Devicon SVG & brand glow
+export const getSkillVisuals = (skillObj) => {
+  const rawName = (typeof skillObj === 'string' ? skillObj : skillObj?.name || skillObj?.title || '').toLowerCase();
+  const customDbIcon = typeof skillObj === 'object' ? (skillObj?.icon || skillObj?.image || skillObj?.logo) : null;
 
-// Desired canonical order for Languages category
-const LANGUAGE_PRIORITY = ['c', 'c++', 'cpp', 'java', 'javascript', 'js', 'python', 'py'];
+  const brandMap = [
+    { match: ['javascript', 'js', 'es6'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg', glow: 'hover:border-yellow-400/50 hover:shadow-[0_0_25px_rgba(250,204,21,0.25)]' },
+    { match: ['typescript', 'ts'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg', glow: 'hover:border-blue-500/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]' },
+    { match: ['react', 'reactjs', 'react.js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', glow: 'hover:border-cyan-400/50 hover:shadow-[0_0_25px_rgba(34,211,238,0.25)]' },
+    { match: ['next', 'nextjs', 'next.js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg', invert: true, glow: 'hover:border-white/50 hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]' },
+    { match: ['node', 'nodejs', 'node.js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg', glow: 'hover:border-emerald-500/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)]' },
+    { match: ['express', 'expressjs', 'express.js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg', invert: true, glow: 'hover:border-slate-300/50 hover:shadow-[0_0_25px_rgba(226,232,240,0.2)]' },
+    { match: ['mongo', 'mongodb'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg', glow: 'hover:border-green-500/50 hover:shadow-[0_0_25px_rgba(34,197,94,0.25)]' },
+    { match: ['java', 'core java'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg', glow: 'hover:border-orange-500/50 hover:shadow-[0_0_25px_rgba(249,115,22,0.25)]' },
+    { match: ['spring', 'spring boot', 'springboot'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg', glow: 'hover:border-lime-500/50 hover:shadow-[0_0_25px_rgba(132,204,22,0.25)]' },
+    { match: ['tailwind', 'tailwindcss'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg', glow: 'hover:border-sky-400/50 hover:shadow-[0_0_25px_rgba(56,189,248,0.25)]' },
+    { match: ['python'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg', glow: 'hover:border-blue-400/50 hover:shadow-[0_0_25px_rgba(96,165,250,0.25)]' },
+    { match: ['git', 'github'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg', glow: 'hover:border-red-500/50 hover:shadow-[0_0_25px_rgba(239,68,68,0.25)]' },
+    { match: ['postman'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg', glow: 'hover:border-orange-400/50 hover:shadow-[0_0_25px_rgba(251,146,60,0.25)]' },
+    { match: ['docker'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg', glow: 'hover:border-blue-500/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]' },
+    { match: ['html', 'html5'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg', glow: 'hover:border-orange-500/50 hover:shadow-[0_0_25px_rgba(249,115,22,0.25)]' },
+    { match: ['css', 'css3'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg', glow: 'hover:border-blue-400/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]' },
+    { match: ['sql', 'mysql', 'postgres', 'postgresql'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg', glow: 'hover:border-sky-500/50 hover:shadow-[0_0_25px_rgba(14,165,233,0.25)]' },
+    { match: ['redux'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redux/redux-original.svg', glow: 'hover:border-purple-500/50 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)]' },
+    { match: ['c++', 'cpp'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg', glow: 'hover:border-blue-500/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]' },
+    { match: ['c', 'c language'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg', glow: 'hover:border-blue-600/50 hover:shadow-[0_0_25px_rgba(37,99,235,0.25)]' },
+    { match: ['bootstrap'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg', glow: 'hover:border-purple-500/50 hover:shadow-[0_0_25px_rgba(147,51,234,0.25)]' },
+    { match: ['vite', 'vitejs'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg', glow: 'hover:border-purple-400/50 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)]' },
+    { match: ['vscode', 'vs code'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg', glow: 'hover:border-blue-400/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]' },
+    { match: ['cloudinary'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/devicon/devicon-original.svg', glow: 'hover:border-blue-500/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]' },
+    { match: ['dsa', 'algorithms', 'data structures', 'problem solving'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/devicon/devicon-original.svg', glow: 'hover:border-cyan-400/50 hover:shadow-[0_0_25px_rgba(34,211,238,0.25)]' }
+  ];
 
-function sortCategorySkills(categoryName, items) {
-  if (!Array.isArray(items)) return [];
-  const cName = String(categoryName || '').toLowerCase();
+  const found = brandMap.find((b) =>
+    b.match.some((keyword) => {
+      if (keyword === 'c') {
+        return rawName === 'c' || rawName.split(/[\s,./\-_]+/).includes('c');
+      }
+      return rawName.includes(keyword);
+    })
+  );
 
-  if (cName.includes('language')) {
-    const getRank = (item) => {
-      const name = String(item.name || '').toLowerCase().trim();
-      const key = String(item.logoKey || '').toLowerCase().trim();
+  return {
+    iconUrl:
+      customDbIcon && typeof customDbIcon === 'string' && customDbIcon.startsWith('http')
+        ? customDbIcon
+        : found?.icon || 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/devicon/devicon-original.svg',
+    invertIcon: found?.invert || false,
+    glowClass: found?.glow || 'hover:border-orange-500/50 hover:shadow-[0_0_25px_rgba(249,115,22,0.25)]',
+  };
+};
 
-      if (name === 'c' || key === 'c') return 0;
-      if (name === 'c++' || key === 'cpp' || name === 'cpp') return 1;
-      if (name.includes('java') && !name.includes('javascript')) return 2;
-      if (name.includes('javascript') || name === 'js' || key === 'javascript') return 3;
-      if (name.includes('python') || key === 'python' || name === 'py') return 4;
-
-      const idx = LANGUAGE_PRIORITY.indexOf(name);
-      return idx !== -1 ? idx : 999;
-    };
-
-    return [...items].sort((a, b) => getRank(a) - getRank(b));
-  }
-
-  return items;
-}
-
-export function InteractiveSkillsWidget({
+export function SkillsSection({
+  dbSkills = null,
   showCta = false,
   onCtaClick = null,
-  isStandalonePage = false
+  isStandalonePage = false,
 }) {
   const { appState } = usePortfolio();
   const ui = appState.uiLabels || {};
 
-  // Extract skills categories from state or fallbacks
-  const categories = Array.isArray(appState.skills) && appState.skills.length > 0
-    ? appState.skills
-    : [];
+  // 1. Resolve skills array from props or dynamic ThemeProvider (MongoDB / CMS bootstrap)
+  const sourceSkills = useMemo(() => {
+    if (dbSkills && Array.isArray(dbSkills) && dbSkills.length > 0) {
+      return dbSkills;
+    }
+    return appState.skills || [];
+  }, [dbSkills, appState.skills]);
 
-  const [selectedCatId, setSelectedCatId] = useState(
-    categories[0]?.id || 'skill-languages'
-  );
+  // 2. Flatten if grouped by categories, while preserving category name for filtering
+  const allSkills = useMemo(() => {
+    if (!Array.isArray(sourceSkills)) return [];
+    if (sourceSkills.length > 0 && Array.isArray(sourceSkills[0]?.items)) {
+      return sourceSkills.flatMap((cat) =>
+        (cat.items || []).map((item, idx) => ({
+          ...item,
+          category: cat.category || 'General',
+          catId: cat.id,
+          _id: item._id || item.id || `${cat.id}-${item.name}-${idx}`,
+        }))
+      );
+    }
+    return sourceSkills.map((s, idx) => ({
+      ...(typeof s === 'string' ? { name: s } : s),
+      category: s.category || 'General',
+      _id: s._id || s.id || `${s.name || s}-${idx}`,
+    }));
+  }, [sourceSkills]);
 
-  // Active category
-  const activeCat = categories.find((c) => c.id === selectedCatId) || categories[0] || {
-    id: 'skill-languages',
-    category: 'Languages',
-    tabIcon: 'languages',
-    items: []
-  };
+  // 3. Dynamically derive categories from DB skills
+  const categories = useMemo(() => {
+    if (sourceSkills.length > 0 && Array.isArray(sourceSkills[0]?.items)) {
+      const distinctCats = sourceSkills.map((c) => c.category).filter(Boolean);
+      return ['All', ...distinctCats];
+    }
+    const distinct = Array.from(new Set(allSkills.map((s) => s.category).filter(Boolean)));
+    return ['All', ...distinct];
+  }, [sourceSkills, allSkills]);
 
-  // Sort items if Languages (1. C, 2. C++, 3. Java, 4. JavaScript, 5. Python)
-  const activeItems = sortCategorySkills(activeCat.category, activeCat.items || []);
-
-  // Number of items currently inserted into the DOM layout (no invisible placeholders)
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [visibleCount, setVisibleCount] = useState(0);
 
-  // Section & Animation Refs
-  const sectionRef = useRef(null);
-  const glowRef = useRef(null);
-  const accentLineRef = useRef(null);
-  const eyebrowRef = useRef(null);
-  const headingWord1Ref = useRef(null);
-  const headingWord2Ref = useRef(null);
-  const headingWord3Ref = useRef(null);
-  const introTextRef = useRef(null);
-  const tabsContainerRef = useRef(null);
-  const listRegionRef = useRef(null);
-  const listHeaderRef = useRef(null);
-  const itemsContainerRef = useRef(null);
-  const itemElsRef = useRef([]);
+  const filteredSkills = useMemo(() => {
+    if (selectedCategory === 'All') return allSkills;
+    return allSkills.filter((s) => s.category === selectedCategory);
+  }, [selectedCategory, allSkills]);
 
-  // Sequence state tracking
   const timersRef = useRef([]);
-  const hasEnteredViewportRef = useRef(false);
-  const activeCatIdRef = useRef(activeCat.id);
 
-  activeCatIdRef.current = activeCat.id;
-
-  // Clear all pending reveal timers
-  const cancelSequence = useCallback(() => {
+  // Smooth One-by-One Sequential Opening Animation when DB data loads or category changes
+  useEffect(() => {
     timersRef.current.forEach((t) => clearTimeout(t));
     timersRef.current = [];
-  }, []);
+    setVisibleCount(0);
 
-  // Sequential reveal function (exactly 0.8s between item start times)
-  const startSequence = useCallback(() => {
-    cancelSequence();
+    if (!filteredSkills.length) return;
 
-    // Check prefers-reduced-motion
-    if (typeof window !== 'undefined') {
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReduced) {
-        setVisibleCount(activeItems.length);
-        return;
-      }
-    }
-
-    if (activeItems.length === 0) {
-      setVisibleCount(0);
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      setVisibleCount(filteredSkills.length);
       return;
     }
 
-    const currentCatId = activeCat.id;
-
-    // Item 0 appears immediately at t = 0.0s
-    setVisibleCount(1);
-
-    // Schedule subsequent items at exactly idx * 800ms
-    for (let idx = 1; idx < activeItems.length; idx++) {
-      const timer = setTimeout(() => {
-        // Prevent stale callback if category changed
-        if (activeCatIdRef.current === currentCatId) {
-          setVisibleCount((prev) => Math.max(prev, idx + 1));
-        }
-      }, idx * 800);
-      timersRef.current.push(timer);
-    }
-  }, [activeItems.length, activeCat.id, cancelSequence]);
-
-  // When active category changes: cancel previous, clear old items, start fresh
-  const handleSelectCategory = (catId) => {
-    if (catId === selectedCatId) return;
-    cancelSequence();
-    setSelectedCatId(catId);
-    setVisibleCount(0);
-
-    // If section is already visible, immediately start sequence for new category
-    if (hasEnteredViewportRef.current) {
-      // Small tick to ensure clean state flush
-      const t = setTimeout(() => {
-        startSequence();
-      }, 50);
-      timersRef.current.push(t);
-    }
-  };
-
-  // Manual replay button
-  const handleReplay = () => {
-    cancelSequence();
-    setVisibleCount(0);
-    const t = setTimeout(() => {
-      startSequence();
-    }, 60);
-    timersRef.current.push(t);
-  };
-
-  // Keyboard navigation for category tabs
-  const handleTabKeyDown = (e, index) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      const nextIdx = (index + 1) % categories.length;
-      handleSelectCategory(categories[nextIdx].id);
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      const prevIdx = (index - 1 + categories.length) % categories.length;
-      handleSelectCategory(categories[prevIdx].id);
-    }
-  };
-
-  // Animate newly added skill item when visibleCount increments
-  useLayoutEffect(() => {
-    if (visibleCount <= 0) return;
-    const targetIdx = visibleCount - 1;
-    const el = itemElsRef.current[targetIdx];
-
-    if (el) {
-      const prefersReduced = typeof window !== 'undefined' &&
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      if (prefersReduced) {
-        gsap.set(el, { opacity: 1, y: 0, scale: 1 });
-      } else {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 7, scale: 0.96 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.38,
-            ease: 'power2.out',
-            clearProps: 'transform'
-          }
-        );
-      }
-    }
-  }, [visibleCount]);
-
-  // Master GSAP ScrollTrigger Context
-  useEffect(() => {
-    const sectionEl = sectionRef.current;
-    if (!sectionEl) return undefined;
-
-    const ctx = gsap.context(() => {
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // ----------------------------------------------------------------------
-      // Effect A — Section Entrance
-      // ----------------------------------------------------------------------
-      if (!prefersReduced) {
-        const entranceTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionEl,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse'
-          }
-        });
-
-        // 1. Eyebrow fades in & rises slightly
-        if (eyebrowRef.current) {
-          entranceTl.fromTo(
-            eyebrowRef.current,
-            { opacity: 0, y: 14 },
-            { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }
-          );
-        }
-
-        // 2. Heading reveals with subtle text stagger
-        const headingElements = [
-          headingWord1Ref.current,
-          headingWord2Ref.current,
-          headingWord3Ref.current
-        ].filter(Boolean);
-
-        if (headingElements.length > 0) {
-          entranceTl.fromTo(
-            headingElements,
-            { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, ease: 'power2.out' },
-            '-=0.25'
-          );
-        }
-
-        // 3. Introductory line
-        if (introTextRef.current) {
-          entranceTl.fromTo(
-            introTextRef.current,
-            { opacity: 0, y: 10 },
-            { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
-            '-=0.2'
-          );
-        }
-
-        // 4. Category tabs reveal one by one
-        if (tabsContainerRef.current) {
-          const tabBtns = tabsContainerRef.current.querySelectorAll('.skills-tab-btn');
-          if (tabBtns.length > 0) {
-            entranceTl.fromTo(
-              tabBtns,
-              { opacity: 0, y: 12 },
-              { opacity: 1, y: 0, duration: 0.38, stagger: 0.05, ease: 'power2.out' },
-              '-=0.2'
-            );
-          }
-        }
-      }
-
-      // ----------------------------------------------------------------------
-      // Effect B — Scroll-Linked Accent Line
-      // ----------------------------------------------------------------------
-      if (accentLineRef.current) {
-        gsap.fromTo(
-          accentLineRef.current,
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionEl,
-              start: 'top 80%',
-              end: 'bottom 35%',
-              scrub: 0.6
-            }
-          }
-        );
-      }
-
-      // ----------------------------------------------------------------------
-      // Effect D — Scroll-Driven Visual Response (Subtle background glow shift)
-      // ----------------------------------------------------------------------
-      if (glowRef.current && !prefersReduced) {
-        gsap.to(glowRef.current, {
-          x: 45,
-          y: 35,
-          opacity: 0.16,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionEl,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.2
-          }
-        });
-      }
-
-      // ----------------------------------------------------------------------
-      // Effect C — Skill-List Reveal
-      // ----------------------------------------------------------------------
-      if (listRegionRef.current) {
-        ScrollTrigger.create({
-          trigger: listRegionRef.current,
-          start: 'top 85%',
-          onEnter: () => {
-            hasEnteredViewportRef.current = true;
-
-            // Subtle list header reveal
-            if (listHeaderRef.current && !prefersReduced) {
-              gsap.fromTo(
-                listHeaderRef.current,
-                { opacity: 0, y: 10 },
-                { opacity: 1, y: 0, duration: 0.38, ease: 'power2.out' }
-              );
-            }
-
-            // Start sequential skill reveal
-            startSequence();
-          },
-          onLeaveBack: () => {
-            // Natural reverse behavior
-            hasEnteredViewportRef.current = false;
-          }
-        });
-      }
-    }, sectionRef);
+    timersRef.current = filteredSkills.map((_, index) =>
+      setTimeout(() => {
+        setVisibleCount((prev) => prev + 1);
+      }, (index + 1) * 160) // 160ms stagger between each skill opening
+    );
 
     return () => {
-      cancelSequence();
-      ctx.revert();
+      timersRef.current.forEach((t) => clearTimeout(t));
     };
-  }, [cancelSequence, startSequence]);
+  }, [selectedCategory, filteredSkills.length]);
 
-  // Only render revealed items (NO invisible placeholders)
-  const revealedItems = activeItems.slice(0, visibleCount);
+  const replayAnimation = useCallback(() => {
+    timersRef.current.forEach((t) => clearTimeout(t));
+    timersRef.current = [];
+    setVisibleCount(0);
+
+    const restartTimer = setTimeout(() => {
+      timersRef.current = filteredSkills.map((_, index) =>
+        setTimeout(() => {
+          setVisibleCount((prev) => prev + 1);
+        }, (index + 1) * 160)
+      );
+    }, 50);
+    timersRef.current.push(restartTimer);
+  }, [filteredSkills]);
 
   return (
-    <section
-      ref={sectionRef}
-      id="skills-section"
-      className={`relative overflow-hidden ${
-        isStandalonePage ? 'space-y-10' : 'scroll-reveal border-t hairline-border pt-16 space-y-10'
-      }`}
-    >
-      {/* Effect D: Restrained decorative ambient glow responding to scroll */}
-      <div
-        ref={glowRef}
-        className="pointer-events-none absolute -top-24 -left-20 h-96 w-96 rounded-full bg-cyanglow/10 blur-[110px] -z-10"
-        aria-hidden="true"
-      />
-
-      {/* Top Header Region */}
-      <div className="flex flex-wrap items-end justify-between gap-6">
-        <div className="space-y-2.5 max-w-2xl">
-          {/* Section Eyebrow Label */}
-          <p
-            ref={eyebrowRef}
-            className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cyanglow"
-          >
-            {ui.homeSkillsEyebrow || '03 — TECHNICAL CAPABILITIES'}
-          </p>
-
-          {/* Section Heading with 'Skills' highlighted in cyan/mint */}
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-alabaster">
-            <span ref={headingWord1Ref} className="inline-block mr-2">
-              Interactive
-            </span>
-            <span ref={headingWord2Ref} className="inline-block text-cyanglow mr-2">
-              Skills
-            </span>
-            <span ref={headingWord3Ref} className="inline-block">
-              & Tech Stack
-            </span>
+    <section className={`max-w-6xl mx-auto px-4 ${isStandalonePage ? 'py-8' : 'py-16'}`}>
+      {/* Header & Dynamic Category Filter Bar */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <span className="text-xs font-mono uppercase tracking-widest text-orange-500 block mb-2">
+            {ui.homeSkillsEyebrow || '01 · TECHNICAL ARSENAL'}
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            {ui.homeSkillsHeading || 'Skills & Technologies'}
           </h2>
-
-          {/* Introductory line */}
-          <p
-            ref={introTextRef}
-            className="text-sm sm:text-base text-stonewarm leading-relaxed pt-1"
-          >
-            Curated technical stack and core competencies applied across live full-stack projects, databases, and problem solving.
-          </p>
         </div>
 
-        {/* Optional CTA button on Home page */}
-        {showCta && onCtaClick && (
-          <button
-            type="button"
-            onClick={onCtaClick}
-            className="focus-ring self-start sm:self-end rounded-full border border-white/15 bg-charcoal px-5 py-2.5 font-mono text-xs font-semibold text-alabaster transition-colors hover:border-cyanglow hover:text-cyanglow"
-          >
-            {ui.homeSkillsCta || 'Open Full Skills View'} →
-          </button>
-        )}
-      </div>
-
-      {/* Effect B: Scroll-Linked Thin Accent Line (Scrubbed to scroll position) */}
-      <div className="skills-accent-track">
-        <div
-          ref={accentLineRef}
-          className="h-full w-full bg-gradient-to-r from-cyanglow via-teal-400 to-amberwarm origin-left scale-x-0"
-        />
-      </div>
-
-      {/* Category Navigation Tabs */}
-      <div
-        ref={tabsContainerRef}
-        role="tablist"
-        aria-label="Skill Categories"
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5"
-      >
-        {categories.map((cat, idx) => {
-          const isSelected = cat.id === activeCat.id;
-          return (
+        <div className="flex flex-wrap items-center gap-2">
+          {categories.map((cat) => (
             <button
-              key={cat.id}
-              role="tab"
-              id={`tab-${cat.id}`}
-              aria-selected={isSelected}
-              aria-controls={`tabpanel-${cat.id}`}
-              tabIndex={isSelected ? 0 : -1}
+              key={cat}
               type="button"
-              onClick={() => handleSelectCategory(cat.id)}
-              onKeyDown={(e) => handleTabKeyDown(e, idx)}
-              className={`skills-tab-btn focus-ring skills-tab-card ${
-                isSelected ? 'skills-tab-active' : ''
-              } rounded-2xl p-3.5 sm:p-4 flex flex-col items-center justify-center gap-2 text-center transition-all`}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer ${
+                selectedCategory === cat
+                  ? 'bg-gradient-to-r from-orange-500 to-pink-600 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]'
+                  : 'bg-white/[0.04] text-slate-400 border border-white/10 hover:text-white hover:bg-white/[0.08]'
+              }`}
             >
-              <SkillCategoryTabIcon tabIconKey={cat.tabIcon || cat.category} isActive={isSelected} />
-              <span
-                className={`font-display text-xs sm:text-sm font-bold tracking-tight truncate max-w-full ${
-                  isSelected ? 'text-white' : 'text-stonewarm'
-                }`}
-              >
-                {cat.category}
-              </span>
+              {cat}
             </button>
-          );
-        })}
-      </div>
-
-      {/* Skill List Region */}
-      <div
-        ref={listRegionRef}
-        role="tabpanel"
-        id={`tabpanel-${activeCat.id}`}
-        aria-labelledby={`tab-${activeCat.id}`}
-        className="rounded-3xl border border-white/10 bg-[#0B0F1C]/85 backdrop-blur-md p-6 sm:p-8 space-y-6 shadow-xl"
-      >
-        {/* Category Title & Skill Count Header */}
-        <div
-          ref={listHeaderRef}
-          className="flex flex-wrap items-center justify-between gap-4 border-b hairline-border pb-4"
-        >
-          <div className="flex items-center gap-3">
-            <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              {activeCat.category}
-            </h3>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyanglow/30 bg-cyanglow/10 px-3 py-0.5 font-mono text-xs font-semibold text-cyanglow">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyanglow animate-pulse" />
-              {activeItems.length} {activeItems.length === 1 ? 'skill' : 'skills'}
-            </span>
-          </div>
-
-          {/* Replay animation control */}
-          <button
-            type="button"
-            onClick={handleReplay}
-            title="Replay sequential reveal animation"
-            className="skills-replay-btn focus-ring inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-charcoal/80 px-3.5 py-1.5 font-mono text-xs font-medium text-stonewarm"
-          >
-            <svg
-              className="h-3.5 w-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            <span>Replay</span>
-          </button>
-        </div>
-
-        {/* Compact Inline Skill List (NO cards, NO containers around logos, NO separator lines, NO placeholders) */}
-        <div
-          ref={itemsContainerRef}
-          className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-2"
-        >
-          {revealedItems.map((item, idx) => (
-            <div
-              key={`${activeCat.id}-${item.name}-${idx}`}
-              ref={(el) => (itemElsRef.current[idx] = el)}
-              className="inline-flex items-center gap-2 py-1 px-1.5 text-stone-200 font-display text-sm sm:text-base font-semibold select-none group transition-colors hover:text-white"
-            >
-              <TechLogo
-                name={item.logoKey || item.name}
-                className="h-6 w-6 sm:h-7 sm:w-7 shrink-0 transition-transform duration-200 group-hover:scale-110"
-              />
-              <span className="tracking-tight">{item.name}</span>
-            </div>
           ))}
 
-          {/* Fallback empty message */}
-          {activeItems.length === 0 && (
-            <p className="font-mono text-xs text-stonewarm py-2">
-              No skills added to this category yet.
-            </p>
+          <button
+            type="button"
+            onClick={replayAnimation}
+            title="Replay One-by-One Animation"
+            className="ml-1 px-3 py-1.5 rounded-full text-xs font-mono bg-orange-500/10 border border-orange-500/30 text-orange-400 hover:bg-orange-500/20 transition-all cursor-pointer"
+          >
+            ↻ Replay
+          </button>
+
+          {showCta && onCtaClick && (
+            <button
+              type="button"
+              onClick={onCtaClick}
+              className="ml-1 px-3.5 py-1.5 rounded-full text-xs font-mono bg-white/[0.04] border border-white/10 text-slate-300 hover:text-white hover:border-orange-500/40 transition-all cursor-pointer"
+            >
+              {ui.homeSkillsCta || 'Full View'} →
+            </button>
           )}
         </div>
+      </div>
+
+      {/* BOX-LESS FLOATING SKILL CLOUD (No outer box container) */}
+      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5 py-6">
+        {filteredSkills.map((skill, index) => {
+          const skillName = typeof skill === 'string' ? skill : skill.name || skill.title;
+          const { iconUrl, invertIcon, glowClass } = getSkillVisuals(skill);
+          const isVisible = index < visibleCount;
+
+          return (
+            <div
+              key={skill._id || skill.id || skillName || index}
+              style={{
+                transition:
+                  'opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+              className={`group flex items-center gap-3.5 px-6 py-3.5 rounded-2xl bg-[#0d1322]/80 backdrop-blur-md border border-white/[0.08] cursor-pointer select-none ${glowClass} ${
+                isVisible
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-7 scale-90 pointer-events-none'
+              } hover:-translate-y-1.5`}
+            >
+              <img
+                src={iconUrl}
+                alt={skillName}
+                className={`w-7 h-7 object-contain transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${
+                  invertIcon ? 'invert brightness-200' : ''
+                }`}
+                loading="lazy"
+              />
+              <span className="text-sm font-semibold text-slate-200 group-hover:text-white tracking-wide">
+                {skillName}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
 }
+
+export const InteractiveSkillsWidget = SkillsSection;
+export default SkillsSection;
