@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { ProjectCard } from '../../components/projects/ProjectCard';
-import { CertificateCard } from '../../components/projects/CertificateCard';
+import { CertificatesPage } from '../Certificates/Certificates';
 import { playTick } from '../../utils/audio';
 
 // Baseline Reference Projects from Reference HTML
@@ -89,37 +89,9 @@ export function ProjectsPage({ viewMode = 'projects' }) {
   const containerRef = useRef(null);
   const gridRef = useRef(null);
 
-  // If in certificates view mode, maintain verified credentials display
+  // If in certificates view mode, render the dedicated CertificatesPage
   if (viewMode === 'certificates') {
-    const certs = appState.certificates || [];
-    return (
-      <main className="projects-page">
-        <div className="page-header">
-          <div className="page-tagline">
-            {ui.homeCertsEyebrow || '04 · VERIFIED CREDENTIALS'}
-          </div>
-          <h1 className="page-title">
-            {ui.homeCertsHeading || 'Certifications & Achievements'}
-          </h1>
-          <p className="page-desc">
-            Click on any certificate card or "View Certificate" to inspect the full-resolution credential.
-          </p>
-        </div>
-
-        {certs.length === 0 ? (
-          <div className="project-card text-center p-12 space-y-4">
-            <h3 className="project-title text-xl">No certificates published yet</h3>
-            <p className="project-desc">Credentials and achievements will appear here once published in Admin CMS.</p>
-          </div>
-        ) : (
-          <div className={`grid grid-cols-1 gap-8 ${certs.length === 1 ? 'max-w-2xl' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
-            {certs.map((cert) => (
-              <CertificateCard key={cert.id} cert={cert} />
-            ))}
-          </div>
-        )}
-      </main>
-    );
+    return <CertificatesPage />;
   }
 
   // Projects View Mode: read CMS published projects or fallback to reference baseline

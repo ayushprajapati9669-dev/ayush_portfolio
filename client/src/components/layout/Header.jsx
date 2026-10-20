@@ -40,8 +40,7 @@ export function Header() {
     { name: ui.navAbout || 'About', path: '/about', icon: 'fa-user' },
     { name: ui.navSkills || 'Skills', path: '/skills', icon: 'fa-code' },
     { name: ui.navProjects || 'Projects', path: '/projects', icon: 'fa-layer-group' },
-    { name: ui.navCertificates || 'Certificates', path: '/certificates', icon: 'fa-certificate' },
-    { name: ui.navContact || 'Contact', path: '/contact', icon: 'fa-envelope' },
+    { name: ui.navCertificates || 'Certificates', path: '/certificates', icon: 'fa-certificate' }
   ];
 
   const isAdmin = location.pathname.startsWith('/admin');

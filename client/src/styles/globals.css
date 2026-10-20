@@ -8,6 +8,8 @@
 @import './pages/skills.css';
 @import './pages/about.css';
 @import './pages/projects.css';
+@import './pages/certificates.css';
+@import './pages/contact.css';
 
 @tailwind base;
 @tailwind components;
