@@ -6,6 +6,8 @@
 @import './admin.css';
 @import './components/cards.css';
 @import './pages/skills.css';
+@import './pages/about.css';
+@import './pages/projects.css';
 
 @tailwind base;
 @tailwind components;

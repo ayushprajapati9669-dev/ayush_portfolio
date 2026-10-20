@@ -1,95 +1,374 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
-import { SocialIconButtons } from '../../components/common/TechLogos';
+import { playTick } from '../../utils/audio';
 
 export function AboutPage() {
   const { appState } = usePortfolio();
   const navigate = useNavigate();
   const p = appState.profile || {};
-  const ui = appState.uiLabels || {};
+  const containerRef = useRef(null);
+
+  // Default / Baseline Milestones matching Reference HTML
+  const defaultMilestones = [
+    {
+      phase: 'Full-Stack Practice',
+      yearBadge: 'Year 3',
+      title: 'MERN Stack & Interactive Systems',
+      description:
+        'Building a Zerodha-inspired trading dashboard and a ChatGPT-inspired conversational AI workspace.'
+    },
+    {
+      phase: 'Foundation',
+      yearBadge: 'Year 1-2',
+      title: 'Core Programming & CS Fundamentals',
+      description:
+        'Strong foundation in C, Java, Python, OOP, MySQL, and HTML/CSS.'
+    },
+    {
+      phase: 'Current Focus',
+      yearBadge: 'Present',
+      title: 'Algorithmic Depth & AI Integration',
+      description:
+        'Deepening DSA fluency and exploring practical AI/ML integration.'
+    }
+  ];
+
+  // Map CMS learningJourney or fallback to defaultMilestones
+  const milestones =
+    p.learningJourney && Array.isArray(p.learningJourney) && p.learningJourney.length > 0
+      ? p.learningJourney.map((m, idx) => ({
+          phase: m.phase || `Phase ${idx + 1}`,
+          yearBadge: m.year || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
+          title: m.title,
+          description: m.description || m.detail
+        }))
+      : defaultMilestones;
+
+  // 3D Card Tilt Physics
+  const handleCardMouseMove = (e) => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+
+    gsap.to(card, {
+      rotateX: ((y - rect.height / 2) / rect.height) * -4,
+      rotateY: ((x - rect.width / 2) / rect.width) * 4,
+      transformPerspective: 1500,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
+  };
+
+  const handleCardMouseLeave = (e) => {
+    const card = e.currentTarget;
+    gsap.to(card, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 1,
+      ease: 'elastic.out(1, 0.3)'
+    });
+  };
+
+  // Magnetic Button Physics
+  const handleMagneticMouseMove = (e) => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) * 0.25;
+    const y = (e.clientY - rect.top - rect.height / 2) * 0.25;
+
+    gsap.to(el, { x, y, duration: 0.4, ease: 'power2.out' });
+  };
+
+  const handleMagneticMouseLeave = (e) => {
+    const el = e.currentTarget;
+    gsap.to(el, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.3)' });
+  };
+
+  // Entrance Animations
+  useEffect(() => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from('.page-header > *', {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out'
+      });
+
+      gsap.from('.top-section .about-card', {
+        y: 50,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.18,
+        ease: 'back.out(1.2)'
+      });
+
+      gsap.from('.bottom-section .about-card', {
+        y: 50,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.18,
+        ease: 'back.out(1.2)',
+        delay: 0.15
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const profileImageUrl = p.portrait?.url || p.profileImage || '/images/ayush-hero-portrait.jpg';
+  const githubUrl = p.socialLinks?.github || 'https://github.com/ayushprajapati9669-dev';
+  const linkedinUrl = p.socialLinks?.linkedin || 'https://www.linkedin.com/in/ayush-prajapati-b9042424a/';
+  const instagramUrl = p.socialLinks?.instagram || 'https://www.instagram.com/ayush7162/';
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 pt-12 space-y-14">
-      <div className="border-b hairline-border pb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{p.eyebrow}</p>
-          <h1 className="mt-2 font-display text-4xl sm:text-5xl font-extrabold text-alabaster">{p.name}</h1>
-          <p className="mt-2 font-mono text-xs sm:text-sm text-cyanglow">
-            {p.email || 'ayushprajapati9669@gmail.com'} · {p.phone || '(+91) 9669802554'}
-          </p>
+    <main className="about-page" ref={containerRef}>
+      {/* Header */}
+      <div className="page-header">
+        <div className="page-tagline">
+          {p.aboutEyebrow || p.eyebrow || 'Computer Science Student · Developer · Builder'}
         </div>
-        <div className="flex flex-wrap gap-3">
+        <h1 className="page-title">{p.name || 'Ayush Prajapati'}</h1>
+        <div className="page-contact-info">
+          <a
+            href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}
+            className="contact-item magnetic"
+            onMouseMove={handleMagneticMouseMove}
+            onMouseLeave={handleMagneticMouseLeave}
+            onClick={() => playTick()}
+          >
+            <i className="fa-regular fa-envelope" /> {p.email || 'ayushprajapati9669@gmail.com'}
+          </a>
+
+          <a
+            href={`tel:${p.phone?.replace(/[^0-9+]/g, '') || '+919669802554'}`}
+            className="contact-item magnetic"
+            onMouseMove={handleMagneticMouseMove}
+            onMouseLeave={handleMagneticMouseLeave}
+            onClick={() => playTick()}
+          >
+            <i className="fa-solid fa-phone" /> {p.phone || '(+91) 9669802554'}
+          </a>
+
           <button
             type="button"
-            onClick={() => navigate('/contact')}
-            className="focus-ring rounded-full bg-vermilion px-6 py-3 text-xs font-bold text-obsidian shadow-lg shadow-vermilion/20 hover:opacity-95"
+            className="contact-item magnetic"
+            style={{
+              background: 'rgba(6, 182, 212, 0.1)',
+              borderColor: 'rgba(6, 182, 212, 0.3)',
+              color: 'var(--accent-1, #06b6d4)'
+            }}
+            onMouseMove={handleMagneticMouseMove}
+            onMouseLeave={handleMagneticMouseLeave}
+            onClick={() => {
+              playTick();
+              navigate('/contact');
+            }}
           >
-            Get In Touch →
+            Get In Touch <i className="fa-solid fa-arrow-right" />
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 items-start">
-        <div className="lg:col-span-7 space-y-6">
-          <div className="glass-card rounded-3xl p-7 sm:p-8 space-y-4">
-            <h2 className="font-display text-2xl font-bold text-alabaster">About & Academic Profile</h2>
-            {(p.aboutBio || []).map((paragraph, i) => (
-              <p key={i} className="text-base leading-relaxed text-stonewarm">{paragraph}</p>
-            ))}
-          </div>
+      {/* Top Section: Bio Card + Profile Card */}
+      <div className="top-section">
+        {/* Bio Card */}
+        <div
+          className="about-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
+          <h3>
+            <span className="realistic-icon">
+              <i className="fa-solid fa-user-astronaut" />
+            </span>{' '}
+            About & Academic Profile
+          </h3>
 
-          <div className="glass-card rounded-3xl p-7 sm:p-8 space-y-4">
-            <h2 className="font-display text-2xl font-bold text-alabaster">Education Qualifications</h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-obsidian p-5 space-y-1">
-                <span className="font-mono text-xs text-sage font-bold">{p.education?.cgpa || 'CGPA: 8.42 | (2026)'}</span>
-                <h3 className="font-display text-lg font-bold text-white">{p.education?.degree || 'B.Tech in CSE'}</h3>
-                <p className="text-xs text-stonewarm">{p.education?.college || 'SISTec (Sagar Institute of Science & Technology), Bhopal'}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-obsidian p-5 space-y-1">
-                <span className="font-mono text-xs text-cyanglow font-bold">{p.education?.schoolScore || '83.5% | 2022'}</span>
-                <h3 className="font-display text-lg font-bold text-white">{p.education?.schoolBoard || 'Class XII (MP Board)'}</h3>
-                <p className="text-xs text-stonewarm">{p.education?.schoolXII || 'Kasturba Vidhya Mandir, Jamani, Madhya Pradesh'}</p>
-              </div>
-            </div>
-          </div>
+          {p.aboutBio && Array.isArray(p.aboutBio) && p.aboutBio.length > 0 ? (
+            p.aboutBio.map((paragraph, i) => (
+              <p key={i} dangerouslySetInnerHTML={{ __html: paragraph }} />
+            ))
+          ) : (
+            <>
+              <p>
+                I am a third-year <strong>B.Tech Computer Science and Engineering</strong> student at
+                SISTec, Bhopal, focused on building full-stack web applications with the MERN stack
+                and strengthening my core software engineering fundamentals.
+              </p>
+              <p>
+                Alongside developing full-stack interfaces and REST APIs with React, Node.js, Express,
+                and MongoDB, I actively practice <strong>Data Structures and Algorithms</strong> in C,
+                Java, and Python to sharpen how I reason about time complexity, state, and system design.
+              </p>
+              <p>
+                I am also exploring <strong>Artificial Intelligence and Machine Learning</strong>—specifically
+                how modern conversational workflows and intelligent tooling can be integrated cleanly
+                into practical web software.
+              </p>
+            </>
+          )}
         </div>
 
-        <div className="lg:col-span-5 space-y-6">
-          <div className="glass-card rounded-3xl p-6 flex items-center gap-5">
-            <img
-              src={p.portrait?.url || '/images/ayush-hero-portrait.jpg'}
-              alt={p.name}
-              className="h-24 w-24 rounded-2xl object-cover border border-white/15 shrink-0"
-            />
-            <div className="space-y-2">
-              <h3 className="font-display text-xl font-bold text-alabaster">{p.name}</h3>
-              <p className="text-xs text-stonewarm">
-                {p.education?.degree || 'CSE'} | {p.education?.college || 'SISTec, Bhopal'} ({p.education?.cgpa || 'CGPA: 8.42'})
-              </p>
-              <div className="flex items-center gap-2 pt-1">
-                <SocialIconButtons socialLinks={p.socialLinks} sizeClass="h-9 w-9" />
-              </div>
+        {/* Profile Card with Animated Ring */}
+        <div
+          className="about-card profile-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
+          <div className="avatar-ring">
+            <div className="profile-img-wrap">
+              <span className="initials-fallback">{p.monogram || 'AP'}</span>
+              <img
+                className="profile-img"
+                src={profileImageUrl}
+                alt={p.name || 'Ayush Prajapati'}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
             </div>
           </div>
 
-          <div className="glass-card rounded-3xl p-6 space-y-4">
-            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
-              {ui.aboutJourneyHeading || 'ACHIEVEMENTS & ACADEMIC PROJECTS'}
+          <div className="profile-details">
+            <h2>{p.name || 'Ayush Prajapati'}</h2>
+            <p>
+              {p.education?.degree || 'B.Tech CSE'} | {p.education?.college || 'SISTec'} (
+              {p.education?.cgpa || '8.42 CGPA'})
             </p>
-            <div className="space-y-4">
-              {(p.learningJourney || []).map((step, i) => (
-                <div key={i} className="border-l-2 border-vermilion/40 pl-4 space-y-1">
-                  <span className="font-mono text-[11px] text-amberwarm">{step.phase}</span>
-                  <h4 className="font-display text-sm font-bold text-alabaster">{step.title}</h4>
-                  <p className="text-xs text-stonewarm">{step.description}</p>
-                </div>
-              ))}
+
+            <div className="social-links">
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn magnetic"
+                aria-label="GitHub"
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+                onClick={() => playTick()}
+              >
+                <i className="fa-brands fa-github" />
+              </a>
+              <a
+                href={linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn magnetic"
+                aria-label="LinkedIn"
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+                onClick={() => playTick()}
+              >
+                <i className="fa-brands fa-linkedin-in" />
+              </a>
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn magnetic"
+                aria-label="Instagram"
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+                onClick={() => playTick()}
+              >
+                <i className="fa-brands fa-instagram" />
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Bottom Section: Education + Timeline */}
+      <div className="bottom-section">
+        {/* Education Qualifications */}
+        <div
+          className="about-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
+          <h3>
+            <span className="realistic-icon">
+              <i className="fa-solid fa-graduation-cap" />
+            </span>{' '}
+            Education Qualifications
+          </h3>
+
+          <div className="edu-grid">
+            <div className="edu-item">
+              <div className="edu-score">
+                {p.education?.cgpa?.replace(/[^0-9.]/g, '') || '8.42'}{' '}
+                <span>CGPA</span>
+              </div>
+              <div className="edu-title">
+                {p.education?.degree || 'B.Tech in Computer Science and Engineering'}
+              </div>
+              <div className="edu-subtitle">
+                {p.education?.college || 'SISTec (Sagar Institute of Science and Technology)'}
+              </div>
+            </div>
+
+            <div className="edu-item">
+              <div className="edu-score">
+                {p.education?.schoolScore || '83.5%'}{' '}
+                <span>2022</span>
+              </div>
+              <div className="edu-title">
+                {p.education?.schoolBoard || 'MP Board (Class XII)'}
+              </div>
+              <div className="edu-subtitle">
+                {p.education?.schoolXII || 'Kasturba Vidhya Mandir, Jamani, MP'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Achievements & Journey Timeline */}
+        <div
+          className="about-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
+          <h3>
+            <span className="realistic-icon">
+              <i className="fa-solid fa-trophy" />
+            </span>{' '}
+            Achievements & Journey
+          </h3>
+
+          <div className="timeline-list">
+            {milestones.map((item, idx) => (
+              <div key={idx} className="timeline-item">
+                <div className="timeline-dot" />
+                <div className="timeline-year">
+                  {item.phase} <span>· {item.yearBadge}</span>
+                </div>
+                <div className="timeline-title">{item.title}</div>
+                <div className="timeline-desc">{item.description}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
+
+export default AboutPage;
+
