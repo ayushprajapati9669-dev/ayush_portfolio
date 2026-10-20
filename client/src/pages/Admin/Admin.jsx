@@ -20,6 +20,7 @@ import { AdminAuthModal } from './components/AdminAuthModal';
 // Modals
 import { QuickProjectModal } from './components/modals/QuickProjectModal';
 import { ActivityDetailModal } from './components/modals/ActivityDetailModal';
+import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
 export function AdminPage() {
   const { appState, updateAppState, showToast, openConfirmModal } = usePortfolio();
@@ -29,6 +30,9 @@ export function AdminPage() {
   // Tab state (query param support: ?tab=projects, etc.)
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState(tabParam || 'dashboard');
+
+  // Trigger smooth scroll animations on tab change
+  useScrollAnimation(activeTab);
 
   // Sidebar Focus Mode
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

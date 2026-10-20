@@ -118,7 +118,7 @@ export function Header() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 3D Tilt & Magnetic GSAP effect
+  // 3D Tilt, Scroll Shrink & Magnetic GSAP effects (matching uploaded HTML)
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
@@ -127,6 +127,17 @@ export function Header() {
     const navbar = navbarRef.current;
     if (!navWrapper || !navbar) return;
 
+    // 1. Entrance drop-in
+    gsap.from(navWrapper, {
+      y: -30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 0.15,
+      clearProps: 'all'
+    });
+
+    // 2. 3D Tilt on mouse move
     const handleMouseMove = (e) => {
       const rect = navbar.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -169,9 +180,54 @@ export function Header() {
     navWrapper.addEventListener('mousemove', handleMouseMove);
     navWrapper.addEventListener('mouseleave', handleMouseLeave);
 
+    // 3. Navbar scroll shrink & background elevation (matching reference HTML file)
+    let scrollState = false;
+    const handleScroll = () => {
+      const s = window.scrollY > 50;
+      if (s === scrollState) return;
+      scrollState = s;
+
+      if (s) {
+        gsap.to(navWrapper, { width: '80%', y: -10, duration: 0.5, ease: 'power2.out' });
+        gsap.to(navbar, { backgroundColor: 'rgba(5, 8, 12, 0.95)', duration: 0.5, ease: 'power2.out' });
+      } else {
+        gsap.to(navWrapper, { width: '92%', y: 0, duration: 0.5, ease: 'power2.out' });
+        gsap.to(navbar, { backgroundColor: 'rgba(10, 15, 20, 0.7)', duration: 0.5, ease: 'power2.out' });
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // 4. Magnetic buttons hover physics
+    const magneticEls = navWrapper.querySelectorAll('.magnetic');
+    const magneticCleanups = [];
+
+    magneticEls.forEach((el) => {
+      const onMove = (e) => {
+        const rect = el.getBoundingClientRect();
+        gsap.to(el, {
+          x: (e.clientX - rect.left - rect.width / 2) * 0.25,
+          y: (e.clientY - rect.top - rect.height / 2) * 0.25,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      };
+      const onLeave = () => {
+        gsap.to(el, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.3)' });
+      };
+      el.addEventListener('mousemove', onMove);
+      el.addEventListener('mouseleave', onLeave);
+      magneticCleanups.push(() => {
+        el.removeEventListener('mousemove', onMove);
+        el.removeEventListener('mouseleave', onLeave);
+      });
+    });
+
     return () => {
       navWrapper.removeEventListener('mousemove', handleMouseMove);
       navWrapper.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('scroll', handleScroll);
+      magneticCleanups.forEach((fn) => fn());
     };
   }, []);
 

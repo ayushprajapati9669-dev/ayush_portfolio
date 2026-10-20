@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 
@@ -12,6 +14,50 @@ export function Footer() {
   const [timeFormat, setTimeFormat] = useState('IST');
   const [liveTimeString, setLiveTimeString] = useState('');
   const [newsletterEmail, setNewsletterEmail] = useState('');
+
+  const footerRef = useRef(null);
+
+  // GSAP ScrollTrigger Entrance for Footer Columns
+  useEffect(() => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !footerRef.current) return;
+
+    try {
+      gsap.registerPlugin(ScrollTrigger);
+    } catch (_e) {}
+
+    const ctx = gsap.context(() => {
+      const cols = footerRef.current.querySelectorAll('.footer-col');
+      gsap.from(cols, {
+        y: 25,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.12,
+        ease: 'power2.out',
+        clearProps: 'all',
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: 'top 92%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, [location.pathname]);
+
+  // Subtle Parallax on Footer Background Grid & Orb
+  const handleFooterMouseMove = (e) => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !footerRef.current) return;
+    const rect = footerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) * 0.03;
+    const y = (e.clientY - rect.top - rect.height / 2) * 0.03;
+    const grid = footerRef.current.querySelector('#footerGrid');
+    const orb = footerRef.current.querySelector('#footerOrb');
+    if (grid) grid.style.transform = `translate(${x}px, ${y}px) translateZ(-10px)`;
+    if (orb) orb.style.transform = `translate(${-x * 1.5}px, ${-y * 1.5}px)`;
+  };
 
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
@@ -77,7 +123,12 @@ export function Footer() {
   };
 
   return (
-    <footer className={`dashboard-footer ${isAdmin ? 'admin-footer' : ''}`} id="godFooter">
+    <footer
+      ref={footerRef}
+      onMouseMove={handleFooterMouseMove}
+      className={`dashboard-footer ${isAdmin ? 'admin-footer' : ''}`}
+      id="godFooter"
+    >
       <div className="footer-grid-bg" id="footerGrid" aria-hidden="true" />
       <div className="footer-orb" id="footerOrb" aria-hidden="true" />
       <div className="footer-glow-line" aria-hidden="true" />

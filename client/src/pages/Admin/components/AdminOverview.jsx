@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { playTick } from '../../../utils/audio';
 
 export function AdminOverview({
@@ -12,7 +13,11 @@ export function AdminOverview({
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(4);
+
   const statsGridRef = useRef(null);
+  const recentActivityRef = useRef(null);
+  const quickActionsRef = useRef(null);
+  const activityListRef = useRef(null);
 
   const projects = appState.projects || [];
   const certificates = appState.certificates || [];
@@ -22,10 +27,124 @@ export function AdminOverview({
   const certCount = certificates.length;
   const unreadMsgCount = messages.filter((m) => m.status === 'unread').length;
 
-  // 3D tilt and entrance animations for stat cards
+  // ScrollTrigger & GSAP Entrance Animations (matching reference HTML file)
   useEffect(() => {
-    // Stat cards remain 100% visible and interactive immediately
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    try {
+      gsap.registerPlugin(ScrollTrigger);
+    } catch (_e) {}
+
+    const ctx = gsap.context(() => {
+      // 1. Stat cards entrance stagger with ScrollTrigger
+      if (statsGridRef.current) {
+        const cards = statsGridRef.current.querySelectorAll('.stat-card');
+        gsap.from(cards, {
+          y: 30,
+          opacity: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'back.out(1.2)',
+          delay: 0.15,
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: statsGridRef.current,
+            start: 'top 92%',
+            toggleActions: 'play none none none'
+          }
+        });
+      }
+
+      // 2. Recent Activity glass card entrance with ScrollTrigger
+      if (recentActivityRef.current) {
+        gsap.from(recentActivityRef.current, {
+          y: 40,
+          opacity: 0,
+          duration: 0.75,
+          ease: 'power3.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: recentActivityRef.current,
+            start: 'top 90%',
+            toggleActions: 'play none none none'
+          }
+        });
+      }
+
+      // 3. Quick Actions glass card entrance with ScrollTrigger
+      if (quickActionsRef.current) {
+        gsap.from(quickActionsRef.current, {
+          y: 40,
+          opacity: 0,
+          duration: 0.75,
+          ease: 'power3.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: quickActionsRef.current,
+            start: 'top 90%',
+            toggleActions: 'play none none none'
+          }
+        });
+      }
+    });
+
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
+
+    return () => {
+      clearTimeout(refreshTimer);
+      ctx.revert();
+    };
   }, []);
+
+  // 3D Card Hover Physics
+  const handleCardMouseMove = (e) => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotateX = ((y - rect.height / 2) / rect.height) * -8;
+    const rotateY = ((x - rect.width / 2) / rect.width) * 8;
+
+    gsap.to(card, {
+      rotateX,
+      rotateY,
+      transformPerspective: 1000,
+      duration: 0.3,
+      ease: 'power2.out'
+    });
+  };
+
+  const handleCardMouseLeave = (e) => {
+    const card = e.currentTarget;
+    gsap.to(card, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 0.6,
+      ease: 'elastic.out(1, 0.4)'
+    });
+  };
+
+  // Animate activity items when filters change or more items are loaded
+  useEffect(() => {
+    if (activityListRef.current) {
+      const items = activityListRef.current.querySelectorAll('.activity-item');
+      if (items.length > 0) {
+        gsap.from(items, {
+          opacity: 0,
+          y: 10,
+          duration: 0.35,
+          stagger: 0.04,
+          ease: 'power2.out',
+          clearProps: 'all'
+        });
+      }
+    }
+  }, [activeFilter, visibleCount]);
 
   // Assemble dynamic activities from real state + system events
   const allActivities = [
@@ -165,7 +284,7 @@ export function AdminOverview({
   return (
     <div className="space-y-8">
       {/* 4 STATS CARDS */}
-      <div className="stats-grid" ref={statsGridRef}>
+      <div className="stats-grid scroll-reveal" ref={statsGridRef}>
         {/* Card 1: Live Projects */}
         <div
           className="stat-card"
@@ -173,6 +292,8 @@ export function AdminOverview({
             playTick();
             onSelectTab('projects');
           }}
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
           style={{ cursor: 'pointer' }}
         >
           <div className="stat-header">
@@ -197,6 +318,8 @@ export function AdminOverview({
             playTick();
             onSelectTab('certificates');
           }}
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
           style={{ cursor: 'pointer' }}
         >
           <div className="stat-header">
@@ -221,6 +344,8 @@ export function AdminOverview({
             playTick();
             onSelectTab('messages');
           }}
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
           style={{ cursor: 'pointer' }}
         >
           <div className="stat-header">
@@ -248,7 +373,11 @@ export function AdminOverview({
         </div>
 
         {/* Card 4: System Status */}
-        <div className="stat-card">
+        <div
+          className="stat-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
           <div className="stat-header">
             <div className="stat-label">System Status</div>
             <div className="stat-icon icon-green">
@@ -275,7 +404,7 @@ export function AdminOverview({
       </div>
 
       {/* RECENT ACTIVITY GLASS CARD */}
-      <div className="glass-card-admin">
+      <div className="glass-card-admin scroll-reveal" ref={recentActivityRef}>
         <div className="card-header">
           <h2 className="card-title">
             <i className="fa-solid fa-wave-square" />
@@ -328,7 +457,7 @@ export function AdminOverview({
         </div>
 
         {/* Activity Items List */}
-        <div className="activity-list">
+        <div className="activity-list" ref={activityListRef}>
           {displayedActivities.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)', fontSize: '13px' }}>
               <i className="fa-solid fa-search" style={{ fontSize: '24px', opacity: 0.3, marginBottom: '12px', display: 'block' }} />
@@ -381,7 +510,7 @@ export function AdminOverview({
       </div>
 
       {/* QUICK ACTIONS ROW */}
-      <div className="glass-card-admin" style={{ padding: '24px' }}>
+      <div className="glass-card-admin scroll-reveal" ref={quickActionsRef} style={{ padding: '24px' }}>
         <div className="quick-actions">
           <div
             className="action-btn"
