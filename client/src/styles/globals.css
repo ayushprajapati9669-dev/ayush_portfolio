@@ -1,5 +1,9 @@
 @import './variables.css';
 @import './layout.css';
+@import './effects.css';
+@import './navbar.css';
+@import './footer.css';
+@import './admin.css';
 @import './components/cards.css';
 @import './pages/skills.css';
 

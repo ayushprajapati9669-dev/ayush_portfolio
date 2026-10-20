@@ -1,0 +1,102 @@
+/* Background Layers: Aurora, 3D Spheres, Noise, Mouse Light */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+  pointer-events: none;
+  background: #020305;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(160px);
+  opacity: 0.45;
+  mix-blend-mode: screen;
+  animation: auroraFloat 20s infinite alternate ease-in-out;
+}
+
+.aurora-1 {
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.5) 0%, transparent 60%);
+  top: -15%;
+  left: -10%;
+}
+
+.aurora-2 {
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.35) 0%, transparent 60%);
+  bottom: -15%;
+  right: -10%;
+  animation-duration: 25s;
+  animation-delay: -5s;
+}
+
+.aurora-3 {
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(162, 89, 255, 0.28) 0%, transparent 60%);
+  top: 40%;
+  left: 40%;
+  animation-duration: 30s;
+  animation-delay: -10s;
+}
+
+@keyframes auroraFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(8%, 8%) scale(1.08); }
+}
+
+.spheres-container {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1200px;
+}
+
+.sphere {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: inset 0 10px 20px rgba(255,255,255,0.08), inset 0 -10px 20px rgba(0,0,0,0.5), 0 20px 40px rgba(0,0,0,0.5);
+  animation: floatSphere 25s infinite linear;
+}
+
+.sphere:nth-child(1) { width: 120px; height: 120px; top: 15%; left: 10%; animation-duration: 25s; }
+.sphere:nth-child(2) { width: 70px; height: 70px; top: 60%; left: 85%; animation-duration: 18s; animation-delay: -5s; }
+.sphere:nth-child(3) { width: 180px; height: 180px; top: 80%; left: 15%; animation-duration: 35s; animation-delay: -10s; }
+.sphere:nth-child(4) { width: 50px; height: 50px; top: 25%; left: 75%; animation-duration: 15s; animation-delay: -2s; }
+
+@keyframes floatSphere {
+  0% { transform: translateY(0) translateX(0) rotate(0deg); }
+  50% { transform: translateY(-50px) translateX(15px) rotate(180deg); }
+  100% { transform: translateY(0) translateX(0) rotate(360deg); }
+}
+
+.bg-noise {
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  z-index: -1;
+  pointer-events: none;
+}
+
+.mouse-light {
+  position: fixed;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.07) 0%, transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  top: 0;
+  left: 0;
+  transition: opacity 0.3s;
+}

@@ -1,68 +1,237 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
-import { SocialIconButtons } from '../common/TechLogos';
+import { playTick } from '../../utils/audio';
 
 export function Footer() {
-  const { appState } = usePortfolio();
+  const { appState, showToast } = usePortfolio();
   const navigate = useNavigate();
+
+  const [timeFormat, setTimeFormat] = useState('IST');
+  const [liveTimeString, setLiveTimeString] = useState('');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
 
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
 
-  const navItems = [
-    { route: '/', label: ui.navHome || 'Home' },
-    { route: '/about', label: ui.navAbout || 'About' },
-    { route: '/skills', label: ui.navSkills || 'Skills' },
-    { route: '/projects', label: ui.navProjects || 'Projects' },
-    { route: '/certificates', label: ui.navCertificates || 'Certificates' },
-    { route: '/contact', label: ui.navContact || 'Contact' }
-  ];
+  // Live Clock (IST / UTC / LOCAL)
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      let str = '';
+      if (timeFormat === 'IST') {
+        str = now.toLocaleTimeString('en-IN', {
+          hour12: false,
+          timeZone: 'Asia/Kolkata',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        }) + ' IST';
+      } else if (timeFormat === 'UTC') {
+        str = now.toLocaleTimeString('en-GB', {
+          hour12: false,
+          timeZone: 'UTC',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        }) + ' UTC';
+      } else {
+        str = now.toLocaleTimeString([], { hour12: false }) + ' LOCAL';
+      }
+      setLiveTimeString(str);
+    };
 
-  const handleNav = (route) => {
-    navigate(route);
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, [timeFormat]);
+
+  const handleToggleClock = () => {
+    playTick();
+    setTimeFormat((prev) => (prev === 'IST' ? 'UTC' : prev === 'UTC' ? 'LOCAL' : 'IST'));
+  };
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim() || !newsletterEmail.includes('@')) {
+      showToast('Please enter a valid email address.', 'fa-triangle-exclamation');
+      return;
+    }
+    playTick();
+    showToast(`Thanks for connecting! Confirmation sent to ${newsletterEmail}`, 'fa-paper-plane');
+    setNewsletterEmail('');
+  };
+
+  const handleScrollToTop = (e) => {
+    e.preventDefault();
+    playTick();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNav = (path) => {
+    playTick();
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer className="border-t hairline-border bg-charcoal/80 py-12 mt-auto backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-vermilion font-display text-xs font-extrabold text-obsidian">
-              {p.monogram || 'AP'}
-            </span>
-            <span className="font-display text-sm font-bold tracking-wider text-alabaster">
-              {p.displayName || 'AYUSH PRAJAPATI'}
+    <footer className="dashboard-footer" id="godFooter">
+      <div className="footer-grid-bg" id="footerGrid" aria-hidden="true" />
+      <div className="footer-orb" id="footerOrb" aria-hidden="true" />
+      <div className="footer-glow-line" aria-hidden="true" />
+
+      <div className="footer-content">
+        {/* Left: Brand & Bio */}
+        <div className="footer-col">
+          <div className="footer-brand">
+            <div className="footer-logo">{p.monogram || 'AP'}</div>
+            <span className="footer-brand-name">{p.displayName || p.name || 'Ayush Prajapati'}</span>
+          </div>
+          <div className="footer-desc">
+            <span>{p.headerSubtitle || 'Full-Stack Developer & UI/UX Designer.'}</span>
+            <a href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}>
+              {p.email || 'ayushprajapati9669@gmail.com'}
+            </a>
+            <span>
+              {p.phone || '(+91) 9669802554'} · {p.location || 'SISTec, Bhopal'}
             </span>
           </div>
-          <p className="text-xs text-stonewarm">{p.footerTagline}</p>
+          <div className="footer-live-info">
+            <div
+              className="live-badge"
+              onClick={handleToggleClock}
+              style={{ cursor: 'pointer', userSelect: 'none', width: 'fit-content' }}
+              title="Click to toggle timezone (IST / UTC / LOCAL)"
+            >
+              <i className="fa-regular fa-clock" />
+              <span className="time-text">{liveTimeString || 'Loading clock...'}</span>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-5 text-xs font-medium text-stonewarm">
-          {navItems.map((item) => (
+        {/* Center: Explore Links */}
+        <div className="footer-col">
+          <div className="footer-title">Explore</div>
+          <div className="footer-links">
             <button
-              key={item.route}
               type="button"
-              onClick={() => handleNav(item.route)}
-              className="hover:text-alabaster transition-colors"
+              className="footer-link"
+              onClick={() => handleNav('/')}
             >
-              {item.label}
+              <i className="fa-solid fa-chevron-right" /> Home
             </button>
-          ))}
+            <button
+              type="button"
+              className="footer-link"
+              onClick={() => handleNav('/about')}
+            >
+              <i className="fa-solid fa-chevron-right" /> About Me
+            </button>
+            <button
+              type="button"
+              className="footer-link"
+              onClick={() => handleNav('/skills')}
+            >
+              <i className="fa-solid fa-chevron-right" /> Skills & Tech
+            </button>
+            <button
+              type="button"
+              className="footer-link"
+              onClick={() => handleNav('/projects')}
+            >
+              <i className="fa-solid fa-chevron-right" /> Featured Projects
+            </button>
+            <button
+              type="button"
+              className="footer-link"
+              onClick={() => handleNav('/certificates')}
+            >
+              <i className="fa-solid fa-chevron-right" /> Certificates
+            </button>
+            <button
+              type="button"
+              className="footer-link admin-link"
+              onClick={() => handleNav('/admin')}
+            >
+              <i className="fa-solid fa-lock" /> Admin CMS
+            </button>
+          </div>
+        </div>
+
+        {/* Right: Premium Connect Box */}
+        <div className="footer-col">
+          <div className="footer-connect-box">
+            <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
+              <input
+                type="email"
+                className="newsletter-input"
+                placeholder="Enter email to connect..."
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+              />
+              <button type="submit" className="newsletter-btn" aria-label="Subscribe to updates">
+                <i className="fa-solid fa-paper-plane" />
+              </button>
+            </form>
+
+            <div className="footer-socials">
+              <a
+                href={p.socialLinks?.github || 'https://github.com/ayushprajapati9669-dev'}
+                target="_blank"
+                rel="noreferrer"
+                className="social-icon github"
+                title="GitHub"
+                onClick={() => playTick()}
+              >
+                <i className="fa-brands fa-github" />
+              </a>
+              <a
+                href={p.socialLinks?.linkedin || 'https://www.linkedin.com/in/ayush-prajapati-53b9a1288'}
+                target="_blank"
+                rel="noreferrer"
+                className="social-icon linkedin"
+                title="LinkedIn"
+                onClick={() => playTick()}
+              >
+                <i className="fa-brands fa-linkedin-in" />
+              </a>
+              <a
+                href={p.socialLinks?.instagram || 'https://www.instagram.com/prajapatiayush7162/'}
+                target="_blank"
+                rel="noreferrer"
+                className="social-icon instagram"
+                title="Instagram"
+                onClick={() => playTick()}
+              >
+                <i className="fa-brands fa-instagram" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Bottom */}
+      <div className="footer-bottom">
+        <div>© 2026 {p.displayName || 'Ayush Prajapati'}. All rights reserved.</div>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Link to="/about" className="hover:text-white transition-colors" onClick={() => playTick()}>
+            About
+          </Link>
+          <span style={{ color: '#333' }}>|</span>
+          <Link to="/contact" className="hover:text-white transition-colors" onClick={() => playTick()}>
+            Contact
+          </Link>
           <button
             type="button"
-            onClick={() => handleNav('/admin')}
-            className="text-vermilion hover:underline"
+            className="back-to-top"
+            onClick={handleScrollToTop}
           >
-            {ui.navAdmin || 'Admin CMS'}
+            Back to Top <i className="fa-solid fa-arrow-up" />
           </button>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <SocialIconButtons socialLinks={p.socialLinks} sizeClass="h-10 w-10" />
         </div>
       </div>
     </footer>
   );
 }
+
+export default Footer;
