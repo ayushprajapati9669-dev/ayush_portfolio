@@ -7,7 +7,7 @@
    ========================================================================== */
 
 .skills-section {
-  padding: 140px 5% 100px;
+  padding: 180px 5% 100px;
   max-width: 1100px;
   margin: 0 auto;
   position: relative;
@@ -16,7 +16,8 @@
 }
 
 .skills-section.standalone {
-  padding-top: 140px;
+  padding: 180px 5% 100px;
+  max-width: 1100px;
 }
 
 .skills-section.home-embedded {

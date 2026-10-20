@@ -13,12 +13,8 @@ export function BackgroundLayers() {
     if (!el) return;
 
     const handleMouseMove = (e) => {
-      gsap.to(el, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 1.2,
-        ease: 'power3.out'
-      });
+      el.style.left = `${e.clientX}px`;
+      el.style.top = `${e.clientY}px`;
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -48,7 +44,7 @@ export function BackgroundLayers() {
       <div className="bg-noise" aria-hidden="true" />
 
       {/* Mouse Glowing Light Follower */}
-      <div className="mouse-light" ref={mouseLightRef} aria-hidden="true" />
+      <div className="mouse-light" id="mouseLight" ref={mouseLightRef} aria-hidden="true" />
     </>
   );
 }

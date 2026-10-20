@@ -283,7 +283,7 @@ export function SkillsSection({
           {ui.homeSkillsEyebrow || '03 · Technical Capabilities'}
         </span>
         <h2 className="skills-title">
-          {ui.homeSkillsHeading || 'Interactive Skills & Tech Stack'}
+          Interactive Skills &<br />Tech Stack
         </h2>
       </div>
 

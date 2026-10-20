@@ -43,7 +43,7 @@ export function AdminSidebar({
         {
           id: 'messages',
           label: 'Messages',
-          icon: 'fa-regular fa-envelope',
+          icon: 'fa-envelope',
           badge: counts.unreadMessages,
           badgeColor: 'orange'
         }
@@ -51,7 +51,7 @@ export function AdminSidebar({
     }
   ];
 
-  // Sliding highlight bar logic
+  // Sliding highlight bar logic with scrollTop support
   const moveHighlight = (element) => {
     const nav = navRef.current;
     const highlight = highlightRef.current;
@@ -69,16 +69,36 @@ export function AdminSidebar({
 
     const navRect = nav.getBoundingClientRect();
     const elRect = element.getBoundingClientRect();
-    const topOffset = elRect.top - navRect.top;
+    const topOffset = (elRect.top - navRect.top) + nav.scrollTop;
 
     highlight.style.top = `${topOffset}px`;
+    highlight.style.height = `${elRect.height || 42}px`;
     highlight.style.opacity = '1';
   };
+
+  // Re-anchor highlight during scroll so lower tabs stay perfectly aligned
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const handleScroll = () => {
+      const hovered = nav.querySelector('.nav-item:hover');
+      if (hovered) {
+        moveHighlight(hovered);
+      } else {
+        const activeEl = nav.querySelector('.nav-item.active');
+        if (activeEl) moveHighlight(activeEl);
+      }
+    };
+
+    nav.addEventListener('scroll', handleScroll, { passive: true });
+    return () => nav.removeEventListener('scroll', handleScroll);
+  }, [activeTab, isCollapsed]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       moveHighlight();
-    }, 100);
+    }, 120);
     return () => clearTimeout(timer);
   }, [activeTab, isCollapsed, searchQuery]);
 
@@ -179,9 +199,10 @@ export function AdminSidebar({
                       moveHighlight(e.currentTarget);
                     }}
                     onMouseEnter={(e) => moveHighlight(e.currentTarget)}
+                    title={isCollapsed ? item.label : undefined}
                   >
                     <div className="nav-icon-box">
-                      <i className={`fa-solid ${item.icon}`} />
+                      <i className={item.icon.startsWith('fa-') && !item.icon.includes(' ') ? `fa-solid ${item.icon}` : item.icon} />
                     </div>
                     <span>{item.label}</span>
                     {item.badge !== null && item.badge !== undefined && (

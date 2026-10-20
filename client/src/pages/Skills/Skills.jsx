@@ -3,7 +3,7 @@ import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWi
 
 export function SkillsPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 pt-8">
+    <div className="w-full">
       <InteractiveSkillsWidget isStandalonePage={true} />
     </div>
   );

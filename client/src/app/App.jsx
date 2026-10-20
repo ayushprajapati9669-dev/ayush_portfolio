@@ -25,7 +25,7 @@ export default function App() {
           <Toast />
           <ConfirmModal />
           <CertificateLightboxModal />
-          <main id="main-content" className="flex-1">
+          <main id="main-content" className="flex-1 relative z-10">
             <AppRouter />
           </main>
           <Footer />
