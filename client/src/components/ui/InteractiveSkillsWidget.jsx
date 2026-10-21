@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 
@@ -251,29 +252,57 @@ export function SkillsSection({
     setTimeout(() => ripple.remove(), 700);
   };
 
-  // GSAP Entrance animation on mount / filter change
+  // GSAP ScrollTrigger & Entrance animation on mount / filter change
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !gridRef.current) return;
 
+    try {
+      gsap.registerPlugin(ScrollTrigger);
+    } catch (_e) {}
+
     const cards = gridRef.current.querySelectorAll('.skill-card');
     if (cards.length > 0) {
-      gsap.fromTo(
-        cards,
-        { y: 35, opacity: 0, scale: 0.92, rotateY: -6 },
-        {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          rotateY: 0,
-          duration: 0.55,
-          stagger: 0.04,
-          ease: 'back.out(1.2)',
-          clearProps: 'transform,opacity'
-        }
-      );
+      if (isStandalonePage) {
+        gsap.fromTo(
+          cards,
+          { y: 35, opacity: 0, scale: 0.92, rotateY: -6 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotateY: 0,
+            duration: 0.55,
+            stagger: 0.03,
+            ease: 'back.out(1.2)',
+            clearProps: 'transform,opacity',
+            overwrite: 'auto'
+          }
+        );
+      } else {
+        gsap.fromTo(
+          cards,
+          { y: 35, opacity: 0, scale: 0.92, rotateY: -6 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotateY: 0,
+            duration: 0.55,
+            stagger: 0.03,
+            ease: 'back.out(1.2)',
+            clearProps: 'transform,opacity',
+            overwrite: 'auto',
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: 'top 88%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      }
     }
-  }, [selectedFilter]);
+  }, [selectedFilter, isStandalonePage]);
 
   return (
     <section className={`skills-section ${isStandalonePage ? 'standalone' : 'home-embedded'}`}>

@@ -1,15 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 
 export function ConfirmModal() {
   const { appState, confirmState, closeConfirmModal } = usePortfolio();
-  if (!confirmState.open) return null;
+  const modalCardRef = useRef(null);
 
   const ui = appState.uiLabels || {};
 
   useEffect(() => {
+    if (!confirmState.open) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && modalCardRef.current) {
+      gsap.fromTo(
+        modalCardRef.current,
+        { scale: 0.9, opacity: 0, y: 20 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.2)' }
+      );
+    }
+  }, [confirmState.open]);
+
+  useEffect(() => {
+    if (!confirmState.open) return;
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         playTick();
@@ -18,7 +32,9 @@ export function ConfirmModal() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [closeConfirmModal]);
+  }, [confirmState.open, closeConfirmModal]);
+
+  if (!confirmState.open) return null;
 
   const modalJSX = (
     <div
@@ -32,7 +48,7 @@ export function ConfirmModal() {
         }
       }}
     >
-      <div className="w-full max-w-md rounded-2xl border border-red-500/30 bg-[#0b1120] p-6 shadow-2xl relative overflow-hidden backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div ref={modalCardRef} className="w-full max-w-md rounded-2xl border border-red-500/30 bg-[#0b1120] p-6 shadow-2xl relative overflow-hidden backdrop-blur-2xl">
         {/* Glow corner ambient */}
         <div className="absolute -top-12 -right-12 w-32 h-32 bg-red-500/15 rounded-full blur-2xl pointer-events-none" />
 

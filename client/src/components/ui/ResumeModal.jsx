@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { SocialIconButtons } from '../common/TechLogos';
 
 export function ResumeModal() {
   const { appState, resumeModalOpen, closeResumeModal, downloadOrPrintResume } = usePortfolio();
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    if (!resumeModalOpen) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && cardRef.current) {
+      gsap.fromTo(
+        cardRef.current,
+        { scale: 0.92, opacity: 0, y: 25 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.15)' }
+      );
+    }
+  }, [resumeModalOpen]);
+
   if (!resumeModalOpen) return null;
 
   const p = appState.profile || {};
@@ -15,7 +30,7 @@ export function ResumeModal() {
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
     >
-      <div className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl border border-white/15 bg-charcoal shadow-2xl overflow-hidden">
+      <div ref={cardRef} className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl border border-white/15 bg-charcoal shadow-2xl overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b hairline-border bg-obsidian px-6 py-4">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-cyanglow">

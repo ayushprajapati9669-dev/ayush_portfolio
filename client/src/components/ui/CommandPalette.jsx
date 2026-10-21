@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import gsap from 'gsap';
 import { playTick } from '../../utils/audio';
 
 export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
@@ -7,6 +8,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
   const resultsRef = useRef(null);
+  const modalRef = useRef(null);
   const navigate = useNavigate();
 
   const commands = [
@@ -112,6 +114,16 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
       setQuery('');
       setSelectedIndex(0);
       playTick();
+
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduceMotion && modalRef.current) {
+        gsap.fromTo(
+          modalRef.current,
+          { scale: 0.94, opacity: 0, y: -20 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.2)' }
+        );
+      }
+
       setTimeout(() => {
         if (inputRef.current) inputRef.current.focus();
       }, 80);
@@ -165,7 +177,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
 
   return (
     <div className={`cmd-palette active`} onClick={onClose} role="dialog" aria-modal="true">
-      <div className="cmd-modal" onClick={(e) => e.stopPropagation()}>
+      <div ref={modalRef} className="cmd-modal" onClick={(e) => e.stopPropagation()}>
         <div className="cmd-input-wrap">
           <i className="fa-solid fa-magnifying-glass" />
           <input

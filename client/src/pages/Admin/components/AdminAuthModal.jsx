@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import { validatePasswordStrength } from '../../../utils/validation';
 import { playTick } from '../../../utils/audio';
 
@@ -24,6 +25,27 @@ export function AdminAuthModal({
   const [loginPass, setLoginPass] = useState('');
   const [authErrors, setAuthErrors] = useState({});
 
+  const cardRef = useRef(null);
+
+  // GSAP Entrance
+  useEffect(() => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && cardRef.current) {
+      gsap.fromTo(
+        cardRef.current,
+        { scale: 0.94, opacity: 0, y: 30 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' }
+      );
+    }
+  }, [authMode]);
+
+  const shakeCard = () => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && cardRef.current) {
+      gsap.fromTo(cardRef.current, { x: -8 }, { x: 0, duration: 0.4, ease: 'elastic.out(1, 0.3)' });
+    }
+  };
+
   const [forgotForm, setForgotForm] = useState({
     email: '',
     phone: '',
@@ -48,12 +70,14 @@ export function AdminAuthModal({
 
     if (Object.keys(errs).length > 0) {
       setAuthErrors(errs);
+      shakeCard();
       return;
     }
 
     playTick();
     const res = await loginAdmin(loginUser, loginPass);
     if (!res.ok) {
+      shakeCard();
       setAuthErrors({
         banner: res.lockoutError || 'Authentication failed: Invalid admin credentials.',
         user: res.userError || '',
@@ -110,7 +134,7 @@ export function AdminAuthModal({
 
   return (
     <div className="mx-auto max-w-md px-4 pt-32 pb-24">
-      <div className="glass-card-admin rounded-3xl p-7 sm:p-9 space-y-6 border border-cyan-400/30">
+      <div ref={cardRef} className="glass-card-admin rounded-3xl p-7 sm:p-9 space-y-6 border border-cyan-400/30">
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-2 rounded-full bg-cyan-400/10 border border-cyan-400/30 px-3 py-1 font-mono text-[10px] font-bold text-cyan-400">
             <i className="fa-solid fa-lock text-xs" />

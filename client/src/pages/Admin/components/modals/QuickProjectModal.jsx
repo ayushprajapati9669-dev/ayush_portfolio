@@ -1,9 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { playTick } from '../../../../utils/audio';
 
 export function QuickProjectModal({ isOpen, onClose, onSave }) {
   const [title, setTitle] = useState('');
   const [stack, setStack] = useState('');
+  const boxRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && boxRef.current) {
+      gsap.fromTo(
+        boxRef.current,
+        { scale: 0.92, opacity: 0, y: 20 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.2)' }
+      );
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -28,7 +42,7 @@ export function QuickProjectModal({ isOpen, onClose, onSave }) {
       role="dialog"
       aria-modal="true"
     >
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+      <div ref={boxRef} className="modal-box" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3 className="modal-title">Add New Project</h3>
           <button

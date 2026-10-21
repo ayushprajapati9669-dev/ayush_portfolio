@@ -1,12 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 
 export function CertificateLightboxModal() {
   const { appState, activeCertLightbox, closeCertificateLightbox } = usePortfolio();
   const [zoom, setZoom] = useState(1);
+  const modalBoxRef = useRef(null);
 
   useEffect(() => {
     setZoom(1);
+    if (!activeCertLightbox) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && modalBoxRef.current) {
+      gsap.fromTo(
+        modalBoxRef.current,
+        { scale: 0.92, opacity: 0, y: 30 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.15)' }
+      );
+    }
   }, [activeCertLightbox]);
 
   if (!activeCertLightbox) return null;
@@ -29,7 +40,7 @@ export function CertificateLightboxModal() {
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-3 sm:p-6 backdrop-blur-xl"
     >
-      <div className="w-full max-w-5xl max-h-[94vh] flex flex-col rounded-3xl border border-cyanglow/35 bg-charcoal shadow-2xl overflow-hidden">
+      <div ref={modalBoxRef} className="w-full max-w-5xl max-h-[94vh] flex flex-col rounded-3xl border border-cyanglow/35 bg-charcoal shadow-2xl overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b hairline-border bg-obsidian px-6 py-4">
           <div>
             <p className="font-mono text-xs font-semibold uppercase tracking-widest text-cyanglow">

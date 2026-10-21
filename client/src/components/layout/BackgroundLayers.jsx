@@ -3,6 +3,7 @@ import gsap from 'gsap';
 
 export function BackgroundLayers() {
   const mouseLightRef = useRef(null);
+  const spheresRef = useRef(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -12,14 +13,39 @@ export function BackgroundLayers() {
     const el = mouseLightRef.current;
     if (!el) return;
 
+    // Smooth cursor interpolation with quickTo
+    const xTo = gsap.quickTo(el, 'left', { duration: 0.35, ease: 'power2.out' });
+    const yTo = gsap.quickTo(el, 'top', { duration: 0.35, ease: 'power2.out' });
+
     const handleMouseMove = (e) => {
-      el.style.left = `${e.clientX}px`;
-      el.style.top = `${e.clientY}px`;
+      xTo(e.clientX);
+      yTo(e.clientY);
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    // Subtle gentle floating drift for the spheres
+    let spheresAnim = null;
+    if (spheresRef.current) {
+      const spheres = spheresRef.current.querySelectorAll('.sphere');
+      spheresAnim = gsap.to(spheres, {
+        y: 'random(-15, 15)',
+        x: 'random(-10, 10)',
+        rotation: 'random(-8, 8)',
+        duration: 'random(3.5, 6)',
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: {
+          each: 0.6,
+          from: 'random'
+        }
+      });
+    }
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      if (spheresAnim) spheresAnim.kill();
     };
   }, []);
 
@@ -33,7 +59,7 @@ export function BackgroundLayers() {
       </div>
 
       {/* 3D Floating Glass Spheres */}
-      <div className="spheres-container" aria-hidden="true">
+      <div ref={spheresRef} className="spheres-container" aria-hidden="true">
         <div className="sphere" />
         <div className="sphere" />
         <div className="sphere" />
@@ -48,3 +74,4 @@ export function BackgroundLayers() {
     </>
   );
 }
+

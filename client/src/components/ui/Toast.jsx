@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 
 export function Toast() {
   const { toastData, toastMessage, hideToast } = usePortfolio();
   const currentMsg = toastData?.message || toastMessage;
+  const toastRef = useRef(null);
+
+  useEffect(() => {
+    if (!currentMsg) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && toastRef.current) {
+      gsap.fromTo(
+        toastRef.current,
+        { opacity: 0, y: 25, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.2)' }
+      );
+    }
+  }, [currentMsg]);
+
   if (!currentMsg) return null;
 
   const type = toastData?.type || 'info';
@@ -45,9 +60,10 @@ export function Toast() {
 
   return (
     <div
+      ref={toastRef}
       role="status"
       aria-live="polite"
-      className={`fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md animate-in fade-in slide-in-from-bottom-3 duration-300 rounded-2xl border ${currentCfg.borderClass} bg-charcoal/95 px-4 py-3.5 text-alabaster shadow-2xl backdrop-blur-xl`}
+      className={`fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md rounded-2xl border ${currentCfg.borderClass} bg-charcoal/95 px-4 py-3.5 text-alabaster shadow-2xl backdrop-blur-xl`}
     >
       <div className="flex items-start gap-3">
         <div className="shrink-0 mt-0.5">{currentCfg.icon}</div>

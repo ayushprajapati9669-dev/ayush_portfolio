@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useAuth } from '../../app/providers/AuthProvider';
 import { playTick } from '../../utils/audio';
@@ -31,8 +32,22 @@ export function AdminPage() {
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState(tabParam || 'dashboard');
 
+  const contentAreaRef = useRef(null);
+
   // Trigger smooth scroll animations on tab change
   useScrollAnimation(activeTab);
+
+  // Smooth GSAP tab transition
+  useEffect(() => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && contentAreaRef.current) {
+      gsap.fromTo(
+        contentAreaRef.current,
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', clearProps: 'transform,opacity' }
+      );
+    }
+  }, [activeTab]);
 
   // Sidebar Focus Mode
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -155,7 +170,7 @@ export function AdminPage() {
       <div
         className={`admin-main-wrapper ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}
       >
-        <main className="admin-content-area">
+        <main ref={contentAreaRef} className="admin-content-area">
           {activeTab === 'dashboard' && (
             <AdminOverview
               appState={appState}

@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 
@@ -44,13 +45,14 @@ export function CertificateCard({
     }
     const card = cardRef.current;
     if (!card) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     card.style.setProperty('--mouse-x', `${x}px`);
     card.style.setProperty('--mouse-y', `${y}px`);
-    if (window.gsap) {
-      window.gsap.to(card, {
+    if (!reduceMotion) {
+      gsap.to(card, {
         rotateX: ((y - rect.height / 2) / rect.height) * -4,
         rotateY: ((x - rect.width / 2) / rect.width) * 4,
         transformPerspective: 1500,
@@ -67,8 +69,9 @@ export function CertificateCard({
     }
     const card = cardRef.current;
     if (!card) return;
-    if (window.gsap) {
-      window.gsap.to(card, {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion) {
+      gsap.to(card, {
         rotateX: 0,
         rotateY: 0,
         duration: 1,
