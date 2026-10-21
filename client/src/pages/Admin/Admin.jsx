@@ -55,6 +55,12 @@ export function AdminPage() {
   // Modals state
   const [isQuickProjOpen, setIsQuickProjOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+
+  const handleOpenCategoryModal = () => {
+    handleSelectTab('skills');
+    setIsCategoryModalOpen(true);
+  };
 
   useEffect(() => {
     if (tabParam && tabParam !== activeTab) {
@@ -100,7 +106,7 @@ export function AdminPage() {
   // Count metrics for sidebar badges
   const publishedCount = (appState.projects || []).filter((p) => p.status === 'published').length;
   const certCount = (appState.certificates || []).length;
-  const skillsCount = (appState.skills || []).length;
+  const skillsCount = (appState.skills || []).reduce((acc, cat) => acc + (cat.items || []).length, 0);
   const unreadMsgCount = (appState.messages || []).filter((m) => m.status === 'unread').length;
 
   const counts = {
@@ -164,6 +170,7 @@ export function AdminPage() {
         counts={counts}
         profile={appState.profile}
         onLogout={logoutAdmin}
+        onOpenCategoryModal={handleOpenCategoryModal}
       />
 
       {/* 2. Main Wrapper */}
@@ -207,6 +214,8 @@ export function AdminPage() {
               updateAppState={updateAppState}
               session={session}
               showToast={showToast}
+              isCategoryModalOpen={isCategoryModalOpen}
+              setIsCategoryModalOpen={setIsCategoryModalOpen}
             />
           )}
 

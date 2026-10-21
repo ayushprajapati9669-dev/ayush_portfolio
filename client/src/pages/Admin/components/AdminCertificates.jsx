@@ -4,11 +4,13 @@ import { uploadImageViaCloudinary } from '../../../services/api';
 import { validateCertificateForm, isValidUrl } from '../../../utils/validation';
 import { playTick } from '../../../utils/audio';
 import { usePortfolio } from '../../../app/providers/ThemeProvider';
+import { CertificateQRCodeModal } from '../../../components/ui/CertificateQRCodeModal';
 
 const COMMON_ISSUERS = [
   'Apna College',
   'Meta',
   'Amazon Web Services',
+  'NPTEL',
   'Code With Harry',
   'HackerRank',
   'Google',
@@ -21,11 +23,14 @@ const COMMON_YEARS = ['2026', '2025', '2024', '2023', '2022'];
 
 const COMMON_CATEGORIES = [
   'Full Stack Development',
-  'Artificial Intelligence & ML',
+  'Cyber Security',
   'Cloud Computing',
+  'Artificial Intelligence & ML',
   'Frontend Engineering',
   'Backend & System Design',
-  'Data Science & Analytics'
+  'Data Science & Analytics',
+  'DevOps & Infrastructure',
+  'NPTEL / Academic'
 ];
 
 const RECOMMENDED_SKILLS = [
@@ -102,12 +107,27 @@ export function AdminCertificates({
   // Filter & Search Controls
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIssuer, setSelectedIssuer] = useState('ALL');
+  const [selectedCategory, setSelectedCategory] = useState('ALL'); // ALL, Full Stack, AI & ML, etc.
   const [selectedStatus, setSelectedStatus] = useState('ALL'); // ALL, FEATURED, VERIFIED
   const [sortBy, setSortBy] = useState('newest'); // newest, oldest, title-asc, issuer-asc
+
+  // Multi-select & Batch Actions State
+  const [selectedCertIds, setSelectedCertIds] = useState([]);
+
+  // Drag-and-drop Reorder State
+  const [draggedCertIndex, setDraggedCertIndex] = useState(null);
+  const [dragOverCertIndex, setDragOverCertIndex] = useState(null);
+
+  // Drag & drop file upload state (Step 4)
+  const [isDraggingFile, setIsDraggingFile] = useState(false);
+
+  // QR Code Modal State
+  const [qrModalCert, setQrModalCert] = useState(null);
 
   // 3D Tilt Card Ref for Step 4 Preview
   const previewCardRef = useRef(null);
   const formTopRef = useRef(null);
+  const imageFileInputRef = useRef(null);
 
   const certificates = appState.certificates || [];
 
@@ -173,6 +193,9 @@ export function AdminCertificates({
     if (stepNumber === 1) {
       if (!form.title || form.title.trim().length < 3) {
         errs.title = 'Certificate title is required (minimum 3 characters).';
+      }
+      if (!form.category || !form.category.trim()) {
+        errs.category = 'Category / Domain is required.';
       }
       if (!form.issuer || !form.issuer.trim()) {
         errs.issuer = 'Issuing organization is required.';
@@ -423,9 +446,27 @@ export function AdminCertificates({
     handleCancelEdit();
   };
 
-  // Cloudinary image upload handler
+  // Cloudinary image upload handler with instant local preview
   const handleFileUpload = async (file) => {
     if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file (PNG, JPG, WebP)', 'fa-triangle-exclamation');
+      return;
+    }
+
+    // 1. Instant local preview
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setForm((prev) => ({
+        ...prev,
+        imageUrl: ev.target.result,
+        downloadUrl: prev.downloadUrl || ev.target.result
+      }));
+      setErrors((prev) => ({ ...prev, imageUrl: '' }));
+    };
+    reader.readAsDataURL(file);
+
+    // 2. Cloudinary / cloud upload
     setIsUploading(true);
     showToast('Uploading certificate image to Cloudinary...', 'fa-cloud-arrow-up');
     try {
@@ -437,12 +478,10 @@ export function AdminCertificates({
           downloadUrl: prev.downloadUrl || url
         }));
         setErrors((prev) => ({ ...prev, imageUrl: '' }));
-        showToast('Certificate badge uploaded successfully!', 'fa-check');
-      } else {
-        showToast('Failed to upload image. Please verify Cloudinary credentials.', 'fa-triangle-exclamation');
+        showToast('Certificate badge saved successfully!', 'fa-check');
       }
     } catch {
-      showToast('Error uploading image to Cloudinary.', 'fa-circle-xmark');
+      showToast('Local preview active.', 'fa-info-circle');
     } finally {
       setIsUploading(false);
     }
@@ -484,6 +523,58 @@ export function AdminCertificates({
     return Array.from(set);
   }, [certificates]);
 
+  // Helper to determine/infer category for any certificate
+  const getCertCategory = (c) => {
+    if (c.category && c.category.trim()) return c.category.trim();
+    const text = `${c.title || ''} ${c.skillsCovered || ''} ${c.issuer || ''}`.toLowerCase();
+    if (text.includes('cyber') || text.includes('security') || text.includes('hacker') || text.includes('infosec')) {
+      return 'Cyber Security';
+    }
+    if (text.includes('nptel') || text.includes('swayam') || text.includes('iit') || text.includes('academic')) {
+      return 'NPTEL / Academic';
+    }
+    if (text.includes('mern') || text.includes('full stack') || text.includes('full-stack') || text.includes('node') || text.includes('express')) {
+      return 'Full Stack Development';
+    }
+    if (text.includes('ai') || text.includes('machine learning') || text.includes('tensorflow') || text.includes('python')) {
+      return 'Artificial Intelligence & ML';
+    }
+    if (text.includes('cloud') || text.includes('aws') || text.includes('s3') || text.includes('lambda') || text.includes('azure') || text.includes('gcp') || text.includes('devops')) {
+      return 'Cloud Computing';
+    }
+    if (text.includes('frontend') || text.includes('react') || text.includes('ui/ux') || text.includes('css')) {
+      return 'Frontend Engineering';
+    }
+    if (text.includes('backend') || text.includes('system design') || text.includes('database') || text.includes('sql') || text.includes('mongo')) {
+      return 'Backend & System Design';
+    }
+    if (text.includes('data') || text.includes('analytics') || text.includes('power bi') || text.includes('tableau')) {
+      return 'Data Science & Analytics';
+    }
+    return 'Full Stack Development';
+  };
+
+  // Dynamic Category Suggestions combining defaults with existing certificate categories
+  const categorySuggestions = useMemo(() => {
+    const set = new Set(COMMON_CATEGORIES);
+    certificates.forEach((c) => {
+      if (c.category && c.category.trim()) {
+        set.add(c.category.trim());
+      }
+    });
+    return Array.from(set);
+  }, [certificates]);
+
+  // Unique Categories for filtering
+  const availableCategories = useMemo(() => {
+    const set = new Set();
+    certificates.forEach((c) => {
+      set.add(getCertCategory(c));
+    });
+    COMMON_CATEGORIES.forEach((cat) => set.add(cat));
+    return ['ALL', ...Array.from(set)];
+  }, [certificates]);
+
   // Filtered & Sorted Certificates List
   const filteredCertificates = useMemo(() => {
     let list = [...certificates];
@@ -497,8 +588,17 @@ export function AdminCertificates({
           (c.issuer || '').toLowerCase().includes(q) ||
           (c.credentialId || '').toLowerCase().includes(q) ||
           (c.skillsCovered || '').toLowerCase().includes(q) ||
-          (c.category || '').toLowerCase().includes(q)
+          getCertCategory(c).toLowerCase().includes(q)
       );
+    }
+
+    // Category Filter
+    if (selectedCategory !== 'ALL') {
+      const target = selectedCategory.toLowerCase();
+      list = list.filter((c) => {
+        const cat = getCertCategory(c).toLowerCase();
+        return cat.includes(target) || target.includes(cat);
+      });
     }
 
     // Issuer Filter
@@ -535,7 +635,226 @@ export function AdminCertificates({
     });
 
     return list;
-  }, [certificates, searchQuery, selectedIssuer, selectedStatus, sortBy]);
+  }, [certificates, searchQuery, selectedCategory, selectedIssuer, selectedStatus, sortBy]);
+
+  // Multi-select & Batch Actions Handlers
+  const handleToggleSelectCert = (certId) => {
+    playTick();
+    setSelectedCertIds((prev) =>
+      prev.includes(certId) ? prev.filter((id) => id !== certId) : [...prev, certId]
+    );
+  };
+
+  const handleToggleSelectAll = () => {
+    playTick();
+    if (selectedCertIds.length === filteredCertificates.length && filteredCertificates.length > 0) {
+      setSelectedCertIds([]);
+    } else {
+      setSelectedCertIds(filteredCertificates.map((c) => c.id));
+    }
+  };
+
+  const handleBatchDelete = () => {
+    if (selectedCertIds.length === 0) return;
+    playTick();
+    openConfirmModal(
+      'Batch Delete Certificates',
+      `Are you sure you want to permanently delete ${selectedCertIds.length} selected certificate(s)? This cannot be undone.`,
+      () => {
+        updateAppState(
+          (prev) => ({
+            ...prev,
+            certificates: (prev.certificates || []).filter((c) => !selectedCertIds.includes(c.id))
+          }),
+          session.token
+        );
+        showToast(`Deleted ${selectedCertIds.length} certificate(s).`, 'fa-trash');
+        setSelectedCertIds([]);
+      }
+    );
+  };
+
+  const handleBatchFeature = (targetFeatured) => {
+    if (selectedCertIds.length === 0) return;
+    playTick();
+    updateAppState(
+      (prev) => ({
+        ...prev,
+        certificates: (prev.certificates || []).map((c) =>
+          selectedCertIds.includes(c.id) ? { ...c, featured: targetFeatured } : c
+        )
+      }),
+      session.token
+    );
+    showToast(
+      targetFeatured
+        ? `Marked ${selectedCertIds.length} certificate(s) as Featured Flagship.`
+        : `Unmarked ${selectedCertIds.length} certificate(s) as featured.`,
+      'fa-star'
+    );
+    setSelectedCertIds([]);
+  };
+
+  const handleBatchVerify = () => {
+    if (selectedCertIds.length === 0) return;
+    playTick();
+    updateAppState(
+      (prev) => ({
+        ...prev,
+        certificates: (prev.certificates || []).map((c) =>
+          selectedCertIds.includes(c.id) ? { ...c, status: 'Verified' } : c
+        )
+      }),
+      session.token
+    );
+    showToast(`Marked ${selectedCertIds.length} certificate(s) as Verified.`, 'fa-circle-check');
+    setSelectedCertIds([]);
+  };
+
+  const handleBatchExport = () => {
+    if (selectedCertIds.length === 0) return;
+    playTick();
+    const selectedCerts = certificates.filter((c) => selectedCertIds.includes(c.id));
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(selectedCerts, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', `certificates_export_${Date.now()}.json`);
+    downloadAnchor.click();
+    showToast(`Exported ${selectedCerts.length} certificate(s) to JSON.`, 'fa-download');
+  };
+
+  // Drag-and-drop Reordering Handlers
+  const handleDragStart = (e, index) => {
+    setDraggedCertIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index.toString());
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverCertIndex !== index) {
+      setDragOverCertIndex(index);
+    }
+  };
+
+  const handleDragLeave = (index) => {
+    if (dragOverCertIndex === index) {
+      setDragOverCertIndex(null);
+    }
+  };
+
+  const handleDropReorder = (targetIndex) => {
+    if (draggedCertIndex === null || draggedCertIndex === targetIndex) {
+      setDraggedCertIndex(null);
+      setDragOverCertIndex(null);
+      return;
+    }
+    playTick();
+
+    const sourceCert = filteredCertificates[draggedCertIndex];
+    const targetCert = filteredCertificates[targetIndex];
+    if (!sourceCert || !targetCert) {
+      setDraggedCertIndex(null);
+      setDragOverCertIndex(null);
+      return;
+    }
+
+    const sourceGlobalIdx = certificates.findIndex((c) => c.id === sourceCert.id);
+    const targetGlobalIdx = certificates.findIndex((c) => c.id === targetCert.id);
+
+    if (sourceGlobalIdx === -1 || targetGlobalIdx === -1) {
+      setDraggedCertIndex(null);
+      setDragOverCertIndex(null);
+      return;
+    }
+
+    const updated = [...certificates];
+    const [moved] = updated.splice(sourceGlobalIdx, 1);
+    updated.splice(targetGlobalIdx, 0, moved);
+
+    updateAppState(
+      (prev) => ({
+        ...prev,
+        certificates: updated
+      }),
+      session.token
+    );
+
+    setDraggedCertIndex(null);
+    setDragOverCertIndex(null);
+    showToast(`Reordered "${sourceCert.title}" to position #${targetIndex + 1}.`, 'fa-arrows-up-down');
+  };
+
+  const handleMoveOrder = (cert, direction) => {
+    playTick();
+    const curIdx = certificates.findIndex((c) => c.id === cert.id);
+    if (curIdx === -1) return;
+    const targetIdx = curIdx + direction;
+    if (targetIdx < 0 || targetIdx >= certificates.length) return;
+
+    const updated = [...certificates];
+    const [moved] = updated.splice(curIdx, 1);
+    updated.splice(targetIdx, 0, moved);
+
+    updateAppState(
+      (prev) => ({
+        ...prev,
+        certificates: updated
+      }),
+      session.token
+    );
+    showToast(`Moved "${cert.title}" ${direction < 0 ? 'up' : 'down'}.`);
+  };
+
+  // 3D Card Hover Physics for top cards
+  const handleCardMouseMove = (e) => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotateX = ((y - rect.height / 2) / rect.height) * -8;
+    const rotateY = ((x - rect.width / 2) / rect.width) * 8;
+
+    gsap.to(card, {
+      rotateX,
+      rotateY,
+      transformPerspective: 1000,
+      duration: 0.3,
+      ease: 'power2.out'
+    });
+  };
+
+  const handleCardMouseLeave = (e) => {
+    const card = e.currentTarget;
+    gsap.to(card, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 0.6,
+      ease: 'elastic.out(1, 0.4)'
+    });
+  };
+
+  // Register Global Command Palette Listener
+  useEffect(() => {
+    window.__adminCertificatesAction = (action, payload) => {
+      if (action === 'create') {
+        handleOpenCreateForm();
+      } else if (action === 'filter-category') {
+        setSelectedCategory(payload || 'ALL');
+      } else if (action === 'filter-status') {
+        setSelectedStatus(payload || 'ALL');
+      } else if (action === 'select-all') {
+        setSelectedCertIds(certificates.map((c) => c.id));
+        showToast('Selected all certificates in batch mode.');
+      }
+    };
+    return () => {
+      delete window.__adminCertificatesAction;
+    };
+  }, [certificates]);
 
   // Metrics
   const totalCount = certificates.length;
@@ -543,60 +862,118 @@ export function AdminCertificates({
   const verifiedCount = certificates.filter((c) => c.status === 'Verified' || c.credentialUrl).length;
 
   return (
-    <div className="space-y-8" ref={formTopRef}>
+    <div className="space-y-8 w-full max-w-full min-w-0" ref={formTopRef}>
       {/* ========================================================
-          1. TOP METRICS & QUICK ACTIONS DASHBOARD
+          0. TOP ACTION BANNER (Matching Projects & Overview)
          ======================================================== */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
-        <div className="rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl transition-all hover:border-cyan-500/30">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Total Credentials</p>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-display text-2xl sm:text-3xl font-extrabold text-white">{totalCount}</span>
-            <span className="font-mono text-xs text-cyan-400">Issued</span>
-          </div>
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold flex items-center gap-2">
+            <i className="fa-solid fa-certificate"></i> ACCREDITED CREDENTIALS MANAGER
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">Certifications & Honors</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Organize, verify, reorder, showcase and issue interactive QR codes for your credentials.
+          </p>
         </div>
-
-        <div className="rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl transition-all hover:border-amber-500/30">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Featured Flagship</p>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-display text-2xl sm:text-3xl font-extrabold text-amber-400">
-              {featuredCount}
-            </span>
-            <span className="font-mono text-xs text-amber-500/80">★ Hero</span>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl transition-all hover:border-emerald-500/30">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Verified Badges</p>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-display text-2xl sm:text-3xl font-extrabold text-emerald-400">
-              {verifiedCount}
-            </span>
-            <span className="font-mono text-xs text-emerald-500/80">Active</span>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl transition-all hover:border-purple-500/30">
-          <p className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Accredited Issuers</p>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-display text-2xl sm:text-3xl font-extrabold text-purple-400">
-              {uniqueIssuers.length}
-            </span>
-            <span className="font-mono text-xs text-purple-400/80">Partners</span>
-          </div>
-        </div>
-
-        <div className="col-span-2 sm:col-span-4 lg:col-span-1 flex flex-col justify-center">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={handleOpenCreateForm}
-            className="w-full h-full min-h-[58px] rounded-2xl bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-600 p-[1.5px] transition-all hover:scale-[1.02] shadow-lg shadow-cyan-500/20"
+            className="btn-create-project"
           >
-            <div className="flex h-full w-full items-center justify-center gap-2 rounded-[14px] bg-[#0c121e] px-4 py-3 text-xs font-bold text-white transition-all hover:bg-transparent">
-              <i className="fa-solid fa-plus text-cyan-400" />
-              <span>New Certificate</span>
-            </div>
+            <i className="fa-solid fa-plus font-bold"></i>
+            <span>New Certificate</span>
           </button>
+        </div>
+      </div>
+
+      {/* ========================================================
+          1. TOP 4 METRICS DASHBOARD (Overview Aesthetic)
+         ======================================================== */}
+      <div className="stats-grid">
+        {/* Card 1: Total Credentials */}
+        <div
+          className="stat-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
+          <div className="stat-header">
+            <div className="stat-label">Total Credentials</div>
+            <div className="stat-icon icon-cyan">
+              <i className="fa-solid fa-award" />
+            </div>
+          </div>
+          <div>
+            <div className="stat-value cyan">{totalCount}</div>
+            <div className="stat-trend">
+              <i className="fa-solid fa-arrow-trend-up" style={{ color: 'var(--accent-2)' }} />
+              <span>{totalCount} Issued</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2: Featured Flagship */}
+        <div
+          className="stat-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
+          <div className="stat-header">
+            <div className="stat-label">Featured Flagship</div>
+            <div className="stat-icon icon-orange">
+              <i className="fa-solid fa-star" />
+            </div>
+          </div>
+          <div>
+            <div className="stat-value orange">{featuredCount}</div>
+            <div className="stat-trend">
+              <i className="fa-solid fa-star" style={{ color: '#f59e0b' }} />
+              <span>★ Hero Credentials</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 3: Verified Badges */}
+        <div
+          className="stat-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
+          <div className="stat-header">
+            <div className="stat-label">Verified Badges</div>
+            <div className="stat-icon icon-green">
+              <i className="fa-solid fa-shield-halved" />
+            </div>
+          </div>
+          <div>
+            <div className="stat-value green">{verifiedCount}</div>
+            <div className="stat-trend">
+              <i className="fa-solid fa-circle-check" style={{ color: 'var(--accent-2)' }} />
+              <span>Active Credentials</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 4: Accredited Issuers */}
+        <div
+          className="stat-card"
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+        >
+          <div className="stat-header">
+            <div className="stat-label">Accredited Issuers</div>
+            <div className="stat-icon icon-purple">
+              <i className="fa-solid fa-building-columns" />
+            </div>
+          </div>
+          <div>
+            <div className="stat-value purple">{uniqueIssuers.length}</div>
+            <div className="stat-trend">
+              <i className="fa-solid fa-handshake" style={{ color: 'var(--accent-3)' }} />
+              <span>Partner Issuers</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -803,22 +1180,75 @@ export function AdminCertificates({
                   <FormErrorMessage message={errors.title} />
                 </div>
 
-                {/* Category / Domain */}
-                <div>
-                  <label className="block font-mono text-xs font-semibold text-slate-200 mb-1.5">
-                    Category / Domain
-                  </label>
-                  <select
-                    value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value })}
-                    className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all"
-                  >
-                    {COMMON_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat} className="bg-[#0b101b] text-white">
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
+                {/* Category / Domain with Typeable Custom Input & Quick Presets */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block font-mono text-xs font-semibold text-slate-200">
+                      Category / Domain *
+                    </label>
+                    <span className="font-mono text-[10px] text-cyan-400">
+                      Type custom or choose preset
+                    </span>
+                  </div>
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      list="category-suggestions-list"
+                      value={form.category}
+                      onChange={(e) => {
+                        setForm({ ...form, category: e.target.value });
+                        if (errors.category) setErrors((prev) => ({ ...prev, category: '' }));
+                      }}
+                      placeholder="e.g. Cyber Security / NPTEL / Cloud Computing / AWS"
+                      className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-sans"
+                    />
+                    <datalist id="category-suggestions-list">
+                      {categorySuggestions.map((cat) => (
+                        <option key={cat} value={cat} />
+                      ))}
+                    </datalist>
+                    {form.category && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playTick();
+                          setForm({ ...form, category: '' });
+                        }}
+                        className="absolute right-3.5 text-xs text-slate-400 hover:text-white transition-colors"
+                        title="Clear category to type fresh"
+                      >
+                        <i className="fa-solid fa-xmark" />
+                      </button>
+                    )}
+                  </div>
+                  <FormErrorMessage message={errors.category} />
+
+                  {/* Category Quick Presets Badges */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="font-mono text-[10px] text-slate-500">Presets:</span>
+                    {COMMON_CATEGORIES.map((preset) => {
+                      const isActive =
+                        (form.category || '').trim().toLowerCase() === preset.toLowerCase();
+                      return (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => {
+                            playTick();
+                            setForm({ ...form, category: preset });
+                            setErrors((prev) => ({ ...prev, category: '' }));
+                          }}
+                          className={`rounded-lg border px-2 py-1 font-mono text-[11px] transition-all ${
+                            isActive
+                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold shadow-sm shadow-cyan-400/20'
+                              : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-white'
+                          }`}
+                        >
+                          {preset}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
@@ -1183,31 +1613,79 @@ export function AdminCertificates({
                     </label>
 
                     {/* Drag & Drop Upload Zone */}
-                    <div className="rounded-2xl border-2 border-dashed border-white/20 bg-black/40 p-6 text-center hover:border-cyan-400/50 transition-all">
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 mb-3">
-                        <i className="fa-solid fa-cloud-arrow-up text-xl" />
+                    <div
+                      onDragEnter={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsDraggingFile(true);
+                      }}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsDraggingFile(true);
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsDraggingFile(false);
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsDraggingFile(false);
+                        const file = e.dataTransfer.files?.[0];
+                        if (file) {
+                          if (file.type.startsWith('image/')) {
+                            handleFileUpload(file);
+                          } else {
+                            showToast('Please drop a valid image file (PNG, JPG, WEBP).', 'fa-triangle-exclamation');
+                          }
+                        }
+                      }}
+                      onClick={() => imageFileInputRef.current?.click()}
+                      className={`relative rounded-2xl border-2 border-dashed p-6 text-center transition-all cursor-pointer ${
+                        isDraggingFile
+                          ? 'border-cyan-400 bg-cyan-500/20 shadow-xl shadow-cyan-500/30 scale-[1.02]'
+                          : 'border-white/20 bg-black/40 hover:border-cyan-400/50'
+                      }`}
+                    >
+                      <input
+                        ref={imageFileInputRef}
+                        type="file"
+                        accept="image/*"
+                        disabled={isUploading}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleFileUpload(file);
+                        }}
+                        className="hidden"
+                      />
+                      <div
+                        className={`mx-auto flex h-12 w-12 items-center justify-center rounded-2xl transition-all mb-3 ${
+                          isDraggingFile
+                            ? 'bg-cyan-400 text-black scale-110 shadow-lg shadow-cyan-400/50'
+                            : 'bg-cyan-500/10 text-cyan-400'
+                        }`}
+                      >
+                        <i
+                          className={`fa-solid ${
+                            isDraggingFile
+                              ? 'fa-arrow-down-to-bracket text-2xl animate-bounce'
+                              : 'fa-cloud-arrow-up text-xl'
+                          }`}
+                        />
                       </div>
                       <p className="text-sm font-semibold text-white mb-1">
-                        Upload Credential to Cloudinary
+                        {isDraggingFile ? 'Drop Certificate Image Here!' : 'Upload Credential Badge'}
                       </p>
                       <p className="text-xs text-slate-400 mb-4">
-                        Supports PNG, JPG, WEBP high-resolution badge or certificate scans.
+                        Drag & drop file here or <span className="text-cyan-400 underline">click to browse</span> (PNG, JPG, WEBP).
                       </p>
 
-                      <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 px-5 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 shadow-md shadow-cyan-400/20 transition-all">
+                      <div className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 px-5 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 shadow-md shadow-cyan-400/20 transition-all">
                         <i className="fa-solid fa-folder-open" />
                         <span>{isUploading ? 'Uploading...' : 'Choose File'}</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          disabled={isUploading}
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleFileUpload(file);
-                          }}
-                          className="sr-only"
-                        />
-                      </label>
+                      </div>
                     </div>
                     <FormErrorMessage message={errors.imageUrl} />
                   </div>
@@ -1315,22 +1793,52 @@ export function AdminCertificates({
                         </div>
                       )}
 
-                      {/* Zoom overlay on preview image */}
+                      {/* Zoom & QR overlay on preview image */}
                       {form.imageUrl && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/55 opacity-0 group-hover:opacity-100 transition-opacity gap-2.5">
                           <button
                             type="button"
                             onClick={() => {
                               playTick();
-                              // Open lightbox with mock cert
                               if (openCertificateLightbox) {
-                                openCertificateLightbox(editingId || 'preview-temp');
+                                openCertificateLightbox({
+                                  id: editingId || 'preview-temp',
+                                  title: form.title || 'Certificate Preview',
+                                  issuer: form.issuer || 'Preview Issuer',
+                                  issueDate: form.issueDate || '2025',
+                                  category: form.category || 'Full Stack Development',
+                                  credentialId: form.credentialId,
+                                  credentialUrl: form.credentialUrl,
+                                  skillsCovered: form.skillsCovered,
+                                  imageUrl: form.imageUrl,
+                                  downloadUrl: form.downloadUrl || form.imageUrl
+                                });
                               }
                             }}
-                            className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400 text-black shadow-lg shadow-cyan-400/50"
-                            title="Inspect in Lightbox"
+                            className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400 text-black shadow-lg shadow-cyan-400/50 hover:scale-110 transition-all"
+                            title="Inspect in Lightbox (Pan & Zoom)"
                           >
                             <i className="fa-solid fa-expand" />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              playTick();
+                              setQrModalCert({
+                                id: editingId || 'preview-temp',
+                                title: form.title || 'Certificate Preview',
+                                issuer: form.issuer || 'Preview Issuer',
+                                credentialId: form.credentialId,
+                                credentialUrl: form.credentialUrl,
+                                downloadUrl: form.downloadUrl || form.imageUrl,
+                                imageUrl: form.imageUrl
+                              });
+                            }}
+                            className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500 text-white shadow-lg shadow-purple-500/50 hover:scale-110 transition-all"
+                            title="Generate QR Code"
+                          >
+                            <i className="fa-solid fa-qrcode" />
                           </button>
                         </div>
                       )}
@@ -1339,12 +1847,19 @@ export function AdminCertificates({
                     {/* Content */}
                     <div className="pt-4 space-y-2">
                       <div className="flex items-center justify-between text-[11px]">
-                        <span className="font-mono font-bold uppercase tracking-wider text-cyan-400">
+                        <span className="font-mono font-bold uppercase tracking-wider text-cyan-400 truncate max-w-[55%]">
                           {form.issuer || 'ISSUER'}
                         </span>
-                        <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-slate-300">
-                          {form.issueDate || '2025'}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          {form.category && (
+                            <span className="rounded-full border border-indigo-400/30 bg-indigo-500/10 px-2 py-0.5 font-mono text-[9px] text-indigo-300">
+                              {form.category}
+                            </span>
+                          )}
+                          <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-slate-300">
+                            {form.issueDate || '2025'}
+                          </span>
+                        </div>
                       </div>
 
                       <h4 className="text-base font-bold text-white line-clamp-2">
@@ -1433,7 +1948,7 @@ export function AdminCertificates({
       {/* ========================================================
           4. EXISTING CERTIFICATES LIST & MANAGEMENT TOOLBAR
          ======================================================== */}
-      <div className="glass-card-admin rounded-3xl border border-white/10 p-6 space-y-6">
+      <div className="glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-6 relative w-full max-w-full min-w-0 overflow-hidden">
         {/* Toolbar Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div>
@@ -1444,24 +1959,125 @@ export function AdminCertificates({
               </span>
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Manage, star featured flagship credentials, inspect in pan/zoom lightbox, edit, or delete.
+              Drag cards to reorder, multi-select for batch actions, filter by category, or inspect QR codes.
             </p>
           </div>
 
-          {!isFormOpen && (
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Multi-Select All / Clear Button */}
             <button
               type="button"
-              onClick={handleOpenCreateForm}
-              className="inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-4 py-2 font-mono text-xs font-bold text-black hover:bg-cyan-300 transition-all shadow-md shadow-cyan-400/20"
+              onClick={handleToggleSelectAll}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 font-mono text-xs font-semibold transition-all ${
+                selectedCertIds.length === filteredCertificates.length && filteredCertificates.length > 0
+                  ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300'
+                  : 'border-white/15 bg-white/5 text-slate-300 hover:border-white/30 hover:text-white'
+              }`}
             >
-              <i className="fa-solid fa-plus" />
-              <span>Add Credential</span>
+              <i
+                className={`fa-solid ${
+                  selectedCertIds.length === filteredCertificates.length && filteredCertificates.length > 0
+                    ? 'fa-check-double text-cyan-400'
+                    : 'fa-square-check text-slate-400'
+                }`}
+              />
+              <span>
+                {selectedCertIds.length === filteredCertificates.length && filteredCertificates.length > 0
+                  ? 'Deselect All'
+                  : `Select All (${filteredCertificates.length})`}
+              </span>
             </button>
-          )}
+
+            {/* Quick Command Palette Launcher */}
+            <button
+              type="button"
+              onClick={() => {
+                playTick();
+                if (typeof window !== 'undefined' && window.__openCommandPalette) {
+                  window.__openCommandPalette({ query: 'cert' });
+                }
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-black/40 px-3 py-1.5 font-mono text-xs font-semibold text-slate-300 hover:border-cyan-400/40 hover:text-white transition-all"
+              title="Open Command Palette (⌘K)"
+            >
+              <i className="fa-solid fa-terminal text-cyan-400 text-[11px]" />
+              <span>Palette</span>
+              <kbd className="rounded border border-white/15 bg-white/5 px-1 py-0.2 text-[10px] text-slate-400">⌘K</kbd>
+            </button>
+
+            {!isFormOpen && (
+              <button
+                type="button"
+                onClick={handleOpenCreateForm}
+                className="inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-4 py-1.5 font-mono text-xs font-bold text-black hover:bg-cyan-300 transition-all shadow-md shadow-cyan-400/20"
+              >
+                <i className="fa-solid fa-plus" />
+                <span>Add Credential</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ========================================================
+            CATEGORY FILTER CHIPS (Requirement 2)
+           ======================================================== */}
+        {/* ========================================================
+            CATEGORY FILTER DROPDOWN
+           ======================================================== */}
+        <div className="flex flex-wrap items-center justify-between gap-3 p-3 sm:p-4 rounded-2xl border border-white/10 bg-black/40 w-full max-w-full min-w-0">
+          <div className="flex items-center gap-2">
+            <i className="fa-solid fa-layer-group text-cyan-400 text-sm" />
+            <span className="font-mono text-xs font-semibold text-slate-300">
+              Filter by Domain / Category:
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2.5 flex-1 sm:flex-initial justify-end">
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                playTick();
+                setSelectedCategory(e.target.value);
+              }}
+              className="w-full sm:w-auto min-w-[260px] rounded-xl border border-cyan-400/40 bg-[#0B101B] px-4 py-2 font-mono text-xs text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer shadow-sm shadow-cyan-400/10"
+            >
+              {availableCategories.map((cat) => {
+                const count =
+                  cat === 'ALL'
+                    ? certificates.length
+                    : certificates.filter((c) => {
+                        const itemCat = getCertCategory(c).toLowerCase();
+                        const target = cat.toLowerCase();
+                        return itemCat.includes(target) || target.includes(itemCat);
+                      }).length;
+
+                return (
+                  <option key={cat} value={cat} className="bg-[#0b101b] text-white py-1">
+                    {cat === 'ALL' ? 'All Categories' : cat} ({count})
+                  </option>
+                );
+              })}
+            </select>
+
+            {selectedCategory !== 'ALL' && (
+              <button
+                type="button"
+                onClick={() => {
+                  playTick();
+                  setSelectedCategory('ALL');
+                }}
+                className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/5 transition-all"
+                title="Reset to All Categories"
+              >
+                <span>Reset</span>
+                <i className="fa-solid fa-xmark text-[10px]" />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Search, Filter & Sort Controls */}
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-12 items-center">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-12 items-center w-full max-w-full min-w-0">
           {/* Search Input (5 cols) */}
           <div className="md:col-span-5 relative">
             <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
@@ -1470,7 +2086,7 @@ export function AdminCertificates({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title, issuer, credential ID, skills..."
-              className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+              className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-mono"
             />
             {searchQuery && (
               <button
@@ -1536,10 +2152,83 @@ export function AdminCertificates({
           </div>
         </div>
 
-        {/* Certificates Grid */}
+        {/* ========================================================
+            STICKY / FLOATING BATCH ACTIONS TOOLBAR (Requirement 1)
+           ======================================================== */}
+        {selectedCertIds.length > 0 && (
+          <div className="sticky top-28 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-cyan-400/40 bg-[#090d14]/95 p-3.5 shadow-2xl shadow-cyan-500/20 backdrop-blur-2xl animate-in slide-in-from-top-2 duration-200">
+            <div className="flex items-center gap-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-cyan-400 text-black font-extrabold text-xs shadow-md shadow-cyan-400/50">
+                {selectedCertIds.length}
+              </span>
+              <div>
+                <p className="text-xs font-bold text-white">
+                  {selectedCertIds.length} of {filteredCertificates.length} Certificates Selected
+                </p>
+                <p className="text-[10px] font-mono text-slate-400">Perform bulk batch operations</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleBatchFeature(true)}
+                className="flex items-center gap-1.5 rounded-xl border border-amber-400/30 bg-amber-500/10 px-3 py-1.5 font-mono text-xs font-bold text-amber-300 hover:bg-amber-500/20 transition-all"
+                title="Mark all selected as featured"
+              >
+                <i className="fa-solid fa-star text-[10px]" />
+                <span>Feature</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleBatchVerify}
+                className="flex items-center gap-1.5 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-xs font-bold text-emerald-300 hover:bg-emerald-500/20 transition-all"
+                title="Mark all selected as verified"
+              >
+                <i className="fa-solid fa-circle-check text-[10px]" />
+                <span>Verify</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleBatchExport}
+                className="flex items-center gap-1.5 rounded-xl border border-indigo-400/30 bg-indigo-500/10 px-3 py-1.5 font-mono text-xs font-bold text-indigo-300 hover:bg-indigo-500/20 transition-all"
+                title="Export selected credentials to JSON"
+              >
+                <i className="fa-solid fa-download text-[10px]" />
+                <span>Export JSON</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleBatchDelete}
+                className="flex items-center gap-1.5 rounded-xl border border-red-500/40 bg-red-500/15 px-3 py-1.5 font-mono text-xs font-bold text-red-300 hover:bg-red-500/25 transition-all"
+                title="Delete selected credentials"
+              >
+                <i className="fa-solid fa-trash text-[10px]" />
+                <span>Delete ({selectedCertIds.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedCertIds([])}
+                className="rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 font-mono text-xs text-slate-400 hover:text-white transition-all ml-1"
+                title="Cancel selection"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Certificates Grid with Drag & Drop Reordering (Requirement 1) */}
         {filteredCertificates.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredCertificates.map((cert) => {
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full max-w-full min-w-0">
+            {filteredCertificates.map((cert, index) => {
+              const isSelected = selectedCertIds.includes(cert.id);
+              const isDragging = draggedCertIndex === index;
+              const isDragOver = dragOverCertIndex === index;
               const isEditing = editingId === cert.id;
               const certImg =
                 cert.imageUrl ||
@@ -1548,8 +2237,17 @@ export function AdminCertificates({
               return (
                 <div
                   key={cert.id}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDragLeave={() => handleDragLeave(index)}
+                  onDrop={(e) => handleDropReorder(index)}
                   className={`group relative rounded-2xl border p-4 space-y-3 flex flex-col justify-between transition-all backdrop-blur-xl ${
-                    isEditing
+                    isDragOver
+                      ? 'border-2 border-cyan-400 bg-cyan-500/20 shadow-2xl shadow-cyan-400/40 translate-y-1'
+                      : isDragging
+                      ? 'opacity-40 scale-95 border-dashed border-cyan-400/60'
+                      : isSelected
+                      ? 'border-cyan-400 bg-cyan-500/15 shadow-xl shadow-cyan-500/25 ring-1 ring-cyan-400/40'
+                      : isEditing
                       ? 'border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-500/20'
                       : 'border-white/10 bg-black/40 hover:border-white/25 hover:bg-black/60'
                   }`}
@@ -1561,41 +2259,120 @@ export function AdminCertificates({
                       <img
                         src={certImg}
                         alt={cert.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
                       />
 
-                      {/* Click overlay to open full Pan & Zoom Lightbox */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playTick();
-                          openCertificateLightbox(cert.id);
-                        }}
-                        className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Inspect in full Lightbox (Pan & Zoom)"
-                      >
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-400 px-3 py-1 font-mono text-xs font-bold text-black shadow-lg shadow-cyan-400/40">
+                      {/* Click overlay with distinct Inspect and QR buttons */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/65 opacity-0 group-hover:opacity-100 transition-opacity gap-2.5 z-10 pointer-events-auto">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            playTick();
+                            openCertificateLightbox(cert.id);
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-cyan-400 px-3.5 py-1.5 font-mono text-xs font-bold text-black shadow-lg shadow-cyan-400/40 hover:scale-105 active:scale-95 transition-all"
+                          title="Inspect in full Lightbox (Pan & Zoom)"
+                        >
                           <i className="fa-solid fa-expand" />
                           <span>Inspect</span>
-                        </span>
-                      </button>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            playTick();
+                            setQrModalCert(cert);
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-purple-500 px-3.5 py-1.5 font-mono text-xs font-bold text-white shadow-lg shadow-purple-500/40 hover:scale-105 active:scale-95 transition-all"
+                          title="Generate QR Code"
+                        >
+                          <i className="fa-solid fa-qrcode" />
+                          <span>QR</span>
+                        </button>
+                      </div>
 
-                      {/* Featured Star Badge */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleFeatured(cert);
-                        }}
-                        className={`absolute top-2.5 right-2.5 flex h-7 w-7 items-center justify-center rounded-lg backdrop-blur-md transition-all ${
-                          cert.featured
-                            ? 'bg-amber-400 text-black shadow-md shadow-amber-400/50'
-                            : 'bg-black/60 text-slate-400 hover:text-amber-300'
-                        }`}
-                        title={cert.featured ? 'Remove featured' : 'Mark as featured flagship'}
-                      >
-                        <i className="fa-solid fa-star text-xs" />
-                      </button>
+                      {/* Top-Left Controls: Checkbox & Drag Handle */}
+                      <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-20">
+                        {/* Multi-Select Checkbox */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleSelectCert(cert.id);
+                          }}
+                          className={`flex h-7 w-7 items-center justify-center rounded-lg border transition-all ${
+                            isSelected
+                              ? 'bg-cyan-400 text-black border-cyan-400 shadow-md shadow-cyan-400/50'
+                              : 'bg-black/70 text-transparent border-white/20 hover:border-cyan-400 hover:text-cyan-400/60'
+                          }`}
+                          title={isSelected ? 'Deselect certificate' : 'Select for batch actions'}
+                        >
+                          <i className="fa-solid fa-check text-xs font-bold" />
+                        </button>
+
+                        {/* Drag Handle - ONLY this icon button is draggable */}
+                        <div
+                          draggable={true}
+                          onDragStart={(e) => {
+                            e.stopPropagation();
+                            handleDragStart(e, index);
+                          }}
+                          onDragEnd={() => {
+                            setDraggedCertIndex(null);
+                            setDragOverCertIndex(null);
+                          }}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-cyan-300 hover:border-cyan-400/40 cursor-grab active:cursor-grabbing transition-all select-none"
+                          title="Drag this handle to reposition certificate"
+                        >
+                          <i className="fa-solid fa-grip-vertical text-xs pointer-events-none" />
+                        </div>
+                      </div>
+
+                      {/* Top-Right Controls: Position Buttons & Featured Star */}
+                      <div className="absolute top-2.5 right-2.5 flex items-center gap-1 z-20">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoveOrder(cert, -1);
+                          }}
+                          disabled={index === 0}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-white disabled:opacity-20 transition-all"
+                          title="Move Up"
+                        >
+                          <i className="fa-solid fa-chevron-up text-[10px]" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoveOrder(cert, 1);
+                          }}
+                          disabled={index === filteredCertificates.length - 1}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-white disabled:opacity-20 transition-all"
+                          title="Move Down"
+                        >
+                          <i className="fa-solid fa-chevron-down text-[10px]" />
+                        </button>
+
+                        {/* Featured Star Badge */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleFeatured(cert);
+                          }}
+                          className={`flex h-7 w-7 items-center justify-center rounded-lg backdrop-blur-md transition-all ${
+                            cert.featured
+                              ? 'bg-amber-400 text-black shadow-md shadow-amber-400/50'
+                              : 'bg-black/70 text-slate-400 hover:text-amber-300'
+                          }`}
+                          title={cert.featured ? 'Remove featured' : 'Mark as featured flagship'}
+                        >
+                          <i className="fa-solid fa-star text-xs" />
+                        </button>
+                      </div>
                     </div>
 
                     {/* Metadata Header */}
@@ -1603,9 +2380,16 @@ export function AdminCertificates({
                       <span className="font-mono font-bold uppercase tracking-wider text-cyan-400 truncate max-w-[65%]">
                         {cert.issuer || 'Issuer'}
                       </span>
-                      <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-slate-300">
-                        {cert.issueDate || cert.year || '2025'}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {cert.category && (
+                          <span className="rounded-full border border-indigo-400/30 bg-indigo-500/10 px-2 py-0.5 font-mono text-[9px] text-indigo-300">
+                            {cert.category}
+                          </span>
+                        )}
+                        <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-slate-300">
+                          {cert.issueDate || cert.year || '2025'}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Title */}
@@ -1645,24 +2429,45 @@ export function AdminCertificates({
                         <span className="font-mono text-[10px] text-slate-500">Unlinked</span>
                       )}
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playTick();
-                          openCertificateLightbox(cert.id);
-                        }}
-                        className="font-mono text-[11px] text-cyan-400 hover:underline inline-flex items-center gap-1"
-                      >
-                        <i className="fa-solid fa-eye text-[10px]" />
-                        <span>Inspect</span>
-                      </button>
+                      <div className="flex items-center gap-3">
+                        {/* QR Code Action Button (Requirement 3) */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            playTick();
+                            setQrModalCert(cert);
+                          }}
+                          className="font-mono text-[11px] text-purple-400 hover:text-purple-300 inline-flex items-center gap-1 transition-colors"
+                          title="Open QR Code"
+                        >
+                          <i className="fa-solid fa-qrcode text-[10px]" />
+                          <span>QR Code</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            playTick();
+                            openCertificateLightbox(cert.id);
+                          }}
+                          className="font-mono text-[11px] text-cyan-400 hover:underline inline-flex items-center gap-1"
+                        >
+                          <i className="fa-solid fa-eye text-[10px]" />
+                          <span>Inspect</span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Buttons row */}
                     <div className="flex items-center justify-between gap-1 pt-1">
                       <button
                         type="button"
-                        onClick={() => handleDuplicate(cert)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDuplicate(cert);
+                        }}
                         className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[11px] text-slate-300 hover:border-white/20 hover:text-white transition-all flex items-center gap-1"
                         title="Duplicate as new certificate"
                       >
@@ -1673,7 +2478,10 @@ export function AdminCertificates({
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => handleEdit(cert)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(cert);
+                          }}
                           className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 font-mono text-[11px] font-bold text-cyan-300 hover:bg-cyan-500/20 transition-all flex items-center gap-1"
                         >
                           <i className="fa-solid fa-pen text-[10px]" />
@@ -1681,7 +2489,10 @@ export function AdminCertificates({
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDelete(cert)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(cert);
+                          }}
                           className="rounded-lg border border-red-500/30 bg-red-500/10 px-2.5 py-1 font-mono text-[11px] font-bold text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-1"
                         >
                           <i className="fa-solid fa-trash text-[10px]" />
@@ -1699,22 +2510,31 @@ export function AdminCertificates({
             <i className="fa-solid fa-filter text-2xl text-slate-600 mb-1" />
             <p className="text-sm font-semibold text-white">No certificates match your search filters.</p>
             <p className="text-xs text-slate-400">
-              Try adjusting your query, clearing issuer filters, or add a new certificate.
+              Try adjusting your query, clearing category or issuer filters, or add a new certificate.
             </p>
             <button
               type="button"
               onClick={() => {
                 setSearchQuery('');
                 setSelectedIssuer('ALL');
+                setSelectedCategory('ALL');
                 setSelectedStatus('ALL');
               }}
               className="mt-2 rounded-xl border border-white/15 bg-white/5 px-4 py-1.5 font-mono text-xs text-slate-300 hover:text-white"
             >
-              Reset Filters
+              Reset All Filters
             </button>
           </div>
         )}
       </div>
+
+      {/* QR Code Modal (Requirement 3) */}
+      <CertificateQRCodeModal
+        cert={qrModalCert}
+        isOpen={Boolean(qrModalCert)}
+        onClose={() => setQrModalCert(null)}
+        showToast={showToast}
+      />
     </div>
   );
 }

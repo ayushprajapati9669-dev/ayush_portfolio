@@ -88,6 +88,7 @@ export function AdminProjects({
   // Search, tabs, sorting, selection
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('manual');
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -97,6 +98,18 @@ export function AdminProjects({
   const sortRef = useRef(null);
 
   const projects = appState.projects || [];
+
+  // Available Categories for filtration
+  const availableCategories = useMemo(() => {
+    const set = new Set();
+    projects.forEach((p) => {
+      if (p.category && p.category.trim()) {
+        set.add(p.category.trim());
+      }
+    });
+    ['Full-Stack Web App', 'AI & Machine Learning', 'Frontend Engineering', 'Backend & APIs'].forEach((c) => set.add(c));
+    return ['all', ...Array.from(set)];
+  }, [projects]);
 
   // Close sort menu on click outside
   useEffect(() => {
@@ -137,6 +150,21 @@ export function AdminProjects({
       result = result.filter((p) => p.status === 'trash');
     }
 
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      const qCat = selectedCategory.toLowerCase().trim();
+      result = result.filter((p) => {
+        const pCat = (p.category || '').toLowerCase().trim();
+        if (qCat === 'full-stack' || qCat.includes('full-stack')) {
+          return pCat.includes('full') || pCat.includes('stack');
+        }
+        if (qCat === 'ai-ml' || qCat.includes('ai') || qCat.includes('machine')) {
+          return pCat.includes('ai') || pCat.includes('ml') || pCat.includes('learning');
+        }
+        return pCat.includes(qCat) || qCat.includes(pCat);
+      });
+    }
+
     // Filter by search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
@@ -165,7 +193,7 @@ export function AdminProjects({
     }
 
     return result;
-  }, [projects, activeTab, searchQuery, sortBy]);
+  }, [projects, activeTab, selectedCategory, searchQuery, sortBy]);
 
   // Select all state
   const isAllSelected = useMemo(() => {
@@ -775,27 +803,61 @@ export function AdminProjects({
           Existing Projects Section (Matching Reference Images 2 & 3)
           ========================================================================= */}
       <div className="glass-card-admin p-6 sm:p-8 space-y-5">
-        {/* Header & Search (Matching Image 2) */}
-        <div className="admin-proj-header">
+        {/* Header & Search with Category Filter Dropdown */}
+        <div className="admin-proj-header flex flex-wrap items-center justify-between gap-4">
           <div className="admin-proj-title-wrap">
             <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-sm">
               <i className="fa-solid fa-layer-group"></i>
             </div>
             <h3 className="admin-proj-title">
-              Existing Projects <span className="admin-proj-count-badge">({projects.length})</span>
+              Existing Projects <span className="admin-proj-count-badge">({filteredProjects.length} / {projects.length})</span>
             </h3>
           </div>
 
-          {/* Real-time Search Box */}
-          <div className="admin-proj-search-wrap">
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search projects..."
-              className="admin-proj-search-input"
-            />
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Category Filter Dropdown */}
+            <div className="flex items-center gap-2">
+              <i className="fa-solid fa-tags text-cyan-400 text-xs hidden sm:inline" />
+              <select
+                value={selectedCategory}
+                onChange={(e) => {
+                  playTick();
+                  setSelectedCategory(e.target.value);
+                }}
+                className="rounded-xl border border-cyan-400/40 bg-[#0B101B] px-3.5 py-2 font-mono text-xs text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer shadow-sm shadow-cyan-400/10 min-w-[190px]"
+                title="Filter by Project Category"
+              >
+                <option value="all" className="bg-[#0b101b] text-white">
+                  All Categories ({projects.length})
+                </option>
+                {availableCategories
+                  .filter((c) => c !== 'all')
+                  .map((cat) => {
+                    const count = projects.filter((p) => {
+                      const pCat = (p.category || '').toLowerCase();
+                      const cLower = cat.toLowerCase();
+                      return pCat.includes(cLower) || cLower.includes(pCat);
+                    }).length;
+                    return (
+                      <option key={cat} value={cat} className="bg-[#0b101b] text-white">
+                        {cat} ({count})
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+
+            {/* Real-time Search Box */}
+            <div className="admin-proj-search-wrap">
+              <i className="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search projects..."
+                className="admin-proj-search-input"
+              />
+            </div>
           </div>
         </div>
 

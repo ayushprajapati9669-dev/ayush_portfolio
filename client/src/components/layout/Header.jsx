@@ -27,7 +27,10 @@ export function Header() {
 
   // Register global command palette opener for shortcuts
   useEffect(() => {
-    window.__openCommandPalette = () => {
+    window.__openCommandPalette = (opts) => {
+      if (opts?.query) {
+        window.__cmdPaletteInitialQuery = opts.query;
+      }
       setCmdOpen(true);
     };
     return () => {
@@ -145,6 +148,8 @@ export function Header() {
       gsap.to(navbar, {
         rotateX: ((y - rect.height / 2) / rect.height) * -6,
         rotateY: ((x - rect.width / 2) / rect.width) * 6,
+        x: (x - rect.width / 2) * 0.02,
+        y: (y - rect.height / 2) * 0.02,
         transformPerspective: 1200,
         duration: 0.35,
         ease: 'power2.out'
@@ -152,23 +157,12 @@ export function Header() {
 
       navbar.style.setProperty('--mouse-x', `${x}px`);
       navbar.style.setProperty('--mouse-y', `${y}px`);
-
-      gsap.to(navWrapper, {
-        x: (x - rect.width / 2) * 0.04,
-        y: (y - rect.height / 2) * 0.04,
-        duration: 0.5,
-        ease: 'power2.out'
-      });
     };
 
     const handleMouseLeave = () => {
       gsap.to(navbar, {
         rotateX: 0,
         rotateY: 0,
-        duration: 0.8,
-        ease: 'elastic.out(1, 0.4)'
-      });
-      gsap.to(navWrapper, {
         x: 0,
         y: 0,
         duration: 0.8,
@@ -179,7 +173,7 @@ export function Header() {
     navWrapper.addEventListener('mousemove', handleMouseMove);
     navWrapper.addEventListener('mouseleave', handleMouseLeave);
 
-    // 3. Navbar scroll shrink & background elevation (matching reference HTML file)
+    // 3. Navbar scroll shrink & background elevation
     let scrollState = false;
     const handleScroll = () => {
       const s = window.scrollY > 50;
@@ -187,11 +181,11 @@ export function Header() {
       scrollState = s;
 
       if (s) {
-        gsap.to(navWrapper, { width: '80%', y: -10, duration: 0.5, ease: 'power2.out' });
-        gsap.to(navbar, { backgroundColor: 'rgba(5, 8, 12, 0.95)', duration: 0.5, ease: 'power2.out' });
+        navWrapper.classList.add('scrolled');
+        gsap.to(navbar, { backgroundColor: 'rgba(5, 8, 12, 0.95)', duration: 0.4, ease: 'power2.out' });
       } else {
-        gsap.to(navWrapper, { width: '92%', y: 0, duration: 0.5, ease: 'power2.out' });
-        gsap.to(navbar, { backgroundColor: 'rgba(10, 15, 20, 0.7)', duration: 0.5, ease: 'power2.out' });
+        navWrapper.classList.remove('scrolled');
+        gsap.to(navbar, { backgroundColor: 'rgba(10, 15, 20, 0.7)', duration: 0.4, ease: 'power2.out' });
       }
     };
 

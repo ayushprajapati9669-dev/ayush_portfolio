@@ -8,7 +8,8 @@ export function AdminSidebar({
   onToggleCollapse,
   counts,
   profile,
-  onLogout
+  onLogout,
+  onOpenCategoryModal
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const navRef = useRef(null);

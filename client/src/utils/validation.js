@@ -75,10 +75,13 @@ export function validateProjectForm({ title, category, shortDescription, technol
   };
 }
 
-export function validateCertificateForm({ title, issuer, issueDate, imageUrl }) {
+export function validateCertificateForm({ title, issuer, issueDate, imageUrl, category }) {
   const errors = {};
   if (!title || String(title).trim().length < 3) {
     errors.title = 'Certificate title is required.';
+  }
+  if (category !== undefined && !String(category).trim()) {
+    errors.category = 'Category / Domain is required.';
   }
   if (!issuer || !String(issuer).trim()) {
     errors.issuer = 'Issuing organization is required.';

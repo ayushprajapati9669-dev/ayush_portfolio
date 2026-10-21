@@ -53,7 +53,69 @@ export function CertificateLightboxModal() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeCertLightbox, closeCertificateLightbox]);
 
-  const cert = (appState.certificates || []).find((c) => c.id === activeCertLightbox);
+  const REFERENCE_FALLBACKS = [
+    {
+      id: 'cert1',
+      title: 'AI & Machine Learning',
+      issuer: 'Code With Harry',
+      year: '2025',
+      issueDate: '2025',
+      category: 'Artificial Intelligence & ML',
+      imageUrl: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?q=80&w=1600&auto=format&fit=crop',
+      skillsCovered: 'PYTHON, TENSORFLOW, SCIKIT-LEARN, DATA SCIENCE, NLP',
+      downloadUrl: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?q=80&w=1600&auto=format&fit=crop'
+    },
+    {
+      id: 'cert2',
+      title: 'MERN Stack Development',
+      issuer: 'Apna College',
+      year: '2025',
+      issueDate: '2025',
+      category: 'Full Stack Development',
+      imageUrl: 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?q=80&w=1600&auto=format&fit=crop',
+      skillsCovered: 'HTML, CSS, JAVASCRIPT, NODE.JS, EXPRESS, MONGODB',
+      downloadUrl: 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?q=80&w=1600&auto=format&fit=crop'
+    },
+    {
+      id: 'cert3',
+      title: 'Frontend Developer Professional',
+      issuer: 'Meta',
+      year: '2024',
+      issueDate: '2024',
+      category: 'Frontend Engineering',
+      imageUrl: 'https://images.unsplash.com/photo-1555529733-0e670560f7e1?q=80&w=1600&auto=format&fit=crop',
+      skillsCovered: 'REACT, REDUX, TAILWIND CSS, UI/UX PRINCIPLES',
+      downloadUrl: 'https://images.unsplash.com/photo-1555529733-0e670560f7e1?q=80&w=1600&auto=format&fit=crop'
+    },
+    {
+      id: 'cert4',
+      title: 'AWS Cloud Practitioner',
+      issuer: 'Amazon Web Services',
+      year: '2024',
+      issueDate: '2024',
+      category: 'Cloud Computing',
+      imageUrl: 'https://images.unsplash.com/photo-1542744094-24638ea0b3b8?q=80&w=1600&auto=format&fit=crop',
+      skillsCovered: 'CLOUD COMPUTING, AWS EC2, S3, LAMBDA, IAM',
+      downloadUrl: 'https://images.unsplash.com/photo-1542744094-24638ea0b3b8?q=80&w=1600&auto=format&fit=crop'
+    },
+    {
+      id: 'cert5',
+      title: 'React (Basic) Certificate',
+      issuer: 'HackerRank',
+      year: '2024',
+      issueDate: '2024',
+      category: 'Frontend Engineering',
+      imageUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1600&auto=format&fit=crop',
+      skillsCovered: 'REACT COMPONENTS, STATE MANAGEMENT, HOOKS, ROUTING',
+      downloadUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1600&auto=format&fit=crop'
+    }
+  ];
+
+  const cert =
+    typeof activeCertLightbox === 'object' && activeCertLightbox !== null
+      ? activeCertLightbox
+      : (appState.certificates || []).find((c) => c.id === activeCertLightbox) ||
+        REFERENCE_FALLBACKS.find((c) => c.id === activeCertLightbox);
 
   // Zoom controls
   const handleZoomIn = () => {

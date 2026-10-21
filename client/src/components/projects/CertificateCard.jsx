@@ -97,7 +97,10 @@ export function CertificateCard({
       <div className="cert-content">
         <div className="cert-meta">
           <span className="cert-issuer">{issuer}</span>
-          <span className="cert-year">{year}</span>
+          <div className="flex items-center gap-1.5">
+            {cert.category && <span className="cert-category-badge">{cert.category}</span>}
+            <span className="cert-year">{year}</span>
+          </div>
         </div>
 
         <h3 className="cert-title">{cert.title}</h3>

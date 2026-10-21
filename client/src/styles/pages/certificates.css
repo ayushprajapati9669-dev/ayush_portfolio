@@ -299,6 +299,17 @@
   font-family: 'JetBrains Mono', monospace;
   color: #e2e8f0;
 }
+.cert-category-badge {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #a5b4fc;
+  font-weight: 600;
+  white-space: nowrap;
+}
 
 .cert-title {
   font-family: 'Space Grotesk', sans-serif;

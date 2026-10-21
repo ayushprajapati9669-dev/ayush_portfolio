@@ -29,52 +29,64 @@ const REFERENCE_SKILLS = [
 
 // Helper to map dynamic Database / CMS skill name to official Devicon SVG
 export const getSkillVisuals = (skillObj) => {
-  const rawName = (typeof skillObj === 'string' ? skillObj : skillObj?.name || skillObj?.title || '').toLowerCase();
-  const customDbIcon = typeof skillObj === 'object' ? (skillObj?.icon || skillObj?.image || skillObj?.logo) : null;
+  const rawName = (typeof skillObj === 'string' ? skillObj : skillObj?.name || skillObj?.title || '').toLowerCase().trim();
+  const customDbIcon = typeof skillObj === 'object' ? (skillObj?.icon || skillObj?.image || skillObj?.logo || skillObj?.logoKey) : null;
 
   const brandMap = [
-    { match: ['javascript', 'js', 'es6'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-    { match: ['typescript', 'ts'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
-    { match: ['react', 'reactjs', 'react.js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
-    { match: ['next', 'nextjs', 'next.js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg', invert: true },
-    { match: ['node', 'nodejs', 'node.js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
-    { match: ['express', 'expressjs', 'express.js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', invert: true },
-    { match: ['mongo', 'mongodb'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
-    { match: ['java', 'core java'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
-    { match: ['spring', 'spring boot', 'springboot'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg' },
-    { match: ['tailwind', 'tailwindcss'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
-    { match: ['python'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
-    { match: ['git'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
-    { match: ['github'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', invert: true },
-    { match: ['postman'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg' },
-    { match: ['docker'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
-    { match: ['html', 'html5'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
-    { match: ['css', 'css3'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
-    { match: ['mysql'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
-    { match: ['postgres', 'postgresql'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
-    { match: ['redux'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg' },
-    { match: ['c++', 'cpp'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
-    { match: ['c', 'c language'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg' },
-    { match: ['bootstrap'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg' },
-    { match: ['vite', 'vitejs'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg' },
-    { match: ['vscode', 'vs code'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg' }
+    { match: ['javascript', 'js', 'es6'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg', devicon: 'devicon-javascript-plain' },
+    { match: ['typescript', 'ts'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', devicon: 'devicon-typescript-plain' },
+    { match: ['react', 'reactjs', 'react.js', 'react js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', devicon: 'devicon-react-original' },
+    { match: ['next', 'nextjs', 'next.js', 'next js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg', invert: true, devicon: 'devicon-nextjs-original' },
+    { match: ['node', 'nodejs', 'node.js', 'node js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', devicon: 'devicon-nodejs-plain' },
+    { match: ['express', 'expressjs', 'express.js', 'express js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', invert: true, devicon: 'devicon-express-original' },
+    { match: ['mongo', 'mongodb'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', devicon: 'devicon-mongodb-plain' },
+    { match: ['java', 'core java'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg', devicon: 'devicon-java-plain' },
+    { match: ['spring', 'spring boot', 'springboot'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg', devicon: 'devicon-spring-plain' },
+    { match: ['tailwind', 'tailwindcss'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg', devicon: 'devicon-tailwindcss-original' },
+    { match: ['python'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', devicon: 'devicon-python-plain' },
+    { match: ['git'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', devicon: 'devicon-git-plain' },
+    { match: ['github'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', invert: true, devicon: 'devicon-github-original' },
+    { match: ['postman'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg', devicon: 'devicon-postman-plain' },
+    { match: ['docker'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', devicon: 'devicon-docker-plain' },
+    { match: ['html', 'html5'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg', devicon: 'devicon-html5-plain' },
+    { match: ['css', 'css3'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg', devicon: 'devicon-css3-plain' },
+    { match: ['mysql'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', devicon: 'devicon-mysql-plain' },
+    { match: ['postgres', 'postgresql'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', devicon: 'devicon-postgresql-plain' },
+    { match: ['redux'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg', devicon: 'devicon-redux-original' },
+    { match: ['c++', 'cpp', 'cplusplus'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg', devicon: 'devicon-cplusplus-plain' },
+    { match: ['c', 'c language'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg', devicon: 'devicon-c-plain' },
+    { match: ['bootstrap'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg', devicon: 'devicon-bootstrap-plain' },
+    { match: ['vite', 'vitejs', 'vite js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg', devicon: 'devicon-vitejs-plain' },
+    { match: ['vscode', 'vs code'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg', devicon: 'devicon-vscode-plain' },
+    { match: ['dsa', 'data structures', 'algorithms', 'problem solving'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg', devicon: 'fa-solid fa-brain' },
+    { match: ['rest', 'api', 'apis', 'rest api', 'rest apis'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg', devicon: 'devicon-fastapi-plain' },
+    { match: ['cloudinary'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg', devicon: 'devicon-googlecloud-plain' },
+    { match: ['responsive', 'ui', 'interface'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg', devicon: 'devicon-figma-plain' }
   ];
+
+  const deviconMatch = (typeof customDbIcon === 'string' && customDbIcon.startsWith('devicon-'))
+    ? customDbIcon.replace('devicon-', '').replace('-plain', '').replace('-original', '').replace('-wordmark', '')
+    : '';
 
   const found = brandMap.find((b) =>
     b.match.some((keyword) => {
       if (keyword === 'c') {
-        return rawName === 'c' || rawName.split(/[\s,./\-_]+/).includes('c');
+        return rawName === 'c' || rawName.split(/[\s,./\-_]+/).includes('c') || deviconMatch === 'c';
       }
-      return rawName.includes(keyword);
+      return rawName.includes(keyword) || (deviconMatch && deviconMatch.includes(keyword));
     })
   );
 
+  const hasHttpUrl = customDbIcon && typeof customDbIcon === 'string' && (customDbIcon.startsWith('http') || customDbIcon.startsWith('/') || customDbIcon.startsWith('data:'));
+
   return {
-    iconUrl:
-      customDbIcon && typeof customDbIcon === 'string' && customDbIcon.startsWith('http')
-        ? customDbIcon
-        : found?.icon || 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/devicon/devicon-original.svg',
-    invertIcon: found?.invert || false
+    iconUrl: hasHttpUrl
+      ? customDbIcon
+      : found?.icon || 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg',
+    invertIcon: found?.invert || false,
+    deviconClass: (typeof customDbIcon === 'string' && customDbIcon.startsWith('devicon-'))
+      ? customDbIcon
+      : (found?.devicon || null)
   };
 };
 
@@ -128,10 +140,25 @@ export function SkillsSection({
       const existing = map.get(key);
       const visuals = getSkillVisuals(item);
 
+      const validIconUrl =
+        typeof item.icon === 'string' &&
+        (item.icon.startsWith('http') || item.icon.startsWith('/') || item.icon.startsWith('data:'))
+          ? item.icon
+          : typeof existing?.icon === 'string' &&
+            (existing.icon.startsWith('http') || existing.icon.startsWith('/'))
+          ? existing.icon
+          : visuals.iconUrl;
+
+      const deviconCls =
+        typeof item.icon === 'string' && item.icon.startsWith('devicon-')
+          ? item.icon
+          : visuals.deviconClass;
+
       map.set(key, {
         name,
         category: item.category || existing?.category || 'tools',
-        icon: item.icon || existing?.icon || visuals.iconUrl,
+        icon: validIconUrl,
+        deviconClass: deviconCls,
         invert: item.invert !== undefined ? item.invert : (existing?.invert ?? visuals.invertIcon)
       });
     });
@@ -306,15 +333,17 @@ export function SkillsSection({
 
   return (
     <section className={`skills-section ${isStandalonePage ? 'standalone' : 'home-embedded'}`}>
-      {/* Header */}
-      <div className="skills-header">
-        <span className="skills-subtitle">
-          {ui.homeSkillsEyebrow || '03 · Technical Capabilities'}
-        </span>
-        <h2 className="skills-title">
-          Interactive Skills &<br />Tech Stack
-        </h2>
-      </div>
+      {/* Header - Only render on embedded home view to avoid double header on dedicated Skills page */}
+      {!isStandalonePage && (
+        <div className="skills-header">
+          <span className="skills-subtitle">
+            {ui.homeSkillsEyebrow || '03 · Technical Capabilities'}
+          </span>
+          <h2 className="skills-title">
+            Interactive Skills &<br />Tech Stack
+          </h2>
+        </div>
+      )}
 
       {/* Filter Buttons */}
       <div className="filter-container" ref={filterContainerRef}>
@@ -354,36 +383,65 @@ export function SkillsSection({
             ✨ No skills found in this category — check back soon.
           </div>
         ) : (
-          filteredSkills.map((skill, index) => {
-            const skillName = skill.name || skill.title;
-            const iconSrc = skill.icon || getSkillVisuals(skill).iconUrl;
-            const invert = skill.invert !== undefined ? skill.invert : getSkillVisuals(skill).invertIcon;
-
-            return (
-              <div
-                key={skill._id || skillName || index}
-                className="skill-card"
-                onMouseMove={handleCardMouseMove}
-                onMouseLeave={handleCardMouseLeave}
-                onClick={handleCardClick}
-              >
-                <div className="skill-icon-wrapper">
-                  <img
-                    src={iconSrc}
-                    alt={skillName}
-                    className={invert ? 'invert-icon' : ''}
-                    loading="lazy"
-                  />
-                </div>
-                <div className="skill-text">
-                  <div className="skill-name">{skillName}</div>
-                </div>
-              </div>
-            );
-          })
+          filteredSkills.map((skill, index) => (
+            <SkillCardItem
+              key={skill._id || skill.name || skill.title || index}
+              skill={skill}
+              onMouseMove={handleCardMouseMove}
+              onMouseLeave={handleCardMouseLeave}
+              onClick={handleCardClick}
+            />
+          ))
         )}
       </div>
     </section>
+  );
+}
+
+// Resilient SkillCardItem component with dynamic SVG -> Devicon -> Monogram fallback
+function SkillCardItem({ skill, onMouseMove, onMouseLeave, onClick }) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const skillName = skill.name || skill.title || '';
+  const visuals = getSkillVisuals(skill);
+  const hasHttpIcon =
+    typeof skill.icon === 'string' &&
+    (skill.icon.startsWith('http') || skill.icon.startsWith('/') || skill.icon.startsWith('data:'));
+  const iconSrc = hasHttpIcon ? skill.icon : visuals.iconUrl;
+  const deviconCls = skill.deviconClass || visuals.deviconClass;
+  const invert = skill.invert !== undefined ? skill.invert : visuals.invertIcon;
+
+  return (
+    <div
+      className="skill-card"
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      onClick={onClick}
+    >
+      <div className="skill-icon-wrapper">
+        {!imgFailed && iconSrc ? (
+          <img
+            src={iconSrc}
+            alt={skillName}
+            className={invert ? 'invert-icon' : ''}
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+          />
+        ) : deviconCls ? (
+          deviconCls.startsWith('fa-') ? (
+            <i className={`${deviconCls} text-cyan-400 text-xl`} />
+          ) : (
+            <i className={`${deviconCls} colored`} style={{ fontSize: '26px' }} />
+          )
+        ) : (
+          <span className="font-mono font-bold text-xs text-cyan-400">
+            {skillName.slice(0, 2).toUpperCase()}
+          </span>
+        )}
+      </div>
+      <div className="skill-text">
+        <div className="skill-name" title={skillName}>{skillName}</div>
+      </div>
+    </div>
   );
 }
 
