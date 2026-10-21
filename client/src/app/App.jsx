@@ -7,6 +7,7 @@ import { BackgroundLayers } from '../components/layout/BackgroundLayers';
 import { Toast } from '../components/ui/Toast';
 import { ConfirmModal } from '../components/ui/ConfirmModal';
 import { CertificateLightboxModal } from '../components/ui/CertificateLightboxModal';
+import { ResumeModal } from '../components/ui/ResumeModal';
 import { AppRouter } from './router';
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
           <Toast />
           <ConfirmModal />
           <CertificateLightboxModal />
+          <ResumeModal />
           <main id="main-content" className="flex-1 relative z-10">
             <AppRouter />
           </main>

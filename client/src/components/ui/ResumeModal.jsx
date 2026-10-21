@@ -1,169 +1,211 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
-import { SocialIconButtons } from '../common/TechLogos';
+import { playTick } from '../../utils/audio';
 
 export function ResumeModal() {
   const { appState, resumeModalOpen, closeResumeModal, downloadOrPrintResume } = usePortfolio();
   const cardRef = useRef(null);
+  const [viewFormat, setViewFormat] = useState('pdf'); // 'pdf' | 'image'
 
+  const p = appState.profile || {};
+  const activeResume = (appState.resumes || []).find((r) => r.isActive) || (appState.resumes || [])[0];
+  const pdfUrl = activeResume?.fileUrl || p.resumeUrl || '/images/Ayush_Prajapati_Resume.pdf';
+  const previewImg = p.resumePreviewUrl || '/images/ayush-resume-preview.jpg';
+
+  // GSAP entrance animation on open
   useEffect(() => {
     if (!resumeModalOpen) return;
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduceMotion && cardRef.current) {
       gsap.fromTo(
         cardRef.current,
-        { scale: 0.92, opacity: 0, y: 25 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.15)' }
+        { scale: 0.94, opacity: 0, y: 25 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.15)' }
       );
     }
   }, [resumeModalOpen]);
 
+  // Escape key listener to close
+  useEffect(() => {
+    if (!resumeModalOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        playTick();
+        closeResumeModal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [resumeModalOpen, closeResumeModal]);
+
   if (!resumeModalOpen) return null;
 
-  const p = appState.profile || {};
-  const previewImg = p.resumePreviewUrl || '/images/ayush-resume-preview.jpg';
+  const handleDownload = () => {
+    playTick();
+    if (downloadOrPrintResume) {
+      downloadOrPrintResume();
+    } else {
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = `${(p.name || 'Ayush_Prajapati').replace(/\s+/g, '_')}_Resume.pdf`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleClose = () => {
+    playTick();
+    closeResumeModal();
+  };
 
   return (
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/85 p-3 sm:p-6 backdrop-blur-xl"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          handleClose();
+        }
+      }}
     >
-      <div ref={cardRef} className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl border border-white/15 bg-charcoal shadow-2xl overflow-hidden">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b hairline-border bg-obsidian px-6 py-4">
-          <div>
-            <p className="font-mono text-[11px] uppercase tracking-widest text-cyanglow">
-              CURRICULUM VITAE · RESUME
+      <div
+        ref={cardRef}
+        className="w-full max-w-5xl max-h-[94vh] flex flex-col rounded-3xl border border-cyan-400/30 bg-[#080d19] shadow-[0_30px_100px_rgba(0,0,0,0.9),0_0_60px_rgba(6,182,212,0.15)] overflow-hidden"
+      >
+        {/* Header matching Image 2 */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 bg-[#060a14] px-6 py-4.5 sm:px-8">
+          <div className="space-y-1">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#06b6d4]">
+              CURRICULUM VITAE
             </p>
-            <h3 className="font-display text-xl font-bold text-alabaster">
-              {p.name} — Official Resume ({p.education?.cgpa || 'CSE 2026'})
-            </h3>
+            <h2 className="font-display text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+              {p.name || 'Ayush Prajapati'} — Resume
+            </h2>
           </div>
-          <div className="flex items-center gap-2.5">
+
+          <div className="flex items-center gap-3">
+            {/* View Format Selector (PDF / Image Preview) */}
+            <div className="hidden sm:inline-flex items-center rounded-xl border border-white/10 bg-black/40 p-1 text-xs font-mono">
+              <button
+                type="button"
+                onClick={() => {
+                  playTick();
+                  setViewFormat('pdf');
+                }}
+                className={`rounded-lg px-3 py-1 transition-colors ${
+                  viewFormat === 'pdf'
+                    ? 'bg-cyan-500/20 text-cyan-300 font-bold'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                PDF View
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  playTick();
+                  setViewFormat('image');
+                }}
+                className={`rounded-lg px-3 py-1 transition-colors ${
+                  viewFormat === 'image'
+                    ? 'bg-cyan-500/20 text-cyan-300 font-bold'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Image Preview
+              </button>
+            </div>
+
+            {/* Download PDF button (gradient) */}
             <button
               type="button"
-              onClick={downloadOrPrintResume}
-              className="focus-ring inline-flex items-center gap-2 rounded-full bg-cyanglow px-4 py-2 text-xs font-bold text-obsidian hover:opacity-90"
+              onClick={handleDownload}
+              className="focus-ring inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#06b6d4] to-[#10b981] px-5 py-2.5 text-xs font-bold text-black shadow-lg shadow-cyan-400/20 hover:opacity-95 transition-all active:scale-95"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              <span>Download / Print PDF</span>
+              <i className="fa-solid fa-download text-xs" />
+              <span>Download PDF</span>
             </button>
+
+            {/* Close button */}
             <button
               type="button"
-              onClick={closeResumeModal}
-              className="focus-ring rounded-full border border-white/15 bg-charcoal px-3.5 py-2 font-mono text-xs text-stonewarm hover:text-alabaster"
+              onClick={handleClose}
+              className="focus-ring inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 font-mono text-xs font-semibold text-white hover:bg-white/15 hover:border-white/30 transition-all active:scale-95"
             >
-              ✕ Close
+              <i className="fa-solid fa-xmark text-xs" />
+              <span>Close</span>
             </button>
           </div>
         </div>
 
-        <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-sm">
-          <div className="rounded-2xl border border-cyanglow/35 bg-obsidian p-4 flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-display text-sm font-bold text-white">
-                {p.name} · {p.email || 'ayushprajapati9669@gmail.com'} · {p.phone || '(+91) 9669802554'}
-              </p>
-              <p className="font-mono text-xs text-cyanglow mt-0.5">
-                {p.education?.college} — {p.education?.cgpa || 'CGPA: 8.42 | (2026)'}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={downloadOrPrintResume}
-              className="focus-ring inline-flex items-center gap-2 rounded-full bg-cyanglow px-5 py-2.5 font-mono text-xs font-bold text-obsidian shadow-lg shadow-cyanglow/20 hover:opacity-90"
-            >
-              <span>↓ Download Resume PDF</span>
-            </button>
+        {/* Modal Body - Document Viewing Area matching Image 2 */}
+        <div className="p-4 sm:p-6 bg-[#040711] overflow-auto flex-1 flex flex-col items-center justify-center">
+          <div className="w-full h-full min-h-[68vh] rounded-2xl border border-white/10 bg-white overflow-hidden shadow-2xl relative flex items-center justify-center">
+            {viewFormat === 'pdf' ? (
+              <object
+                data={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1`}
+                type="application/pdf"
+                className="w-full h-[74vh] rounded-xl border-none"
+              >
+                {/* Fallback if browser doesn't natively render pdf in object */}
+                <iframe
+                  src={pdfUrl}
+                  title="Ayush Prajapati Resume PDF"
+                  className="w-full h-[74vh] rounded-xl border-none"
+                >
+                  <div className="p-8 text-center text-slate-700 space-y-3 font-sans">
+                    <p className="font-bold text-lg">Unable to display PDF preview directly.</p>
+                    <p className="text-sm text-slate-500">You can download or switch to high-resolution image preview.</p>
+                    <div className="flex justify-center gap-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setViewFormat('image')}
+                        className="rounded-lg bg-cyan-600 px-4 py-2 text-xs font-bold text-white"
+                      >
+                        Switch to Image Preview
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleDownload}
+                        className="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white"
+                      >
+                        Download PDF
+                      </button>
+                    </div>
+                  </div>
+                </iframe>
+              </object>
+            ) : (
+              <div className="w-full h-full overflow-auto p-4 flex items-center justify-center bg-slate-900">
+                <img
+                  src={previewImg}
+                  alt={`${p.name || 'Ayush Prajapati'} Resume`}
+                  className="max-h-[72vh] w-auto rounded-lg object-contain shadow-xl border border-white/10"
+                />
+              </div>
+            )}
           </div>
+        </div>
 
-          {previewImg && (
-            <div className="rounded-2xl border border-white/15 bg-white p-2 sm:p-4 shadow-2xl overflow-hidden">
-              <img
-                src={previewImg}
-                alt={`${p.name} Official Resume`}
-                className="w-full h-auto rounded-lg object-contain mx-auto max-h-[72vh]"
-              />
-            </div>
-          )}
-
-          <div className="rounded-2xl border border-white/10 bg-obsidian p-6 space-y-5">
-            <div className="border-b hairline-border pb-4 flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <h4 className="font-display text-2xl font-extrabold text-white">{p.name}</h4>
-                <p className="font-mono text-xs text-cyanglow mt-1">
-                  {p.email || 'ayushprajapati9669@gmail.com'} | {p.phone || '(+91) 9669802554'}
-                </p>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <SocialIconButtons socialLinks={p.socialLinks} sizeClass="h-9 w-9" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <h5 className="font-mono text-xs font-bold uppercase tracking-widest text-cyanglow">EDUCATION</h5>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="rounded-xl border border-white/10 bg-charcoal p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-display text-sm font-bold text-white">CSE | SISTec, Bhopal</span>
-                    <span className="rounded-full bg-sage/15 px-2.5 py-0.5 font-mono text-xs font-bold text-sage">
-                      CGPA: 8.42 | (2026)
-                    </span>
-                  </div>
-                  <p className="text-xs text-stonewarm mt-1">{p.education?.degree}</p>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-charcoal p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-display text-sm font-bold text-white">XII (MP Board)</span>
-                    <span className="rounded-full bg-cyanglow/15 px-2.5 py-0.5 font-mono text-xs font-bold text-cyanglow">
-                      83.5% | 2022
-                    </span>
-                  </div>
-                  <p className="text-xs text-stonewarm mt-1">Kasturba Vidhya Mandir, Jamani, Madhya Pradesh</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <h5 className="font-mono text-xs font-bold uppercase tracking-widest text-cyanglow">SKILLS</h5>
-              <div className="rounded-xl border border-white/10 bg-charcoal p-4 space-y-1.5 text-xs text-alabaster">
-                <p>❖ <strong>Languages:</strong> C, Java, JavaScript, Python</p>
-                <p>❖ <strong>Web Technologies:</strong> HTML, CSS, Bootstrap, React.js, Node.js, Express.js</p>
-                <p>❖ <strong>Databases & Tools:</strong> MySQL, MongoDB, Git, GitHub, Cloudinary</p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h5 className="font-mono text-xs font-bold uppercase tracking-widest text-cyanglow">ACADEMIC & LIVE PROJECTS</h5>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {(p.academicProjects || []).map((ap, i) => (
-                  <div key={i} className="rounded-xl border border-white/10 bg-charcoal p-4 space-y-1.5">
-                    <p className="font-display text-sm font-bold text-white">{ap.title}</p>
-                    <p className="font-mono text-[10px] text-vermilion">{ap.stack}</p>
-                    <ul className="list-disc pl-4 space-y-1 text-xs text-stonewarm">
-                      {(ap.points || []).map((pt, j) => (
-                        <li key={j}>{pt}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <h5 className="font-mono text-xs font-bold uppercase tracking-widest text-cyanglow">ACHIEVEMENTS / HOBBIES</h5>
-              <div className="rounded-xl border border-white/10 bg-charcoal p-4 text-xs text-alabaster space-y-1">
-                {(p.achievements || ['Won a website-making competition at college.']).map((ach, i) => (
-                  <p key={i}>● {ach}</p>
-                ))}
-              </div>
-            </div>
+        {/* Footer info bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 bg-[#060a14] px-6 py-3 font-mono text-[11px] text-slate-400">
+          <div className="flex items-center gap-3">
+            <span className="text-cyan-400">✉ {p.email || 'ayushprajapati9669@gmail.com'}</span>
+            <span>•</span>
+            <span>☎ {p.phone || '(+91) 9669802554'}</span>
+            <span>•</span>
+            <span>CGPA: {p.education?.cgpa || '8.42 (2026)'}</span>
+          </div>
+          <div className="text-slate-500">
+            Press <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-white">ESC</kbd> or click outside to close
           </div>
         </div>
       </div>
     </div>
   );
 }
+

@@ -7,7 +7,7 @@ import { playTick } from '../../utils/audio';
 import { CommandPalette } from '../ui/CommandPalette';
 
 export function Header() {
-  const { appState, showToast } = usePortfolio();
+  const { appState, showToast, openResumeModal } = usePortfolio();
   const { session } = useAuth();
   const location = useLocation();
 
@@ -392,22 +392,21 @@ export function Header() {
               {/* Resume Button (Only visible on Public pages per reference) */}
               {!isAdmin && (
                 <div className="magnetic">
-                  <a
-                    href={appState.profile?.resumeUrl || '#'}
-                    target={appState.profile?.resumeUrl ? '_blank' : '_self'}
-                    rel="noreferrer"
+                  <button
+                    type="button"
                     className="btn-outline"
-                    onClick={(e) => {
+                    onClick={() => {
                       playTick();
-                      if (!appState.profile?.resumeUrl) {
-                        e.preventDefault();
-                        showToast('Resume link can be updated in Admin CMS Profile settings');
+                      if (openResumeModal) {
+                        openResumeModal();
+                      } else {
+                        showToast('Opening Resume...');
                       }
                     }}
                   >
                     <span>Resume</span>
                     <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '10px' }} />
-                  </a>
+                  </button>
                 </div>
               )}
 
@@ -492,23 +491,22 @@ export function Header() {
 
         <div className="mt-auto pt-6 border-t border-white/10 flex items-center justify-between gap-2">
           {!isAdmin ? (
-            <a
-              href={appState.profile?.resumeUrl || '#'}
-              target={appState.profile?.resumeUrl ? '_blank' : '_self'}
-              rel="noreferrer"
+            <button
+              type="button"
               className="btn-outline"
               style={{ display: 'flex', fontSize: '12px', padding: '8px 14px' }}
-              onClick={(e) => {
+              onClick={() => {
                 playTick();
                 setMobileMenuOpen(false);
-                if (!appState.profile?.resumeUrl) {
-                  e.preventDefault();
-                  showToast('Resume link can be updated in Admin CMS Profile settings');
+                if (openResumeModal) {
+                  openResumeModal();
+                } else {
+                  showToast('Opening Resume...');
                 }
               }}
             >
               Resume <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '10px' }} />
-            </a>
+            </button>
           ) : (
             <button
               type="button"
