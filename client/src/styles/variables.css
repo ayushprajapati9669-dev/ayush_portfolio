@@ -1,13 +1,32 @@
 :root {
   color-scheme: dark;
-  --bg-obsidian: #080B14;
-  --bg-charcoal: #0E1322;
-  --bg-graphite: #141B2D;
-  --text-alabaster: #F8FAFC;
-  --text-stone: #94A3B8;
+  /* REALISTIC 3D LIQUID PALETTE */
+  --bg-dark: #0a1118;
+  --bg-mid: #1e3a4d;
+  --bg-obsidian: #0a1118;
+  --bg-charcoal: #1e3a4d;
+  --bg-graphite: #0d2c3d;
+
+  --nav-bg: rgba(15, 30, 40, 0.6);
+  --text-main: #f0f8ff;
+  --text-muted: #8caab9;
+  --text-alabaster: #f0f8ff;
+  --text-stone: #8caab9;
+
+  --accent-primary: #38bdf8; /* Vibrant water blue */
+  --accent-1: #38bdf8;
+  --accent-2: #0ea5e9;
+  --accent-3: #a259ff;
+  --accent-cyan: #38bdf8;
+  --accent-sage: #0ea5e9;
+  --accent-glow: rgba(56, 189, 248, 0.4);
+
+  --border: rgba(255, 255, 255, 0.12);
+  --card-bg: rgba(15, 30, 40, 0.4);
+  --sidebar-bg: rgba(15, 30, 40, 0.6);
+
   --accent-vermilion: #FF6B4A;
   --accent-amber: #F59E0B;
-  --accent-sage: #10B981;
   --accent-indigo: #6366F1;
-  --accent-cyan: #00D4FF;
 }
+

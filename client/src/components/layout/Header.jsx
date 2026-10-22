@@ -104,6 +104,15 @@ export function Header() {
     pill.style.opacity = '1';
     pill.style.width = `${elRect.width}px`;
     pill.style.left = `${elRect.left - navRect.left}px`;
+
+    // Smooth double-pill hover system matching 3D liquid droplets theme
+    if (targetEl && !targetEl.classList.contains('active')) {
+      pill.style.background = 'rgba(255, 255, 255, 0.2)';
+      pill.style.boxShadow = 'none';
+    } else {
+      pill.style.background = 'linear-gradient(135deg, var(--accent-1, #38bdf8), var(--accent-2, #0ea5e9))';
+      pill.style.boxShadow = '0 0 25px var(--accent-glow, rgba(56, 189, 248, 0.4))';
+    }
   };
 
   useEffect(() => {

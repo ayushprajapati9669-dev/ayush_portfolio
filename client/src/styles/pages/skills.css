@@ -33,7 +33,7 @@
 }
 
 .skills-subtitle {
-  color: #06b6d4;
+  color: var(--accent-1, #38bdf8);
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   letter-spacing: 5px;
@@ -41,8 +41,8 @@
   font-weight: 700;
   margin-bottom: 12px;
   display: block;
-  text-shadow: 0 0 15px rgba(6, 182, 212, 0.6);
-  background: linear-gradient(90deg, #06b6d4, #10b981, #06b6d4);
+  text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9, #38bdf8);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -61,7 +61,7 @@
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -1.5px;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #06b6d4 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #38bdf8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;
@@ -83,8 +83,8 @@
 .filter-btn {
   position: relative;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  color: var(--text-muted, #8caab9);
   padding: 10px 24px;
   border-radius: 40px;
   font-size: 13px;
@@ -101,7 +101,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 50%, rgba(6, 182, 212, 0.9), transparent 60%), radial-gradient(circle at 70% 50%, rgba(16, 185, 129, 0.7), transparent 60%);
+  background: radial-gradient(circle at 30% 50%, rgba(56, 189, 248, 0.9), transparent 60%), radial-gradient(circle at 70% 50%, rgba(14, 165, 233, 0.7), transparent 60%);
   opacity: 0;
   z-index: -2;
   transition: opacity 0.4s ease;
@@ -127,7 +127,7 @@
 .filter-btn:hover {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
 }
 
 .filter-btn:hover::before {
@@ -139,10 +139,10 @@
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, #06b6d4, #10b981);
-  color: #fff;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: #000;
   border-color: transparent;
-  box-shadow: 0 0 35px rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.5);
   font-weight: 700;
 }
 
@@ -163,8 +163,8 @@
 /* Skill card - uniform size */
 .skill-card {
   position: relative;
-  background: linear-gradient(145deg, rgba(20, 25, 32, 0.8), rgba(8, 12, 18, 0.95));
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--card-bg, rgba(15, 30, 40, 0.4));
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
   border-radius: 18px;
   padding: 16px 18px;
   display: flex;
@@ -172,10 +172,11 @@
   gap: 12px;
   cursor: pointer;
   transform-style: preserve-3d;
-  box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   overflow: hidden;
   will-change: transform;
+  backdrop-filter: blur(10px);
 }
 
 .skill-card::before {
@@ -185,7 +186,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  background: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(6, 182, 212, 0.25), transparent 50%);
+  background: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(56, 189, 248, 0.2), transparent 50%);
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;
@@ -198,7 +199,7 @@
   inset: 0;
   border-radius: 18px;
   padding: 1.5px;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.7), transparent 40%, transparent 60%, rgba(16, 185, 129, 0.7));
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.7), transparent 40%, transparent 60%, rgba(14, 165, 233, 0.7));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -217,15 +218,16 @@
 }
 
 .skill-card:hover {
+  transform: translateY(-2px);
   border-color: transparent;
-  background: linear-gradient(145deg, rgba(25, 32, 38, 0.95), rgba(15, 18, 22, 0.98));
-  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(6, 182, 212, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: rgba(20, 40, 55, 0.6);
+  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(56, 189, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .ripple {
   position: absolute;
   border-radius: 50%;
-  background: rgba(6, 182, 212, 0.4);
+  background: rgba(56, 189, 248, 0.4);
   transform: scale(0);
   animation: rippleAnim 0.6s linear;
   pointer-events: none;

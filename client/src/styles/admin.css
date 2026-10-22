@@ -1,16 +1,16 @@
 /* Admin CMS Styles */
 :root {
-  --admin-bg: #020305;
-  --nav-bg: rgba(10, 15, 20, 0.7);
-  --text-main: #ffffff;
-  --text-muted: #94a3b8;
-  --accent-1: #00f0ff;
-  --accent-2: #00ff88;
+  --admin-bg: #0a1118;
+  --nav-bg: rgba(15, 30, 40, 0.6);
+  --text-main: #f0f8ff;
+  --text-muted: #8caab9;
+  --accent-1: #38bdf8;
+  --accent-2: #0ea5e9;
   --accent-3: #a259ff;
-  --accent-glow: rgba(0, 240, 255, 0.5);
-  --border: rgba(255, 255, 255, 0.08);
-  --card-bg: linear-gradient(145deg, rgba(20, 25, 32, 0.4), rgba(8, 12, 18, 0.8));
-  --sidebar-bg: rgba(10, 15, 20, 0.75);
+  --accent-glow: rgba(56, 189, 248, 0.4);
+  --border: rgba(255, 255, 255, 0.12);
+  --card-bg: rgba(15, 30, 40, 0.4);
+  --sidebar-bg: rgba(15, 30, 40, 0.6);
   --danger: #ff4d4d;
 }
 

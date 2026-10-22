@@ -92,6 +92,7 @@ export function AdminProjects({
   const [sortBy, setSortBy] = useState('manual');
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [isHeadingsOpen, setIsHeadingsOpen] = useState(false);
 
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
@@ -490,52 +491,82 @@ export function AdminProjects({
         </div>
       </div>
 
-      {/* Live Headings Customizer */}
-      <div className="glass-card-admin p-6 space-y-4">
-        <div className="border-b border-white/10 pb-3">
-          <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold flex items-center gap-2">
-            <i className="fa-solid fa-sliders"></i> SECTION HEADINGS CUSTOMIZER
-          </span>
-          <h3 className="text-lg font-bold text-white mt-1">Live Page Titles & Subtitles</h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Customize the heading and eyebrow displayed on the public Projects page and Homepage section dynamically.
-          </p>
+      {/* ========================================================
+          2. LIVE SECTION HEADINGS CUSTOMIZER (COLLAPSIBLE)
+         ======================================================== */}
+      <div className="glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 transition-all hover:border-cyan-500/30">
+        <div
+          className="flex cursor-pointer items-center justify-between select-none"
+          onClick={() => {
+            playTick();
+            setIsHeadingsOpen(!isHeadingsOpen);
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 shadow-sm shadow-cyan-500/10">
+              <i className="fa-solid fa-heading" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-400 font-bold">
+                  SECTION HEADINGS CUSTOMIZER
+                </span>
+              </div>
+              <h3 className="text-sm font-bold text-white sm:text-base">
+                Projects Section Headings <span className="text-xs font-normal text-slate-400 hidden sm:inline">(Live Page Titles & Subtitles)</span>
+              </h3>
+              <p className="text-xs text-slate-400">
+                Customize dynamic eyebrow tag and headline displayed on the public Projects page and Homepage section dynamically.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 hover:text-white transition-all"
+            aria-label={isHeadingsOpen ? "Collapse headings customizer" : "Expand headings customizer"}
+          >
+            <i className={`fa-solid fa-chevron-${isHeadingsOpen ? 'up' : 'down'} text-xs`} />
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className="block font-mono text-xs text-slate-400 mb-1">
-              Eyebrow Tag (e.g. 02 · LIVE DEPLOYED PROJECTS)
-            </label>
-            <input
-              type="text"
-              value={appState.uiLabels?.homeProjectsEyebrow ?? '02 · LIVE DEPLOYED PROJECTS'}
-              onChange={(e) =>
-                updateAppState((prev) => ({
-                  ...prev,
-                  uiLabels: { ...prev.uiLabels, homeProjectsEyebrow: e.target.value }
-                }), session.token)
-              }
-              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
-            />
+        {isHeadingsOpen && (
+          <div className="mt-5 border-t border-white/10 pt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 animate-in fade-in duration-200">
+            <div>
+              <label className="block font-mono text-xs font-semibold text-slate-300 mb-1.5">
+                Eyebrow Tag (e.g. 02 · LIVE DEPLOYED PROJECTS)
+              </label>
+              <input
+                type="text"
+                value={appState.uiLabels?.homeProjectsEyebrow ?? '02 · LIVE DEPLOYED PROJECTS'}
+                onChange={(e) =>
+                  updateAppState((prev) => ({
+                    ...prev,
+                    uiLabels: { ...prev.uiLabels, homeProjectsEyebrow: e.target.value }
+                  }), session.token)
+                }
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                placeholder="02 · LIVE DEPLOYED PROJECTS"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-xs font-semibold text-slate-300 mb-1.5">
+                Main Heading (e.g. Featured Full-Stack Applications)
+              </label>
+              <input
+                type="text"
+                value={appState.uiLabels?.homeProjectsHeading ?? 'Featured Full-Stack Applications'}
+                onChange={(e) =>
+                  updateAppState((prev) => ({
+                    ...prev,
+                    uiLabels: { ...prev.uiLabels, homeProjectsHeading: e.target.value }
+                  }), session.token)
+                }
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                placeholder="Featured Full-Stack Applications"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block font-mono text-xs text-slate-400 mb-1">
-              Main Heading (e.g. Featured Full-Stack Applications)
-            </label>
-            <input
-              type="text"
-              value={appState.uiLabels?.homeProjectsHeading ?? 'Featured Full-Stack Applications'}
-              onChange={(e) =>
-                updateAppState((prev) => ({
-                  ...prev,
-                  uiLabels: { ...prev.uiLabels, homeProjectsHeading: e.target.value }
-                }), session.token)
-              }
-              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
-            />
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Project Form (Toggled via Create Button / Edit Click) */}
@@ -802,66 +833,153 @@ export function AdminProjects({
       {/* =========================================================================
           Existing Projects Section (Matching Reference Images 2 & 3)
           ========================================================================= */}
-      <div className="glass-card-admin p-6 sm:p-8 space-y-5">
-        {/* Header & Search with Category Filter Dropdown */}
-        <div className="admin-proj-header flex flex-wrap items-center justify-between gap-4">
-          <div className="admin-proj-title-wrap">
-            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-sm">
-              <i className="fa-solid fa-layer-group"></i>
+      {/* =========================================================================
+          Existing Projects Section (Clean, Structured, and Admin-Friendly)
+          ========================================================================= */}
+      <div className="glass-card-admin p-6 sm:p-8 space-y-6">
+        {/* Section Header */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-400 shadow-sm shadow-cyan-400/10">
+              <i className="fa-solid fa-layer-group text-base" />
             </div>
-            <h3 className="admin-proj-title">
-              Existing Projects <span className="admin-proj-count-badge">({filteredProjects.length} / {projects.length})</span>
-            </h3>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Category Filter Dropdown */}
-            <div className="flex items-center gap-2">
-              <i className="fa-solid fa-tags text-cyan-400 text-xs hidden sm:inline" />
-              <select
-                value={selectedCategory}
-                onChange={(e) => {
-                  playTick();
-                  setSelectedCategory(e.target.value);
-                }}
-                className="rounded-xl border border-cyan-400/40 bg-[#0B101B] px-3.5 py-2 font-mono text-xs text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer shadow-sm shadow-cyan-400/10 min-w-[190px]"
-                title="Filter by Project Category"
-              >
-                <option value="all" className="bg-[#0b101b] text-white">
-                  All Categories ({projects.length})
-                </option>
-                {availableCategories
-                  .filter((c) => c !== 'all')
-                  .map((cat) => {
-                    const count = projects.filter((p) => {
-                      const pCat = (p.category || '').toLowerCase();
-                      const cLower = cat.toLowerCase();
-                      return pCat.includes(cLower) || cLower.includes(pCat);
-                    }).length;
-                    return (
-                      <option key={cat} value={cat} className="bg-[#0b101b] text-white">
-                        {cat} ({count})
-                      </option>
-                    );
-                  })}
-              </select>
-            </div>
-
-            {/* Real-time Search Box */}
-            <div className="admin-proj-search-wrap">
-              <i className="fa-solid fa-magnifying-glass"></i>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search projects..."
-                className="admin-proj-search-input"
-              />
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-xl font-bold text-white">
+                  Existing Projects
+                </h3>
+                <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-400/20 px-2.5 py-0.5 rounded-full">
+                  {filteredProjects.length} / {projects.length}
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Drag cards to reorder, multi-select for batch actions, filter by category or status.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Sub-Toolbar: Select All, Filter Tabs, Batch Delete, and Sort Dropdown */}
+        {/* Dedicated Category Filter Bar (Matching Certificates Tab Style) */}
+        <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl border border-white/10 bg-black/40 w-full max-w-full">
+          <div className="flex items-center gap-2.5">
+            <i className="fa-solid fa-tags text-cyan-400 text-sm" />
+            <span className="font-mono text-xs font-semibold text-slate-300">
+              Filter by Project Category:
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2.5 flex-1 sm:flex-initial justify-end">
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                playTick();
+                setSelectedCategory(e.target.value);
+              }}
+              className="w-full sm:w-auto min-w-[240px] rounded-xl border border-cyan-400/40 bg-[#0B101B] px-4 py-2 font-mono text-xs text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer shadow-sm shadow-cyan-400/10"
+              title="Filter by Project Category"
+            >
+              <option value="all" className="bg-[#0b101b] text-white py-1">
+                All Categories ({projects.length})
+              </option>
+              {availableCategories
+                .filter((c) => c !== 'all')
+                .map((cat) => {
+                  const count = projects.filter((p) => {
+                    const pCat = (p.category || '').toLowerCase();
+                    const cLower = cat.toLowerCase();
+                    return pCat.includes(cLower) || cLower.includes(pCat);
+                  }).length;
+                  return (
+                    <option key={cat} value={cat} className="bg-[#0b101b] text-white py-1">
+                      {cat} ({count})
+                    </option>
+                  );
+                })}
+            </select>
+
+            {selectedCategory !== 'all' && (
+              <button
+                type="button"
+                onClick={() => {
+                  playTick();
+                  setSelectedCategory('all');
+                }}
+                className="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-white/15 bg-white/5 transition-all"
+                title="Reset to All Categories"
+              >
+                <span>Reset</span>
+                <i className="fa-solid fa-xmark text-[11px] text-cyan-400" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Real-time Search Box & Sort Controls Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center w-full">
+          {/* Search Input (9 cols on md+, 8 cols on sm) */}
+          <div className="sm:col-span-8 md:col-span-9 relative">
+            <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search projects by title, category, tech stack, or description..."
+              className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-9 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-mono"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  playTick();
+                  setSearchQuery('');
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white transition-colors"
+                title="Clear search"
+              >
+                <i className="fa-solid fa-xmark" />
+              </button>
+            )}
+          </div>
+
+          {/* Sort Selector (3 cols on md+, 4 cols on sm) */}
+          <div className="sm:col-span-4 md:col-span-3 flex justify-end">
+            <div className="admin-sort-wrap w-full" ref={sortRef}>
+              <button
+                type="button"
+                onClick={() => { playTick(); setIsSortOpen((prev) => !prev); }}
+                className="admin-sort-btn w-full justify-between"
+              >
+                <div className="flex items-center gap-2">
+                  <i className={currentSortObj.icon}></i>
+                  <span>{currentSortObj.label}</span>
+                </div>
+                <i className="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+              </button>
+
+              {isSortOpen && (
+                <div className="admin-sort-menu animate-in fade-in zoom-in-95 duration-150 right-0">
+                  {SORT_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => {
+                        playTick();
+                        setSortBy(opt.id);
+                        setIsSortOpen(false);
+                      }}
+                      className={`admin-sort-item ${sortBy === opt.id ? 'active' : ''}`}
+                    >
+                      <i className={`${opt.icon} text-xs w-4`}></i>
+                      <span>{opt.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Sub-Toolbar: Select All, Filter Tabs, Batch Delete */}
         <div className="admin-proj-toolbar">
           <div className="admin-proj-toolbar-left">
             {/* Select All */}
@@ -872,7 +990,11 @@ export function AdminProjects({
               >
                 {isAllSelected && <i className="fa-solid fa-check"></i>}
               </div>
-              <span>Select All</span>
+              <span>
+                {isAllSelected && filteredProjects.length > 0
+                  ? 'Deselect All'
+                  : `Select All (${filteredProjects.length})`}
+              </span>
             </label>
 
             <div className="admin-v-divider"></div>
@@ -946,38 +1068,12 @@ export function AdminProjects({
               </button>
             )}
 
-            {/* Sort Dropdown */}
-            <div className="admin-sort-wrap" ref={sortRef}>
-              <button
-                type="button"
-                onClick={() => { playTick(); setIsSortOpen((prev) => !prev); }}
-                className="admin-sort-btn"
-              >
-                <i className={currentSortObj.icon}></i>
-                <span>{currentSortObj.label}</span>
-                <i className="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"></i>
-              </button>
-
-              {isSortOpen && (
-                <div className="admin-sort-menu animate-in fade-in zoom-in-95 duration-150">
-                  {SORT_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => {
-                        playTick();
-                        setSortBy(opt.id);
-                        setIsSortOpen(false);
-                      }}
-                      className={`admin-sort-item ${sortBy === opt.id ? 'active' : ''}`}
-                    >
-                      <i className={`${opt.icon} text-xs w-4`}></i>
-                      <span>{opt.label}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {sortBy === 'manual' && activeTab === 'all' && (
+              <span className="font-mono text-[11px] text-slate-500 hidden lg:inline-flex items-center gap-1.5">
+                <i className="fa-solid fa-grip-vertical text-slate-600"></i>
+                Drag cards to reorder
+              </span>
+            )}
           </div>
         </div>
 

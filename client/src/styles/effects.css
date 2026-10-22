@@ -1,30 +1,47 @@
 /* ==========================================================================
-   Background Layers: Aurora, 3D Spheres, Noise, Mouse Light
-   Directly matching reference HTML (skilled_section_nav)
+   Realistic 3D Liquid Droplets Theme Background Layers:
+   - Deep oceanic gradient background
+   - 6 Floating 3D realistic liquid droplets / spheres with refraction
+   - SVG fractal noise texture overlay at opacity: 0.04
+   - Interactive mouse light with vibrant water blue glow (#38bdf8)
    ========================================================================== */
 
+/* Deep Oceanic Liquid Background */
+.liquid-bg,
 .aurora-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: #030407;
+  background: linear-gradient(135deg, #0a1118 0%, #1e3a4d 50%, #0d2c3d 100%);
 }
 
+.liquid-bg::after,
+.aurora-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Subtle Aurora Blobs tuned to oceanic water hues */
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(140px);
-  opacity: 0.5;
+  opacity: 0.35;
   mix-blend-mode: screen;
-  animation: auroraFloat 20s infinite alternate ease-in-out;
+  animation: auroraFloat 22s infinite alternate ease-in-out;
 }
 
 .aurora-1 {
   width: 70vw;
   height: 70vw;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.6) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, transparent 60%);
   top: -20%;
   left: -20%;
 }
@@ -32,7 +49,7 @@
 .aurora-2 {
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.35) 0%, transparent 60%);
   bottom: -10%;
   right: -10%;
   animation-duration: 25s;
@@ -42,7 +59,7 @@
 .aurora-3 {
   width: 50vw;
   height: 50vw;
-  background: radial-gradient(circle, rgba(162, 89, 255, 0.35) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(162, 89, 255, 0.25) 0%, transparent 60%);
   top: 30%;
   left: 40%;
   animation-duration: 30s;
@@ -54,96 +71,125 @@
     transform: translate(0, 0) scale(1) rotate(0deg);
   }
   100% {
-    transform: translate(15%, 10%) scale(1.2) rotate(45deg);
+    transform: translate(12%, 8%) scale(1.15) rotate(35deg);
   }
 }
 
-/* 3D Glass Spheres Container */
+/* 3D Liquid Droplets / Spheres Container */
 .spheres-container {
   position: fixed;
   inset: 0;
   z-index: 1;
   overflow: hidden;
   pointer-events: none;
-  perspective: 1200px;
+  perspective: 1000px;
 }
 
+/* 6 Realistic 3D Liquid Droplets with Inset Highlights & Depth Shadows */
+.droplet,
 .sphere {
   position: absolute;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.01));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 10px 20px rgba(255, 255, 255, 0.1), inset 0 -10px 20px rgba(0, 0, 0, 0.5), 0 20px 40px rgba(0, 0, 0, 0.5);
-  animation: floatSphere 25s infinite linear;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(56, 189, 248, 0.2) 40%, rgba(0, 0, 0, 0.6) 80%);
+  box-shadow: inset 0 10px 20px rgba(255, 255, 255, 0.4), inset 0 -10px 20px rgba(0, 0, 0, 0.6), 0 20px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  animation: floatDroplet 20s infinite linear;
+  will-change: transform;
 }
 
+.droplet:nth-child(1),
 .sphere:nth-child(1) {
-  width: 150px;
-  height: 150px;
-  top: 15%;
-  left: 10%;
+  width: 350px;
+  height: 350px;
+  left: -10%;
+  top: 10%;
   animation-duration: 25s;
 }
 
+.droplet:nth-child(2),
 .sphere:nth-child(2) {
-  width: 80px;
-  height: 80px;
-  top: 60%;
-  left: 80%;
+  width: 180px;
+  height: 180px;
+  right: 10%;
+  top: 20%;
   animation-duration: 18s;
   animation-delay: -5s;
 }
 
+.droplet:nth-child(3),
 .sphere:nth-child(3) {
-  width: 200px;
-  height: 200px;
-  top: 80%;
-  left: 15%;
-  animation-duration: 35s;
+  width: 250px;
+  height: 250px;
+  left: 25%;
+  bottom: -10%;
+  animation-duration: 30s;
   animation-delay: -10s;
 }
 
+.droplet:nth-child(4),
 .sphere:nth-child(4) {
-  width: 60px;
-  height: 60px;
-  top: 25%;
-  left: 75%;
+  width: 100px;
+  height: 100px;
+  right: 30%;
+  bottom: 20%;
   animation-duration: 15s;
   animation-delay: -2s;
 }
 
-@keyframes floatSphere {
+.droplet:nth-child(5),
+.sphere:nth-child(5) {
+  width: 150px;
+  height: 150px;
+  left: 60%;
+  top: 50%;
+  animation-duration: 22s;
+  animation-delay: -8s;
+}
+
+.droplet:nth-child(6),
+.sphere:nth-child(6) {
+  width: 80px;
+  height: 80px;
+  left: 15%;
+  top: 60%;
+  animation-duration: 12s;
+  animation-delay: -4s;
+}
+
+@keyframes floatDroplet {
   0% {
-    transform: translateY(0) translateX(0) rotate(0deg);
+    transform: translateY(0) scale(1);
   }
   50% {
-    transform: translateY(-80px) translateX(20px) rotate(180deg);
+    transform: translateY(-60px) scale(1.05);
   }
   100% {
-    transform: translateY(0) translateX(0) rotate(360deg);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Background Noise Texture */
+/* Background Noise Texture Overlay at opacity: 0.04 */
 .bg-noise {
   position: fixed;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-  z-index: 2;
+  z-index: 1;
   pointer-events: none;
 }
 
-/* Dynamic Interactive Mouse Light */
+/* Dynamic Interactive Mouse Light Follower with Vibrant Water Blue Glow */
 .mouse-light {
   position: fixed;
   width: 1000px;
   height: 1000px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  z-index: 3;
+  z-index: 2;
   top: 0;
   left: 0;
   transition: opacity 0.3s;
 }
+
