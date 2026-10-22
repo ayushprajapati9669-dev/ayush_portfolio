@@ -116,7 +116,7 @@ export function AdminSidebar({
           </div>
           <div className="logo-text-wrap">
             <span className="logo-text">{profile?.displayName || 'Ayush Prajapati'}</span>
-            <span className="logo-sub">Admin CMS</span>
+            <span className="logo-sub">ADMIN SYSTEM</span>
           </div>
         </div>
 

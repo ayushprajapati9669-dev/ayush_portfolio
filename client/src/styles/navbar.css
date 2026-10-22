@@ -95,7 +95,7 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   left: 50%;
   width: 200%;
   height: 200%;
-  background: conic-gradient(from 0deg, transparent 0%, transparent 70%, var(--accent-1, #00f0ff) 85%, var(--accent-2, #00ff88) 100%);
+  background: conic-gradient(from 0deg, transparent 0%, transparent 70%, var(--accent-1, #38bdf8) 85%, var(--accent-2, #0ea5e9) 100%);
   transform-origin: center;
   animation: rotateBeam 4s linear infinite;
   opacity: 0;
@@ -162,15 +162,15 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 }
 
 .nav-logo-box {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   background: linear-gradient(135deg, var(--accent-1, #38bdf8), var(--accent-2, #0ea5e9));
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 16px;
+  font-size: 17px;
   color: #000;
   position: relative;
   box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
@@ -179,12 +179,12 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 }
 
 .nav-left:hover .nav-logo-box {
-  transform: scale(1.08) rotate(12deg);
+  transform: scale(1.1) rotate(15deg);
 }
 
 .nav-logo-text {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.3px;
   color: #fff;
@@ -220,12 +220,12 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   position: relative;
   z-index: 2;
   text-decoration: none;
-  color: #94a3b8;
+  color: #8caab9;
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 14px;
+  padding: 9px 18px;
   border-radius: 50px;
-  transition: all 0.25s ease;
+  transition: color 0.3s;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -234,13 +234,13 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 }
 
 .nav-link:hover,
-.nav-link.active,
 .nav-link:focus-visible {
   color: #ffffff;
 }
 
 .nav-link.active {
-  background: rgba(255, 255, 255, 0.08);
+  color: #000000 !important;
+  font-weight: 700;
 }
 
 .nav-link i {
@@ -249,20 +249,11 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 }
 
 .nav-link.active i {
-  color: var(--accent-2, #00ff88);
+  color: #000000 !important;
 }
 
 .nav-active-dot {
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent-2, #00ff88);
-  box-shadow: 0 0 10px var(--accent-2, #00ff88), 0 0 4px #00ff88;
-  pointer-events: none;
+  display: none;
 }
 
 @media (max-width: 1280px) {
@@ -352,10 +343,10 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 
 .notif-btn:hover,
 .notif-btn.open {
-  color: var(--accent-1, #00f0ff);
-  border-color: rgba(0, 240, 255, 0.4);
-  background: rgba(0, 240, 255, 0.08);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+  color: var(--accent-1, #38bdf8);
+  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.1);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
 }
 
 .notif-badge {
@@ -571,9 +562,9 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: white;
-  padding: 8px 18px;
+  padding: 10px 20px;
   border-radius: 50px;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -605,10 +596,10 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   background: linear-gradient(135deg, #38bdf8, #0ea5e9);
   border: none;
   color: #000;
-  padding: 8px 22px;
+  padding: 10px 24px;
   border-radius: 50px;
-  font-size: 12.5px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -618,6 +609,7 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   outline: none;
   text-decoration: none;
   white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
 }
 
 .btn-primary:hover {

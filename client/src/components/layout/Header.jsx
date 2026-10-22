@@ -39,14 +39,14 @@ export function Header() {
   }, []);
 
   const navItems = [
-    { name: ui.navHome || 'Home', path: '/', icon: 'fa-house' },
-    { name: ui.navAbout || 'About', path: '/about', icon: 'fa-user' },
-    { name: ui.navSkills || 'Skills', path: '/skills', icon: 'fa-code' },
-    { name: ui.navProjects || 'Projects', path: '/projects', icon: 'fa-layer-group' },
-    { name: ui.navCertificates || 'Certificates', path: '/certificates', icon: 'fa-certificate' }
+    { name: ui.navHome || 'Home', path: '/', icon: 'fa-solid fa-house' },
+    { name: ui.navAbout || 'About', path: '/about', icon: 'fa-regular fa-user' },
+    { name: ui.navSkills || 'Skills', path: '/skills', icon: 'fa-solid fa-code' },
+    { name: ui.navProjects || 'Projects', path: '/projects', icon: 'fa-solid fa-layer-group' },
+    { name: ui.navCertificates || 'Certificates', path: '/certificates', icon: 'fa-solid fa-certificate' }
   ];
 
-  const isAdmin = location.pathname.startsWith('/admin');
+  const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
 
   // Dynamic notifications from messages & portfolio state
   const rawNotifications = [
@@ -283,7 +283,7 @@ export function Header() {
                 >
                   {({ isActive }) => (
                     <>
-                      <i className={`fa-solid ${item.icon}`} />
+                      <i className={item.icon} />
                       <span>{item.name}</span>
                       {isActive && (
                         <span className="nav-active-dot" aria-hidden="true" />
@@ -413,29 +413,33 @@ export function Header() {
                 </div>
               )}
 
-              {/* Hire / Connect CTA */}
-              <div className="magnetic">
-                <Link
-                  to="/contact"
-                  className="btn-primary"
-                  onClick={() => playTick()}
-                >
-                  <i className="fa-solid fa-paper-plane" style={{ fontSize: '11px' }} />
-                  <span>Hire / Connect</span>
-                </Link>
-              </div>
+              {/* Hire / Connect CTA (Visible only on Public pages, hidden on admin side) */}
+              {!isAdmin && (
+                <div className="magnetic">
+                  <Link
+                    to="/contact"
+                    className="btn-primary"
+                    onClick={() => playTick()}
+                  >
+                    <i className="fa-solid fa-paper-plane" style={{ fontSize: '11px' }} />
+                    <span>Hire / Connect</span>
+                  </Link>
+                </div>
+              )}
 
-              {/* Admin CMS Button */}
-              <div className="magnetic">
-                <Link
-                  to="/admin"
-                  className={`btn-admin-cms ${isAdmin ? 'active' : ''}`}
-                  onClick={() => playTick()}
-                >
-                  <i className={`fa-solid fa-shield-halved ${isAdmin ? 'text-black' : 'text-emerald-400'}`} />
-                  <span>Admin CMS</span>
-                </Link>
-              </div>
+              {/* Admin CMS Button (Visible when on Admin Dashboard) */}
+              {isAdmin && (
+                <div className="magnetic">
+                  <Link
+                    to="/admin"
+                    className={`btn-admin-cms ${isAdmin ? 'active' : ''}`}
+                    onClick={() => playTick()}
+                  >
+                    <i className="fa-solid fa-shield-halved text-black" />
+                    <span>Admin CMS</span>
+                  </Link>
+                </div>
+              )}
 
               {/* Mobile Drawer Toggle */}
               <button
@@ -486,7 +490,7 @@ export function Header() {
                 setMobileMenuOpen(false);
               }}
             >
-              <i className={`fa-solid ${item.icon}`} />
+              <i className={item.icon} />
               <span>{item.name}</span>
             </NavLink>
           ))}
