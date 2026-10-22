@@ -120,6 +120,8 @@ export function AdminProjects({
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [isHeadingsOpen, setIsHeadingsOpen] = useState(false);
+  const [draggedProjIndex, setDraggedProjIndex] = useState(null);
+  const [dragOverProjIndex, setDragOverProjIndex] = useState(null);
 
   const fileInputRef = useRef(null);
   const formRef = useRef(null);
@@ -322,6 +324,106 @@ export function AdminProjects({
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
+  };
+
+  // Drag-and-drop Reordering Handlers for Projects
+  const handleProjDragStart = (e, index) => {
+    setDraggedProjIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index.toString());
+  };
+
+  const handleProjDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverProjIndex !== index) {
+      setDragOverProjIndex(index);
+    }
+  };
+
+  const handleProjDragLeave = (index) => {
+    if (dragOverProjIndex === index) {
+      setDragOverProjIndex(null);
+    }
+  };
+
+  const handleProjDropReorder = (targetIndex) => {
+    if (draggedProjIndex === null || draggedProjIndex === targetIndex) {
+      setDraggedProjIndex(null);
+      setDragOverProjIndex(null);
+      return;
+    }
+    playTick();
+
+    const sourceProj = filteredProjects[draggedProjIndex];
+    const targetProj = filteredProjects[targetIndex];
+    if (!sourceProj || !targetProj) {
+      setDraggedProjIndex(null);
+      setDragOverProjIndex(null);
+      return;
+    }
+
+    const sourceGlobalIdx = projects.findIndex((p) => p.id === sourceProj.id);
+    const targetGlobalIdx = projects.findIndex((p) => p.id === targetProj.id);
+
+    if (sourceGlobalIdx === -1 || targetGlobalIdx === -1) {
+      setDraggedProjIndex(null);
+      setDragOverProjIndex(null);
+      return;
+    }
+
+    const updated = [...projects];
+    const [moved] = updated.splice(sourceGlobalIdx, 1);
+    updated.splice(targetGlobalIdx, 0, moved);
+
+    // Assign displayOrder based on new positions
+    const ordered = updated.map((p, i) => ({ ...p, displayOrder: i + 1 }));
+
+    // Auto-set sortBy to manual so the user immediately sees the custom order
+    setSortBy('manual');
+
+    updateAppState(
+      (prev) => ({
+        ...prev,
+        projects: ordered
+      }),
+      session.token
+    );
+
+    setDraggedProjIndex(null);
+    setDragOverProjIndex(null);
+    showToast(`Project "${moved.title || 'Project'}" moved to position #${targetIndex + 1}!`, 'fa-arrows-up-down');
+  };
+
+  // 1-Click Move Up / Down
+  const handleMoveOrder = (proj, direction) => {
+    playTick();
+    const currentIdx = filteredProjects.findIndex((p) => p.id === proj.id);
+    const targetIdx = currentIdx + direction;
+    if (targetIdx < 0 || targetIdx >= filteredProjects.length) return;
+
+    const sourceGlobalIdx = projects.findIndex((p) => p.id === proj.id);
+    const targetProj = filteredProjects[targetIdx];
+    const targetGlobalIdx = projects.findIndex((p) => p.id === targetProj.id);
+
+    if (sourceGlobalIdx === -1 || targetGlobalIdx === -1) return;
+
+    const updated = [...projects];
+    const [moved] = updated.splice(sourceGlobalIdx, 1);
+    updated.splice(targetGlobalIdx, 0, moved);
+
+    const ordered = updated.map((p, i) => ({ ...p, displayOrder: i + 1 }));
+    setSortBy('manual');
+
+    updateAppState(
+      (prev) => ({
+        ...prev,
+        projects: ordered
+      }),
+      session.token
+    );
+
+    showToast(`Project moved ${direction < 0 ? 'up' : 'down'}!`, 'fa-arrow-up');
   };
 
   // Image upload handling with instant preview
@@ -731,28 +833,37 @@ export function AdminProjects({
             </button>
           </div>
 
-          {/* Multi-Step Wizard Progress Bar */}
-          <div className="rounded-2xl border border-white/10 bg-black/40 p-4 sm:p-5 backdrop-blur-md">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Stepper Progress Bar & Stage Indicator (Matching Certificates Form) */}
+          <div className="space-y-3">
+            {/* Visual Step Progress Slider */}
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
+                style={{ width: `${(currentStep / 3) * 100}%` }}
+              />
+            </div>
+
+            {/* Stepper Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               {/* Step 1 Pill */}
               <button
                 type="button"
                 onClick={() => handleJumpToStep(1)}
-                className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+                className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
                   currentStep === 1
-                    ? 'border-cyan-500/50 bg-cyan-500/10 shadow-lg shadow-cyan-500/10'
+                    ? 'border-cyan-400 bg-cyan-500/10 text-white shadow-md shadow-cyan-500/15'
                     : currentStep > 1
-                    ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50'
-                    : 'border-white/5 bg-white/[0.02] opacity-60'
+                    ? 'border-emerald-500/30 bg-emerald-500/5 text-slate-300 hover:border-emerald-500/50'
+                    : 'border-white/10 bg-black/40 text-slate-400 hover:border-white/20'
                 }`}
               >
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
                     currentStep === 1
-                      ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
+                      ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/40'
                       : currentStep > 1
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                      : 'bg-white/10 text-slate-400 border border-white/10'
+                      : 'bg-white/10 text-slate-400'
                   }`}
                 >
                   {currentStep > 1 ? <i className="fa-solid fa-check text-xs"></i> : '01'}
@@ -766,10 +877,10 @@ export function AdminProjects({
                       </span>
                     )}
                   </div>
-                  <p className={`text-xs font-semibold truncate ${currentStep === 1 ? 'text-cyan-300' : 'text-white'}`}>
+                  <p className={`text-xs font-bold truncate ${currentStep === 1 ? 'text-white' : 'text-slate-300'}`}>
                     Core Information
                   </p>
-                  <p className="text-[11px] text-slate-400 truncate">Title, category & overview</p>
+                  <p className="text-[10px] text-slate-400 truncate">Title, category & overview</p>
                 </div>
               </button>
 
@@ -777,21 +888,21 @@ export function AdminProjects({
               <button
                 type="button"
                 onClick={() => handleJumpToStep(2)}
-                className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+                className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
                   currentStep === 2
-                    ? 'border-cyan-500/50 bg-cyan-500/10 shadow-lg shadow-cyan-500/10'
+                    ? 'border-cyan-400 bg-cyan-500/10 text-white shadow-md shadow-cyan-500/15'
                     : currentStep > 2
-                    ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50'
-                    : 'border-white/5 bg-white/[0.02] opacity-60'
+                    ? 'border-emerald-500/30 bg-emerald-500/5 text-slate-300 hover:border-emerald-500/50'
+                    : 'border-white/10 bg-black/40 text-slate-400 hover:border-white/20'
                 }`}
               >
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
                     currentStep === 2
-                      ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
+                      ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/40'
                       : currentStep > 2
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                      : 'bg-white/10 text-slate-400 border border-white/10'
+                      : 'bg-white/10 text-slate-400'
                   }`}
                 >
                   {currentStep > 2 ? <i className="fa-solid fa-check text-xs"></i> : '02'}
@@ -805,10 +916,10 @@ export function AdminProjects({
                       </span>
                     )}
                   </div>
-                  <p className={`text-xs font-semibold truncate ${currentStep === 2 ? 'text-cyan-300' : 'text-white'}`}>
+                  <p className={`text-xs font-bold truncate ${currentStep === 2 ? 'text-white' : 'text-slate-300'}`}>
                     Tech Stack & Links
                   </p>
-                  <p className="text-[11px] text-slate-400 truncate">Tech tags, live URL & GitHub</p>
+                  <p className="text-[10px] text-slate-400 truncate">Tech tags, live URL & GitHub</p>
                 </div>
               </button>
 
@@ -816,17 +927,17 @@ export function AdminProjects({
               <button
                 type="button"
                 onClick={() => handleJumpToStep(3)}
-                className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+                className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
                   currentStep === 3
-                    ? 'border-cyan-500/50 bg-cyan-500/10 shadow-lg shadow-cyan-500/10'
-                    : 'border-white/5 bg-white/[0.02] opacity-60'
+                    ? 'border-cyan-400 bg-cyan-500/10 text-white shadow-md shadow-cyan-500/15'
+                    : 'border-white/10 bg-black/40 text-slate-400 hover:border-white/20'
                 }`}
               >
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
                     currentStep === 3
-                      ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
-                      : 'bg-white/10 text-slate-400 border border-white/10'
+                      ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/40'
+                      : 'bg-white/10 text-slate-400'
                   }`}
                 >
                   03
@@ -835,25 +946,12 @@ export function AdminProjects({
                   <div className="flex items-center gap-1.5">
                     <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Step 03</span>
                   </div>
-                  <p className={`text-xs font-semibold truncate ${currentStep === 3 ? 'text-cyan-300' : 'text-white'}`}>
+                  <p className={`text-xs font-bold truncate ${currentStep === 3 ? 'text-white' : 'text-slate-300'}`}>
                     Media & Visibility
                   </p>
-                  <p className="text-[11px] text-slate-400 truncate">Cover image, status & preview</p>
+                  <p className="text-[10px] text-slate-400 truncate">Cover image, status & preview</p>
                 </div>
               </button>
-            </div>
-
-            {/* Stepper progress indicator track */}
-            <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-400">
-              <span className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-                <span>
-                  {currentStep === 1 && 'Step 1: Enter Title, Domain Category & Summary'}
-                  {currentStep === 2 && 'Step 2: Tag Tech Stack & Enter URLs'}
-                  {currentStep === 3 && 'Step 3: Upload Cover, Set Visibility & Live Preview'}
-                </span>
-              </span>
-              <span className="text-cyan-400 font-semibold">{Math.round((currentStep / 3) * 100)}% Completed</span>
             </div>
           </div>
 
@@ -1758,7 +1856,14 @@ export function AdminProjects({
               return (
                 <div
                   key={proj.id}
-                  className={`admin-proj-card ${isSelected ? 'selected' : ''}`}
+                  onDragOver={(e) => handleProjDragOver(e, idx)}
+                  onDragLeave={() => handleProjDragLeave(idx)}
+                  onDrop={() => handleProjDropReorder(idx)}
+                  className={`admin-proj-card ${isSelected ? 'selected' : ''} ${
+                    dragOverProjIndex === idx
+                      ? 'border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-400/20 scale-[1.01] transition-all'
+                      : ''
+                  } ${draggedProjIndex === idx ? 'opacity-40 cursor-grabbing' : ''}`}
                 >
                   {/* Top Cover Image with Overlays (Matching Image 3) */}
                   <div className="admin-proj-img-wrap">
@@ -1774,7 +1879,7 @@ export function AdminProjects({
                       </div>
                     )}
 
-                    {/* Top-Left Overlays: Checkbox & Category Badge */}
+                    {/* Top-Left Overlays: Checkbox, Drag Handle & Category Badge */}
                     <div className="admin-proj-top-left">
                       <div
                         onClick={(e) => {
@@ -1787,6 +1892,23 @@ export function AdminProjects({
                         {isSelected && <i className="fa-solid fa-check"></i>}
                       </div>
 
+                      {/* Drag Handle button */}
+                      <div
+                        draggable={true}
+                        onDragStart={(e) => {
+                          e.stopPropagation();
+                          handleProjDragStart(e, idx);
+                        }}
+                        onDragEnd={() => {
+                          setDraggedProjIndex(null);
+                          setDragOverProjIndex(null);
+                        }}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-cyan-300 hover:border-cyan-400/40 cursor-grab active:cursor-grabbing transition-all select-none"
+                        title="Drag handle to reorder project"
+                      >
+                        <i className="fa-solid fa-grip-vertical text-xs pointer-events-none" />
+                      </div>
+
                       <span className="admin-proj-cat-badge">
                         {proj.category || 'Full-Stack'}
                       </span>
@@ -1794,6 +1916,34 @@ export function AdminProjects({
 
                     {/* Top-Right Overlays: Actions (Edit/Delete) & Live Badge */}
                     <div className="admin-proj-top-right">
+                      {/* Position Reorder Chevrons */}
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoveOrder(proj, -1);
+                          }}
+                          disabled={idx === 0}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-white disabled:opacity-20 transition-all"
+                          title="Move Up"
+                        >
+                          <i className="fa-solid fa-chevron-up text-[10px]" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleMoveOrder(proj, 1);
+                          }}
+                          disabled={idx === filteredProjects.length - 1}
+                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-white disabled:opacity-20 transition-all"
+                          title="Move Down"
+                        >
+                          <i className="fa-solid fa-chevron-down text-[10px]" />
+                        </button>
+                      </div>
+
                       <div className="admin-proj-icon-actions">
                         {proj.status === 'trash' ? (
                           <button

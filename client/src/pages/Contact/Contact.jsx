@@ -196,6 +196,32 @@ export function ContactPage() {
           onMouseLeave={handleCardMouseLeave}
         >
           <h3 className="card-title">Send a Message</h3>
+
+          {/* Top Status Alert Banners */}
+          {success && (
+            <div className="contact-status-banner success">
+              <div className="banner-icon">
+                <i className="fa-solid fa-circle-check" />
+              </div>
+              <div className="banner-content">
+                <h4>Message Sent Successfully!</h4>
+                <p>Thank you for reaching out. Ayush has received your message and will respond within 24 hours.</p>
+              </div>
+            </div>
+          )}
+
+          {!success && Object.keys(errors).length > 0 && (
+            <div className="contact-status-banner error">
+              <div className="banner-icon">
+                <i className="fa-solid fa-triangle-exclamation" />
+              </div>
+              <div className="banner-content">
+                <h4>Please Complete All Required Fields</h4>
+                <p>Check the highlighted red fields below with details and try sending again.</p>
+              </div>
+            </div>
+          )}
+
           <form className="contact-form" id="contactForm" onSubmit={handleSubmit} noValidate>
             <div className="form-row">
               <div className="form-group">
@@ -211,6 +237,12 @@ export function ContactPage() {
                 <label htmlFor="name" className="form-label">
                   Your Name
                 </label>
+                {errors.name && (
+                  <div className="field-error-message">
+                    <i className="fa-solid fa-circle-exclamation" />
+                    <span>{errors.name}</span>
+                  </div>
+                )}
               </div>
 
               <div className="form-group">
@@ -226,6 +258,12 @@ export function ContactPage() {
                 <label htmlFor="email" className="form-label">
                   Your Email
                 </label>
+                {errors.email && (
+                  <div className="field-error-message">
+                    <i className="fa-solid fa-circle-exclamation" />
+                    <span>{errors.email}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -242,6 +280,12 @@ export function ContactPage() {
               <label htmlFor="subject" className="form-label">
                 Subject
               </label>
+              {errors.subject && (
+                <div className="field-error-message">
+                  <i className="fa-solid fa-circle-exclamation" />
+                  <span>{errors.subject}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-group">
@@ -256,6 +300,17 @@ export function ContactPage() {
               <label htmlFor="message" className="form-label">
                 Message
               </label>
+              <div className="field-meta">
+                {errors.message ? (
+                  <div className="field-error-message !mt-0">
+                    <i className="fa-solid fa-circle-exclamation" />
+                    <span>{errors.message}</span>
+                  </div>
+                ) : (
+                  <span className="field-hint">Minimum 10 characters</span>
+                )}
+                <span className="char-count">{formData.message.length} chars</span>
+              </div>
             </div>
 
             <button

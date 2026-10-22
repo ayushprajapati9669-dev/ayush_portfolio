@@ -579,3 +579,133 @@
   background: var(--accent-1);
   box-shadow: 0 0 8px var(--accent-1);
 }
+
+/* ===== CONTACT STATUS BANNERS (SUCCESS / ERROR) ===== */
+.contact-status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(12px);
+  animation: bannerSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes bannerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-status-banner.success {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  box-shadow: 0 8px 24px -6px rgba(16, 185, 129, 0.25);
+}
+
+.contact-status-banner.success .banner-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #34d399;
+  font-size: 16px;
+  shrink: 0;
+}
+
+.contact-status-banner.success h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #6ee7b7;
+  margin: 0 0 4px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.contact-status-banner.success p {
+  font-size: 12px;
+  color: #a7f3d0;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.contact-status-banner.error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  box-shadow: 0 8px 24px -6px rgba(239, 68, 68, 0.25);
+}
+
+.contact-status-banner.error .banner-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f87171;
+  font-size: 16px;
+  shrink: 0;
+}
+
+.contact-status-banner.error h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fca5a5;
+  margin: 0 0 4px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.contact-status-banner.error p {
+  font-size: 12px;
+  color: #fecaca;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===== FIELD-LEVEL ERROR MESSAGES ===== */
+.field-error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #f87171;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 6px;
+  padding-left: 2px;
+  animation: bannerSlideIn 0.2s ease-out;
+}
+
+.field-error-message i {
+  font-size: 11px;
+}
+
+.field-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-left: 2px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.field-hint {
+  color: #94a3b8;
+}
+
+.char-count {
+  color: #64748b;
+  margin-left: auto;
+}
+
