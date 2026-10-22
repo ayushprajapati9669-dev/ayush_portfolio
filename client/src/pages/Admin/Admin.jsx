@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useAuth } from '../../app/providers/AuthProvider';
@@ -16,6 +16,8 @@ import { AdminProfile } from './components/AdminProfile';
 import { AdminHeroPortrait } from './components/AdminHeroPortrait';
 import { AdminMessages } from './components/AdminMessages';
 import { AdminSecurity } from './components/AdminSecurity';
+import { AdminUserGuide } from './components/AdminUserGuide';
+import { AdminApiReference } from './components/AdminApiReference';
 import { AdminAuthModal } from './components/AdminAuthModal';
 
 // Modals
@@ -27,10 +29,21 @@ export function AdminPage() {
   const { appState, updateAppState, showToast, openConfirmModal } = usePortfolio();
   const { session, loginAdmin, logoutAdmin, resetAdminPassword, checkCurrentPassword } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Tab state (query param support: ?tab=projects, etc.)
-  const tabParam = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState(tabParam || 'dashboard');
+  // Tab state (query param support: ?tab=projects, or direct routes /admin/guide, /admin/api-docs)
+  const getInitialTab = () => {
+    if (location.pathname === '/admin/guide' || location.pathname === '/admin/guide/') {
+      return 'guide';
+    }
+    if (location.pathname === '/admin/api-docs' || location.pathname === '/admin/api-docs/') {
+      return 'api-docs';
+    }
+    return searchParams.get('tab') || 'dashboard';
+  };
+
+  const [activeTab, setActiveTab] = useState(getInitialTab);
 
   const contentAreaRef = useRef(null);
 
@@ -62,15 +75,25 @@ export function AdminPage() {
     setIsCategoryModalOpen(true);
   };
 
+  // Sync activeTab when URL pathname or searchParams change
   useEffect(() => {
-    if (tabParam && tabParam !== activeTab) {
-      setActiveTab(tabParam);
+    const current = getInitialTab();
+    if (current !== activeTab) {
+      setActiveTab(current);
     }
-  }, [tabParam]);
+  }, [location.pathname, searchParams]);
 
-  const handleSelectTab = (tabId) => {
+  const handleSelectTab = (tabId, route) => {
     setActiveTab(tabId);
-    setSearchParams(tabId === 'dashboard' ? {} : { tab: tabId });
+    if (route) {
+      navigate(route);
+    } else if (tabId === 'guide') {
+      navigate('/admin/guide');
+    } else if (tabId === 'api-docs') {
+      navigate('/admin/api-docs');
+    } else {
+      navigate(tabId === 'dashboard' ? '/admin' : `/admin?tab=${tabId}`);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -261,6 +284,20 @@ export function AdminPage() {
             <AdminSecurity
               checkCurrentPassword={checkCurrentPassword}
               resetAdminPassword={resetAdminPassword}
+              showToast={showToast}
+            />
+          )}
+
+          {activeTab === 'guide' && (
+            <AdminUserGuide
+              onSelectTab={handleSelectTab}
+              showToast={showToast}
+            />
+          )}
+
+          {activeTab === 'api-docs' && (
+            <AdminApiReference
+              onSelectTab={handleSelectTab}
               showToast={showToast}
             />
           )}

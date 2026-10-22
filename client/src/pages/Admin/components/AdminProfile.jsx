@@ -385,11 +385,13 @@ export function AdminProfile({
         </div>
 
         {/* =========================================================================
-            RIGHT COLUMN (xl:col-span-8): Form Edit Sections
+            RIGHT COLUMN (xl:col-span-8): Dedicated Scrollable Form Panel with Docked Action Bar
             ========================================================================= */}
-        <div className="xl:col-span-8 space-y-6">
-          {/* 1. RESUME / CV DOCUMENT UPLOADER */}
-          <div className="glass-card-admin p-6 sm:p-7 space-y-4">
+        <div className="xl:col-span-8 flex flex-col xl:h-[calc(100vh-250px)] min-h-[500px]">
+          {/* Scrollable Form Cards Area */}
+          <div className="flex-1 xl:overflow-y-auto space-y-6 xl:pr-3 custom-admin-scrollbar pb-6 min-h-0">
+            {/* 1. RESUME / CV DOCUMENT UPLOADER */}
+            <div className="glass-card-admin p-6 sm:p-7 space-y-4">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
               <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
                 <i className="fa-solid fa-file-pdf" />
@@ -843,26 +845,47 @@ export function AdminProfile({
             </div>
           </div>
 
-          {/* 6. SAVE & PUBLISH ACTION BAR */}
-          <div className="sticky bottom-6 z-30 pt-2">
-            <button
-              type="button"
-              onClick={handleSaveProfile}
-              disabled={isSaving}
-              className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-cyan-400 via-sky-400 to-cyan-500 hover:from-cyan-300 hover:to-sky-400 text-black font-extrabold px-6 py-4 rounded-2xl shadow-xl shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSaving ? (
-                <>
-                  <i className="fa-solid fa-circle-notch fa-spin text-base" />
-                  <span>Publishing Changes to Database...</span>
-                </>
-              ) : (
-                <>
-                  <i className="fa-solid fa-cloud-arrow-up text-base" />
-                  <span>Publish Profile & Resume Changes</span>
-                </>
-              )}
-            </button>
+          </div>
+
+          {/* 6. DOCKED ACTION BAR (Fixed at bottom of right panel, never overlaps inputs) */}
+          <div className="shrink-0 pt-3 pb-1 border-t border-white/10 bg-[#0a1118]/95 backdrop-blur-md z-20 shadow-[0_-12px_24px_rgba(0,0,0,0.5)]">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs font-mono w-full sm:w-auto">
+                {isDirty ? (
+                  <span className="flex items-center gap-1.5 text-amber-400 font-semibold bg-amber-500/10 border border-amber-500/25 px-3 py-1.5 rounded-xl">
+                    <i className="fa-solid fa-circle-exclamation animate-pulse text-xs" />
+                    <span>Unsaved draft changes</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5 text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/25 px-3 py-1.5 rounded-xl">
+                    <i className="fa-solid fa-circle-check text-xs" />
+                    <span>All changes synced & live</span>
+                  </span>
+                )}
+                <span className="hidden lg:inline text-[11px] text-slate-500 font-mono">
+                  · Updates reflected in simulation
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSaveProfile}
+                disabled={isSaving}
+                className="w-full sm:w-auto sm:min-w-[280px] flex items-center justify-center gap-2.5 bg-gradient-to-r from-cyan-400 via-sky-400 to-cyan-500 hover:from-cyan-300 hover:to-sky-400 text-black font-extrabold px-6 py-3.5 rounded-xl shadow-xl shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide cursor-pointer"
+              >
+                {isSaving ? (
+                  <>
+                    <i className="fa-solid fa-circle-notch fa-spin text-base" />
+                    <span>Publishing Changes...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-solid fa-cloud-arrow-up text-base" />
+                    <span>Publish Profile & Resume Changes</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

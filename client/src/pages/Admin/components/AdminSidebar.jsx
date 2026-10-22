@@ -49,6 +49,13 @@ export function AdminSidebar({
           badgeColor: 'orange'
         }
       ]
+    },
+    {
+      title: 'Resources',
+      items: [
+        { id: 'guide', label: 'User Guide', icon: 'fa-book-open', badge: null, route: '/admin/guide' },
+        { id: 'api-docs', label: 'API Reference', icon: 'fa-terminal', badge: null, route: '/admin/api-docs' }
+      ]
     }
   ];
 
@@ -196,7 +203,7 @@ export function AdminSidebar({
                     className={`nav-item ${isActive ? 'active' : ''}`}
                     onClick={(e) => {
                       playTick();
-                      onSelectTab(item.id);
+                      onSelectTab(item.id, item.route);
                       moveHighlight(e.currentTarget);
                     }}
                     onMouseEnter={(e) => moveHighlight(e.currentTarget)}
