@@ -205,6 +205,28 @@
       "thumbnailUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80",
       "title": "ai chat boat",
       "updatedAt": "2026-10-21T10:24:21.777Z"
+    },
+    {
+      "id": "proj-1792669669594",
+      "title": "AI Agentic Workspace",
+      "slug": "ai-agentic-workspace",
+      "category": "AI & Machine Learning",
+      "status": "published",
+      "shortDescription": "An advanced AI agentic workspace built with cutting-edge tools.",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "liveDemoUrl": "https://agentic-workspace.onrender.com",
+      "featured": true,
+      "displayOrder": 4,
+      "createdAt": "2026-10-22T11:47:49.594Z",
+      "updatedAt": "2026-10-22T11:47:49.595Z"
     }
   ],
   "skills": [

@@ -54,6 +54,31 @@ function getTechBadgeData(rawName) {
   return { icon: 'fa-solid fa-cube', color: 'text-cyan-400' };
 }
 
+const COMMON_PROJECT_CATEGORIES = [
+  'Full-Stack Web App',
+  'Frontend Engineering',
+  'AI & Machine Learning',
+  'Backend & APIs',
+  'Mobile Application',
+  'Cloud & DevOps'
+];
+
+const COMMON_TECH_PRESETS = [
+  'React JS',
+  'Node.js',
+  'Express.js',
+  'MongoDB',
+  'TypeScript',
+  'Next.js',
+  'Python',
+  'Tailwind CSS',
+  'Docker',
+  'MySQL',
+  'PostgreSQL',
+  'Redux',
+  'Firebase'
+];
+
 const SORT_OPTIONS = [
   { id: 'manual', label: 'Manual Order', icon: 'fa-solid fa-arrow-down-short-wide' },
   { id: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock-rotate-left' },
@@ -70,6 +95,8 @@ export function AdminProjects({
   openConfirmModal
 }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isUploading, setIsUploading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({
     title: '',
@@ -99,6 +126,85 @@ export function AdminProjects({
   const sortRef = useRef(null);
 
   const projects = appState.projects || [];
+
+  // Parse current tech list for easy tag display and toggling
+  const currentTechList = useMemo(() => {
+    if (!form.technologies) return [];
+    return form.technologies.split(',').map((t) => t.trim()).filter(Boolean);
+  }, [form.technologies]);
+
+  const handleToggleTechPreset = (tech) => {
+    playTick();
+    const exists = currentTechList.some((t) => t.toLowerCase() === tech.toLowerCase());
+    let nextList;
+    if (exists) {
+      nextList = currentTechList.filter((t) => t.toLowerCase() !== tech.toLowerCase());
+    } else {
+      nextList = [...currentTechList, tech];
+    }
+    setForm((prev) => ({ ...prev, technologies: nextList.join(', ') }));
+    if (errors.technologies) {
+      setErrors((prev) => ({ ...prev, technologies: '' }));
+    }
+  };
+
+  // Step-by-step validation helper
+  const validateStep = (stepNumber) => {
+    const newErrors = {};
+    if (stepNumber === 1) {
+      if (!form.title || form.title.trim().length < 3) {
+        newErrors.title = 'Project title is required (minimum 3 characters).';
+      }
+      if (!form.category || !form.category.trim()) {
+        newErrors.category = 'Project category is required.';
+      }
+      if (!form.shortDescription || form.shortDescription.trim().length < 10) {
+        newErrors.shortDescription = 'Please provide a clear project description (at least 10 characters).';
+      }
+    } else if (stepNumber === 2) {
+      if (!form.technologies || !form.technologies.trim()) {
+        newErrors.technologies = 'Please specify at least one technology.';
+      }
+      if (!form.liveDemoUrl || !/^https?:\/\//i.test(form.liveDemoUrl.trim())) {
+        newErrors.liveDemoUrl = 'Valid Live Demo URL starting with https:// or http:// is required.';
+      }
+      if (!form.githubUrl || !/^https?:\/\//i.test(form.githubUrl.trim())) {
+        newErrors.githubUrl = 'Valid GitHub repository URL starting with https:// or http:// is required.';
+      }
+    } else if (stepNumber === 3) {
+      if (!form.thumbnailUrl || !form.thumbnailUrl.trim()) {
+        newErrors.thumbnailUrl = 'Please upload a project cover image or paste an image URL.';
+      }
+    }
+
+    setErrors((prev) => ({ ...prev, ...newErrors }));
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNextStep = () => {
+    playTick();
+    if (validateStep(currentStep)) {
+      setErrors({});
+      setCurrentStep((prev) => Math.min(prev + 1, 3));
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handlePrevStep = () => {
+    playTick();
+    setErrors({});
+    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleJumpToStep = (targetStep) => {
+    playTick();
+    if (targetStep < currentStep || validateStep(currentStep)) {
+      setErrors({});
+      setCurrentStep(targetStep);
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   // Available Categories for filtration
   const availableCategories = useMemo(() => {
@@ -233,11 +339,19 @@ export function AdminProjects({
     };
     reader.readAsDataURL(file);
 
-    showToast('Uploading cover image to cloud...');
-    const uploadedUrl = await uploadImageViaCloudinary(file, appState.settings);
-    if (uploadedUrl) {
-      setForm((prev) => ({ ...prev, thumbnailUrl: uploadedUrl }));
-      showToast('Cover image ready!', 'fa-circle-check');
+    try {
+      setIsUploading(true);
+      showToast('Uploading cover image to cloud...');
+      const uploadedUrl = await uploadImageViaCloudinary(file, appState.settings);
+      if (uploadedUrl) {
+        setForm((prev) => ({ ...prev, thumbnailUrl: uploadedUrl }));
+        setErrors((prev) => ({ ...prev, thumbnailUrl: '' }));
+        showToast('Cover image ready!', 'fa-circle-check');
+      }
+    } catch {
+      showToast('Failed to upload image. You can paste a direct URL.', 'fa-circle-exclamation');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -266,6 +380,7 @@ export function AdminProjects({
   const handleEdit = (p) => {
     playTick();
     setEditingId(p.id);
+    setCurrentStep(1);
     setIsFormOpen(true);
     setForm({
       title: p.title || '',
@@ -288,6 +403,7 @@ export function AdminProjects({
   const handleCancelEdit = () => {
     playTick();
     setEditingId(null);
+    setCurrentStep(1);
     setForm({
       title: '',
       category: 'Full-Stack Web App',
@@ -396,6 +512,14 @@ export function AdminProjects({
     const check = validateProjectForm(form);
     if (!check.isValid) {
       setErrors(check.errors);
+      if (check.errors.title || check.errors.category || check.errors.shortDescription) {
+        setCurrentStep(1);
+      } else if (check.errors.technologies || check.errors.liveDemoUrl || check.errors.githubUrl) {
+        setCurrentStep(2);
+      } else {
+        setCurrentStep(3);
+      }
+      showToast('Please check the highlighted fields.', 'fa-triangle-exclamation');
       return;
     }
 
@@ -577,255 +701,764 @@ export function AdminProjects({
           noValidate
           className="glass-card-admin p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200 border-cyan-500/30"
         >
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          {/* Header */}
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
                 <i className={editingId ? 'fa-solid fa-pen-to-square' : 'fa-solid fa-plus'}></i>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">
-                  {editingId ? 'Edit Project' : 'Create New Live Project'}
-                </h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-bold text-white">
+                    {editingId ? 'Edit Project' : 'Create New Live Project'}
+                  </h2>
+                  <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                    Step {currentStep} of 3
+                  </span>
+                </div>
                 <p className="text-xs text-slate-400">
-                  {editingId ? 'Modify project details, tech stack, and links.' : 'Fill in the information below to add a new project to your portfolio.'}
+                  {editingId ? 'Update project details across 3 organized steps.' : 'Complete the 3 quick steps below to showcase a new live project.'}
                 </p>
               </div>
             </div>
             <button
               type="button"
               onClick={handleCancelEdit}
-              className="font-mono text-xs text-slate-400 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 transition-all"
+              className="font-mono text-xs text-slate-400 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 transition-all hover:bg-white/5"
             >
               <i className="fa-solid fa-xmark"></i>
               <span>{editingId ? 'Cancel Edit' : 'Close Form'}</span>
             </button>
           </div>
 
-          {/* Title & Category */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="sm:col-span-2">
-              <label className="block font-mono text-xs text-slate-400 mb-1">Project Title *</label>
-              <input
-                type="text"
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-                placeholder="e.g. Airbnb Clone — Vacation Rental Platform"
-                className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
-              />
-              <FormErrorMessage message={errors.title} />
-            </div>
-            <div>
-              <label className="block font-mono text-xs text-slate-400 mb-1">Category *</label>
-              <input
-                type="text"
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-                placeholder="Full-Stack Web App, Frontend, AI/ML..."
-                className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
-              />
-              <FormErrorMessage message={errors.category} />
-            </div>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block font-mono text-xs text-slate-400 mb-1">Project Description *</label>
-            <textarea
-              rows="3"
-              value={form.shortDescription}
-              onChange={(e) => setForm({ ...form, shortDescription: e.target.value })}
-              placeholder="Describe what this project does and key engineering highlights..."
-              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
-            />
-            <FormErrorMessage message={errors.shortDescription} />
-          </div>
-
-          {/* Technologies, URLs, and Status */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-            <div className="sm:col-span-2">
-              <label className="block font-mono text-xs text-slate-400 mb-1">Technologies (comma-separated) *</label>
-              <input
-                type="text"
-                value={form.technologies}
-                onChange={(e) => setForm({ ...form, technologies: e.target.value })}
-                placeholder="React JS, Node.js, Express.js, MongoDB..."
-                className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
-              />
-              <FormErrorMessage message={errors.technologies} />
-            </div>
-            <div>
-              <label className="block font-mono text-xs text-slate-400 mb-1">Live Demo URL *</label>
-              <input
-                type="text"
-                value={form.liveDemoUrl}
-                onChange={(e) => setForm({ ...form, liveDemoUrl: e.target.value })}
-                placeholder="https://airbnbclone2-8519.onrender.com"
-                className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
-              />
-              <FormErrorMessage message={errors.liveDemoUrl} />
-            </div>
-            <div>
-              <label className="block font-mono text-xs text-slate-400 mb-1">GitHub Code URL *</label>
-              <input
-                type="text"
-                value={form.githubUrl}
-                onChange={(e) => setForm({ ...form, githubUrl: e.target.value })}
-                placeholder="https://github.com/ayushprajapati9669-dev"
-                className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
-              />
-              <FormErrorMessage message={errors.githubUrl} />
-            </div>
-          </div>
-
-          {/* Status Selection Row */}
-          <div className="flex items-center gap-6 p-3 rounded-xl border border-white/10 bg-black/20 flex-wrap">
-            <span className="font-mono text-xs text-slate-400 font-semibold">Publish Status:</span>
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300">
-              <input
-                type="radio"
-                name="projStatus"
-                value="published"
-                checked={form.status === 'published' || form.status === 'active'}
-                onChange={() => setForm({ ...form, status: 'published' })}
-                className="accent-cyan-400"
-              />
-              <span className="flex items-center gap-1.5"><i className="fa-solid fa-circle-check text-emerald-400"></i> Active / Published</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300">
-              <input
-                type="radio"
-                name="projStatus"
-                value="draft"
-                checked={form.status === 'draft'}
-                onChange={() => setForm({ ...form, status: 'draft' })}
-                className="accent-amber-400"
-              />
-              <span className="flex items-center gap-1.5"><i className="fa-solid fa-file-pen text-amber-400"></i> Draft</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300">
-              <input
-                type="radio"
-                name="projStatus"
-                value="archived"
-                checked={form.status === 'archived'}
-                onChange={() => setForm({ ...form, status: 'archived' })}
-                className="accent-indigo-400"
-              />
-              <span className="flex items-center gap-1.5"><i className="fa-solid fa-box-archive text-indigo-400"></i> Archived</span>
-            </label>
-          </div>
-
-          {/* Drag & Drop Image Upload Zone */}
-          <div className="space-y-2">
-            <label className="block font-mono text-xs text-cyan-400 font-bold flex items-center gap-1.5">
-              <i className="fa-solid fa-image"></i> Project Cover Image *
-            </label>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-12 items-center rounded-2xl border border-white/10 bg-black/40 p-4">
-              <div className="sm:col-span-8 space-y-3">
-                {/* Drag and Drop Zone */}
+          {/* Multi-Step Wizard Progress Bar */}
+          <div className="rounded-2xl border border-white/10 bg-black/40 p-4 sm:p-5 backdrop-blur-md">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Step 1 Pill */}
+              <button
+                type="button"
+                onClick={() => handleJumpToStep(1)}
+                className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+                  currentStep === 1
+                    ? 'border-cyan-500/50 bg-cyan-500/10 shadow-lg shadow-cyan-500/10'
+                    : currentStep > 1
+                    ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50'
+                    : 'border-white/5 bg-white/[0.02] opacity-60'
+                }`}
+              >
                 <div
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  onClick={() => fileInputRef.current?.click()}
-                  className={`admin-dropzone ${isDraggingFile ? 'dragging' : ''}`}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
+                    currentStep === 1
+                      ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
+                      : currentStep > 1
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                      : 'bg-white/10 text-slate-400 border border-white/10'
+                  }`}
                 >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      if (e.target.files && e.target.files[0]) {
-                        handleImageFile(e.target.files[0]);
-                      }
-                    }}
-                    className="hidden"
-                  />
-                  <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg">
-                    <i className="fa-solid fa-cloud-arrow-up"></i>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-white">
-                      Drag & Drop project cover image here, or <span className="text-cyan-400 underline cursor-pointer">browse</span>
-                    </p>
-                    <p className="text-[11px] text-slate-400 mt-0.5 font-mono">
-                      PNG, JPG, WebP or SVG up to 10MB
-                    </p>
-                  </div>
+                  {currentStep > 1 ? <i className="fa-solid fa-check text-xs"></i> : '01'}
                 </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Step 01</span>
+                    {currentStep > 1 && (
+                      <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-0.5">
+                        <i className="fa-solid fa-circle-check text-[9px]"></i> Done
+                      </span>
+                    )}
+                  </div>
+                  <p className={`text-xs font-semibold truncate ${currentStep === 1 ? 'text-cyan-300' : 'text-white'}`}>
+                    Core Information
+                  </p>
+                  <p className="text-[11px] text-slate-400 truncate">Title, category & overview</p>
+                </div>
+              </button>
 
-                {/* Direct Image URL input */}
-                <div className="space-y-1">
-                  <input
-                    type="text"
-                    value={form.thumbnailUrl}
-                    onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })}
-                    placeholder="Or paste direct image URL (https://...)"
-                    className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2 text-xs text-white outline-none focus:border-cyan-400"
-                  />
-                  <FormErrorMessage message={errors.thumbnailUrl} />
+              {/* Step 2 Pill */}
+              <button
+                type="button"
+                onClick={() => handleJumpToStep(2)}
+                className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+                  currentStep === 2
+                    ? 'border-cyan-500/50 bg-cyan-500/10 shadow-lg shadow-cyan-500/10'
+                    : currentStep > 2
+                    ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50'
+                    : 'border-white/5 bg-white/[0.02] opacity-60'
+                }`}
+              >
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
+                    currentStep === 2
+                      ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
+                      : currentStep > 2
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                      : 'bg-white/10 text-slate-400 border border-white/10'
+                  }`}
+                >
+                  {currentStep > 2 ? <i className="fa-solid fa-check text-xs"></i> : '02'}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Step 02</span>
+                    {currentStep > 2 && (
+                      <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-0.5">
+                        <i className="fa-solid fa-circle-check text-[9px]"></i> Done
+                      </span>
+                    )}
+                  </div>
+                  <p className={`text-xs font-semibold truncate ${currentStep === 2 ? 'text-cyan-300' : 'text-white'}`}>
+                    Tech Stack & Links
+                  </p>
+                  <p className="text-[11px] text-slate-400 truncate">Tech tags, live URL & GitHub</p>
+                </div>
+              </button>
+
+              {/* Step 3 Pill */}
+              <button
+                type="button"
+                onClick={() => handleJumpToStep(3)}
+                className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+                  currentStep === 3
+                    ? 'border-cyan-500/50 bg-cyan-500/10 shadow-lg shadow-cyan-500/10'
+                    : 'border-white/5 bg-white/[0.02] opacity-60'
+                }`}
+              >
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
+                    currentStep === 3
+                      ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
+                      : 'bg-white/10 text-slate-400 border border-white/10'
+                  }`}
+                >
+                  03
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Step 03</span>
+                  </div>
+                  <p className={`text-xs font-semibold truncate ${currentStep === 3 ? 'text-cyan-300' : 'text-white'}`}>
+                    Media & Visibility
+                  </p>
+                  <p className="text-[11px] text-slate-400 truncate">Cover image, status & preview</p>
+                </div>
+              </button>
+            </div>
+
+            {/* Stepper progress indicator track */}
+            <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-400">
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span>
+                  {currentStep === 1 && 'Step 1: Enter Title, Domain Category & Summary'}
+                  {currentStep === 2 && 'Step 2: Tag Tech Stack & Enter URLs'}
+                  {currentStep === 3 && 'Step 3: Upload Cover, Set Visibility & Live Preview'}
+                </span>
+              </span>
+              <span className="text-cyan-400 font-semibold">{Math.round((currentStep / 3) * 100)}% Completed</span>
+            </div>
+          </div>
+
+          {/* STEP 1: Core Information */}
+          {currentStep === 1 && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                  <i className="fa-solid fa-file-lines text-cyan-400"></i>
+                  <span>Project Identity & Overview</span>
+                </div>
+                <span className="text-[11px] font-mono text-slate-400">Required fields marked with *</span>
+              </div>
+
+              {/* Title Input */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block font-mono text-xs text-slate-300 font-semibold">
+                    Project Title *
+                  </label>
+                  <span className="font-mono text-[11px] text-slate-400">
+                    {form.title.length} characters
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={form.title}
+                  onChange={(e) => {
+                    setForm({ ...form, title: e.target.value });
+                    if (errors.title) setErrors((prev) => ({ ...prev, title: '' }));
+                  }}
+                  placeholder="e.g. Airbnb Clone — Vacation Rental Platform"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                />
+                <FormErrorMessage message={errors.title} />
+                <p className="text-[11px] text-slate-400 mt-1 font-mono">
+                  Slug will be auto-generated: <span className="text-cyan-400">/{form.title ? form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') : 'project-slug'}</span>
+                </p>
+              </div>
+
+              {/* Category Input & Quick Presets */}
+              <div className="space-y-2">
+                <label className="block font-mono text-xs text-slate-300 font-semibold">
+                  Category *
+                </label>
+                <input
+                  type="text"
+                  value={form.category}
+                  onChange={(e) => {
+                    setForm({ ...form, category: e.target.value });
+                    if (errors.category) setErrors((prev) => ({ ...prev, category: '' }));
+                  }}
+                  placeholder="e.g. Full-Stack Web App, AI & Machine Learning, Mobile..."
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                />
+                <FormErrorMessage message={errors.category} />
+
+                {/* Quick Presets */}
+                <div className="pt-1">
+                  <span className="font-mono text-[11px] text-slate-400 block mb-1.5">Quick Category Presets:</span>
+                  <div className="flex flex-wrap gap-2">
+                    {COMMON_PROJECT_CATEGORIES.map((cat) => {
+                      const isSelected = form.category.trim().toLowerCase() === cat.toLowerCase();
+                      return (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => {
+                            playTick();
+                            setForm({ ...form, category: cat });
+                            if (errors.category) setErrors((prev) => ({ ...prev, category: '' }));
+                          }}
+                          className={`font-mono text-xs px-3 py-1.5 rounded-lg border transition-all ${
+                            isSelected
+                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold shadow-sm shadow-cyan-500/20'
+                              : 'border-white/10 bg-black/30 text-slate-400 hover:text-white hover:border-white/25'
+                          }`}
+                        >
+                          {isSelected && <i className="fa-solid fa-check text-[10px] mr-1.5 text-cyan-400"></i>}
+                          {cat}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
-              {/* Preview Box */}
-              <div className="sm:col-span-4 flex flex-col items-center justify-center">
-                {form.thumbnailUrl ? (
-                  <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/20 shadow-xl group">
-                    <img
-                      src={form.thumbnailUrl}
-                      alt="Thumbnail preview"
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setForm((prev) => ({ ...prev, thumbnailUrl: '' }))}
-                      className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/80 text-red-400 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
-                      title="Remove image"
-                    >
-                      <i className="fa-solid fa-trash-can"></i>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="w-full aspect-video rounded-xl border border-dashed border-white/20 flex flex-col items-center justify-center font-mono text-[11px] text-slate-500 gap-1.5 bg-black/30">
-                    <i className="fa-regular fa-image text-2xl text-slate-600"></i>
-                    <span>No image preview</span>
+              {/* Project Description */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block font-mono text-xs text-slate-300 font-semibold">
+                    Project Description *
+                  </label>
+                  <span className="font-mono text-[11px] text-slate-400">
+                    {form.shortDescription.length} characters (min 10)
+                  </span>
+                </div>
+                <textarea
+                  rows="4"
+                  value={form.shortDescription}
+                  onChange={(e) => {
+                    setForm({ ...form, shortDescription: e.target.value });
+                    if (errors.shortDescription) setErrors((prev) => ({ ...prev, shortDescription: '' }));
+                  }}
+                  placeholder="Describe the problem solved, engineering architecture highlights, features, and user workflow..."
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                />
+                <FormErrorMessage message={errors.shortDescription} />
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2: Technologies & Links */}
+          {currentStep === 2 && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                  <i className="fa-solid fa-code text-cyan-400"></i>
+                  <span>Tech Stack & Project Links</span>
+                </div>
+                <span className="text-[11px] font-mono text-slate-400">Required fields marked with *</span>
+              </div>
+
+              {/* Technologies Section */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="block font-mono text-xs text-slate-300 font-semibold">
+                    Technologies Used (comma-separated) *
+                  </label>
+                  <span className="font-mono text-[11px] text-slate-400">
+                    {currentTechList.length} technologies selected
+                  </span>
+                </div>
+
+                <input
+                  type="text"
+                  value={form.technologies}
+                  onChange={(e) => {
+                    setForm({ ...form, technologies: e.target.value });
+                    if (errors.technologies) setErrors((prev) => ({ ...prev, technologies: '' }));
+                  }}
+                  placeholder="React JS, Node.js, Express.js, MongoDB, Tailwind CSS..."
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                />
+                <FormErrorMessage message={errors.technologies} />
+
+                {/* Selected Badges Preview */}
+                {currentTechList.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2 p-3 rounded-xl border border-white/10 bg-black/25">
+                    <span className="font-mono text-[11px] text-slate-400 mr-1">Active Tags:</span>
+                    {currentTechList.map((tech) => {
+                      const badge = getTechBadgeData(tech);
+                      return (
+                        <span
+                          key={tech}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/15 text-xs text-slate-200 font-mono group"
+                        >
+                          <i className={`${badge.icon} ${badge.color}`}></i>
+                          <span>{tech}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleTechPreset(tech)}
+                            className="text-slate-400 hover:text-red-400 ml-0.5 transition-colors"
+                            title={`Remove ${tech}`}
+                          >
+                            <i className="fa-solid fa-xmark text-[10px]"></i>
+                          </button>
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
+
+                {/* Quick Add Tech Chips */}
+                <div>
+                  <span className="font-mono text-[11px] text-slate-400 block mb-2">
+                    Click to add / remove common technologies:
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {COMMON_TECH_PRESETS.map((tech) => {
+                      const isSelected = currentTechList.some((t) => t.toLowerCase() === tech.toLowerCase());
+                      const badge = getTechBadgeData(tech);
+                      return (
+                        <button
+                          key={tech}
+                          type="button"
+                          onClick={() => handleToggleTechPreset(tech)}
+                          className={`font-mono text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+                            isSelected
+                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold shadow-sm shadow-cyan-500/20'
+                              : 'border-white/10 bg-black/30 text-slate-400 hover:text-white hover:border-white/25'
+                          }`}
+                        >
+                          <i className={`${badge.icon} ${badge.color}`}></i>
+                          <span>{tech}</span>
+                          {isSelected && <i className="fa-solid fa-check text-[10px] text-cyan-400 ml-0.5"></i>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* URLs: Live Demo & GitHub */}
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 pt-2">
+                {/* Live Demo URL */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="block font-mono text-xs text-slate-300 font-semibold flex items-center gap-1.5">
+                      <i className="fa-solid fa-arrow-up-right-from-square text-cyan-400"></i>
+                      <span>Live Demo URL *</span>
+                    </label>
+                    {form.liveDemoUrl && /^https?:\/\//i.test(form.liveDemoUrl) && (
+                      <a
+                        href={form.liveDemoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-mono text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
+                      >
+                        <span>Test Link</span>
+                        <i className="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                      </a>
+                    )}
+                  </div>
+                  <input
+                    type="url"
+                    value={form.liveDemoUrl}
+                    onChange={(e) => {
+                      setForm({ ...form, liveDemoUrl: e.target.value });
+                      if (errors.liveDemoUrl) setErrors((prev) => ({ ...prev, liveDemoUrl: '' }));
+                    }}
+                    placeholder="https://airbnbclone2-8519.onrender.com"
+                    className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                  />
+                  <FormErrorMessage message={errors.liveDemoUrl} />
+                  <p className="text-[11px] text-slate-400 font-mono">
+                    Must begin with <span className="text-cyan-400">https://</span> or <span className="text-cyan-400">http://</span>
+                  </p>
+                </div>
+
+                {/* GitHub Code URL */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="block font-mono text-xs text-slate-300 font-semibold flex items-center gap-1.5">
+                      <i className="fa-brands fa-github text-slate-300"></i>
+                      <span>GitHub Repository URL *</span>
+                    </label>
+                    {form.githubUrl && /^https?:\/\//i.test(form.githubUrl) && (
+                      <a
+                        href={form.githubUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-mono text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
+                      >
+                        <span>Open Repo</span>
+                        <i className="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                      </a>
+                    )}
+                  </div>
+                  <input
+                    type="url"
+                    value={form.githubUrl}
+                    onChange={(e) => {
+                      setForm({ ...form, githubUrl: e.target.value });
+                      if (errors.githubUrl) setErrors((prev) => ({ ...prev, githubUrl: '' }));
+                    }}
+                    placeholder="https://github.com/ayushprajapati9669-dev/project-repo"
+                    className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                  />
+                  <FormErrorMessage message={errors.githubUrl} />
+                  <p className="text-[11px] text-slate-400 font-mono">
+                    Public or open-source GitHub repository URL
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Featured on Homepage */}
-          <div className="flex items-center gap-3 pt-2">
-            <input
-              type="checkbox"
-              id="projFeatured"
-              checked={form.featured}
-              onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-              className="h-4 w-4 rounded accent-cyan-400 cursor-pointer"
-            />
-            <label htmlFor="projFeatured" className="text-xs text-slate-300 select-none cursor-pointer">
-              Featured on Homepage (Highlight in hero & top carousel)
-            </label>
-          </div>
+          {/* STEP 3: Media, Visibility & Live Preview */}
+          {currentStep === 3 && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                  <i className="fa-solid fa-photo-film text-cyan-400"></i>
+                  <span>Media Upload, Visibility & Card Preview</span>
+                </div>
+                <span className="text-[11px] font-mono text-slate-400">Final Step</span>
+              </div>
 
-          {/* Form Actions: Submit Button with real icons */}
-          <div className="flex items-center justify-between pt-4 border-t border-white/10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {/* Left Column: Image Dropzone & Settings */}
+                <div className="lg:col-span-7 space-y-5">
+                  {/* Cover Image Upload */}
+                  <div className="space-y-2">
+                    <label className="block font-mono text-xs text-slate-300 font-semibold flex items-center gap-1.5">
+                      <i className="fa-solid fa-image text-cyan-400"></i>
+                      <span>Project Cover Image *</span>
+                    </label>
+
+                    {/* Drag and Drop Zone */}
+                    <div
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`admin-dropzone ${isDraggingFile ? 'dragging' : ''}`}
+                    >
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            handleImageFile(e.target.files[0]);
+                          }
+                        }}
+                        className="hidden"
+                      />
+                      <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg shadow-inner">
+                        {isUploading ? (
+                          <i className="fa-solid fa-circle-notch fa-spin"></i>
+                        ) : (
+                          <i className="fa-solid fa-cloud-arrow-up"></i>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-white">
+                          {isUploading ? 'Uploading to cloud...' : 'Drag & Drop cover image here, or '}
+                          {!isUploading && <span className="text-cyan-400 underline cursor-pointer">browse</span>}
+                        </p>
+                        <p className="text-[11px] text-slate-400 mt-0.5 font-mono">
+                          PNG, JPG, WebP up to 10MB (Cloudinary automated optimization)
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Direct Image URL input */}
+                    <div className="space-y-1 pt-1">
+                      <input
+                        type="text"
+                        value={form.thumbnailUrl}
+                        onChange={(e) => {
+                          setForm({ ...form, thumbnailUrl: e.target.value });
+                          if (errors.thumbnailUrl) setErrors((prev) => ({ ...prev, thumbnailUrl: '' }));
+                        }}
+                        placeholder="Or paste direct image URL (https://...)"
+                        className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                      />
+                      <FormErrorMessage message={errors.thumbnailUrl} />
+                    </div>
+                  </div>
+
+                  {/* Publish Status Selection */}
+                  <div className="space-y-2">
+                    <label className="block font-mono text-xs text-slate-300 font-semibold">
+                      Publish Status
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                      <label
+                        className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
+                          form.status === 'published' || form.status === 'active'
+                            ? 'border-emerald-500/50 bg-emerald-500/10 text-white'
+                            : 'border-white/10 bg-black/30 text-slate-400 hover:text-white hover:border-white/20'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="projStatus"
+                          value="published"
+                          checked={form.status === 'published' || form.status === 'active'}
+                          onChange={() => setForm({ ...form, status: 'published' })}
+                          className="accent-emerald-400"
+                        />
+                        <div className="text-xs">
+                          <p className="font-semibold text-emerald-400 flex items-center gap-1">
+                            <i className="fa-solid fa-circle-check"></i> Published
+                          </p>
+                          <p className="text-[10px] text-slate-400">Live on public site</p>
+                        </div>
+                      </label>
+
+                      <label
+                        className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
+                          form.status === 'draft'
+                            ? 'border-amber-500/50 bg-amber-500/10 text-white'
+                            : 'border-white/10 bg-black/30 text-slate-400 hover:text-white hover:border-white/20'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="projStatus"
+                          value="draft"
+                          checked={form.status === 'draft'}
+                          onChange={() => setForm({ ...form, status: 'draft' })}
+                          className="accent-amber-400"
+                        />
+                        <div className="text-xs">
+                          <p className="font-semibold text-amber-400 flex items-center gap-1">
+                            <i className="fa-solid fa-file-pen"></i> Draft
+                          </p>
+                          <p className="text-[10px] text-slate-400">Hidden from visitors</p>
+                        </div>
+                      </label>
+
+                      <label
+                        className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
+                          form.status === 'archived'
+                            ? 'border-indigo-500/50 bg-indigo-500/10 text-white'
+                            : 'border-white/10 bg-black/30 text-slate-400 hover:text-white hover:border-white/20'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="projStatus"
+                          value="archived"
+                          checked={form.status === 'archived'}
+                          onChange={() => setForm({ ...form, status: 'archived' })}
+                          className="accent-indigo-400"
+                        />
+                        <div className="text-xs">
+                          <p className="font-semibold text-indigo-400 flex items-center gap-1">
+                            <i className="fa-solid fa-box-archive"></i> Archived
+                          </p>
+                          <p className="text-[10px] text-slate-400">Stored in archive</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Featured on Homepage */}
+                  <div className="flex items-center gap-3 p-3.5 rounded-xl border border-white/10 bg-black/30">
+                    <input
+                      type="checkbox"
+                      id="projFeatured"
+                      checked={form.featured}
+                      onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                      className="h-4 w-4 rounded accent-cyan-400 cursor-pointer"
+                    />
+                    <label htmlFor="projFeatured" className="text-xs text-slate-200 select-none cursor-pointer flex-1">
+                      <span className="font-semibold block text-white flex items-center gap-1.5">
+                        <i className="fa-solid fa-star text-amber-400 text-xs"></i>
+                        Feature on Homepage & Live Portfolio Hero
+                      </span>
+                      <span className="text-[11px] text-slate-400">
+                        Pins this project with priority badges in top carousels and highlight sections.
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Right Column: Real-time Live Project Card Preview */}
+                <div className="lg:col-span-5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs text-cyan-400 font-semibold flex items-center gap-1.5">
+                      <i className="fa-solid fa-eye"></i> Live Portfolio Card Preview
+                    </span>
+                    <span className="font-mono text-[10px] text-slate-400">What visitors will see</span>
+                  </div>
+
+                  <div className="rounded-2xl border border-cyan-500/30 bg-black/60 overflow-hidden shadow-2xl backdrop-blur-md">
+                    {/* Preview Thumbnail */}
+                    <div className="relative aspect-video w-full bg-slate-900 overflow-hidden group">
+                      {form.thumbnailUrl ? (
+                        <img
+                          src={form.thumbnailUrl}
+                          alt={form.title || 'Project Preview'}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-slate-600 gap-2 bg-gradient-to-br from-black/80 to-slate-900">
+                          <i className="fa-regular fa-image text-3xl"></i>
+                          <span className="font-mono text-xs text-slate-400">Upload cover image to preview</span>
+                        </div>
+                      )}
+
+                      {/* Top badging on card */}
+                      <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
+                        <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-cyan-300 border border-cyan-400/30">
+                          {form.category || 'Category'}
+                        </span>
+                        {form.featured && (
+                          <span className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1 backdrop-blur-md">
+                            <i className="fa-solid fa-star text-[9px]"></i> Featured
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Remove image button if has thumbnail */}
+                      {form.thumbnailUrl && (
+                        <button
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, thumbnailUrl: '' }))}
+                          className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/80 text-red-400 flex items-center justify-center text-xs hover:bg-red-500 hover:text-white transition-all"
+                          title="Remove cover image"
+                        >
+                          <i className="fa-solid fa-trash-can"></i>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Preview Content */}
+                    <div className="p-4 space-y-3">
+                      <div>
+                        <h4 className="text-sm font-bold text-white line-clamp-1">
+                          {form.title || 'Project Title Preview'}
+                        </h4>
+                        <p className="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+                          {form.shortDescription || 'Your short project overview description will appear here on the public website.'}
+                        </p>
+                      </div>
+
+                      {/* Tech badges */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {currentTechList.slice(0, 4).map((tech) => {
+                          const badge = getTechBadgeData(tech);
+                          return (
+                            <span
+                              key={tech}
+                              className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-300 flex items-center gap-1"
+                            >
+                              <i className={`${badge.icon} ${badge.color}`}></i>
+                              <span>{tech}</span>
+                            </span>
+                          );
+                        })}
+                        {currentTechList.length > 4 && (
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                            +{currentTechList.length - 4} more
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Action buttons preview */}
+                      <div className="flex items-center gap-2 pt-2 border-t border-white/10">
+                        <span className="flex-1 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-center text-xs font-semibold flex items-center justify-center gap-1.5">
+                          <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                          <span>Live Demo</span>
+                        </span>
+                        <span className="px-3 py-1.5 rounded-lg bg-white/5 text-slate-300 border border-white/15 text-center text-xs font-semibold flex items-center justify-center gap-1.5">
+                          <i className="fa-brands fa-github"></i>
+                          <span>GitHub</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Stepper Navigation Actions */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-5 border-t border-white/10">
             <button
               type="button"
               onClick={handleCancelEdit}
-              className="text-xs text-slate-400 hover:text-white font-mono"
+              className="text-xs text-slate-400 hover:text-white font-mono flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/5 transition-all"
             >
-              Cancel
+              <i className="fa-solid fa-xmark"></i>
+              <span>Cancel</span>
             </button>
-            <button
-              type="submit"
-              className="btn-save flex items-center gap-2 px-6 py-2.5 text-xs font-bold shadow-lg shadow-cyan-500/20"
-            >
-              <i className={editingId ? 'fa-solid fa-pen-to-square' : 'fa-solid fa-plus'}></i>
-              <span>{editingId ? 'Update Project' : 'Publish New Project'}</span>
-            </button>
+
+            <div className="flex items-center gap-2.5">
+              {/* Back Button (shown on Steps 2 & 3) */}
+              {currentStep > 1 && (
+                <button
+                  type="button"
+                  onClick={handlePrevStep}
+                  className="font-mono text-xs px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-slate-300 hover:text-white hover:border-white/30 transition-all flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-arrow-left"></i>
+                  <span>Back to Step 0{currentStep - 1}</span>
+                </button>
+              )}
+
+              {/* Continue / Next Step Button (shown on Steps 1 & 2) */}
+              {currentStep < 3 ? (
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  className="btn-save flex items-center gap-2 px-6 py-2.5 text-xs font-bold shadow-lg shadow-cyan-500/20"
+                >
+                  <span>Continue to Step 0{currentStep + 1}</span>
+                  <i className="fa-solid fa-arrow-right"></i>
+                </button>
+              ) : (
+                /* Final Submit Button (shown on Step 3) */
+                <button
+                  type="submit"
+                  disabled={isUploading}
+                  className="btn-save flex items-center gap-2 px-7 py-2.5 text-xs font-bold shadow-lg shadow-cyan-500/20 disabled:opacity-50"
+                >
+                  {isUploading ? (
+                    <>
+                      <i className="fa-solid fa-circle-notch fa-spin"></i>
+                      <span>Uploading Media...</span>
+                    </>
+                  ) : (
+                    <>
+                      <i className={editingId ? 'fa-solid fa-check' : 'fa-solid fa-rocket'}></i>
+                      <span>{editingId ? 'Update & Save Changes' : 'Publish New Project'}</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </form>
       )}
@@ -837,7 +1470,7 @@ export function AdminProjects({
           Existing Projects Section (Clean, Structured, and Admin-Friendly)
           ========================================================================= */}
       <div className="glass-card-admin p-6 sm:p-8 space-y-6">
-        {/* Section Header */}
+        {/* Section Header (Matching Image 2) */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-400 shadow-sm shadow-cyan-400/10">
@@ -845,40 +1478,95 @@ export function AdminProjects({
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-white tracking-tight">
                   Existing Projects
                 </h3>
                 <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-400/20 px-2.5 py-0.5 rounded-full">
                   {filteredProjects.length} / {projects.length}
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Drag cards to reorder, multi-select for batch actions, filter by category or status.
+              <p className="text-xs text-slate-400 mt-1">
+                Drag to reorder, multi-select for batch actions, or filter your portfolio.
               </p>
             </div>
           </div>
+
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                playTick();
+                setEditingId(null);
+                setForm({
+                  title: '',
+                  category: 'Full-Stack Web App',
+                  status: 'published',
+                  shortDescription: '',
+                  technologies: 'React JS, Node.js, Express.js, MongoDB',
+                  liveDemoUrl: '',
+                  githubUrl: 'https://github.com/ayushprajapati9669-dev',
+                  thumbnailUrl: '',
+                  featured: true
+                });
+                setIsFormOpen(true);
+                setTimeout(() => {
+                  formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer"
+            >
+              <i className="fa-solid fa-plus text-xs" />
+              <span>New Project</span>
+            </button>
+          </div>
         </div>
 
-        {/* Dedicated Category Filter Bar (Matching Certificates Tab Style) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl border border-white/10 bg-black/40 w-full max-w-full">
-          <div className="flex items-center gap-2.5">
-            <i className="fa-solid fa-tags text-cyan-400 text-sm" />
-            <span className="font-mono text-xs font-semibold text-slate-300">
-              Filter by Project Category:
-            </span>
+        {/* Search, Category & Sort Bar (Matching Image 2 Single Bar) */}
+        <div className="flex flex-wrap lg:flex-nowrap items-center rounded-2xl border border-white/10 bg-[#070b12]/60 px-3 py-1.5 w-full gap-2">
+          {/* Search Input */}
+          <div className="flex-1 min-w-[240px] relative flex items-center">
+            <i className="fa-solid fa-magnifying-glass text-xs text-slate-400 pl-1 pr-2.5" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search projects, tech stack, or keywords..."
+              className="w-full bg-transparent border-0 outline-none text-xs text-white placeholder-slate-500 font-sans py-2"
+            />
+            {searchQuery ? (
+              <button
+                type="button"
+                onClick={() => {
+                  playTick();
+                  setSearchQuery('');
+                }}
+                className="text-xs text-slate-400 hover:text-white pr-2 cursor-pointer"
+                title="Clear search"
+              >
+                ×
+              </button>
+            ) : (
+              <kbd className="border border-white/10 bg-white/5 text-[10px] text-slate-400 px-1.5 py-0.5 rounded font-mono mr-2 hidden sm:inline-block">
+                ⌘K
+              </kbd>
+            )}
           </div>
 
-          <div className="flex items-center gap-2.5 flex-1 sm:flex-initial justify-end">
+          {/* Divider */}
+          <div className="hidden lg:block h-6 w-px bg-white/10" />
+
+          {/* Category Dropdown */}
+          <div className="relative min-w-[160px] flex items-center">
+            <i className="fa-solid fa-filter text-slate-400 text-xs pl-2 mr-1 pointer-events-none" />
             <select
               value={selectedCategory}
               onChange={(e) => {
                 playTick();
                 setSelectedCategory(e.target.value);
               }}
-              className="w-full sm:w-auto min-w-[240px] rounded-xl border border-cyan-400/40 bg-[#0B101B] px-4 py-2 font-mono text-xs text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer shadow-sm shadow-cyan-400/10"
-              title="Filter by Project Category"
+              className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
             >
-              <option value="all" className="bg-[#0b101b] text-white py-1">
+              <option value="all" className="bg-[#0b101b] text-white">
                 All Categories ({projects.length})
               </option>
               {availableCategories
@@ -890,105 +1578,49 @@ export function AdminProjects({
                     return pCat.includes(cLower) || cLower.includes(pCat);
                   }).length;
                   return (
-                    <option key={cat} value={cat} className="bg-[#0b101b] text-white py-1">
+                    <option key={cat} value={cat} className="bg-[#0b101b] text-white">
                       {cat} ({count})
                     </option>
                   );
                 })}
             </select>
+            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+          </div>
 
-            {selectedCategory !== 'all' && (
-              <button
-                type="button"
-                onClick={() => {
-                  playTick();
-                  setSelectedCategory('all');
-                }}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg border border-white/15 bg-white/5 transition-all"
-                title="Reset to All Categories"
-              >
-                <span>Reset</span>
-                <i className="fa-solid fa-xmark text-[11px] text-cyan-400" />
-              </button>
-            )}
+          {/* Divider */}
+          <div className="hidden lg:block h-6 w-px bg-white/10" />
+
+          {/* Sort Selector */}
+          <div className="relative min-w-[150px] flex items-center">
+            <i className="fa-solid fa-arrow-down-short-wide text-slate-400 text-xs pl-2 mr-1 pointer-events-none" />
+            <select
+              value={sortBy}
+              onChange={(e) => {
+                playTick();
+                setSortBy(e.target.value);
+              }}
+              className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.id} value={opt.id} className="bg-[#0b101b] text-white">
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
           </div>
         </div>
 
-        {/* Real-time Search Box & Sort Controls Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center w-full">
-          {/* Search Input (9 cols on md+, 8 cols on sm) */}
-          <div className="sm:col-span-8 md:col-span-9 relative">
-            <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search projects by title, category, tech stack, or description..."
-              className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-9 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-mono"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => {
-                  playTick();
-                  setSearchQuery('');
-                }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white transition-colors"
-                title="Clear search"
-              >
-                <i className="fa-solid fa-xmark" />
-              </button>
-            )}
-          </div>
-
-          {/* Sort Selector (3 cols on md+, 4 cols on sm) */}
-          <div className="sm:col-span-4 md:col-span-3 flex justify-end">
-            <div className="admin-sort-wrap w-full" ref={sortRef}>
-              <button
-                type="button"
-                onClick={() => { playTick(); setIsSortOpen((prev) => !prev); }}
-                className="admin-sort-btn w-full justify-between"
-              >
-                <div className="flex items-center gap-2">
-                  <i className={currentSortObj.icon}></i>
-                  <span>{currentSortObj.label}</span>
-                </div>
-                <i className="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
-              </button>
-
-              {isSortOpen && (
-                <div className="admin-sort-menu animate-in fade-in zoom-in-95 duration-150 right-0">
-                  {SORT_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => {
-                        playTick();
-                        setSortBy(opt.id);
-                        setIsSortOpen(false);
-                      }}
-                      className={`admin-sort-item ${sortBy === opt.id ? 'active' : ''}`}
-                    >
-                      <i className={`${opt.icon} text-xs w-4`}></i>
-                      <span>{opt.label}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Sub-Toolbar: Select All, Filter Tabs, Batch Delete */}
-        <div className="admin-proj-toolbar">
-          <div className="admin-proj-toolbar-left">
-            {/* Select All */}
-            <label className="admin-select-all-wrap">
+        {/* Action Controls & Status Tabs Row (Matching Image 2) */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Select All Checkbox */}
+            <label className="flex items-center gap-2 cursor-pointer font-sans text-xs font-semibold text-slate-300 hover:text-white transition-colors">
               <div
                 onClick={handleToggleSelectAll}
                 className={`admin-proj-checkbox ${isAllSelected ? 'checked' : ''}`}
               >
-                {isAllSelected && <i className="fa-solid fa-check"></i>}
+                {isAllSelected && <i className="fa-solid fa-check text-[10px]"></i>}
               </div>
               <span>
                 {isAllSelected && filteredProjects.length > 0
@@ -997,63 +1629,85 @@ export function AdminProjects({
               </span>
             </label>
 
-            <div className="admin-v-divider"></div>
-
-            {/* Filter Tabs: All, Active, Draft, Archived, Trash with real icons and dynamic counts */}
-            <div className="admin-filter-tabs">
+            {/* Filter Tabs Group matching Image 2 */}
+            <div className="flex items-center rounded-xl bg-black/40 border border-white/10 p-1 gap-1">
               <button
                 type="button"
                 onClick={() => { playTick(); setActiveTab('all'); }}
-                className={`admin-tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'all'
+                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
               >
                 <i className="fa-solid fa-border-all text-[11px]"></i>
                 <span>All</span>
-                <span className="admin-tab-count">{counts.all}</span>
+                <span className={`text-[11px] px-1.5 py-0.2 rounded-md ${
+                  activeTab === 'all' ? 'bg-cyan-400/20 text-cyan-300' : 'bg-white/10 text-slate-400'
+                }`}>
+                  {counts.all}
+                </span>
               </button>
 
               <button
                 type="button"
                 onClick={() => { playTick(); setActiveTab('active'); }}
-                className={`admin-tab-btn ${activeTab === 'active' ? 'active' : ''}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'active'
+                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <i className="fa-solid fa-circle-check text-[11px] text-emerald-400"></i>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
                 <span>Active</span>
-                <span className="admin-tab-count">{counts.active}</span>
+                <span className="text-[11px] text-slate-400 ml-0.5">{counts.active}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => { playTick(); setActiveTab('draft'); }}
-                className={`admin-tab-btn ${activeTab === 'draft' ? 'active' : ''}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'draft'
+                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <i className="fa-solid fa-file-pen text-[11px] text-amber-400"></i>
+                <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
                 <span>Draft</span>
-                <span className="admin-tab-count">{counts.draft}</span>
+                <span className="text-[11px] text-slate-400 ml-0.5">{counts.draft}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => { playTick(); setActiveTab('archived'); }}
-                className={`admin-tab-btn ${activeTab === 'archived' ? 'active' : ''}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'archived'
+                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <i className="fa-solid fa-box-archive text-[11px] text-indigo-400"></i>
+                <span className="w-2 h-2 rounded-full bg-indigo-400 inline-block" />
                 <span>Archived</span>
-                <span className="admin-tab-count">{counts.archived}</span>
+                <span className="text-[11px] text-slate-400 ml-0.5">{counts.archived}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => { playTick(); setActiveTab('trash'); }}
-                className={`admin-tab-btn ${activeTab === 'trash' ? 'active' : ''}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  activeTab === 'trash'
+                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <i className="fa-solid fa-trash-can text-[11px] text-rose-400"></i>
+                <span className="w-2 h-2 rounded-full bg-rose-500 inline-block" />
                 <span>Trash</span>
-                <span className="admin-tab-count">{counts.trash}</span>
+                <span className="text-[11px] text-slate-400 ml-0.5">{counts.trash}</span>
               </button>
             </div>
           </div>
 
-          <div className="admin-proj-toolbar-right">
+          <div className="flex items-center gap-3">
             {/* Batch Delete Button (shown when items are selected) */}
             {selectedIds.length > 0 && (
               <button
@@ -1068,12 +1722,10 @@ export function AdminProjects({
               </button>
             )}
 
-            {sortBy === 'manual' && activeTab === 'all' && (
-              <span className="font-mono text-[11px] text-slate-500 hidden lg:inline-flex items-center gap-1.5">
-                <i className="fa-solid fa-grip-vertical text-slate-600"></i>
-                Drag cards to reorder
-              </span>
-            )}
+            <span className="font-sans text-xs text-slate-400 flex items-center gap-1.5">
+              <i className="fa-solid fa-grip-vertical text-slate-500"></i>
+              <span>Drag to reorder</span>
+            </span>
           </div>
         </div>
 

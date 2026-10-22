@@ -1949,26 +1949,28 @@ export function AdminCertificates({
           4. EXISTING CERTIFICATES LIST & MANAGEMENT TOOLBAR
          ======================================================== */}
       <div className="glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-6 relative w-full max-w-full min-w-0 overflow-hidden">
-        {/* Toolbar Header */}
+        {/* Toolbar Header (Matching Image 1) */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div>
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <span>Existing Credentials</span>
-              <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-xs text-cyan-400">
+            <div className="flex items-center gap-2.5">
+              <h3 className="text-xl font-bold text-white tracking-tight">
+                Existing Credentials
+              </h3>
+              <span className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-0.5 font-mono text-xs font-bold text-cyan-400">
                 {filteredCertificates.length} / {certificates.length}
               </span>
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
               Drag cards to reorder, multi-select for batch actions, filter by category, or inspect QR codes.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2.5">
             {/* Multi-Select All / Clear Button */}
             <button
               type="button"
               onClick={handleToggleSelectAll}
-              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 font-mono text-xs font-semibold transition-all ${
+              className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 font-mono text-xs font-semibold transition-all cursor-pointer ${
                 selectedCertIds.length === filteredCertificates.length && filteredCertificates.length > 0
                   ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300'
                   : 'border-white/15 bg-white/5 text-slate-300 hover:border-white/30 hover:text-white'
@@ -1977,7 +1979,7 @@ export function AdminCertificates({
               <i
                 className={`fa-solid ${
                   selectedCertIds.length === filteredCertificates.length && filteredCertificates.length > 0
-                    ? 'fa-check-double text-cyan-400'
+                    ? 'fa-square-check text-cyan-400'
                     : 'fa-square-check text-slate-400'
                 }`}
               />
@@ -1997,21 +1999,21 @@ export function AdminCertificates({
                   window.__openCommandPalette({ query: 'cert' });
                 }
               }}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-black/40 px-3 py-1.5 font-mono text-xs font-semibold text-slate-300 hover:border-cyan-400/40 hover:text-white transition-all"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2 font-mono text-xs font-semibold text-slate-300 hover:border-cyan-400/40 hover:text-white transition-all cursor-pointer"
               title="Open Command Palette (⌘K)"
             >
-              <i className="fa-solid fa-terminal text-cyan-400 text-[11px]" />
+              <span className="text-slate-400 font-mono">&gt;_</span>
               <span>Palette</span>
-              <kbd className="rounded border border-white/15 bg-white/5 px-1 py-0.2 text-[10px] text-slate-400">⌘K</kbd>
+              <kbd className="rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-[10px] text-slate-400 font-mono">⌘K</kbd>
             </button>
 
             {!isFormOpen && (
               <button
                 type="button"
                 onClick={handleOpenCreateForm}
-                className="inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-4 py-1.5 font-mono text-xs font-bold text-black hover:bg-cyan-300 transition-all shadow-md shadow-cyan-400/20"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer"
               >
-                <i className="fa-solid fa-plus" />
+                <i className="fa-solid fa-plus text-xs" />
                 <span>Add Credential</span>
               </button>
             )}
@@ -2019,45 +2021,45 @@ export function AdminCertificates({
         </div>
 
         {/* ========================================================
-            CATEGORY FILTER CHIPS (Requirement 2)
+            CATEGORY FILTER ROW (Matching Image 1)
            ======================================================== */}
-        {/* ========================================================
-            CATEGORY FILTER DROPDOWN
-           ======================================================== */}
-        <div className="flex flex-wrap items-center justify-between gap-3 p-3 sm:p-4 rounded-2xl border border-white/10 bg-black/40 w-full max-w-full min-w-0">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl border border-white/10 bg-[#070b12]/60 w-full max-w-full">
+          <div className="flex items-center gap-2.5">
             <i className="fa-solid fa-layer-group text-cyan-400 text-sm" />
-            <span className="font-mono text-xs font-semibold text-slate-300">
+            <span className="font-sans text-xs sm:text-sm font-semibold text-white">
               Filter by Domain / Category:
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 flex-1 sm:flex-initial justify-end">
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                playTick();
-                setSelectedCategory(e.target.value);
-              }}
-              className="w-full sm:w-auto min-w-[260px] rounded-xl border border-cyan-400/40 bg-[#0B101B] px-4 py-2 font-mono text-xs text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer shadow-sm shadow-cyan-400/10"
-            >
-              {availableCategories.map((cat) => {
-                const count =
-                  cat === 'ALL'
-                    ? certificates.length
-                    : certificates.filter((c) => {
-                        const itemCat = getCertCategory(c).toLowerCase();
-                        const target = cat.toLowerCase();
-                        return itemCat.includes(target) || target.includes(itemCat);
-                      }).length;
+          <div className="flex items-center gap-2 flex-1 sm:flex-initial justify-end">
+            <div className="relative">
+              <select
+                value={selectedCategory}
+                onChange={(e) => {
+                  playTick();
+                  setSelectedCategory(e.target.value);
+                }}
+                className="appearance-none w-full sm:w-auto min-w-[220px] rounded-xl border border-white/10 bg-[#0B101B]/90 pl-4 pr-9 py-2 text-xs font-medium text-white outline-none hover:border-cyan-400/40 focus:border-cyan-400 cursor-pointer transition-colors"
+              >
+                {availableCategories.map((cat) => {
+                  const count =
+                    cat === 'ALL'
+                      ? certificates.length
+                      : certificates.filter((c) => {
+                          const itemCat = getCertCategory(c).toLowerCase();
+                          const target = cat.toLowerCase();
+                          return itemCat.includes(target) || target.includes(itemCat);
+                        }).length;
 
-                return (
-                  <option key={cat} value={cat} className="bg-[#0b101b] text-white py-1">
-                    {cat === 'ALL' ? 'All Categories' : cat} ({count})
-                  </option>
-                );
-              })}
-            </select>
+                  return (
+                    <option key={cat} value={cat} className="bg-[#0b101b] text-white py-1">
+                      {cat === 'ALL' ? 'All Categories' : cat} ({count})
+                    </option>
+                  );
+                })}
+              </select>
+              <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+            </div>
 
             {selectedCategory !== 'ALL' && (
               <button
@@ -2076,79 +2078,93 @@ export function AdminCertificates({
           </div>
         </div>
 
-        {/* Search, Filter & Sort Controls */}
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-12 items-center w-full max-w-full min-w-0">
-          {/* Search Input (5 cols) */}
-          <div className="md:col-span-5 relative">
-            <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
+        {/* ========================================================
+            UNIFIED SEARCH & FILTERS TOOLBAR (Matching Image 1)
+           ======================================================== */}
+        <div className="flex flex-wrap lg:flex-nowrap items-center rounded-2xl border border-white/10 bg-[#070b12]/60 px-3 py-1.5 w-full gap-2">
+          {/* Search Input */}
+          <div className="flex-1 min-w-[220px] relative flex items-center">
+            <i className="fa-solid fa-magnifying-glass text-xs text-slate-400 pl-1 pr-2.5" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title, issuer, credential ID, skills..."
-              className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-mono"
+              placeholder="Search by title, Issuer, credential ID, skills..."
+              className="w-full bg-transparent border-0 outline-none text-xs text-white placeholder-slate-500 font-sans py-2"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                className="text-xs text-slate-400 hover:text-white pr-2"
               >
                 ×
               </button>
             )}
           </div>
 
-          {/* Issuer Filter (3 cols) */}
-          <div className="md:col-span-3">
+          {/* Divider */}
+          <div className="hidden lg:block h-6 w-px bg-white/10" />
+
+          {/* Issuer Filter */}
+          <div className="relative min-w-[140px]">
             <select
               value={selectedIssuer}
               onChange={(e) => {
                 playTick();
                 setSelectedIssuer(e.target.value);
               }}
-              className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 text-xs text-white outline-none focus:border-cyan-400"
+              className="appearance-none w-full bg-transparent border-0 pl-3 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
             >
-              <option value="ALL">All Issuers ({certificates.length})</option>
+              <option value="ALL" className="bg-[#0b101b] text-white">All Issuers ({certificates.length})</option>
               {uniqueIssuers.map((iss) => (
                 <option key={iss} value={iss} className="bg-[#0b101b] text-white">
                   {iss}
                 </option>
               ))}
             </select>
+            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
           </div>
 
-          {/* Status Filter (2 cols) */}
-          <div className="md:col-span-2">
+          {/* Divider */}
+          <div className="hidden lg:block h-6 w-px bg-white/10" />
+
+          {/* Status Filter */}
+          <div className="relative min-w-[120px]">
             <select
               value={selectedStatus}
               onChange={(e) => {
                 playTick();
                 setSelectedStatus(e.target.value);
               }}
-              className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 text-xs text-white outline-none focus:border-cyan-400"
+              className="appearance-none w-full bg-transparent border-0 pl-3 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
             >
-              <option value="ALL">All Status</option>
-              <option value="FEATURED">★ Featured Only</option>
-              <option value="VERIFIED">✓ Verified Only</option>
+              <option value="ALL" className="bg-[#0b101b] text-white">All Status</option>
+              <option value="FEATURED" className="bg-[#0b101b] text-white">★ Featured Only</option>
+              <option value="VERIFIED" className="bg-[#0b101b] text-white">✓ Verified Only</option>
             </select>
+            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
           </div>
 
-          {/* Sort Selector (2 cols) */}
-          <div className="md:col-span-2">
+          {/* Divider */}
+          <div className="hidden lg:block h-6 w-px bg-white/10" />
+
+          {/* Sort Selector */}
+          <div className="relative min-w-[130px]">
             <select
               value={sortBy}
               onChange={(e) => {
                 playTick();
                 setSortBy(e.target.value);
               }}
-              className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 text-xs text-white outline-none focus:border-cyan-400"
+              className="appearance-none w-full bg-transparent border-0 pl-3 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
             >
-              <option value="newest">Newest Year</option>
-              <option value="oldest">Oldest Year</option>
-              <option value="title-asc">Title (A-Z)</option>
-              <option value="issuer-asc">Issuer (A-Z)</option>
+              <option value="newest" className="bg-[#0b101b] text-white">Newest Year</option>
+              <option value="oldest" className="bg-[#0b101b] text-white">Oldest Year</option>
+              <option value="title-asc" className="bg-[#0b101b] text-white">Title (A-Z)</option>
+              <option value="issuer-asc" className="bg-[#0b101b] text-white">Issuer (A-Z)</option>
             </select>
+            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
           </div>
         </div>
 

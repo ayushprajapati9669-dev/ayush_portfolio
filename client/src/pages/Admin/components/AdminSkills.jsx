@@ -720,92 +720,98 @@ export function AdminSkills({
       </div>
 
       {/* ========================================================
-          2. UNIFIED CONTROLS TOOLBAR (Search, Category Dropdown, Sort, New Category)
+          2. UNIFIED CONTROLS TOOLBAR (Matching Image 3)
          ======================================================== */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl border border-white/10 bg-black/40 w-full max-w-full min-w-0">
-        {/* Search Input (flexible width) */}
-        <div className="relative min-w-[220px] flex-1 max-w-md">
-          <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
+      <div className="flex flex-wrap md:flex-nowrap items-center rounded-2xl border border-white/10 bg-[#070b12]/60 px-3 py-1.5 w-full gap-2">
+        {/* Search Input */}
+        <div className="flex-1 min-w-[220px] relative flex items-center">
+          <i className="fa-solid fa-magnifying-glass text-cyan-400 text-xs pl-1 pr-2.5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Filter skills by name or category..."
-            className="w-full rounded-xl border border-white/15 bg-black/60 pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-mono"
+            className="w-full bg-transparent border-0 outline-none text-xs text-white placeholder-slate-500 font-sans py-2"
           />
-          {searchQuery && (
+          {searchQuery ? (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+              className="text-xs text-slate-400 hover:text-white pr-2 cursor-pointer"
+              title="Clear search"
             >
-              <i className="fa-solid fa-xmark" />
+              ×
             </button>
+          ) : (
+            <kbd className="border border-white/10 bg-white/5 text-[10px] text-slate-400 px-1.5 py-0.5 rounded font-mono mr-2 hidden sm:inline-block">
+              ⌘K
+            </kbd>
           )}
         </div>
 
-        {/* Action Controls: Category Dropdown, Sort Dropdown, and New Category Button side-by-side */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          {/* Category Dropdown */}
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-slate-400 hidden xl:inline whitespace-nowrap">
-              Filter by Skill Category:
-            </span>
-            <select
-              value={activeCategory}
-              onChange={(e) => {
-                playTick();
-                setActiveCategory(e.target.value);
-              }}
-              className="rounded-xl border border-cyan-400/40 bg-[#0B101B] px-3.5 py-2 font-mono text-xs text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer shadow-sm shadow-cyan-400/10 min-w-[180px]"
-              title="Filter by Skill Category"
-            >
-              <option value="all" className="bg-[#0b101b] text-white">
-                All Skills ({allSkills.length})
-              </option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id} className="bg-[#0b101b] text-white">
-                  {cat.name} ({cat.items.length})
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Divider */}
+        <div className="hidden md:block h-6 w-px bg-white/10" />
 
-          {/* Sort Controls */}
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-slate-400 hidden sm:inline whitespace-nowrap">
-              Sort:
-            </span>
-            <select
-              value={sortOrder}
-              onChange={(e) => {
-                playTick();
-                setSortOrder(e.target.value);
-              }}
-              className="rounded-xl border border-white/15 bg-[#0B101B] px-3.5 py-2 font-mono text-xs text-white outline-none focus:border-cyan-400 cursor-pointer min-w-[170px]"
-              title="Sort Order"
-            >
-              <option value="custom">Custom Order (Drag & Drop)</option>
-              <option value="az">Alphabetical (A-Z)</option>
-              <option value="za">Alphabetical (Z-A)</option>
-              <option value="newest">Newest First</option>
-            </select>
-          </div>
-
-          {/* New Category Button */}
-          <button
-            type="button"
-            onClick={() => {
+        {/* Category Dropdown */}
+        <div className="relative min-w-[170px] flex items-center">
+          <i className="fa-solid fa-layer-group text-cyan-400 text-xs pl-2 mr-1 pointer-events-none" />
+          <select
+            value={activeCategory}
+            onChange={(e) => {
               playTick();
-              setCatModalVisible(true);
+              setActiveCategory(e.target.value);
             }}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-gradient-to-r from-cyan-500/20 to-indigo-500/20 px-3.5 py-2 font-mono text-xs font-semibold text-cyan-300 hover:border-cyan-400 hover:text-white transition-all shadow-sm shadow-cyan-500/10 whitespace-nowrap"
-            title="Create new skill category"
+            className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-semibold text-white outline-none cursor-pointer hover:text-cyan-300 transition-colors"
+            title="Filter by Skill Category"
           >
-            <i className="fa-solid fa-plus text-[10px]" />
-            <span>New Category</span>
-          </button>
+            <option value="all" className="bg-[#0b101b] text-white">
+              All Skills ({allSkills.length})
+            </option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id} className="bg-[#0b101b] text-white">
+                {cat.name} ({cat.items.length})
+              </option>
+            ))}
+          </select>
+          <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
         </div>
+
+        {/* Divider */}
+        <div className="hidden md:block h-6 w-px bg-white/10" />
+
+        {/* Sort Controls */}
+        <div className="relative min-w-[210px] flex items-center">
+          <i className="fa-solid fa-arrow-down-up-across-line text-slate-400 text-xs pl-2 mr-1 pointer-events-none" />
+          <select
+            value={sortOrder}
+            onChange={(e) => {
+              playTick();
+              setSortOrder(e.target.value);
+            }}
+            className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
+            title="Sort Order"
+          >
+            <option value="custom" className="bg-[#0b101b] text-white">Custom Order (Drag & Drop)</option>
+            <option value="az" className="bg-[#0b101b] text-white">Alphabetical (A-Z)</option>
+            <option value="za" className="bg-[#0b101b] text-white">Alphabetical (Z-A)</option>
+            <option value="newest" className="bg-[#0b101b] text-white">Newest First</option>
+          </select>
+          <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+        </div>
+
+        {/* New Category Button */}
+        <button
+          type="button"
+          onClick={() => {
+            playTick();
+            setCatModalVisible(true);
+          }}
+          className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer whitespace-nowrap ml-auto"
+          title="Create new skill category"
+        >
+          <i className="fa-solid fa-plus text-xs" />
+          <span>New Category</span>
+        </button>
       </div>
 
       {/* ========================================================
