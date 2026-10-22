@@ -99,15 +99,15 @@ body.has-admin-sidebar.sidebar-collapsed .dashboard-footer {
 .footer-logo {
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, var(--accent-1, #38bdf8), var(--accent-2, #0ea5e9));
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: 18px;
-  color: #000;
-  box-shadow: 0 0 20px var(--accent-glow, rgba(56, 189, 248, 0.4));
+  color: #000 !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4) !important;
 }
 
 .footer-brand-name {

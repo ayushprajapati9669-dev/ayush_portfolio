@@ -124,7 +124,7 @@ export function ResumeModal() {
             <button
               type="button"
               onClick={handleDownload}
-              className="focus-ring inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#06b6d4] to-[#10b981] px-5 py-2.5 text-xs font-bold text-black shadow-lg shadow-cyan-400/20 hover:opacity-95 transition-all active:scale-95"
+              className="focus-ring inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#38bdf8] to-[#0ea5e9] px-5 py-2.5 text-xs font-bold text-black shadow-lg shadow-sky-400/20 hover:opacity-95 transition-all active:scale-95"
             >
               <i className="fa-solid fa-download text-xs" />
               <span>Download PDF</span>

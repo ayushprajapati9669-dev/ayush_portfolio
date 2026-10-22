@@ -110,8 +110,8 @@ export function Header() {
       pill.style.background = 'rgba(255, 255, 255, 0.2)';
       pill.style.boxShadow = 'none';
     } else {
-      pill.style.background = 'linear-gradient(135deg, var(--accent-1, #38bdf8), var(--accent-2, #0ea5e9))';
-      pill.style.boxShadow = '0 0 25px var(--accent-glow, rgba(56, 189, 248, 0.4))';
+      pill.style.background = 'linear-gradient(135deg, #38bdf8, #0ea5e9)';
+      pill.style.boxShadow = '0 0 25px rgba(56, 189, 248, 0.4)';
     }
   };
 
