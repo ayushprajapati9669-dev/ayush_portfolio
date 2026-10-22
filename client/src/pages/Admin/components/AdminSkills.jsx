@@ -432,6 +432,16 @@ export function AdminSkills({
     });
   };
 
+  // Toggle select all visible filtered skills
+  const handleSelectAllVisible = () => {
+    playTick();
+    if (selectedSkills.size === filteredSkills.length && filteredSkills.length > 0) {
+      setSelectedSkills(new Set());
+    } else {
+      setSelectedSkills(new Set(filteredSkills.map((s) => s.id)));
+    }
+  };
+
   // Bulk Delete Selected
   const handleBulkDelete = () => {
     if (selectedSkills.size === 0) return;
@@ -803,7 +813,7 @@ export function AdminSkills({
          ======================================================== */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start w-full max-w-full min-w-0">
         {/* LEFT COLUMN: Add New Skill Card */}
-        <div className="lg:col-span-5 glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-5 relative">
+        <div className="lg:col-span-5 glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-5 relative lg:sticky lg:top-24">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
               <i className="fa-solid fa-plus-circle text-cyan-400" />
@@ -950,22 +960,36 @@ export function AdminSkills({
         </div>
 
         {/* RIGHT COLUMN: Current Skills List */}
-        <div className="lg:col-span-7 glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-4 relative">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="lg:col-span-7 glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-4 relative flex flex-col">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2.5">
               <h3 className="text-base font-bold text-white">Current Skills</h3>
-              <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 font-mono text-[11px] text-cyan-400">
+              <span className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-0.5 font-mono text-[11px] text-cyan-400">
                 {totalActiveCount} active
               </span>
             </div>
-            <span className="font-mono text-xs text-slate-400">
-              Showing {filteredSkills.length} of {allSkills.length}
-            </span>
+            
+            <div className="flex items-center gap-2.5">
+              {filteredSkills.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleSelectAllVisible}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/15 bg-white/5 hover:bg-cyan-500/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-300 font-mono text-[11px] transition-all cursor-pointer"
+                  title={selectedSkills.size === filteredSkills.length && filteredSkills.length > 0 ? "Deselect all visible skills" : "Select all visible skills"}
+                >
+                  <i className={`fa-solid ${selectedSkills.size === filteredSkills.length && filteredSkills.length > 0 ? 'fa-check-double text-cyan-400' : 'fa-list-check'}`} />
+                  <span>{selectedSkills.size === filteredSkills.length && filteredSkills.length > 0 ? 'Deselect All' : 'Select All'}</span>
+                </button>
+              )}
+              <span className="font-mono text-xs text-slate-400">
+                Showing {filteredSkills.length} of {allSkills.length}
+              </span>
+            </div>
           </div>
 
           {/* Skeleton Shimmer Loading */}
           {isLoadingInitial ? (
-            <div>
+            <div className="space-y-2">
               <div className="skill-skeleton-item" />
               <div className="skill-skeleton-item" />
               <div className="skill-skeleton-item" />
@@ -982,8 +1006,11 @@ export function AdminSkills({
               </p>
             </div>
           ) : (
-            /* Skills List */
-            <div ref={skillsListRef} className="space-y-2.5 min-h-[140px]">
+            /* Skills List with custom sleek scrollbar */
+            <div
+              ref={skillsListRef}
+              className="space-y-2 max-h-[520px] overflow-y-auto pr-1.5 custom-admin-scrollbar min-h-[140px]"
+            >
               {filteredSkills.map((skill) => {
                 const isSelected = selectedSkills.has(skill.id);
                 const isDragging = draggedSkillId === skill.id;
@@ -1025,7 +1052,7 @@ export function AdminSkills({
                     <div className="skill-icon-box">
                       {typeof skill.icon === 'string' &&
                       (skill.icon.startsWith('http') || skill.icon.startsWith('/') || skill.icon.startsWith('data:')) ? (
-                        <img src={skill.icon} alt={skill.name} className="w-6 h-6 object-contain" />
+                        <img src={skill.icon} alt={skill.name} className="w-5 h-5 object-contain" />
                       ) : skill.icon ? (
                         <i className={`${skill.icon} colored`} />
                       ) : (
@@ -1037,7 +1064,7 @@ export function AdminSkills({
 
                     {/* Skill Details */}
                     <div className="ml-3 flex-1 min-w-0">
-                      <div className="text-sm font-bold text-white truncate">
+                      <div className="text-sm font-semibold text-white truncate">
                         {skill.name}
                       </div>
                       <div
@@ -1062,7 +1089,7 @@ export function AdminSkills({
                     <button
                       type="button"
                       onClick={() => handleDeleteSkill(skill)}
-                      className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                      className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
                       title={`Delete "${skill.name}"`}
                     >
                       <i className="fa-solid fa-trash-can text-xs" />

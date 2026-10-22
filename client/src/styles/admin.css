@@ -2197,24 +2197,58 @@
   font-style: italic;
 }
 
+/* Sleek Admin Glass Scrollbar */
+.custom-admin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-admin-scrollbar::-webkit-scrollbar-track {
+  background: rgba(10, 17, 24, 0.4);
+  border-radius: 9999px;
+}
+
+.custom-admin-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.25);
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.custom-admin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.custom-admin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.3) rgba(10, 17, 24, 0.4);
+}
+
 /* Skill Icon & Initials */
 .skill-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: rgba(26, 35, 50, 0.7);
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: rgba(14, 23, 38, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
   flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.skill-row-item:hover .skill-icon-box {
+  border-color: rgba(56, 189, 248, 0.3);
+  background: rgba(18, 30, 49, 0.85);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
 }
 
 .skill-icon-box .initials {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
-  color: #00d4ff;
+  color: #38bdf8;
   font-family: 'JetBrains Mono', monospace;
 }
 
@@ -2222,8 +2256,8 @@
 .skill-row-item {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  background: rgba(8, 11, 18, 0.65);
+  padding: 8px 14px;
+  background: rgba(8, 14, 23, 0.65);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 12px;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -2232,27 +2266,27 @@
 }
 
 .skill-row-item:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(20, 28, 42, 0.6);
+  border-color: rgba(56, 189, 248, 0.25);
+  background: rgba(15, 27, 44, 0.75);
   transform: translateY(-1px);
 }
 
 .skill-row-item.selected {
-  border-color: #00d4ff;
-  background: rgba(0, 212, 255, 0.12);
-  box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.18);
 }
 
 .skill-drag-handle {
   cursor: grab;
   color: #64748b;
-  margin-right: 12px;
-  padding: 4px;
+  margin-right: 10px;
+  padding: 4px 2px;
   transition: color 0.2s;
 }
 
 .skill-drag-handle:hover {
-  color: #00d4ff;
+  color: #38bdf8;
 }
 
 .skill-drag-handle:active {
@@ -2261,29 +2295,30 @@
 
 /* Custom Checkbox */
 .skill-custom-checkbox {
-  width: 18px;
-  height: 18px;
-  border: 2px solid #64748b;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid #64748b;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  margin-right: 14px;
+  margin-right: 12px;
   background: transparent;
+  flex-shrink: 0;
 }
 
 .skill-custom-checkbox i {
-  font-size: 10px;
-  color: #000000;
+  font-size: 9px;
+  color: #030712;
   opacity: 0;
   transition: opacity 0.2s;
 }
 
 .skill-row-item.selected .skill-custom-checkbox {
-  background: #00d4ff;
-  border-color: #00d4ff;
+  background: #38bdf8;
+  border-color: #38bdf8;
 }
 
 .skill-row-item.selected .skill-custom-checkbox i {
@@ -2293,9 +2328,9 @@
 /* Animated Visibility Toggle Switch */
 .skill-toggle-switch {
   position: relative;
-  width: 38px;
-  height: 20px;
-  margin: 0 14px;
+  width: 36px;
+  height: 19px;
+  margin: 0 10px;
   flex-shrink: 0;
 }
 
@@ -2312,29 +2347,32 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #334155;
-  transition: 0.3s;
+  background-color: #243247;
+  transition: 0.25s;
   border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .skill-slider:before {
   position: absolute;
   content: "";
-  height: 14px;
-  width: 14px;
-  left: 3px;
-  bottom: 3px;
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
   background-color: white;
-  transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .skill-toggle-switch input:checked + .skill-slider {
-  background-color: #00d4ff;
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  border-color: rgba(56, 189, 248, 0.4);
 }
 
 .skill-toggle-switch input:checked + .skill-slider:before {
-  transform: translateX(18px);
+  transform: translateX(17px);
 }
 
 /* Floating Bulk Bar */
@@ -2346,13 +2384,13 @@
   background: rgba(15, 22, 35, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid #00d4ff;
+  border: 1px solid #38bdf8;
   padding: 12px 24px;
   border-radius: 50px;
   display: flex;
   align-items: center;
   gap: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 212, 255, 0.35);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.35);
   z-index: 1000;
   transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -2386,12 +2424,12 @@
 
 /* Shimmer Skeleton */
 .skill-skeleton-item {
-  height: 60px;
+  height: 48px;
   background: linear-gradient(90deg, rgba(8, 12, 18, 0.6) 25%, rgba(26, 35, 50, 0.6) 50%, rgba(8, 12, 18, 0.6) 75%);
   background-size: 200% 100%;
   animation: skillShimmer 1.5s infinite;
   border-radius: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 @keyframes skillShimmer {

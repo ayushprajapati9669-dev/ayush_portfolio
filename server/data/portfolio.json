@@ -218,20 +218,20 @@
       "displayOrder": 1,
       "items": [
         {
-          "id": "skill-skill-cat-languages-0-c",
-          "name": "C",
-          "logoKey": "c",
-          "icon": "devicon-c-plain",
-          "isVisible": false,
-          "createdAt": 1792600883119
-        },
-        {
           "id": "skill_1792603472386",
           "name": "TypeScript",
           "logoKey": "typescript",
           "icon": "devicon-typescript-plain",
           "isVisible": true,
           "createdAt": 1792603472386
+        },
+        {
+          "id": "skill-skill-cat-languages-0-c",
+          "name": "C",
+          "logoKey": "c",
+          "icon": "devicon-c-plain",
+          "isVisible": false,
+          "createdAt": 1792600883119
         },
         {
           "id": "skill-skill-cat-languages-2-python",
