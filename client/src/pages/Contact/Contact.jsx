@@ -4,6 +4,8 @@ import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { validateContactForm } from '../../utils/validation';
 import { apiRequest } from '../../services/api';
 import { playTick } from '../../utils/audio';
+import { SEO } from '../../components/SEO';
+import { contactPageSchema } from '../../utils/seo';
 
 export function ContactPage() {
   const { appState, updateAppState, showToast } = usePortfolio();
@@ -176,6 +178,11 @@ export function ContactPage() {
 
   return (
     <main className="contact-page" ref={containerRef}>
+      <SEO
+        title="Hire & Contact Ayush"
+        description="Connect with Ayush Prajapati for full-stack web development opportunities, engineering internships, software consulting, or collaborative projects."
+        schema={contactPageSchema(p)}
+      />
       {/* Page Header */}
       <div className="page-header">
         <div className="header-orb" />

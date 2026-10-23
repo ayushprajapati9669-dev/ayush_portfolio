@@ -4,6 +4,8 @@ import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { CertificateCard } from '../../components/projects/CertificateCard';
 import { playTick } from '../../utils/audio';
+import { SEO } from '../../components/SEO';
+import { itemListSchema } from '../../utils/seo';
 
 const REFERENCE_CERTIFICATES = [
   {
@@ -267,6 +269,11 @@ export function CertificatesPage() {
 
   return (
     <main className="certificates-page" ref={containerRef}>
+      <SEO
+        title="Verified Certificates & Professional Credentials"
+        description="Browse accredited software engineering, MERN full-stack, AI/ML, and cloud computing certificates earned by Ayush Prajapati."
+        schema={itemListSchema(certList, 'Credential')}
+      />
       {/* Page Header */}
       <div className="page-header">
         <div className="page-tagline">

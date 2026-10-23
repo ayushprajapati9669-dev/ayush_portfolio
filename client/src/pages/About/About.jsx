@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
+import { SEO } from '../../components/SEO';
+import { personSchema } from '../../utils/seo';
 
 export function AboutPage() {
   const { appState } = usePortfolio();
@@ -146,6 +148,11 @@ export function AboutPage() {
 
   return (
     <main className="about-page" ref={containerRef}>
+      <SEO
+        title="About & Academic Milestones"
+        description="Learn about Ayush Prajapati's background, education at SISTec Bhopal (CGPA 8.42), engineering roadmap, achievements, and full-stack software expertise."
+        schema={personSchema(p)}
+      />
       {/* Header */}
       <div className="page-header">
         <div className="page-tagline">

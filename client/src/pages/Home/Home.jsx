@@ -10,6 +10,8 @@ import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificateCard } from '../../components/projects/CertificateCard';
 import { SocialIconButtons, TechLogo } from '../../components/common/TechLogos';
 import { playTick } from '../../utils/audio';
+import { SEO } from '../../components/SEO';
+import { personSchema, websiteSchema } from '../../utils/seo';
 
 export function HomePage() {
   const { appState } = usePortfolio();
@@ -341,6 +343,11 @@ export function HomePage() {
 
   return (
     <div ref={containerRef}>
+      <SEO
+        title="Ayush Prajapati | Full-Stack Developer & Software Engineer"
+        description={p.headline || p.heroDescription || 'Full-Stack Developer crafting high-performance web products, scalable backend systems, and interactive architectures.'}
+        schema={[personSchema(p), websiteSchema(p)]}
+      />
       {/* Hero & Bento Stage */}
       <section ref={heroRef} className="mx-auto max-w-7xl px-4 pt-28 pb-16 sm:px-6 lg:px-8 sm:pt-32 lg:pt-36">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificatesPage } from '../Certificates/Certificates';
 import { playTick } from '../../utils/audio';
+import { SEO } from '../../components/SEO';
+import { itemListSchema, projectSchema } from '../../utils/seo';
 
 // Baseline Reference Projects from Reference HTML
 const REFERENCE_PROJECTS = [
@@ -81,6 +84,7 @@ function normalizeCategoryKey(cat) {
 }
 
 export function ProjectsPage({ viewMode = 'projects' }) {
+  const { slug } = useParams();
   const { appState } = usePortfolio();
   const ui = appState.uiLabels || {};
   const [activeFilter, setActiveFilter] = useState('all');
@@ -100,6 +104,7 @@ export function ProjectsPage({ viewMode = 'projects' }) {
     .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
 
   const allProjects = cmsPublished.length > 0 ? cmsPublished : REFERENCE_PROJECTS;
+  const currentProject = slug ? allProjects.find((p) => p.slug === slug || p.id === slug) : null;
 
   // Filter tabs
   const FILTER_TABS = [
@@ -250,6 +255,20 @@ export function ProjectsPage({ viewMode = 'projects' }) {
 
   return (
     <main className="projects-page" ref={containerRef}>
+      {currentProject ? (
+        <SEO
+          title={`${currentProject.title} | Case Study`}
+          description={currentProject.shortDescription || `Case study and architecture overview for ${currentProject.title} built with ${(currentProject.technologies || []).join(', ')}.`}
+          image={currentProject.thumbnailUrl}
+          schema={projectSchema(currentProject)}
+        />
+      ) : (
+        <SEO
+          title="Featured Projects & Live Software"
+          description="A collection of full-stack web applications, interactive dashboards, and AI-powered tools engineered and deployed by Ayush Prajapati."
+          schema={itemListSchema(allProjects, 'SoftwareApplication')}
+        />
+      )}
       {/* Page Header */}
       <div className="page-header">
         <div className="page-tagline">02 · Featured Work</div>

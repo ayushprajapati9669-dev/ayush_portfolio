@@ -449,6 +449,31 @@
   position: relative;
   z-index: 1;
   transform-style: preserve-3d;
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(6, 182, 212, 0.4) rgba(255, 255, 255, 0.03);
+}
+
+.timeline-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.timeline-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 9999px;
+}
+
+.timeline-list::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.35);
+  border-radius: 9999px;
+}
+
+.timeline-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.7);
 }
 
 .timeline-list::before {

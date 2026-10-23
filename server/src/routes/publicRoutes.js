@@ -31,6 +31,10 @@ async function handlePublicRoutes(req, res, pathname, parsedUrl, publicControlle
     await publicController.submitContact(req, res);
     return true;
   }
+  if (req.method === 'GET' && (pathname === '/api/public/sitemap.xml' || pathname === '/sitemap.xml')) {
+    publicController.getSitemap(req, res);
+    return true;
+  }
   return false;
 }
 

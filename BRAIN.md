@@ -168,6 +168,33 @@
   - Parallax background grid and glowing orb.
   - "Back to Top" smooth scroll button.
 
+### 2.9 SEO, Open Graph & Structured Data Optimization (Feature 1)
+- **Reusable `<SEO />` Component (`client/src/components/SEO.jsx`)**:
+  - Sets dynamic `<title>` per page with site-wide brand formatting.
+  - Updates `<meta name="description">`, `<meta name="author">`, and `<meta name="robots">`.
+  - Sets Open Graph properties: `og:title`, `og:description`, `og:type`, `og:url`, `og:image` (fallback to `/og-image.png`), `og:site_name`.
+  - Sets Twitter cards: `twitter:card` (summary_large_image), `twitter:title`, `twitter:description`, `twitter:image`.
+  - Updates `<link rel="canonical">` dynamically matching the current route.
+  - Injects and updates Schema.org JSON-LD structured data via `<script id="seo-jsonld-schema" type="application/ld+json">`.
+- **JSON-LD Schema Generators (`client/src/utils/seo.js`)**:
+  - `personSchema(profile, extra)`: Schema.org `Person` object.
+  - `websiteSchema(profile)`: Schema.org `WebSite` object.
+  - `projectSchema(project)`: Schema.org `SoftwareApplication` object.
+  - `certificateSchema(cert)`: Schema.org `EducationalOccupationalCredential` object.
+  - `itemListSchema(items, type)`: Schema.org `ItemList` object.
+  - `contactPageSchema(profile)`: Schema.org `ContactPage` object.
+- **Page-Level Coverage**:
+  - `Home.jsx`: `personSchema` + `websiteSchema`.
+  - `About.jsx`: `personSchema` with education credentials.
+  - `Skills.jsx`: `personSchema` with dynamic `knowsAbout` array.
+  - `Projects.jsx`: `itemListSchema` for project gallery; `projectSchema` when accessing `/projects/:slug`.
+  - `Certificates.jsx`: `itemListSchema` with `Credential` type.
+  - `Contact.jsx`: `contactPageSchema` with primary contact entity.
+- **XML Sitemap & Robots.txt**:
+  - Backend endpoint `GET /api/public/sitemap.xml` and `/sitemap.xml` generating live sitemap with `<lastmod>` timestamps from data store.
+  - `client/public/robots.txt` directing crawlers to `/sitemap.xml` and disallowing `/admin/*`.
+  - Default Open Graph image placed at `client/public/og-image.png`.
+
 ---
 
 ## 3. Admin CMS Features (Super Admin Experience)
@@ -301,6 +328,7 @@
 |---|---|---|---|
 | `GET` | `/api/health` | Public | System health check, storage engine status, timestamp |
 | `GET` | `/api/public/bootstrap` | Public | Bootstraps entire portfolio state (profile, projects, skills, certificates, settings) |
+| `GET` | `/api/public/sitemap.xml` | Public | Live XML sitemap with lastmod timestamps for all public routes and projects |
 | `GET` | `/api/public/profile` | Public | Retrieves public profile data |
 | `GET` | `/api/public/skills` | Public | Retrieves all categorized skills |
 | `GET` | `/api/public/certificates` | Public | Retrieves accredited certificates |

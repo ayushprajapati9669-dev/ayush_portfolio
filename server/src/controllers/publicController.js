@@ -72,6 +72,58 @@ function createPublicController({ store, contactLimiter }) {
           createdAt: saved.createdAt
         }
       });
+    },
+
+    getSitemap(req, res) {
+      const host = req.headers.host || 'localhost:6000';
+      const protocol = req.headers['x-forwarded-proto'] || (host.includes('localhost') ? 'http' : 'https');
+      const origin = `${protocol}://${host}`;
+
+      const now = new Date().toISOString().split('T')[0];
+      const projects = store.getPublicProjects() || [];
+      const profile = store.getProfile() || {};
+      const lastModDate = profile.updatedAt ? new Date(profile.updatedAt).toISOString().split('T')[0] : now;
+
+      const staticPages = [
+        { path: '', changefreq: 'daily', priority: '1.0' },
+        { path: 'about', changefreq: 'weekly', priority: '0.8' },
+        { path: 'skills', changefreq: 'weekly', priority: '0.8' },
+        { path: 'projects', changefreq: 'daily', priority: '0.9' },
+        { path: 'certificates', changefreq: 'weekly', priority: '0.8' },
+        { path: 'contact', changefreq: 'monthly', priority: '0.7' }
+      ];
+
+      const staticUrls = staticPages.map((page) => {
+        const loc = page.path ? `${origin}/${page.path}` : `${origin}/`;
+        return `  <url>
+    <loc>${loc}</loc>
+    <lastmod>${lastModDate}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`;
+      });
+
+      const projectUrls = projects.map((p) => {
+        const slug = p.slug || p.id;
+        const pMod = p.updatedAt ? new Date(p.updatedAt).toISOString().split('T')[0] : lastModDate;
+        return `  <url>
+    <loc>${origin}/projects/${encodeURIComponent(slug)}</loc>
+    <lastmod>${pMod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+      });
+
+      const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${staticUrls.join('\n')}
+${projectUrls.join('\n')}
+</urlset>`;
+
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+      return res.end(sitemapXml);
     }
   };
 }
