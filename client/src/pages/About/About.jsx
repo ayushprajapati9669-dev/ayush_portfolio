@@ -40,9 +40,17 @@ export function AboutPage() {
     p.learningJourney && Array.isArray(p.learningJourney) && p.learningJourney.length > 0
       ? p.learningJourney.map((m, idx) => ({
           phase: m.phase || `Phase ${idx + 1}`,
-          yearBadge: m.year || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
+          yearBadge: m.yearBadge || m.year || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
           title: m.title,
-          description: m.description || m.detail
+          description: m.description || m.detail,
+          icon: m.icon,
+          status: m.status,
+          metric: m.metric,
+          skills: Array.isArray(m.skills)
+            ? m.skills
+            : m.skills
+            ? m.skills.split(',').map((s) => s.trim()).filter(Boolean)
+            : []
         }))
       : defaultMilestones;
 
@@ -357,10 +365,85 @@ export function AboutPage() {
               <div key={idx} className="timeline-item">
                 <div className="timeline-dot" />
                 <div className="timeline-year">
-                  {item.phase} <span>· {item.yearBadge}</span>
+                  <span>{item.phase}</span>
+                  <span>· {item.yearBadge}</span>
+                  {item.status && (
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        padding: '2px 8px',
+                        borderRadius: '9999px',
+                        marginLeft: 'auto',
+                        background:
+                          item.status === 'completed'
+                            ? 'rgba(16, 185, 129, 0.15)'
+                            : item.status === 'planned'
+                            ? 'rgba(168, 85, 247, 0.15)'
+                            : 'rgba(6, 182, 212, 0.15)',
+                        color:
+                          item.status === 'completed'
+                            ? '#34d399'
+                            : item.status === 'planned'
+                            ? '#c084fc'
+                            : '#22d3ee',
+                        border: `1px solid ${
+                          item.status === 'completed'
+                            ? 'rgba(16, 185, 129, 0.3)'
+                            : item.status === 'planned'
+                            ? 'rgba(168, 85, 247, 0.3)'
+                            : 'rgba(6, 182, 212, 0.3)'
+                        }`
+                      }}
+                    >
+                      {item.status === 'completed'
+                        ? 'Completed'
+                        : item.status === 'planned'
+                        ? 'Target'
+                        : 'Current Focus'}
+                    </span>
+                  )}
                 </div>
-                <div className="timeline-title">{item.title}</div>
+                <div className="timeline-title flex items-center justify-between gap-2">
+                  <span>{item.title}</span>
+                  {item.metric && (
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        fontFamily: 'JetBrains Mono, monospace',
+                        fontWeight: '700',
+                        color: 'var(--accent-1, #06b6d4)',
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        background: 'rgba(6, 182, 212, 0.1)',
+                        border: '1px solid rgba(6, 182, 212, 0.25)',
+                        flexShrink: 0
+                      }}
+                    >
+                      {item.metric}
+                    </span>
+                  )}
+                </div>
                 <div className="timeline-desc">{item.description}</div>
+                {item.skills && item.skills.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2.5">
+                    {item.skills.map((sk, skIdx) => (
+                      <span
+                        key={skIdx}
+                        style={{
+                          fontSize: '10px',
+                          fontFamily: 'JetBrains Mono, monospace',
+                          padding: '2px 8px',
+                          borderRadius: '6px',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          color: '#cbd5e1'
+                        }}
+                      >
+                        {sk}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>

@@ -279,6 +279,27 @@ export function AdminOverview({
   const handleLoadMore = () => {
     playTick();
     setVisibleCount((prev) => prev + 2);
+    setTimeout(() => {
+      if (activityListRef.current) {
+        activityListRef.current.scrollBy({ top: 110, behavior: 'smooth' });
+      }
+      try {
+        ScrollTrigger.refresh();
+      } catch (_e) {}
+    }, 120);
+  };
+
+  const handleShowLess = () => {
+    playTick();
+    setVisibleCount(4);
+    if (activityListRef.current) {
+      activityListRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    setTimeout(() => {
+      try {
+        ScrollTrigger.refresh();
+      } catch (_e) {}
+    }, 120);
   };
 
   return (
@@ -495,17 +516,35 @@ export function AdminOverview({
           )}
         </div>
 
-        {/* Load More Button */}
+        {/* Load More & Show Less Controls */}
         <div className="load-more-wrap">
-          <button
-            type="button"
-            className={`load-more-btn ${!canLoadMore ? 'all-loaded' : ''}`}
-            onClick={handleLoadMore}
-            disabled={!canLoadMore}
-          >
-            <span>{canLoadMore ? 'Load more' : 'All loaded'}</span>
-            <i className={`fa-solid ${canLoadMore ? 'fa-chevron-down' : 'fa-check'}`} />
-          </button>
+          {canLoadMore ? (
+            <button
+              type="button"
+              className="load-more-btn"
+              onClick={handleLoadMore}
+            >
+              <span>Load more</span>
+              <i className="fa-solid fa-chevron-down" />
+            </button>
+          ) : (
+            <span className="activity-all-loaded-pill">
+              <i className="fa-solid fa-check-circle" style={{ color: 'var(--accent-2)' }} />
+              <span>All activity loaded ({filteredActivities.length})</span>
+            </span>
+          )}
+
+          {visibleCount > 4 && (
+            <button
+              type="button"
+              className="load-more-btn show-less-btn"
+              onClick={handleShowLess}
+              title="Collapse to 4 items"
+            >
+              <span>Show less</span>
+              <i className="fa-solid fa-chevron-up" />
+            </button>
+          )}
         </div>
       </div>
 

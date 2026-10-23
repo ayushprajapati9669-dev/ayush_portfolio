@@ -136,6 +136,7 @@ export function AdminPage() {
     projects: publishedCount,
     certificates: certCount,
     skills: skillsCount,
+    journey: (appState.profile?.learningJourney || []).length,
     unreadMessages: unreadMsgCount
   };
 

@@ -27,7 +27,7 @@ export function AdminSidebar({
         { id: 'projects', label: 'Projects', icon: 'fa-folder', badge: counts.projects },
         { id: 'certificates', label: 'Certificates', icon: 'fa-certificate', badge: counts.certificates },
         { id: 'skills', label: 'Skills', icon: 'fa-code', badge: counts.skills },
-        { id: 'journey', label: 'About & Milestones', icon: 'fa-timeline', badge: null }
+        { id: 'journey', label: 'About & Milestones', icon: 'fa-timeline', badge: counts.journey }
       ]
     },
     {

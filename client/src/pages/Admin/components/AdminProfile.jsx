@@ -100,12 +100,13 @@ export function AdminProfile({
     setResumeLoading(true);
     showToast('Uploading resume file to cloud...');
     try {
-      const res = await uploadResumeFile(file, session?.token);
-      if (res?.url) {
-        setDirectResumeUrl(res.url);
+      const res = await uploadResumeFile(file, appState.settings || {});
+      const targetUrl = res?.fileUrl || res?.url;
+      if (targetUrl) {
+        setDirectResumeUrl(targetUrl);
         updateAppState((prev) => ({
           ...prev,
-          profile: { ...prev.profile, resumeUrl: res.url }
+          profile: { ...prev.profile, resumeUrl: targetUrl }
         }), session?.token);
         showToast('Resume uploaded and synchronized!', 'fa-circle-check');
       } else {

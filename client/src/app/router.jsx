@@ -22,6 +22,9 @@ export function AppRouter() {
       <Route path="/projects" element={<ProjectsPage viewMode="projects" />} />
       <Route path="/projects/:slug" element={<ProjectsPage viewMode="projects" />} />
       <Route path="/certificates" element={<CertificatesPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/connect" element={<ContactPage />} />
+      <Route path="/hire" element={<ContactPage />} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/admin/guide" element={<AdminPage />} />
       <Route path="/admin/api-docs" element={<AdminPage />} />
