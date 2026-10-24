@@ -14,7 +14,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <div className="min-h-screen text-alabaster selection:bg-cyan-400 selection:text-black flex flex-col relative overflow-x-hidden">
+        <div className="min-h-screen text-alabaster selection:bg-cyan-500/30 selection:text-cyan-100 flex flex-col relative overflow-x-hidden">
           <BackgroundLayers />
           <a
             href="#main-content"

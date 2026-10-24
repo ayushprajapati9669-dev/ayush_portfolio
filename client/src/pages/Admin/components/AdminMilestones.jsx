@@ -461,11 +461,25 @@ export function AdminMilestones({
         requestAnimationFrame(animate);
       } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = 0;
+        canvas.height = 0;
         canvas.classList.remove('active');
       }
     };
     animate();
   }, []);
+
+  // Sync Focus Mode with document.body classList
+  useEffect(() => {
+    if (isFocusMode) {
+      document.body.classList.add('focus-mode');
+    } else {
+      document.body.classList.remove('focus-mode');
+    }
+    return () => {
+      document.body.classList.remove('focus-mode');
+    };
+  }, [isFocusMode]);
 
   const checkAchievement = useCallback((newCount) => {
     if (MILESTONE_ACHIEVEMENTS.includes(newCount)) {
@@ -1448,27 +1462,42 @@ export function AdminMilestones({
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
 
+    const startX = e.clientX;
+    const startWidth = rightPanelWidth;
+
     const handleMouseMove = (moveEvent) => {
       if (!isResizingRef.current) return;
-      const newWidth = window.innerWidth - moveEvent.clientX;
-      if (newWidth >= 280 && newWidth <= 650) {
-        setRightPanelWidth(newWidth);
-      }
+      const delta = startX - moveEvent.clientX;
+      const newWidth = Math.min(650, Math.max(280, startWidth + delta));
+      setRightPanelWidth(newWidth);
     };
 
     const handleMouseUp = () => {
       isResizingRef.current = false;
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
-      try {
-        localStorage.setItem('admin_panel_width_v9', rightPanelWidth);
-      } catch (e) {}
+      setRightPanelWidth((curr) => {
+        try {
+          localStorage.setItem('admin_panel_width_v9', String(curr));
+        } catch (err) {}
+        return curr;
+      });
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+  };
+
+  // Clear Activity Log History
+  const clearActivityLog = () => {
+    playTick();
+    setActivityLog([]);
+    try {
+      localStorage.setItem('admin_logs_v9', JSON.stringify([]));
+    } catch (err) {}
+    showToast('Milestone activity log cleared successfully!', 'fa-broom');
   };
 
   // Save Academic Education
@@ -1529,7 +1558,21 @@ export function AdminMilestones({
   return (
     <div className={`admin-milestones-root ${theme} ${accent} ${density === 'compact' ? 'compact' : ''} ${isFocusMode ? 'focus-mode' : ''}`}>
       {/* Canvas for Confetti */}
-      <canvas ref={canvasRef} id="confettiCanvas" className="pointer-events-none" />
+      <canvas
+        ref={canvasRef}
+        id="confettiCanvas"
+        className="pointer-events-none"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          pointerEvents: 'none',
+          zIndex: 999999,
+          display: 'none'
+        }}
+      />
 
 
 
@@ -2033,7 +2076,10 @@ export function AdminMilestones({
           {/* Resizable Live Preview Right Panel */}
           <div
             className={`right-panel ${isPiP ? 'pip-mode' : ''}`}
-            style={{ width: isPiP ? '360px' : `${rightPanelWidth}px` }}
+            style={{
+              width: isPiP ? '360px' : `${rightPanelWidth}px`,
+              '--preview-panel-width': isPiP ? '360px' : `${rightPanelWidth}px`
+            }}
           >
             {/* Resize Handle */}
             {!isPiP && (
@@ -3369,37 +3415,137 @@ export function AdminMilestones({
         </div>
       )}
 
-      {/* ACTIVITY LOG MODAL */}
+      {/* ACTIVITY LOG MODAL (Redesigned with Premium Glassmorphism) */}
       {isActivityOpen && (
         <div className="modal-overlay active" role="dialog" aria-modal="true">
-          <div className="modal-content" style={{ maxWidth: '580px' }}>
-            <div className="modal-header">
-              <h2>
-                <i className="fa-solid fa-clock-rotate-left text-cyan-400" /> Milestone Activity Log
-              </h2>
-              <button type="button" className="modal-close" onClick={() => setIsActivityOpen(false)}>
-                <i className="fa-solid fa-xmark" />
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="activity-log">
-                {activityLog.length === 0 ? (
-                  <p className="text-center text-slate-500 py-6 text-xs">No recent recorded activities.</p>
-                ) : (
-                  activityLog.map((log) => (
-                    <div key={log.id} className="log-item">
-                      <i className="fa-solid fa-circle" />
-                      <div className="flex-1">
-                        <div>
-                          <b className="text-slate-100">{log.action}:</b> {log.details}
-                        </div>
-                        <div className="text-[10px] text-slate-500 font-mono">{log.device}</div>
-                      </div>
-                      <span className="log-time">{log.time}</span>
-                    </div>
-                  ))
-                )}
+          <div className="modal-content !max-w-2xl !bg-[#070c16]/95 !border-cyan-500/30 !rounded-2xl !p-0 !overflow-hidden !shadow-2xl backdrop-blur-2xl">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-white/10 flex items-center justify-between gap-4 bg-[#0a1120]/80">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-black font-extrabold text-base shadow-[0_0_20px_rgba(6,182,212,0.4)]">
+                  <i className="fa-solid fa-clock-rotate-left" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+                    <span>Milestone Activity Log</span>
+                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+                      {activityLog.length} events
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Real-time chronological audit trail of all milestone actions and updates.
+                  </p>
+                </div>
               </div>
+
+              <div className="flex items-center gap-2">
+                {activityLog.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={clearActivityLog}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 text-rose-400 text-xs font-semibold transition-all"
+                    title="Clear all activity history"
+                  >
+                    <i className="fa-solid fa-broom text-[11px]" />
+                    <span>Clear History</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-colors"
+                  onClick={() => setIsActivityOpen(false)}
+                >
+                  <i className="fa-solid fa-xmark text-sm" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body / Timeline */}
+            <div className="p-6 max-h-[440px] overflow-y-auto space-y-2.5 custom-scrollbar">
+              {activityLog.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center text-slate-500">
+                  <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-2xl text-slate-600 mb-3 border border-white/5">
+                    <i className="fa-solid fa-clock-rotate-left" />
+                  </div>
+                  <h4 className="text-sm font-semibold text-white mb-1">No Activity Records Yet</h4>
+                  <p className="text-xs text-slate-400 max-w-xs">
+                    Actions such as creating, reordering, updating, and deleting milestones will be automatically recorded here.
+                  </p>
+                </div>
+              ) : (
+                activityLog.map((log) => {
+                  const act = (log.action || '').toLowerCase();
+                  let badgeClass = 'bg-purple-500/15 text-purple-300 border-purple-500/30';
+                  let iconClass = 'fa-bolt';
+
+                  if (act.includes('reorder')) {
+                    badgeClass = 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30';
+                    iconClass = 'fa-arrow-down-up-across-line';
+                  } else if (act.includes('create') || act.includes('add')) {
+                    badgeClass = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+                    iconClass = 'fa-plus';
+                  } else if (act.includes('delete') || act.includes('trash')) {
+                    badgeClass = 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+                    iconClass = 'fa-trash-can';
+                  } else if (act.includes('move') || act.includes('down') || act.includes('up')) {
+                    badgeClass = 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+                    iconClass = 'fa-arrows-up-down';
+                  } else if (act.includes('restore')) {
+                    badgeClass = 'bg-blue-500/15 text-blue-300 border-blue-500/30';
+                    iconClass = 'fa-rotate-left';
+                  }
+
+                  return (
+                    <div
+                      key={log.id}
+                      className="flex items-start justify-between gap-3.5 p-3.5 rounded-xl bg-[#0a1120] border border-white/5 hover:border-white/10 transition-all group"
+                    >
+                      <div className="flex items-start gap-3 min-w-0 flex-1">
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs shrink-0 border mt-0.5 ${badgeClass}`}
+                        >
+                          <i className={`fa-solid ${iconClass}`} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <span
+                              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border font-mono ${badgeClass}`}
+                            >
+                              {log.action}
+                            </span>
+                            <span className="text-xs font-semibold text-white">
+                              {log.details}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+                            <i className="fa-solid fa-laptop text-[9px]" />
+                            <span>{log.device || 'Chrome on Windows'}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/[0.04] border border-white/5 text-[10px] font-mono text-slate-400">
+                        <i className="fa-regular fa-clock text-[9px]" />
+                        <span>{log.time}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-3 border-t border-white/10 bg-[#0a1120] flex items-center justify-between">
+              <span className="text-[11px] text-slate-500 font-mono">
+                Audit trail active · Session synchronized
+              </span>
+              <button
+                type="button"
+                className="px-4 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-medium border border-white/10 transition-colors"
+                onClick={() => setIsActivityOpen(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

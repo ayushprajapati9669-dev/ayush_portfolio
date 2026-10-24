@@ -277,47 +277,42 @@ export function AdminMessages({
   };
 
   return (
-    <div className="space-y-4 flex flex-col h-[calc(100vh-140px)] min-h-[640px]">
-      {/* Top Navbar / Header Bar matching Reference HTML */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#080d17]/80 backdrop-blur-2xl border border-white/10 shadow-lg">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-black font-extrabold text-sm shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-            <i className="fa-solid fa-inbox text-xs" />
-          </div>
-          <div>
-            <h2 className="text-white font-bold text-sm tracking-tight flex items-center gap-2">
-              <span>Inbox Workspace</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
-                {messages.length} Total
-              </span>
-            </h2>
-            <p className="text-[11px] text-slate-400">
-              Interactive split-view reader & reply center for portfolio inquiries.
-            </p>
-          </div>
+    <div className="space-y-6 flex flex-col h-[calc(100vh-140px)] min-h-[640px]">
+      {/* 0. Top Action Banner (Matching Projects & Certificates) */}
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold flex items-center gap-2">
+            <i className="fa-solid fa-inbox" /> COMMUNICATIONS & CLIENT INQUIRIES
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">Inbox Workspace</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Interactive split-view reader & reply center for portfolio inquiries.
+          </p>
         </div>
 
-        {/* Search Input (⌘K) */}
-        <div className="relative flex items-center">
-          <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none" />
-          <input
-            ref={searchInputRef}
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search messages (⌘K)..."
-            className="w-64 bg-[#03050a]/80 border border-white/10 rounded-xl pl-8 pr-12 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/50 transition-all font-sans"
-          />
-          <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/10 font-mono">
-            ⌘K
-          </kbd>
+        <div className="flex items-center gap-3">
+          {/* Search Input (⌘K) */}
+          <div className="relative flex items-center">
+            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search messages (⌘K)..."
+              className="w-56 md:w-64 bg-black/40 border border-white/10 rounded-xl pl-8 pr-12 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-sans"
+            />
+            <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/10 font-mono">
+              ⌘K
+            </kbd>
+          </div>
         </div>
       </div>
 
       {/* Split-View Container */}
       <div
         ref={splitContainerRef}
-        className="flex-1 flex overflow-hidden rounded-2xl border border-white/10 bg-[#080d17]/60 backdrop-blur-xl shadow-2xl relative"
+        className="flex-1 flex overflow-hidden rounded-2xl border border-white/10 bg-[#080d17]/80 backdrop-blur-xl shadow-2xl relative"
       >
         {/* =========================================================================
             LEFT PANEL: Message List with Date Groups & Quick Actions
@@ -638,7 +633,11 @@ export function AdminMessages({
                         type="button"
                         onClick={handleSendReply}
                         disabled={!replyText.trim() || isSendingReply}
-                        className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 disabled:opacity-40 text-black font-bold text-xs transition-all shadow-md shadow-cyan-500/20 cursor-pointer"
+                        className="flex items-center gap-2 px-5 py-2 rounded-xl text-black font-bold text-xs transition-all shadow-md cursor-pointer hover:opacity-95 disabled:opacity-40"
+                        style={{
+                          backgroundColor: 'var(--brand-color, #06b6d4)',
+                          boxShadow: '0 4px 15px var(--brand-glow, rgba(6,182,212,0.3))'
+                        }}
                       >
                         {isSendingReply ? (
                           <>

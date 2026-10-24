@@ -380,16 +380,9 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 }
 
 .notif-btn:hover .fa-bell {
-  animation: bellRing 0.8s ease;
-}
-
-@keyframes bellRing {
-  0%, 100% { transform: rotate(0); }
-  15% { transform: rotate(14deg); }
-  30% { transform: rotate(-12deg); }
-  45% { transform: rotate(8deg); }
-  60% { transform: rotate(-6deg); }
-  80% { transform: rotate(3deg); }
+  transform: scale(1.1);
+  color: var(--accent-1, #38bdf8);
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .notif-dropdown {
@@ -403,21 +396,21 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   -webkit-backdrop-filter: blur(40px) saturate(200%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 18px;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 240, 255, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 240, 255, 0.05);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-10px) scale(0.97);
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform: translateY(-4px);
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
   z-index: 10000;
 }
 
 .notif-dropdown.open {
   opacity: 1;
   pointer-events: all;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
 }
 
 .notif-head {

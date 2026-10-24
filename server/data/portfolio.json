@@ -41,68 +41,6 @@
     "heroDescription": "I’m a Computer Science student exploring the intersection of web engineering, problem solving, and intelligent applications. I enjoy turning ideas into useful digital products and continuously improving how I build them.",
     "learningJourney": [
       {
-        "id": "m-1792846753290",
-        "title": "ai-ml",
-        "metaLabel": "year 3",
-        "year": "Year 3",
-        "status": "focus",
-        "progress": 70,
-        "rating": 4,
-        "desc": "<h3><pre><pre><ol><li><span style=\"font-size: inherit; font-weight: inherit; letter-spacing: -0.025em;\">Overview</span></li></ol></pre></pre></h3><p>Successfully completed <b>ai-ml </b> demonstrating rigorous engineering and methodical execution.</p><h3>Key Highlights</h3><ul><li>Applied algorithmic problem-solving and modern development tools.</li><li>Engineered modular architecture with comprehensive test coverage.</li><li>Ensured intuitive responsive interfaces and optimized execution speed.</li></ul>",
-        "tags": [
-          "react"
-        ],
-        "link": "",
-        "icon": "fa-layer-group",
-        "image": null,
-        "imageAlt": "",
-        "published": true,
-        "pinned": false,
-        "views": 0,
-        "createdAt": "2026-10-24T12:59:13.290Z"
-      },
-      {
-        "id": "m-1792844269207",
-        "title": "ai-ml learning 2",
-        "desc": "",
-        "year": "Year 3",
-        "status": "focus",
-        "metaLabel": "year 3",
-        "progress": 70,
-        "rating": 4,
-        "tags": [
-          "C",
-          "AI / ML"
-        ],
-        "icon": "fa-layer-group",
-        "image": null,
-        "imageAlt": "",
-        "link": "",
-        "published": true,
-        "pinned": false,
-        "views": 0,
-        "createdAt": "2026-10-24T12:17:49.207Z"
-      },
-      {
-        "id": "m-1792844353281",
-        "title": "mern",
-        "desc": "",
-        "year": "Year 3",
-        "status": "focus",
-        "metaLabel": "year 3",
-        "progress": 70,
-        "rating": 4,
-        "tags": [],
-        "icon": "fa-layer-group",
-        "image": null,
-        "imageAlt": "",
-        "link": "",
-        "published": true,
-        "pinned": false,
-        "views": 0,
-        "createdAt": "2026-10-24T12:19:13.281Z"
-      },
-      {
         "id": "m-1792835816020",
         "title": "Ai-ml learning",
         "desc": "",
@@ -125,25 +63,6 @@
         "createdAt": "2026-10-24T09:56:56.020Z"
       },
       {
-        "id": "m-2-1792835712842",
-        "title": "MERN Stack & Interactive Systems",
-        "desc": "Transitioned to full-stack JavaScript engineering with React.js, Node.js, Express.js, and MongoDB—building a Zerodha-inspired trading dashboard and a ChatGPT-inspired conversational AI workspace.",
-        "year": "Year 1-2",
-        "status": "completed",
-        "metaLabel": "Full-Stack Practice · Year 3",
-        "progress": 70,
-        "rating": 4,
-        "tags": [],
-        "icon": "fa-layer-group",
-        "image": null,
-        "imageAlt": "",
-        "link": "",
-        "published": true,
-        "pinned": false,
-        "views": 98,
-        "createdAt": "2026-10-24T09:55:12.842Z"
-      },
-      {
         "id": "m-1-1792835712842",
         "title": "Core Programming & Computer Science Fundamentals",
         "desc": "Built a strong foundation in C, Java, Python, object-oriented programming, relational databases (MySQL), and HTML/CSS layouts at SISTec, Bhopal.",
@@ -163,12 +82,12 @@
         "createdAt": "2026-10-24T09:55:12.842Z"
       },
       {
-        "id": "m-1792844841087",
-        "title": "Core Programming & Computer Science Fundamentals (Copy)",
-        "desc": "Built a strong foundation in C, Java, Python, object-oriented programming, relational databases (MySQL), and HTML/CSS layouts at SISTec, Bhopal.",
-        "year": "Year 3",
-        "status": "focus",
-        "metaLabel": "Foundation · Year 1–2",
+        "id": "m-2-1792835712842",
+        "title": "MERN Stack & Interactive Systems",
+        "desc": "Transitioned to full-stack JavaScript engineering with React.js, Node.js, Express.js, and MongoDB—building a Zerodha-inspired trading dashboard and a ChatGPT-inspired conversational AI workspace.",
+        "year": "Year 1-2",
+        "status": "completed",
+        "metaLabel": "Full-Stack Practice · Year 3",
         "progress": 70,
         "rating": 4,
         "tags": [],
@@ -176,47 +95,9 @@
         "image": null,
         "imageAlt": "",
         "link": "",
-        "published": false,
+        "published": true,
         "pinned": false,
-        "views": 0,
-        "createdAt": "2026-10-24T09:55:12.842Z"
-      },
-      {
-        "id": "m-1792844845509",
-        "title": "Core Programming & Computer Science Fundamentals (Copy) (Copy)",
-        "desc": "Built a strong foundation in C, Java, Python, object-oriented programming, relational databases (MySQL), and HTML/CSS layouts at SISTec, Bhopal.",
-        "year": "Year 3",
-        "status": "focus",
-        "metaLabel": "Foundation · Year 1–2",
-        "progress": 70,
-        "rating": 4,
-        "tags": [],
-        "icon": "fa-layer-group",
-        "image": null,
-        "imageAlt": "",
-        "link": "",
-        "published": false,
-        "pinned": false,
-        "views": 0,
-        "createdAt": "2026-10-24T09:55:12.842Z"
-      },
-      {
-        "id": "m-1792844839966",
-        "title": "Core Programming & Computer Science Fundamentals (Copy)",
-        "desc": "Built a strong foundation in C, Java, Python, object-oriented programming, relational databases (MySQL), and HTML/CSS layouts at SISTec, Bhopal.",
-        "year": "Year 3",
-        "status": "focus",
-        "metaLabel": "Foundation · Year 1–2",
-        "progress": 70,
-        "rating": 4,
-        "tags": [],
-        "icon": "fa-layer-group",
-        "image": null,
-        "imageAlt": "",
-        "link": "",
-        "published": false,
-        "pinned": false,
-        "views": 0,
+        "views": 98,
         "createdAt": "2026-10-24T09:55:12.842Z"
       }
     ],
@@ -290,7 +171,7 @@
     "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80",
     "customDomain": "ayush.dev",
     "portfolioSlug": "hero-section",
-    "themeColor": "#3b6b81",
+    "themeColor": "#0ea5e9",
     "fontFamily": "'Outfit', sans-serif"
   },
   "projects": [
@@ -756,7 +637,7 @@
       "email": "ajit@gmail.com",
       "subject": "help",
       "message": "i need some help from you please support me",
-      "status": "unread",
+      "status": "read",
       "createdAt": "2026-10-24T03:40:14.696Z"
     },
     {
@@ -765,7 +646,7 @@
       "email": "ajay@gmail.com",
       "subject": "personal",
       "message": "you can aaply for the tcs",
-      "status": "unread",
+      "status": "read",
       "createdAt": "2026-10-23T17:20:34.240Z"
     },
     {
@@ -774,7 +655,7 @@
       "email": "sonali@gmail.com",
       "subject": "connect",
       "message": "i am connect to you",
-      "status": "unread",
+      "status": "read",
       "createdAt": "2026-10-23T17:19:52.794Z"
     },
     {
@@ -783,7 +664,7 @@
       "email": "rohti626861@gmail.com",
       "subject": "hiring",
       "message": "i hired you",
-      "status": "unread",
+      "status": "read",
       "createdAt": "2026-10-23T17:18:25.527Z"
     }
   ],

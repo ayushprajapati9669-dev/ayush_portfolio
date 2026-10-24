@@ -104,17 +104,54 @@ export function Header() {
   // Keyboard shortcut listener for Esc / F to exit focus mode
   useEffect(() => {
     const handleKey = (e) => {
-      if (e.key === 'Escape' || (e.key === 'f' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName) && !document.activeElement?.isContentEditable)) {
+      const isInput =
+        ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName) ||
+        document.activeElement?.isContentEditable;
+
+      // F key: Toggle Focus Mode & Full Screen
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !isInput) {
+        e.preventDefault();
+        playTick();
+        const willFocus = !document.body.classList.contains('focus-mode');
+        if (willFocus) {
+          document.body.classList.add('focus-mode');
+          setIsFocusMode(true);
+          showToast('Focus Mode & Full Screen Enabled (Press F or Esc to exit)', 'fa-expand');
+          if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          }
+        } else {
+          document.body.classList.remove('focus-mode');
+          setIsFocusMode(false);
+          showToast('Exited Focus Mode', 'fa-compress');
+          if (document.fullscreenElement && document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+          }
+        }
+      }
+
+      // Escape key: Exit Focus Mode & Full Screen
+      if (e.key === 'Escape') {
         if (document.body.classList.contains('focus-mode')) {
           document.body.classList.remove('focus-mode');
           setIsFocusMode(false);
-          showToast('Exited Focus Mode');
+          showToast('Exited Focus Mode', 'fa-compress');
         }
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+
+      // ? key: Open Keyboard Shortcuts
+      if (e.key === '?' && !isInput) {
+        e.preventDefault();
+        playTick();
+        window.dispatchEvent(new CustomEvent('ams-open-shortcuts'));
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, []);
+  }, [showToast]);
 
   const handleToggleVoice = () => {
     playTick();

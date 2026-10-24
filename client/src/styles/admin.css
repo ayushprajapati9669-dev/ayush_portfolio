@@ -559,7 +559,7 @@
 }
 
 .admin-content-area {
-  padding: 85px 32px 48px 32px;
+  padding: 86px 32px 48px 32px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -572,7 +572,7 @@
 
 @media (max-width: 768px) {
   .admin-content-area {
-    padding: 78px 16px 32px 16px;
+    padding: 82px 16px 32px 16px;
   }
 }
 
