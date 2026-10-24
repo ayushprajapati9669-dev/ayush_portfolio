@@ -14,7 +14,8 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(135deg, #0a1118 0%, #1e3a4d 50%, #0d2c3d 100%);
+  background: var(--liquid-gradient, linear-gradient(135deg, #0a1118 0%, #1e3a4d 50%, #0d2c3d 100%)) !important;
+  transition: background 0.4s ease;
 }
 
 .liquid-bg-case-study {

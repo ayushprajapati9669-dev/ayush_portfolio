@@ -92,7 +92,7 @@ export function AdminMilestones({
   const rawJourney = useMemo(() => {
     const list = profile.learningJourney || [];
     return list.map((item, idx) => ({
-      id: item.id || `m-${idx + 1}-${Date.now()}`,
+      id: item.id || `m-${idx + 1}`,
       title: item.title || 'Untitled Milestone',
       desc: item.desc || item.description || item.detail || '',
       year: item.year || item.yearBadge || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
@@ -115,7 +115,7 @@ export function AdminMilestones({
       link: item.link || '',
       published: item.published !== false,
       pinned: !!item.pinned,
-      views: item.views !== undefined ? Number(item.views) : Math.floor(Math.random() * 200) + 50,
+      views: item.views !== undefined ? Number(item.views) : 100 + (idx * 25),
       createdAt: item.createdAt || new Date().toISOString()
     }));
   }, [profile.learningJourney]);
@@ -195,6 +195,7 @@ export function AdminMilestones({
   const [duplicateOverride, setDuplicateOverride] = useState(false);
   const [aiCategorySuggestion, setAiCategorySuggestion] = useState(null);
   const [isWizardSaving, setIsWizardSaving] = useState(false);
+  const [wizardDesc, setWizardDesc] = useState('');
 
   // Rich Text Editor ref and stats
   const rteEditorRef = useRef(null);
@@ -205,6 +206,14 @@ export function AdminMilestones({
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isRteVoiceListening, setIsRteVoiceListening] = useState(false);
   const rteRecognitionRef = useRef(null);
+
+  // Sync wizardDesc to rteEditorRef when Step 2 mounts
+  useEffect(() => {
+    if (wizardStep === 2 && rteEditorRef.current) {
+      rteEditorRef.current.innerHTML = wizardDesc || '';
+      updateRteStats();
+    }
+  }, [wizardStep]);
 
   // Drag and drop state for milestone cards
   const [draggedIndex, setDraggedIndex] = useState(null);
@@ -891,6 +900,7 @@ export function AdminMilestones({
     setDuplicateWarning(null);
     setDuplicateOverride(false);
     setAiCategorySuggestion(null);
+    setWizardDesc('');
     if (rteEditorRef.current) rteEditorRef.current.innerHTML = '';
     setWordCount(0);
     setCharCount(0);
@@ -917,14 +927,9 @@ export function AdminMilestones({
     setDuplicateWarning(null);
     setDuplicateOverride(false);
     setAiCategorySuggestion(null);
+    const initialDesc = m.desc || m.description || m.detail || '';
+    setWizardDesc(initialDesc);
     setIsWizardOpen(true);
-
-    setTimeout(() => {
-      if (rteEditorRef.current) {
-        rteEditorRef.current.innerHTML = m.desc || '';
-        updateRteStats();
-      }
-    }, 100);
   };
 
   const closeWizard = () => {
@@ -1025,12 +1030,17 @@ export function AdminMilestones({
     if (!rteEditorRef.current) return;
     rteEditorRef.current.focus();
     document.execCommand(command, false, value);
+    if (rteEditorRef.current) {
+      setWizardDesc(rteEditorRef.current.innerHTML);
+    }
     updateRteStats();
   };
 
   const updateRteStats = () => {
     if (!rteEditorRef.current) return;
+    const html = rteEditorRef.current.innerHTML || '';
     const text = rteEditorRef.current.innerText || '';
+    setWizardDesc(html);
     const words = text.trim() ? text.trim().split(/\s+/).length : 0;
     setWordCount(words);
     setCharCount(text.length);
@@ -1203,8 +1213,8 @@ export function AdminMilestones({
     }
     setIsWizardSaving(true);
 
-    const descHtml = rteEditorRef.current?.innerHTML || '';
-    const sanitizedDesc = DOMPurify.sanitize(descHtml, {
+    const rawDesc = wizardDesc || rteEditorRef.current?.innerHTML || '';
+    const sanitizedDesc = DOMPurify.sanitize(rawDesc, {
       ALLOWED_TAGS: ['p', 'br', 'b', 'strong', 'i', 'em', 'u', 's', 'h2', 'h3', 'ul', 'ol', 'li', 'a', 'pre', 'code', 'blockquote', 'span', 'div'],
       ALLOWED_ATTR: ['href', 'target', 'rel', 'style', 'class']
     });
@@ -1214,67 +1224,65 @@ export function AdminMilestones({
       .map((t) => t.trim())
       .filter(Boolean);
 
-    setTimeout(() => {
-      try {
-        if (wizardEditingId) {
-          // Update existing
-          const updated = milestones.map((m) => {
-            if (m.id === wizardEditingId) {
-              return {
-                ...m,
-                title: wizardTitle.trim(),
-                metaLabel: wizardMeta.trim() || 'Milestone',
-                year: wizardYear,
-                status: wizardStatus,
-                progress: Number(wizardProgress) || 0,
-                rating: Number(wizardRating) || 0,
-                desc: sanitizedDesc,
-                tags: parsedTags,
-                link: wizardLink.trim(),
-                icon: wizardIcon,
-                image: wizardImageData,
-                imageAlt: wizardImageAlt.trim(),
-                updatedAt: new Date().toISOString()
-              };
-            }
-            return m;
-          });
-          persistMilestones(updated, 'Edit Milestone', `Updated "${wizardTitle.trim()}"`);
-          showToast(`Milestone "${wizardTitle.trim()}" updated successfully!`, 'fa-check');
-        } else {
-          // Add new milestone
-          const newMilestone = {
-            id: `m-${Date.now()}`,
-            title: wizardTitle.trim(),
-            metaLabel: wizardMeta.trim() || 'Milestone',
-            year: wizardYear,
-            status: wizardStatus,
-            progress: Number(wizardProgress) || 0,
-            rating: Number(wizardRating) || 0,
-            desc: sanitizedDesc,
-            tags: parsedTags,
-            link: wizardLink.trim(),
-            icon: wizardIcon,
-            image: wizardImageData,
-            imageAlt: wizardImageAlt.trim(),
-            published: true,
-            pinned: false,
-            views: 0,
-            createdAt: new Date().toISOString()
-          };
-          const updated = [newMilestone, ...milestones];
-          persistMilestones(updated, 'Create Milestone', `Added "${wizardTitle.trim()}"`);
-          showToast(`Milestone "${wizardTitle.trim()}" added to roadmap!`, 'fa-rocket');
-          checkAchievement(updated.length);
-        }
-        closeWizard();
-      } catch (err) {
-        console.error('Error saving milestone:', err);
-        showToast('Error saving milestone: ' + err.message, 'fa-triangle-exclamation');
-      } finally {
-        setIsWizardSaving(false);
+    try {
+      if (wizardEditingId) {
+        // Update existing
+        const updated = milestones.map((m) => {
+          if (m.id === wizardEditingId) {
+            return {
+              ...m,
+              title: wizardTitle.trim(),
+              metaLabel: wizardMeta.trim() || 'Milestone',
+              year: wizardYear,
+              status: wizardStatus,
+              progress: Number(wizardProgress) || 0,
+              rating: Number(wizardRating) || 0,
+              desc: sanitizedDesc,
+              tags: parsedTags,
+              link: wizardLink.trim(),
+              icon: wizardIcon,
+              image: wizardImageData,
+              imageAlt: wizardImageAlt.trim(),
+              updatedAt: new Date().toISOString()
+            };
+          }
+          return m;
+        });
+        persistMilestones(updated, 'Edit Milestone', `Updated "${wizardTitle.trim()}"`);
+        showToast(`Milestone "${wizardTitle.trim()}" updated successfully!`, 'fa-check');
+      } else {
+        // Add new milestone
+        const newMilestone = {
+          id: `m-${Date.now()}`,
+          title: wizardTitle.trim(),
+          metaLabel: wizardMeta.trim() || 'Milestone',
+          year: wizardYear,
+          status: wizardStatus,
+          progress: Number(wizardProgress) || 0,
+          rating: Number(wizardRating) || 0,
+          desc: sanitizedDesc,
+          tags: parsedTags,
+          link: wizardLink.trim(),
+          icon: wizardIcon,
+          image: wizardImageData,
+          imageAlt: wizardImageAlt.trim(),
+          published: true,
+          pinned: false,
+          views: 0,
+          createdAt: new Date().toISOString()
+        };
+        const updated = [newMilestone, ...milestones];
+        persistMilestones(updated, 'Create Milestone', `Added "${wizardTitle.trim()}"`);
+        showToast(`Milestone "${wizardTitle.trim()}" added to roadmap!`, 'fa-rocket');
+        checkAchievement(updated.length);
       }
-    }, 300);
+      closeWizard();
+    } catch (err) {
+      console.error('Error saving milestone:', err);
+      showToast('Error saving milestone: ' + err.message, 'fa-triangle-exclamation');
+    } finally {
+      setIsWizardSaving(false);
+    }
   };
 
   // Templates handling
@@ -1294,6 +1302,7 @@ export function AdminMilestones({
     setWizardImageAlt('');
     setDuplicateWarning(null);
     setDuplicateOverride(false);
+    setWizardDesc(tmpl.content || '');
     setIsTemplatesOpen(false);
     setIsWizardOpen(true);
 
@@ -1507,6 +1516,33 @@ export function AdminMilestones({
         </div>
       )}
 
+      {/* Sub-Tabs: Journey | Academic | Bio (Moved to top per Photo 1) */}
+      <div className="sub-tabs-sticky-header">
+        <div className="sub-tabs" role="tablist">
+          <button
+            type="button"
+            className={`sub-tab ${subTab === 'journey' ? 'active' : ''}`}
+            onClick={() => { playTick(); setSubTab('journey'); }}
+          >
+            <i className="fa-solid fa-route" /> Journey Roadmap
+          </button>
+          <button
+            type="button"
+            className={`sub-tab ${subTab === 'academic' ? 'active' : ''}`}
+            onClick={() => { playTick(); setSubTab('academic'); }}
+          >
+            <i className="fa-solid fa-graduation-cap" /> Academic Credentials
+          </button>
+          <button
+            type="button"
+            className={`sub-tab ${subTab === 'bio' ? 'active' : ''}`}
+            onClick={() => { playTick(); setSubTab('bio'); }}
+          >
+            <i className="fa-solid fa-user-pen" /> Bio & Story
+          </button>
+        </div>
+      </div>
+
       {/* Header & Stats Grid */}
       <div className="page-header">
         <div className="page-title">
@@ -1553,31 +1589,6 @@ export function AdminMilestones({
           <div className="stat-value">{cgpaDisplay}</div>
           <div className="stat-label">B.Tech CGPA</div>
         </div>
-      </div>
-
-      {/* Sub-Tabs: Journey | Academic | Bio */}
-      <div className="sub-tabs" role="tablist">
-        <button
-          type="button"
-          className={`sub-tab ${subTab === 'journey' ? 'active' : ''}`}
-          onClick={() => { playTick(); setSubTab('journey'); }}
-        >
-          <i className="fa-solid fa-route" /> Journey Roadmap
-        </button>
-        <button
-          type="button"
-          className={`sub-tab ${subTab === 'academic' ? 'active' : ''}`}
-          onClick={() => { playTick(); setSubTab('academic'); }}
-        >
-          <i className="fa-solid fa-graduation-cap" /> Academic Credentials
-        </button>
-        <button
-          type="button"
-          className={`sub-tab ${subTab === 'bio' ? 'active' : ''}`}
-          onClick={() => { playTick(); setSubTab('bio'); }}
-        >
-          <i className="fa-solid fa-user-pen" /> Bio & Story
-        </button>
       </div>
 
       {/* TAB 1: JOURNEY ROADMAP */}
@@ -2483,21 +2494,24 @@ export function AdminMilestones({
                     {/* RTE Container */}
                     <div className="rte-container">
                       <div className="rte-toolbar">
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('undo')} title="Undo">
+                        <button type="button" className="rte-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('undo')} title="Undo">
                           <i className="fa-solid fa-rotate-left" />
                         </button>
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('redo')} title="Redo">
+                        <button type="button" className="rte-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('redo')} title="Redo">
                           <i className="fa-solid fa-rotate-right" />
                         </button>
                         <div className="rte-divider" />
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('bold')} title="Bold">
+                        <button type="button" className="rte-btn font-bold" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('bold')} title="Bold">
                           <i className="fa-solid fa-bold" />
                         </button>
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('italic')} title="Italic">
+                        <button type="button" className="rte-btn italic" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('italic')} title="Italic">
                           <i className="fa-solid fa-italic" />
                         </button>
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('underline')} title="Underline">
+                        <button type="button" className="rte-btn underline" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('underline')} title="Underline">
                           <i className="fa-solid fa-underline" />
+                        </button>
+                        <button type="button" className="rte-btn line-through" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('strikeThrough')} title="Strikethrough">
+                          <i className="fa-solid fa-strikethrough" />
                         </button>
                         <div className="rte-divider" />
 
@@ -2506,6 +2520,7 @@ export function AdminMilestones({
                           <button
                             type="button"
                             className="color-picker-btn"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => setIsColorPaletteOpen((prev) => !prev)}
                             title="Text Color"
                           >
@@ -2521,6 +2536,7 @@ export function AdminMilestones({
                                     key={c}
                                     className="color-swatch"
                                     style={{ background: c }}
+                                    onMouseDown={(e) => e.preventDefault()}
                                     onClick={() => applyRteColor(c)}
                                   />
                                 ))}
@@ -2530,23 +2546,23 @@ export function AdminMilestones({
                         </div>
 
                         <div className="rte-divider" />
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('formatBlock', '<h2>')} title="Heading 2">
+                        <button type="button" className="rte-btn font-bold text-xs" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('formatBlock', '<h2>')} title="Heading 2">
                           H2
                         </button>
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('formatBlock', '<h3>')} title="Heading 3">
+                        <button type="button" className="rte-btn font-bold text-xs" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('formatBlock', '<h3>')} title="Heading 3">
                           H3
                         </button>
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('insertUnorderedList')} title="Bullet List">
+                        <button type="button" className="rte-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('insertUnorderedList')} title="Bullet List">
                           <i className="fa-solid fa-list-ul" />
                         </button>
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('insertOrderedList')} title="Numbered List">
+                        <button type="button" className="rte-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('insertOrderedList')} title="Numbered List">
                           <i className="fa-solid fa-list-ol" />
                         </button>
                         <div className="rte-divider" />
-                        <button type="button" className="rte-btn" onClick={insertLinkInRte} title="Insert Link">
+                        <button type="button" className="rte-btn" onMouseDown={(e) => e.preventDefault()} onClick={insertLinkInRte} title="Insert Link">
                           <i className="fa-solid fa-link" />
                         </button>
-                        <button type="button" className="rte-btn" onClick={() => executeRteCmd('formatBlock', '<pre>')} title="Code Block">
+                        <button type="button" className="rte-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => executeRteCmd('formatBlock', '<pre>')} title="Code Block">
                           <i className="fa-solid fa-code" />
                         </button>
 
@@ -2555,6 +2571,7 @@ export function AdminMilestones({
                           <button
                             type="button"
                             className="rte-btn"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => setIsEmojiPickerOpen((prev) => !prev)}
                             title="Insert Emoji"
                           >
@@ -2564,7 +2581,7 @@ export function AdminMilestones({
                             <div className="emoji-picker active">
                               <div className="emoji-grid">
                                 {['😀', '🚀', '🔥', '💡', '🏆', '⭐', '💻', '🎯', '📚', '🎉', '⚡', '🌟'].map((em) => (
-                                  <span key={em} className="emoji-item" onClick={() => insertEmojiInRte(em)}>
+                                  <span key={em} className="emoji-item" onMouseDown={(e) => e.preventDefault()} onClick={() => insertEmojiInRte(em)}>
                                     {em}
                                   </span>
                                 ))}
@@ -2578,6 +2595,7 @@ export function AdminMilestones({
                           <button
                             type="button"
                             className={`rte-btn ${isRteVoiceListening ? 'text-rose-400 font-bold' : ''}`}
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={handleRteVoiceToggle}
                             title="Voice Dictation"
                           >
@@ -2586,6 +2604,7 @@ export function AdminMilestones({
                           <button
                             type="button"
                             className="rte-btn text-emerald-400"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={handleCheckGrammar}
                             title="Check Grammar"
                           >
@@ -2594,6 +2613,7 @@ export function AdminMilestones({
                           <button
                             type="button"
                             className="rte-btn text-amber-400 font-bold"
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={generateAiDescription}
                             title="Generate Description with AI"
                           >
@@ -2609,6 +2629,7 @@ export function AdminMilestones({
                         contentEditable
                         onKeyUp={updateRteStats}
                         onInput={updateRteStats}
+                        onBlur={updateRteStats}
                         placeholder="Write detailed milestone summary, objectives, architecture decisions, and results..."
                       />
 
@@ -2810,7 +2831,7 @@ export function AdminMilestones({
                       <div
                         className="review-desc-preview"
                         dangerouslySetInnerHTML={{
-                          __html: rteEditorRef.current?.innerHTML || '<em>No description provided</em>'
+                          __html: wizardDesc || rteEditorRef.current?.innerHTML || '<em class="text-slate-500">No description provided</em>'
                         }}
                       />
                     </div>

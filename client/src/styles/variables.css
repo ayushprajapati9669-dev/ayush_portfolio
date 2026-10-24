@@ -9,6 +9,7 @@
   --bg-surface: rgba(15, 23, 42, 0.65);
   --bg-panel: rgba(13, 20, 35, 0.75);
   --bg-card: rgba(18, 27, 45, 0.65);
+  --card-bg: rgba(18, 27, 45, 0.75);
   --bg-card-hover: rgba(26, 38, 60, 0.85);
   --bg-input: rgba(0, 0, 0, 0.4);
   --bg-modal: #0d1526;
@@ -46,6 +47,7 @@
 
   --nav-bg: rgba(9, 9, 11, 0.9);
   --sidebar-bg: rgba(15, 23, 42, 0.7);
+  --liquid-gradient: linear-gradient(135deg, #030712 0%, #0d1526 50%, #060a14 100%);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -57,7 +59,7 @@
 }
 
 /* =========================================================================
-   6 CURATED DARK THEMES (No Light Theme)
+   10 CURATED DARK THEMES (100% GLOBAL APPLICATION - NO LIGHT THEME)
    ========================================================================= */
 
 /* 1. Midnight Theme */
@@ -65,20 +67,24 @@ body.theme-midnight {
   --bg-base: #030712 !important;
   --bg-obsidian: #030712 !important;
   --bg-dark: #030712 !important;
-  --bg-surface: rgba(13, 20, 35, 0.72) !important;
-  --bg-panel: rgba(13, 20, 35, 0.75) !important;
-  --bg-card: rgba(18, 27, 45, 0.6) !important;
-  --bg-card-hover: rgba(26, 38, 60, 0.8) !important;
+  --bg-surface: rgba(13, 20, 35, 0.75) !important;
+  --bg-panel: rgba(13, 20, 35, 0.82) !important;
+  --bg-card: rgba(18, 27, 45, 0.7) !important;
+  --card-bg: rgba(18, 27, 45, 0.8) !important;
+  --sidebar-bg: rgba(10, 16, 28, 0.85) !important;
+  --nav-bg: rgba(7, 11, 20, 0.92) !important;
+  --bg-card-hover: rgba(26, 38, 60, 0.9) !important;
   --bg-modal: #0d1526 !important;
   --bg-elevated: rgba(30, 41, 59, 0.95) !important;
   --border-color: rgba(255, 255, 255, 0.08) !important;
   --border-subtle: rgba(255, 255, 255, 0.08) !important;
   --border-medium: rgba(255, 255, 255, 0.16) !important;
+  --border: rgba(255, 255, 255, 0.1) !important;
   --text-primary: #f8fafc !important;
   --text-alabaster: #f8fafc !important;
   --text-secondary: #94a3b8 !important;
   --text-muted: #64748b !important;
-  --gradient-bg: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 211, 238, 0.08), transparent) !important;
+  --liquid-gradient: linear-gradient(135deg, #030712 0%, #0b1120 50%, #030712 100%) !important;
 }
 
 /* 2. Ocean Theme */
@@ -86,20 +92,24 @@ body.theme-ocean {
   --bg-base: #020a14 !important;
   --bg-obsidian: #020a14 !important;
   --bg-dark: #020a14 !important;
-  --bg-surface: rgba(7, 22, 41, 0.78) !important;
-  --bg-panel: rgba(7, 22, 41, 0.8) !important;
-  --bg-card: rgba(10, 30, 55, 0.65) !important;
-  --bg-card-hover: rgba(15, 40, 72, 0.88) !important;
+  --bg-surface: rgba(7, 22, 41, 0.8) !important;
+  --bg-panel: rgba(7, 22, 41, 0.85) !important;
+  --bg-card: rgba(10, 30, 55, 0.7) !important;
+  --card-bg: rgba(10, 30, 55, 0.8) !important;
+  --sidebar-bg: rgba(5, 17, 33, 0.88) !important;
+  --nav-bg: rgba(4, 14, 27, 0.92) !important;
+  --bg-card-hover: rgba(15, 42, 75, 0.9) !important;
   --bg-modal: #071629 !important;
   --bg-elevated: rgba(12, 38, 68, 0.95) !important;
-  --border-color: rgba(56, 189, 248, 0.12) !important;
+  --border-color: rgba(56, 189, 248, 0.14) !important;
   --border-subtle: rgba(56, 189, 248, 0.1) !important;
   --border-medium: rgba(56, 189, 248, 0.22) !important;
+  --border: rgba(56, 189, 248, 0.15) !important;
   --text-primary: #e0f2fe !important;
   --text-alabaster: #e0f2fe !important;
   --text-secondary: #7dd3fc !important;
   --text-muted: #38bdf8 !important;
-  --gradient-bg: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.1), transparent) !important;
+  --liquid-gradient: linear-gradient(135deg, #020a14 0%, #071c33 50%, #031020 100%) !important;
 }
 
 /* 3. Forest Theme */
@@ -107,20 +117,24 @@ body.theme-forest {
   --bg-base: #041008 !important;
   --bg-obsidian: #041008 !important;
   --bg-dark: #041008 !important;
-  --bg-surface: rgba(8, 28, 16, 0.75) !important;
-  --bg-panel: rgba(8, 28, 16, 0.8) !important;
-  --bg-card: rgba(12, 38, 22, 0.65) !important;
-  --bg-card-hover: rgba(18, 52, 30, 0.85) !important;
+  --bg-surface: rgba(8, 28, 16, 0.8) !important;
+  --bg-panel: rgba(8, 28, 16, 0.85) !important;
+  --bg-card: rgba(12, 38, 22, 0.7) !important;
+  --card-bg: rgba(12, 38, 22, 0.8) !important;
+  --sidebar-bg: rgba(6, 21, 12, 0.88) !important;
+  --nav-bg: rgba(4, 16, 9, 0.92) !important;
+  --bg-card-hover: rgba(18, 54, 32, 0.9) !important;
   --bg-modal: #082213 !important;
   --bg-elevated: rgba(14, 46, 26, 0.95) !important;
-  --border-color: rgba(52, 211, 153, 0.12) !important;
+  --border-color: rgba(52, 211, 153, 0.14) !important;
   --border-subtle: rgba(52, 211, 153, 0.1) !important;
   --border-medium: rgba(52, 211, 153, 0.22) !important;
+  --border: rgba(52, 211, 153, 0.15) !important;
   --text-primary: #f0fdf4 !important;
   --text-alabaster: #f0fdf4 !important;
   --text-secondary: #86efac !important;
   --text-muted: #4ade80 !important;
-  --gradient-bg: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(52, 211, 153, 0.1), transparent) !important;
+  --liquid-gradient: linear-gradient(135deg, #041008 0%, #082615 50%, #031207 100%) !important;
 }
 
 /* 4. Sunset Theme */
@@ -128,20 +142,24 @@ body.theme-sunset {
   --bg-base: #14060c !important;
   --bg-obsidian: #14060c !important;
   --bg-dark: #14060c !important;
-  --bg-surface: rgba(35, 12, 22, 0.78) !important;
-  --bg-panel: rgba(35, 12, 22, 0.8) !important;
-  --bg-card: rgba(45, 16, 28, 0.65) !important;
-  --bg-card-hover: rgba(60, 22, 38, 0.85) !important;
+  --bg-surface: rgba(35, 12, 22, 0.8) !important;
+  --bg-panel: rgba(35, 12, 22, 0.85) !important;
+  --bg-card: rgba(45, 16, 28, 0.7) !important;
+  --card-bg: rgba(45, 16, 28, 0.8) !important;
+  --sidebar-bg: rgba(26, 8, 16, 0.88) !important;
+  --nav-bg: rgba(18, 5, 11, 0.92) !important;
+  --bg-card-hover: rgba(62, 22, 38, 0.9) !important;
   --bg-modal: #250b17 !important;
   --bg-elevated: rgba(48, 16, 30, 0.95) !important;
-  --border-color: rgba(251, 113, 133, 0.12) !important;
+  --border-color: rgba(251, 113, 133, 0.14) !important;
   --border-subtle: rgba(251, 113, 133, 0.1) !important;
   --border-medium: rgba(251, 113, 133, 0.22) !important;
+  --border: rgba(251, 113, 133, 0.15) !important;
   --text-primary: #fff7ed !important;
   --text-alabaster: #fff7ed !important;
   --text-secondary: #fdba74 !important;
   --text-muted: #fb923c !important;
-  --gradient-bg: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(251, 113, 133, 0.1), transparent) !important;
+  --liquid-gradient: linear-gradient(135deg, #14060c 0%, #290a18 50%, #11040a 100%) !important;
 }
 
 /* 5. Cyberpunk Theme */
@@ -149,20 +167,24 @@ body.theme-cyberpunk {
   --bg-base: #090014 !important;
   --bg-obsidian: #090014 !important;
   --bg-dark: #090014 !important;
-  --bg-surface: rgba(26, 6, 42, 0.8) !important;
-  --bg-panel: rgba(26, 6, 42, 0.85) !important;
-  --bg-card: rgba(35, 8, 56, 0.65) !important;
-  --bg-card-hover: rgba(50, 12, 80, 0.85) !important;
+  --bg-surface: rgba(26, 6, 42, 0.82) !important;
+  --bg-panel: rgba(26, 6, 42, 0.88) !important;
+  --bg-card: rgba(35, 8, 56, 0.7) !important;
+  --card-bg: rgba(35, 8, 56, 0.8) !important;
+  --sidebar-bg: rgba(19, 4, 31, 0.9) !important;
+  --nav-bg: rgba(14, 2, 23, 0.93) !important;
+  --bg-card-hover: rgba(52, 12, 82, 0.9) !important;
   --bg-modal: #180326 !important;
   --bg-elevated: rgba(44, 10, 70, 0.95) !important;
-  --border-color: rgba(168, 85, 247, 0.16) !important;
+  --border-color: rgba(168, 85, 247, 0.18) !important;
   --border-subtle: rgba(168, 85, 247, 0.14) !important;
   --border-medium: rgba(168, 85, 247, 0.28) !important;
+  --border: rgba(168, 85, 247, 0.18) !important;
   --text-primary: #f5f3ff !important;
   --text-alabaster: #f5f3ff !important;
   --text-secondary: #c4b5fd !important;
   --text-muted: #a78bfa !important;
-  --gradient-bg: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(168, 85, 247, 0.12), transparent) !important;
+  --liquid-gradient: linear-gradient(135deg, #090014 0%, #200533 50%, #0b0117 100%) !important;
 }
 
 /* 6. Luxury Gold Theme */
@@ -170,20 +192,124 @@ body.theme-gold {
   --bg-base: #0a0804 !important;
   --bg-obsidian: #0a0804 !important;
   --bg-dark: #0a0804 !important;
-  --bg-surface: rgba(28, 20, 10, 0.8) !important;
-  --bg-panel: rgba(28, 20, 10, 0.85) !important;
-  --bg-card: rgba(38, 28, 14, 0.65) !important;
-  --bg-card-hover: rgba(52, 38, 20, 0.85) !important;
+  --bg-surface: rgba(28, 20, 10, 0.82) !important;
+  --bg-panel: rgba(28, 20, 10, 0.88) !important;
+  --bg-card: rgba(38, 28, 14, 0.7) !important;
+  --card-bg: rgba(38, 28, 14, 0.8) !important;
+  --sidebar-bg: rgba(20, 14, 7, 0.9) !important;
+  --nav-bg: rgba(15, 10, 5, 0.93) !important;
+  --bg-card-hover: rgba(55, 40, 20, 0.9) !important;
   --bg-modal: #1e1509 !important;
   --bg-elevated: rgba(46, 34, 16, 0.95) !important;
-  --border-color: rgba(245, 158, 11, 0.16) !important;
+  --border-color: rgba(245, 158, 11, 0.18) !important;
   --border-subtle: rgba(245, 158, 11, 0.14) !important;
-  --border-medium: rgba(245, 158, 11, 0.26) !important;
+  --border-medium: rgba(245, 158, 11, 0.28) !important;
+  --border: rgba(245, 158, 11, 0.18) !important;
   --text-primary: #fffbeb !important;
   --text-alabaster: #fffbeb !important;
   --text-secondary: #fde68a !important;
   --text-muted: #f59e0b !important;
-  --gradient-bg: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(245, 158, 11, 0.1), transparent) !important;
+  --liquid-gradient: linear-gradient(135deg, #0a0804 0%, #221808 50%, #0d0a04 100%) !important;
+}
+
+/* 7. Dracula Theme */
+body.theme-dracula {
+  --bg-base: #0b0914 !important;
+  --bg-obsidian: #0b0914 !important;
+  --bg-dark: #0b0914 !important;
+  --bg-surface: rgba(24, 18, 41, 0.82) !important;
+  --bg-panel: rgba(24, 18, 41, 0.88) !important;
+  --bg-card: rgba(34, 25, 56, 0.7) !important;
+  --card-bg: rgba(34, 25, 56, 0.8) !important;
+  --sidebar-bg: rgba(18, 13, 31, 0.9) !important;
+  --nav-bg: rgba(13, 9, 22, 0.93) !important;
+  --bg-card-hover: rgba(48, 35, 78, 0.9) !important;
+  --bg-modal: #171128 !important;
+  --bg-elevated: rgba(42, 31, 68, 0.95) !important;
+  --border-color: rgba(189, 147, 249, 0.18) !important;
+  --border-subtle: rgba(189, 147, 249, 0.12) !important;
+  --border-medium: rgba(189, 147, 249, 0.25) !important;
+  --border: rgba(189, 147, 249, 0.16) !important;
+  --text-primary: #f8f8f2 !important;
+  --text-alabaster: #f8f8f2 !important;
+  --text-secondary: #ff79c6 !important;
+  --text-muted: #bd93f9 !important;
+  --liquid-gradient: linear-gradient(135deg, #0b0914 0%, #1d1430 50%, #0d0a17 100%) !important;
+}
+
+/* 8. Nord Frost Theme */
+body.theme-nord {
+  --bg-base: #0a0f18 !important;
+  --bg-obsidian: #0a0f18 !important;
+  --bg-dark: #0a0f18 !important;
+  --bg-surface: rgba(18, 27, 43, 0.8) !important;
+  --bg-panel: rgba(18, 27, 43, 0.85) !important;
+  --bg-card: rgba(26, 38, 59, 0.7) !important;
+  --card-bg: rgba(26, 38, 59, 0.8) !important;
+  --sidebar-bg: rgba(14, 20, 32, 0.88) !important;
+  --nav-bg: rgba(10, 15, 24, 0.92) !important;
+  --bg-card-hover: rgba(36, 52, 80, 0.9) !important;
+  --bg-modal: #141c2c !important;
+  --bg-elevated: rgba(32, 46, 72, 0.95) !important;
+  --border-color: rgba(136, 192, 208, 0.16) !important;
+  --border-subtle: rgba(136, 192, 208, 0.12) !important;
+  --border-medium: rgba(136, 192, 208, 0.24) !important;
+  --border: rgba(136, 192, 208, 0.16) !important;
+  --text-primary: #eceff4 !important;
+  --text-alabaster: #eceff4 !important;
+  --text-secondary: #88c0d0 !important;
+  --text-muted: #81a1c1 !important;
+  --liquid-gradient: linear-gradient(135deg, #0a0f18 0%, #152236 50%, #0a0f18 100%) !important;
+}
+
+/* 9. Synthwave 84 Theme */
+body.theme-synthwave {
+  --bg-base: #12071f !important;
+  --bg-obsidian: #12071f !important;
+  --bg-dark: #12071f !important;
+  --bg-surface: rgba(33, 14, 56, 0.82) !important;
+  --bg-panel: rgba(33, 14, 56, 0.88) !important;
+  --bg-card: rgba(45, 19, 76, 0.7) !important;
+  --card-bg: rgba(45, 19, 76, 0.8) !important;
+  --sidebar-bg: rgba(24, 10, 42, 0.9) !important;
+  --nav-bg: rgba(16, 7, 28, 0.93) !important;
+  --bg-card-hover: rgba(62, 26, 102, 0.9) !important;
+  --bg-modal: #220e3a !important;
+  --bg-elevated: rgba(52, 22, 88, 0.95) !important;
+  --border-color: rgba(255, 126, 219, 0.18) !important;
+  --border-subtle: rgba(255, 126, 219, 0.12) !important;
+  --border-medium: rgba(255, 126, 219, 0.26) !important;
+  --border: rgba(255, 126, 219, 0.16) !important;
+  --text-primary: #fff0f5 !important;
+  --text-alabaster: #fff0f5 !important;
+  --text-secondary: #ff7edb !important;
+  --text-muted: #fe4450 !important;
+  --liquid-gradient: linear-gradient(135deg, #12071f 0%, #2b0b46 50%, #10061c 100%) !important;
+}
+
+/* 10. Tokyo Night Theme */
+body.theme-tokyo {
+  --bg-base: #080c18 !important;
+  --bg-obsidian: #080c18 !important;
+  --bg-dark: #080c18 !important;
+  --bg-surface: rgba(16, 23, 44, 0.82) !important;
+  --bg-panel: rgba(16, 23, 44, 0.88) !important;
+  --bg-card: rgba(23, 33, 62, 0.7) !important;
+  --card-bg: rgba(23, 33, 62, 0.8) !important;
+  --sidebar-bg: rgba(12, 17, 33, 0.9) !important;
+  --nav-bg: rgba(8, 12, 24, 0.93) !important;
+  --bg-card-hover: rgba(32, 46, 86, 0.9) !important;
+  --bg-modal: #131b34 !important;
+  --bg-elevated: rgba(28, 40, 75, 0.95) !important;
+  --border-color: rgba(122, 162, 247, 0.18) !important;
+  --border-subtle: rgba(122, 162, 247, 0.12) !important;
+  --border-medium: rgba(122, 162, 247, 0.26) !important;
+  --border: rgba(122, 162, 247, 0.16) !important;
+  --text-primary: #c0caf5 !important;
+  --text-alabaster: #c0caf5 !important;
+  --text-secondary: #7aa2f7 !important;
+  --text-muted: #bb9af7 !important;
+  --liquid-gradient: linear-gradient(135deg, #080c18 0%, #151e3c 50%, #070a14 100%) !important;
 }
 
 /* =========================================================================

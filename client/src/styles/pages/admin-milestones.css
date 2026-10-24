@@ -311,13 +311,24 @@ body.theme-light .nav-link.active {
   letter-spacing: normal !important;
 }
 
-/* Sub-tabs */
+/* Sub-tabs Sticky Header */
+.admin-milestones-root .sub-tabs-sticky-header {
+  position: sticky !important;
+  top: 75px !important;
+  z-index: 40 !important;
+  background: var(--bg-base, #030712) !important;
+  padding: 4px 0 10px 0 !important;
+  margin-bottom: 8px !important;
+  backdrop-filter: blur(15px) !important;
+  display: flex !important;
+  align-items: center !important;
+}
 .admin-milestones-root .sub-tabs {
   display: flex !important;
-  gap: 3px !important;
-  margin-bottom: 14px !important;
-  background: var(--bg-input) !important;
-  padding: 3px !important;
+  gap: 6px !important;
+  margin-bottom: 0 !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+  padding: 4px !important;
   border-radius: var(--radius-md) !important;
   border: 1px solid var(--border-subtle) !important;
   width: fit-content !important;
@@ -325,26 +336,29 @@ body.theme-light .nav-link.active {
 }
 .admin-milestones-root .sub-tab {
   background: transparent !important;
-  border: none !important;
+  border: 1px solid transparent !important;
   color: var(--text-secondary) !important;
-  padding: 6px 12px !important;
-  border-radius: var(--radius-sm) !important;
+  padding: 7px 16px !important;
+  border-radius: 8px !important;
   cursor: pointer !important;
   display: flex !important;
   align-items: center !important;
-  gap: 5px !important;
-  font-size: 0.78rem !important;
-  font-weight: 500 !important;
+  gap: 8px !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
   font-family: var(--font-sans) !important;
-  transition: var(--transition) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 .admin-milestones-root .sub-tab:hover {
   color: var(--text-primary) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 .admin-milestones-root .sub-tab.active {
-  background: var(--bg-card) !important;
-  color: var(--accent-primary) !important;
-  font-weight: 600 !important;
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(168, 85, 247, 0.2)) !important;
+  color: var(--brand-color, #f43f5e) !important;
+  border-color: var(--brand-color, #f43f5e) !important;
+  box-shadow: 0 0 15px var(--brand-glow, rgba(244, 63, 94, 0.35)) !important;
+  font-weight: 700 !important;
 }
 
 /* Sticky Toolbar */

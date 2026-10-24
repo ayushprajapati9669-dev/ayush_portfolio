@@ -32,8 +32,22 @@ export function Header() {
   const [accentPaletteOpen, setAccentPaletteOpen] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
 
-  const THEME_CLASSES = ['theme-midnight', 'theme-ocean', 'theme-forest', 'theme-sunset', 'theme-cyberpunk', 'theme-gold'];
+  const THEME_CLASSES = [
+    'theme-midnight',
+    'theme-ocean',
+    'theme-forest',
+    'theme-sunset',
+    'theme-cyberpunk',
+    'theme-gold',
+    'theme-dracula',
+    'theme-nord',
+    'theme-synthwave',
+    'theme-tokyo'
+  ];
   const ACCENT_CLASSES = ['accent-cyan', 'accent-violet', 'accent-rose', 'accent-emerald', 'accent-amber', 'accent-pink', 'accent-lime', 'accent-blue'];
+
+  const [toolsMenuOpen, setToolsMenuOpen] = useState(false);
+  const toolsMenuRef = useRef(null);
 
   useEffect(() => {
     let savedTheme = localStorage.getItem('portfolio_theme') || localStorage.getItem('admin_theme_v9') || 'theme-midnight';
@@ -124,15 +138,28 @@ export function Header() {
     };
   }, []);
 
+  const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+
   const navItems = [
     { name: ui.navHome || 'Home', path: '/', icon: 'fa-solid fa-house' },
     { name: ui.navAbout || 'About', path: '/about', icon: 'fa-regular fa-user' },
     { name: ui.navSkills || 'Skills', path: '/skills', icon: 'fa-solid fa-code' },
     { name: ui.navProjects || 'Projects', path: '/projects', icon: 'fa-solid fa-layer-group' },
-    { name: ui.navCertificates || 'Certificates', path: '/certificates', icon: 'fa-solid fa-certificate' }
+    { name: isAdmin ? 'Certs' : (ui.navCertificates || 'Certificates'), path: '/certificates', icon: 'fa-solid fa-certificate' }
   ];
 
-  const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+  // Outside click listener for tools popover
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (toolsMenuRef.current && !toolsMenuRef.current.contains(e.target)) {
+        setToolsMenuOpen(false);
+      }
+    };
+    if (toolsMenuOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [toolsMenuOpen]);
 
   // Dynamic notifications from messages & portfolio state
   const rawNotifications = [
@@ -455,11 +482,9 @@ export function Header() {
                     </div>
                   </div>
                 </div>
-              )}
-
-              {/* Theme & Accent Controls (Available across ALL pages: Public & Admin) */}
+              )}                {/* Theme & Accent Controls (Available across ALL pages: Public & Admin) */}
               <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
-                {/* Theme Selector Dropdown (No Light theme, 6 rich dark themes) */}
+                {/* Theme Selector Dropdown (10 Curated Dark Themes - No Light) */}
                 <select
                   className="theme-selector"
                   value={currentTheme}
@@ -472,6 +497,10 @@ export function Header() {
                   <option value="theme-sunset">🌅 Sunset</option>
                   <option value="theme-cyberpunk">⚡ Cyberpunk</option>
                   <option value="theme-gold">👑 Luxury Gold</option>
+                  <option value="theme-dracula">🧛 Dracula</option>
+                  <option value="theme-nord">❄️ Nord Frost</option>
+                  <option value="theme-synthwave">👾 Synthwave 84</option>
+                  <option value="theme-tokyo">🌌 Tokyo Night</option>
                 </select>
 
                 {/* Accent Color Palette (8 vibrant colors) */}
@@ -497,45 +526,69 @@ export function Header() {
                   )}
                 </div>
 
-                {/* Admin-Specific Action Icons Pill */}
+                {/* Admin Quick Settings & Tools Dropdown */}
                 {isAdmin && (
-                  <div className="flex items-center gap-1 px-1 border-l border-r border-white/10 mx-0.5">
+                  <div className="relative" ref={toolsMenuRef}>
                     <button
                       type="button"
-                      className="btn-icon"
-                      onClick={handleToggleVoice}
-                      title="Voice Command"
-                      aria-label="Voice Command"
+                      className={`btn-icon ${toolsMenuOpen ? 'active' : ''}`}
+                      onClick={() => {
+                        playTick();
+                        setToolsMenuOpen((prev) => !prev);
+                      }}
+                      title="Quick Settings & Tools"
+                      aria-label="Quick Settings & Tools"
                     >
-                      <i className="fa-solid fa-microphone text-xs" />
+                      <i className="fa-solid fa-sliders text-xs" />
                     </button>
 
-                    <button
-                      type="button"
-                      className={`btn-icon ${isFocusMode ? 'active' : ''}`}
-                      onClick={handleToggleFocus}
-                      title="Toggle Fullscreen / Focus Mode"
-                      aria-label="Focus Mode"
-                    >
-                      <i className="fa-solid fa-expand text-xs" />
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn-icon"
-                      onClick={handleOpenShortcuts}
-                      title="Keyboard Shortcuts (?)"
-                      aria-label="Shortcuts"
-                    >
-                      <i className="fa-solid fa-keyboard text-xs" />
-                    </button>
+                    {toolsMenuOpen && (
+                      <div className="admin-tools-popover">
+                        <div className="popover-title">Quick Settings & Tools</div>
+                        <button
+                          type="button"
+                          className="popover-item"
+                          onClick={() => {
+                            handleToggleVoice();
+                            setToolsMenuOpen(false);
+                          }}
+                        >
+                          <i className="fa-solid fa-microphone text-xs" />
+                          <span>Voice Commands</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="popover-item"
+                          onClick={() => {
+                            handleToggleFocus();
+                            setToolsMenuOpen(false);
+                          }}
+                        >
+                          <i className="fa-solid fa-expand text-xs" />
+                          <span>{isFocusMode ? 'Exit Focus Mode' : 'Focus Mode (Zoom)'}</span>
+                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded">F</kbd>
+                        </button>
+                        <button
+                          type="button"
+                          className="popover-item"
+                          onClick={() => {
+                            handleOpenShortcuts();
+                            setToolsMenuOpen(false);
+                          }}
+                        >
+                          <i className="fa-solid fa-keyboard text-xs" />
+                          <span>Keyboard Shortcuts</span>
+                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded">?</kbd>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
 
-              {/* Command Palette Trigger (Search ⌘K) (Only visible on Admin Dashboard) */}
+              {/* Command Palette Trigger (Search ⌘K) (Positioned with safe right padding) */}
               {isAdmin && (
-                <div className="magnetic">
+                <div className="magnetic mr-1 shrink-0">
                   <button
                     type="button"
                     className="btn-outline"
