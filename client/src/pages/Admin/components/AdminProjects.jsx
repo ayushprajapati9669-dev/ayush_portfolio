@@ -913,35 +913,49 @@ export function AdminProjects({
 
   const currentSortObj = SORT_OPTIONS.find((s) => s.id === sortBy) || SORT_OPTIONS[0];
 
+  const activeProjectsCount = projects.filter((p) => p.status === 'published' || p.status === 'active' || !p.status).length;
+
   return (
-    <div className="space-y-8">
-      {/* Top Banner with Create Project Button */}
-      <div className="admin-proj-top-banner">
+    <div className="space-y-6">
+      {/* Top Header Matching Photo 2 */}
+      <div className="flex flex-wrap items-center justify-between gap-6 pb-2">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold flex items-center gap-2">
-            <i className="fa-solid fa-layer-group"></i> PORTFOLIO PROJECTS MANAGER
-          </span>
-          <h2 className="text-xl font-bold text-white mt-1">Deploy & Showcase Applications</h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <h1 className="text-3xl font-bold text-white tracking-tight">Deploy & Showcase Applications</h1>
+          <p className="text-slate-400 text-[13px] mt-1">
             Create, edit, organize, filter and maintain live projects showcased across your portfolio.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              playTick();
-              if (isFormOpen && editingId) {
-                handleCancelEdit();
-              } else {
-                setIsFormOpen((prev) => !prev);
-              }
-            }}
-            className="btn-create-project"
-          >
-            <i className={isFormOpen && !editingId ? 'fa-solid fa-minus text-sm' : isFormOpen && editingId ? 'fa-solid fa-xmark text-sm' : 'fa-solid fa-plus text-sm'}></i>
-            <span>{isFormOpen ? (editingId ? 'Cancel Edit' : 'Hide Form') : 'Create New Project'}</span>
-          </button>
+
+        {/* Pulse Stats Card (Matching Photo 2) */}
+        <div className="bg-[#0a111c] border border-white/10 rounded-2xl px-6 py-3 flex items-center gap-6 shadow-premium">
+          <div>
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">TOTAL</span>
+            <span className="text-xl font-bold text-white">{projects.length}</span>
+          </div>
+          <div className="w-px h-8 bg-white/10" />
+          <div>
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">ACTIVE</span>
+            <span className="text-xl font-bold text-emerald-400">{activeProjectsCount}</span>
+          </div>
+          <div className="w-px h-8 bg-white/10" />
+          <div>
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">PULSE</span>
+            <div className="flex items-center gap-2 mt-1">
+              <svg className="w-16 h-5 text-cyan-400" viewBox="0 0 64 20" fill="none">
+                <path
+                  d="M0 10 L15 10 L22 3 L30 17 L38 7 L45 13 L52 10 L64 10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2460,206 +2474,166 @@ export function AdminProjects({
           </div>
         </div>
 
-        {/* Search, Category & Sort Bar (Matching Image 2 Single Bar) */}
-        <div className="flex flex-wrap lg:flex-nowrap items-center rounded-2xl border border-white/10 bg-[#070b12]/60 px-3 py-1.5 w-full gap-2">
-          {/* Search Input */}
-          <div className="flex-1 min-w-[240px] relative flex items-center">
-            <i className="fa-solid fa-magnifying-glass text-xs text-slate-400 pl-1 pr-2.5" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search projects, tech stack, or keywords..."
-              className="w-full bg-transparent border-0 outline-none text-xs text-white placeholder-slate-500 font-sans py-2"
-            />
-            {searchQuery ? (
-              <button
-                type="button"
-                onClick={() => {
+        {/* Search, Category, Sort & Status Tabs Bar (Matching Photo 2) */}
+        <div className="flex flex-wrap lg:flex-nowrap items-center justify-between rounded-2xl border border-white/10 bg-[#070b12]/80 px-3.5 py-2 w-full gap-3 shadow-lg shadow-black/20">
+          <div className="flex flex-wrap items-center gap-2.5 flex-1 min-w-0">
+            {/* Search Input */}
+            <div className="flex-1 min-w-[200px] max-w-sm relative flex items-center">
+              <i className="fa-solid fa-magnifying-glass text-xs text-slate-400 pl-1 pr-2.5" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search projects, tech stack..."
+                className="w-full bg-transparent border-0 outline-none text-xs text-white placeholder-slate-500 font-sans py-1.5"
+              />
+              {searchQuery ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    playTick();
+                    setSearchQuery('');
+                  }}
+                  className="text-xs text-slate-400 hover:text-white pr-2 cursor-pointer"
+                  title="Clear search"
+                >
+                  ×
+                </button>
+              ) : (
+                <kbd className="border border-white/10 bg-white/5 text-[10px] text-slate-400 px-1.5 py-0.5 rounded font-mono mr-2 hidden sm:inline-block">
+                  ⌘K
+                </kbd>
+              )}
+            </div>
+
+            {/* Category Dropdown */}
+            <div className="relative flex items-center">
+              <select
+                value={selectedCategory}
+                onChange={(e) => {
                   playTick();
-                  setSearchQuery('');
+                  setSelectedCategory(e.target.value);
                 }}
-                className="text-xs text-slate-400 hover:text-white pr-2 cursor-pointer"
-                title="Clear search"
+                className="appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-7 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
               >
-                ×
-              </button>
-            ) : (
-              <kbd className="border border-white/10 bg-white/5 text-[10px] text-slate-400 px-1.5 py-0.5 rounded font-mono mr-2 hidden sm:inline-block">
-                ⌘K
-              </kbd>
-            )}
-          </div>
-
-          {/* Divider */}
-          <div className="hidden lg:block h-6 w-px bg-white/10" />
-
-          {/* Category Dropdown */}
-          <div className="relative min-w-[160px] flex items-center">
-            <i className="fa-solid fa-filter text-slate-400 text-xs pl-2 mr-1 pointer-events-none" />
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                playTick();
-                setSelectedCategory(e.target.value);
-              }}
-              className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
-            >
-              <option value="all" className="bg-[#0b101b] text-white">
-                All Categories ({projects.length})
-              </option>
-              {availableCategories
-                .filter((c) => c !== 'all')
-                .map((cat) => {
-                  const count = projects.filter((p) => {
-                    const pCat = (p.category || '').toLowerCase();
-                    const cLower = cat.toLowerCase();
-                    return pCat.includes(cLower) || cLower.includes(pCat);
-                  }).length;
-                  return (
-                    <option key={cat} value={cat} className="bg-[#0b101b] text-white">
-                      {cat} ({count})
-                    </option>
-                  );
-                })}
-            </select>
-            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
-          </div>
-
-          {/* Divider */}
-          <div className="hidden lg:block h-6 w-px bg-white/10" />
-
-          {/* Sort Selector */}
-          <div className="relative min-w-[150px] flex items-center">
-            <i className="fa-solid fa-arrow-down-short-wide text-slate-400 text-xs pl-2 mr-1 pointer-events-none" />
-            <select
-              value={sortBy}
-              onChange={(e) => {
-                playTick();
-                setSortBy(e.target.value);
-              }}
-              className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
-            >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.id} value={opt.id} className="bg-[#0b101b] text-white">
-                  {opt.label}
+                <option value="all" className="bg-[#0b101b] text-white">
+                  All Categories
                 </option>
-              ))}
-            </select>
-            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
-          </div>
-        </div>
+                {availableCategories
+                  .filter((c) => c !== 'all')
+                  .map((cat) => (
+                    <option key={cat} value={cat} className="bg-[#0b101b] text-white">
+                      {cat}
+                    </option>
+                  ))}
+              </select>
+              <i className="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+            </div>
 
-        {/* Action Controls & Status Tabs Row (Matching Image 2) */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
-          <div className="flex flex-wrap items-center gap-4">
-            {/* Select All Checkbox */}
-            <label className="flex items-center gap-2 cursor-pointer font-sans text-xs font-semibold text-slate-300 hover:text-white transition-colors">
-              <div
-                onClick={handleToggleSelectAll}
-                className={`admin-proj-checkbox ${isAllSelected ? 'checked' : ''}`}
+            {/* Sort Selector */}
+            <div className="relative flex items-center">
+              <select
+                value={sortBy}
+                onChange={(e) => {
+                  playTick();
+                  setSortBy(e.target.value);
+                }}
+                className="appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
               >
-                {isAllSelected && <i className="fa-solid fa-check text-[10px]"></i>}
-              </div>
-              <span>
-                {isAllSelected && filteredProjects.length > 0
-                  ? 'Deselect All'
-                  : `Select All (${filteredProjects.length})`}
-              </span>
-            </label>
-
-            {/* Filter Tabs Group matching Image 2 */}
-            <div className="flex items-center rounded-xl bg-black/40 border border-white/10 p-1 gap-1">
-              <button
-                type="button"
-                onClick={() => { playTick(); setActiveTab('all'); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  activeTab === 'all'
-                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <i className="fa-solid fa-border-all text-[11px]"></i>
-                <span>All</span>
-                <span className={`text-[11px] px-1.5 py-0.2 rounded-md ${
-                  activeTab === 'all' ? 'bg-cyan-400/20 text-cyan-300' : 'bg-white/10 text-slate-400'
-                }`}>
-                  {counts.all}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => { playTick(); setActiveTab('active'); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  activeTab === 'active'
-                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
-                <span>Active</span>
-                <span className="text-[11px] text-slate-400 ml-0.5">{counts.active}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => { playTick(); setActiveTab('draft'); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  activeTab === 'draft'
-                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
-                <span>Draft</span>
-                <span className="text-[11px] text-slate-400 ml-0.5">{counts.draft}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => { playTick(); setActiveTab('archived'); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  activeTab === 'archived'
-                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full bg-indigo-400 inline-block" />
-                <span>Archived</span>
-                <span className="text-[11px] text-slate-400 ml-0.5">{counts.archived}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => { playTick(); setActiveTab('trash'); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  activeTab === 'trash'
-                    ? 'bg-cyan-500/20 border border-cyan-400/40 text-cyan-300'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full bg-rose-500 inline-block" />
-                <span>Trash</span>
-                <span className="text-[11px] text-slate-400 ml-0.5">{counts.trash}</span>
-              </button>
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.id} value={opt.id} className="bg-[#0b101b] text-white">
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <i className="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Batch Delete Button (shown when items are selected) */}
-            {selectedIds.length > 0 && (
+          {/* Status Filter Tabs (Matching Photo 2 Right Side) */}
+          <div className="flex items-center rounded-xl bg-black/40 border border-white/10 p-1 gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => { playTick(); setActiveTab('all'); }}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeTab === 'all'
+                  ? 'bg-white/10 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <span>All</span>
+              <span className="text-[11px] font-bold text-slate-300">{counts.all}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { playTick(); setActiveTab('active'); }}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeTab === 'active'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
+              <span>Active</span>
+              <span className="text-[11px] text-slate-400">{counts.active}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { playTick(); setActiveTab('draft'); }}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeTab === 'draft'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+              <span>Draft</span>
+              <span className="text-[11px] text-slate-400">{counts.draft}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { playTick(); setActiveTab('archived'); }}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                activeTab === 'archived'
+                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30 shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block" />
+              <span>Archived</span>
+              <span className="text-[11px] text-slate-400">{counts.archived}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Action Controls when selected */}
+        {selectedIds.length > 0 && (
+          <div className="flex items-center justify-between p-3 rounded-xl bg-cyan-500/10 border border-cyan-400/30">
+            <span className="text-xs text-cyan-300 font-semibold flex items-center gap-2">
+              <i className="fa-solid fa-check-circle" /> {selectedIds.length} projects selected
+            </span>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleBatchDelete}
-                className="btn-batch-delete"
+                className="btn-batch-delete text-xs px-3 py-1.5"
               >
-                <i className="fa-solid fa-trash-can"></i>
-                <span>
-                  {activeTab === 'trash' ? 'Delete Selected' : 'Trash Selected'} ({selectedIds.length})
-                </span>
+                <i className="fa-solid fa-trash-can" />
+                <span>Delete Selected</span>
               </button>
-            )}
+              <button
+                type="button"
+                onClick={() => setSelectedIds([])}
+                className="text-xs text-slate-400 hover:text-white px-2 py-1"
+              >
+                Clear Selection
+              </button>
+            </div>
+          </div>
+        )}
 
             <span className="font-sans text-xs text-slate-400 flex items-center gap-1.5">
               <i className="fa-solid fa-grip-vertical text-slate-500"></i>
@@ -2684,7 +2658,7 @@ export function AdminProjects({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((proj, idx) => {
               const isSelected = selectedIds.includes(proj.id);
               const indexStr = String(idx + 1).padStart(2, '0');
@@ -2700,19 +2674,22 @@ export function AdminProjects({
                   onDragOver={(e) => handleProjDragOver(e, idx)}
                   onDragLeave={() => handleProjDragLeave(idx)}
                   onDrop={() => handleProjDropReorder(idx)}
-                  className={`admin-proj-card ${isSelected ? 'selected' : ''} ${
+                  className={`group relative flex flex-col rounded-2xl border border-white/5 bg-[#0a111c] hover:border-white/20 transition-all duration-300 overflow-hidden shadow-xl ${
+                    isSelected ? 'ring-2 ring-cyan-400' : ''
+                  } ${
                     dragOverProjIndex === idx
-                      ? 'border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-400/20 scale-[1.01] transition-all'
+                      ? 'border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-400/20 scale-[1.01]'
                       : ''
                   } ${draggedProjIndex === idx ? 'opacity-40 cursor-grabbing' : ''}`}
                 >
-                  {/* Top Cover Image with Overlays (Matching Image 3) */}
-                  <div className="admin-proj-img-wrap">
+                  {/* Top Cover Image (Matching Photos 2 & 3) */}
+                  <div className="h-48 w-full relative overflow-hidden bg-black/40">
                     {proj.thumbnailUrl ? (
                       <img
                         src={proj.thumbnailUrl}
                         alt={proj.title}
                         loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-slate-900 to-black flex items-center justify-center text-slate-600">
@@ -2720,185 +2697,141 @@ export function AdminProjects({
                       </div>
                     )}
 
-                    {/* Top-Left Overlays: Checkbox, Drag Handle & Category Badge */}
-                    <div className="admin-proj-top-left">
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleSelect(proj.id);
-                        }}
-                        className={`admin-proj-checkbox ${isSelected ? 'checked' : ''}`}
-                        title={isSelected ? 'Deselect project' : 'Select for deletion'}
-                      >
-                        {isSelected && <i className="fa-solid fa-check"></i>}
-                      </div>
-
-                      {/* Drag Handle button */}
-                      <div
-                        draggable={true}
-                        onDragStart={(e) => {
-                          e.stopPropagation();
-                          handleProjDragStart(e, idx);
-                        }}
-                        onDragEnd={() => {
-                          setDraggedProjIndex(null);
-                          setDragOverProjIndex(null);
-                        }}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-cyan-300 hover:border-cyan-400/40 cursor-grab active:cursor-grabbing transition-all select-none"
-                        title="Drag handle to reorder project"
-                      >
-                        <i className="fa-solid fa-grip-vertical text-xs pointer-events-none" />
-                      </div>
-
-                      <span className="admin-proj-cat-badge">
-                        {proj.category || 'Full-Stack'}
-                      </span>
+                    {/* Top-Left Drag Handle Badge (Matching Photos 2 & 3) */}
+                    <div
+                      draggable={true}
+                      onDragStart={(e) => {
+                        e.stopPropagation();
+                        handleProjDragStart(e, idx);
+                      }}
+                      onDragEnd={() => {
+                        setDraggedProjIndex(null);
+                        setDragOverProjIndex(null);
+                      }}
+                      className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#050a14]/80 backdrop-blur-md border border-white/10 text-white text-xs font-semibold cursor-grab active:cursor-grabbing hover:border-cyan-400/40 transition-all select-none shadow-sm"
+                      title="Drag handle to reorder project"
+                    >
+                      <i className="fa-solid fa-grip-vertical text-slate-400 text-xs pointer-events-none" />
+                      <span className="truncate max-w-[130px] pointer-events-none">{proj.title}</span>
                     </div>
 
-                    {/* Top-Right Overlays: Actions (Edit/Delete) & Live Badge */}
-                    <div className="admin-proj-top-right">
-                      {/* Position Reorder Chevrons */}
-                      <div className="flex items-center gap-1">
+                    {/* Top-Right Actions & Dropdown (Matching Photos 2 & 3) */}
+                    <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleMoveOrder(proj, -1);
+                            handleEdit(proj);
                           }}
-                          disabled={idx === 0}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-white disabled:opacity-20 transition-all"
-                          title="Move Up"
+                          className="w-7 h-7 rounded-lg bg-[#050a14]/90 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-300 flex items-center justify-center text-xs transition-all shadow-sm"
+                          title="Edit Project"
                         >
-                          <i className="fa-solid fa-chevron-up text-[10px]" />
+                          <i className="fa-solid fa-pen text-[10px]" />
                         </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleMoveOrder(proj, 1);
-                          }}
-                          disabled={idx === filteredProjects.length - 1}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-white disabled:opacity-20 transition-all"
-                          title="Move Down"
-                        >
-                          <i className="fa-solid fa-chevron-down text-[10px]" />
-                        </button>
-                      </div>
-
-                      <div className="admin-proj-icon-actions">
-                        {proj.status === 'trash' ? (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleRestore(proj);
-                            }}
-                            className="admin-proj-circle-btn"
-                            title="Restore Project"
-                          >
-                            <i className="fa-solid fa-rotate-left"></i>
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEdit(proj);
-                            }}
-                            className="admin-proj-circle-btn"
-                            title="Edit Project"
-                          >
-                            <i className="fa-solid fa-pen"></i>
-                          </button>
-                        )}
-
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDelete(proj);
                           }}
-                          className="admin-proj-circle-btn delete"
+                          className="w-7 h-7 rounded-lg bg-[#050a14]/90 hover:bg-rose-500/20 border border-white/10 hover:border-rose-400/40 text-slate-300 hover:text-rose-400 flex items-center justify-center text-xs transition-all shadow-sm"
                           title={proj.status === 'trash' ? 'Delete Permanently' : 'Move to Trash'}
                         >
-                          <i className="fa-solid fa-trash-can"></i>
+                          <i className="fa-solid fa-trash-can text-[10px]" />
                         </button>
                       </div>
 
-                      {/* Status Badge */}
-                      <div className="admin-proj-live-badge">
-                        <span className={`admin-proj-live-dot ${!isLive ? '!bg-amber-400 !shadow-amber-400' : ''}`}></span>
-                        <span>
-                          {proj.status === 'draft'
-                            ? 'Draft'
-                            : proj.status === 'archived'
-                            ? 'Archived'
-                            : proj.status === 'trash'
-                            ? 'In Trash'
-                            : 'Live Deployed'}
-                        </span>
+                      <div className="w-7 h-7 rounded-lg bg-[#050a14]/80 backdrop-blur-md border border-white/10 flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
+                        <i className="fa-solid fa-chevron-down text-[10px]" />
                       </div>
                     </div>
-                  </div>
 
-                  {/* Card Body Details */}
-                  <div className="admin-proj-body">
-                    {/* Meta Line: PROJECT 01 + Click to Visit */}
-                    <div className="admin-proj-meta-line">
-                      <span className="admin-proj-num">PROJECT {indexStr}</span>
-                      {proj.liveDemoUrl && (
-                        <a
-                          href={proj.liveDemoUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="admin-proj-visit-hint"
-                        >
-                          <span>Click to Visit</span>
-                          <i className="fa-solid fa-arrow-up-right-from-square"></i>
-                        </a>
+                    {/* Bottom Status Pill on Image (Matching Photos 2 & 3) */}
+                    <div className="absolute right-3 bottom-3 z-10">
+                      {isLive ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 text-emerald-300 text-[10px] font-bold shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          LIVE DEPLOYED
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 backdrop-blur-md border border-amber-500/30 text-amber-300 text-[10px] font-bold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                          DRAFT
+                        </span>
                       )}
                     </div>
-
-                    {/* Card Title */}
-                    <h4 className="admin-proj-card-title">{proj.title}</h4>
-
-                    {/* Description (2 lines clamp) */}
-                    <p className="admin-proj-card-desc">{proj.shortDescription}</p>
-
-                    {/* Tech Stack Row with real icons (Matching Image 3) */}
-                    <div className="admin-proj-tech-row">
-                      {techList.map((tech, tIdx) => {
-                        const badge = getTechBadgeData(tech);
-                        return (
-                          <span key={tIdx} className="admin-proj-tech-tag">
-                            <i className={`${badge.icon} ${badge.color}`}></i>
-                            <span>{tech}</span>
-                          </span>
-                        );
-                      })}
-                    </div>
                   </div>
 
-                  {/* Card Bottom Actions: Live Demo + Code Buttons (Matching Image 3) */}
-                  <div className="admin-proj-card-actions">
-                    <a
-                      href={proj.liveDemoUrl || '#'}
-                      target={proj.liveDemoUrl ? '_blank' : '_self'}
-                      rel="noreferrer"
-                      className="admin-btn-live-demo"
-                    >
-                      <i className="fa-solid fa-arrow-up-right-from-square"></i>
-                      <span>Live Demo</span>
-                    </a>
-                    <a
-                      href={proj.githubUrl || 'https://github.com/ayushprajapati9669-dev'}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="admin-btn-code"
-                    >
-                      <i className="fa-brands fa-github"></i>
-                      <span>Code</span>
-                    </a>
+                  {/* Card Body Details (Matching Photos 2 & 3) */}
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                      {/* Meta Line: PROJECT 01 + Click to Visit */}
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="font-mono text-[11px] font-bold text-cyan-400 tracking-wider">
+                          PROJECT {indexStr}
+                        </span>
+                        {proj.liveDemoUrl && (
+                          <a
+                            href={proj.liveDemoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-[11px] text-slate-400 hover:text-white flex items-center gap-1 transition-colors"
+                          >
+                            <span>Click to Visit</span>
+                            <i className="fa-solid fa-arrow-up-right-from-square text-[9px]" />
+                          </a>
+                        )}
+                      </div>
+
+                      {/* Card Title */}
+                      <h4 className="text-[16px] font-bold text-white mb-1 hover:text-cyan-300 transition-colors">
+                        {proj.title}
+                      </h4>
+
+                      {/* Description */}
+                      <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                        {proj.shortDescription || 'Interactive full-stack web application.'}
+                      </p>
+
+                      {/* Tech Stack Pills with Real Brand Icons (Matching Photos 2 & 3) */}
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {techList.map((tech, tIdx) => {
+                          const badge = getTechBadgeData(tech);
+                          return (
+                            <span
+                              key={tIdx}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#050a14] border border-white/5 text-[11px] font-medium text-slate-300 hover:border-white/15 transition-colors"
+                            >
+                              <i className={`${badge.icon} ${badge.color}`} />
+                              <span>{tech}</span>
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Card Bottom Actions: Live Demo + Code Buttons (Matching Photos 2 & 3) */}
+                    <div className="grid grid-cols-2 gap-3 pt-2">
+                      <a
+                        href={proj.liveDemoUrl || '#'}
+                        target={proj.liveDemoUrl ? '_blank' : '_self'}
+                        rel="noreferrer"
+                        className="flex items-center justify-center gap-2 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_20px_-5px_rgba(6,182,212,0.4)]"
+                      >
+                        <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
+                        <span>Live Demo</span>
+                      </a>
+                      <a
+                        href={proj.githubUrl || 'https://github.com/ayushprajapati9669-dev'}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-center gap-2 py-2 rounded-xl bg-[#050a14] hover:bg-white/10 border border-white/10 text-white font-semibold text-xs transition-all"
+                      >
+                        <i className="fa-brands fa-github text-xs" />
+                        <span>Code</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               );

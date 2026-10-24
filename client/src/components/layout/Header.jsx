@@ -48,6 +48,7 @@ export function Header() {
 
   const [toolsMenuOpen, setToolsMenuOpen] = useState(false);
   const toolsMenuRef = useRef(null);
+  const accentPickerRef = useRef(null);
 
   useEffect(() => {
     let savedTheme = localStorage.getItem('portfolio_theme') || localStorage.getItem('admin_theme_v9') || 'theme-midnight';
@@ -346,11 +347,17 @@ export function Header() {
     };
   }, []);
 
-  // Close notifications dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (notifWrapRef.current && !notifWrapRef.current.contains(e.target)) {
         setNotifOpen(false);
+      }
+      if (toolsMenuRef.current && !toolsMenuRef.current.contains(e.target)) {
+        setToolsMenuOpen(false);
+      }
+      if (accentPickerRef.current && !accentPickerRef.current.contains(e.target)) {
+        setAccentPaletteOpen(false);
       }
     };
     document.addEventListener('click', handleClickOutside);
@@ -367,7 +374,9 @@ export function Header() {
     <>
       <header className="nav-wrapper" id="navWrapper" ref={navWrapperRef}>
         <div className="nav-beam-container">
-          <div className="nav-beam" />
+          <div className="nav-beam-clip">
+            <div className="nav-beam" />
+          </div>
           <nav className="navbar" id="navbar" ref={navbarRef}>
             {/* Left: Brand / Monogram */}
             <Link to="/" className="nav-left" onClick={() => playTick()}>
@@ -504,7 +513,7 @@ export function Header() {
                 </select>
 
                 {/* Accent Color Palette (8 vibrant colors) */}
-                <div className="accent-picker-wrapper relative">
+                <div className="accent-picker-wrapper relative" ref={accentPickerRef}>
                   <button
                     type="button"
                     className="accent-picker-btn"

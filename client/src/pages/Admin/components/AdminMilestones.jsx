@@ -740,6 +740,41 @@ export function AdminMilestones({
     showToast(`Restored "${item.title}"!`, 'fa-arrow-rotate-left');
   };
 
+  const permanentlyDeleteFromTrash = (id) => {
+    playTick();
+    const item = trash.find((t) => t.id === id);
+    if (!item) return;
+    const nextTrash = trash.filter((t) => t.id !== id);
+    setTrash(nextTrash);
+    try { localStorage.setItem('admin_trash_v9', JSON.stringify(nextTrash)); } catch (e) {}
+    showToast(`Permanently deleted "${item.title}"`, 'fa-trash');
+  };
+
+  const emptyTrash = () => {
+    if (trash.length === 0) return;
+    playTick();
+    if (window.confirm(`Permanently delete all ${trash.length} items from the Recycle Bin? This action cannot be undone.`)) {
+      setTrash([]);
+      try { localStorage.setItem('admin_trash_v9', JSON.stringify([])); } catch (e) {}
+      showToast('Recycle Bin emptied', 'fa-trash');
+    }
+  };
+
+  const restoreAllFromTrash = () => {
+    if (trash.length === 0) return;
+    playTick();
+    const restoredItems = trash.map((t) => {
+      const copy = { ...t };
+      delete copy.deletedAt;
+      return copy;
+    });
+    const updated = [...restoredItems, ...milestones];
+    setTrash([]);
+    try { localStorage.setItem('admin_trash_v9', JSON.stringify([])); } catch (e) {}
+    persistMilestones(updated, 'Restore All', `Restored ${restoredItems.length} items from Recycle Bin`);
+    showToast(`Restored all ${restoredItems.length} items!`, 'fa-arrow-rotate-left');
+  };
+
   // Inline Title Editing on Double Click
   const handleStartInlineEdit = (id, currentTitle) => {
     playTick();
@@ -2010,38 +2045,128 @@ export function AdminMilestones({
             )}
 
             <div className="preview-header">
-              <h3>
-                <i className="fa-solid fa-eye" /> Live Portfolio Preview
-              </h3>
-              <button
-                type="button"
-                className="btn-icon"
-                onClick={() => setIsPiP((prev) => !prev)}
-                title={isPiP ? 'Dock Preview' : 'Picture-in-Picture Floating Mode'}
-                style={{ width: '26px', height: '26px' }}
-              >
-                <i className={`fa-solid ${isPiP ? 'fa-window-restore' : 'fa-clone'}`} />
-              </button>
+              <div className="flex items-center gap-2">
+                <i className="fa-regular fa-eye text-accent" />
+                <h3 className="text-white font-semibold text-[13px] tracking-wide">Live Portfolio Preview</h3>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300 ml-1">
+                  {milestones.filter((m) => m.published).length}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  className="btn-icon"
+                  onClick={() => {
+                    playTick();
+                    navigator.clipboard.writeText(`${window.location.origin}/about`);
+                    showToast('Public portfolio link copied!', 'fa-copy');
+                  }}
+                  title="Copy Public About Link"
+                  style={{ width: '26px', height: '26px' }}
+                >
+                  <i className="fa-regular fa-copy text-xs" />
+                </button>
+                <button
+                  type="button"
+                  className="btn-icon"
+                  onClick={() => setIsPiP((prev) => !prev)}
+                  title={isPiP ? 'Dock Preview' : 'Picture-in-Picture Floating Mode'}
+                  style={{ width: '26px', height: '26px' }}
+                >
+                  <i className={`fa-solid ${isPiP ? 'fa-window-restore' : 'fa-clone'}`} />
+                </button>
+              </div>
             </div>
 
             <div className="preview-body">
               {milestones.filter((m) => m.published).length === 0 ? (
-                <p className="text-center text-slate-500 py-8 text-xs">No published milestones yet.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-center text-slate-500">
+                  <i className="fa-regular fa-folder-open text-2xl mb-2 opacity-50" />
+                  <p className="text-xs">No published milestones yet.</p>
+                </div>
               ) : (
-                milestones
-                  .filter((m) => m.published)
-                  .map((m) => (
-                    <div key={m.id} className="preview-milestone">
-                      <h4>
-                        <i className={m.icon.startsWith('fa-') && !m.icon.includes(' ') ? `fa-solid ${m.icon}` : m.icon} />
-                        {m.title}
-                      </h4>
-                      <p dangerouslySetInnerHTML={{ __html: m.desc }} />
-                      {m.image && (
-                        <img src={m.image} alt={m.imageAlt || m.title} className="rounded-md mt-1.5" />
-                      )}
-                    </div>
-                  ))
+                <div className="space-y-4 border-l border-white/10 pl-4 ml-2 my-1">
+                  {milestones
+                    .filter((m) => m.published)
+                    .map((m) => (
+                      <div
+                        key={m.id}
+                        draggable={true}
+                        onDragStart={(e) => handleDragStart(e, m.id)}
+                        onDragEnd={handleDragEnd}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, m.id)}
+                        className="preview-milestone relative group transition-all duration-200 cursor-grab active:cursor-grabbing p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-white/10"
+                      >
+                        {/* Timeline Node Dot */}
+                        <div className="absolute -left-[23px] top-4 w-2.5 h-2.5 rounded-full bg-accent border-2 border-[#0a111c] group-hover:scale-125 transition-transform shadow-[0_0_8px_rgba(255,75,157,0.4)]" />
+
+                        <div className="flex items-start justify-between gap-2 mb-1.5">
+                          <h4 className="text-accent font-semibold text-[13px] leading-snug flex items-center gap-1.5 flex-1">
+                            <i className="fa-solid fa-grip-vertical text-slate-500 group-hover:text-accent text-[11px] cursor-grab" title="Drag to reorder" />
+                            <i className={m.icon.startsWith('fa-') && !m.icon.includes(' ') ? `fa-solid ${m.icon} text-[11px]` : `${m.icon} text-[11px]`} />
+                            <span>{m.title}</span>
+                          </h4>
+
+                          {/* Quick Up/Down Buttons on hover */}
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMoveUp(m.id);
+                              }}
+                              className="w-5 h-5 rounded bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-[9px] transition-colors"
+                              title="Move Up"
+                            >
+                              <i className="fa-solid fa-arrow-up" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMoveDown(m.id);
+                              }}
+                              className="w-5 h-5 rounded bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-[9px] transition-colors"
+                              title="Move Down"
+                            >
+                              <i className="fa-solid fa-arrow-down" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Description snippet */}
+                        <div
+                          className="text-slate-400 text-[11.5px] leading-relaxed line-clamp-2"
+                          dangerouslySetInnerHTML={{ __html: m.desc }}
+                        />
+
+                        {/* Skills / Technology Tags */}
+                        {Array.isArray(m.tags) && m.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-2.5">
+                            {m.tags.map((tag, tIdx) => (
+                              <span
+                                key={tIdx}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-medium text-slate-300"
+                              >
+                                <i className="fa-solid fa-code text-[8px] text-cyan-400" />
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {m.image && (
+                          <img
+                            src={m.image}
+                            alt={m.imageAlt || m.title}
+                            className="rounded-lg mt-2 max-h-24 w-full object-cover border border-white/10"
+                          />
+                        )}
+                      </div>
+                    ))}
+                </div>
               )}
             </div>
           </div>
@@ -3108,43 +3233,137 @@ export function AdminMilestones({
       {/* RECYCLE BIN MODAL */}
       {isRecycleBinOpen && (
         <div className="modal-overlay active" role="dialog" aria-modal="true">
-          <div className="modal-content" style={{ maxWidth: '600px' }}>
-            <div className="modal-header">
-              <h2>
-                <i className="fa-solid fa-trash-can text-rose-400" /> Recycle Bin ({trash.length})
-              </h2>
-              <button type="button" className="modal-close" onClick={() => setIsRecycleBinOpen(false)}>
-                <i className="fa-solid fa-xmark" />
+          <div className="modal-content !max-w-2xl !bg-[#070c16]/95 !border-rose-500/30 !rounded-2xl !p-0 overflow-hidden shadow-2xl backdrop-blur-2xl">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0a1120]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.2)]">
+                  <i className="fa-solid fa-trash-can text-base" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base font-bold text-white tracking-tight">Recycle Bin</h2>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                      {trash.length} {trash.length === 1 ? 'item' : 'items'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    Recover deleted milestones or permanently purge them from your database.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+                onClick={() => setIsRecycleBinOpen(false)}
+              >
+                <i className="fa-solid fa-xmark text-sm" />
               </button>
             </div>
-            <div className="modal-body max-h-96 overflow-y-auto">
+
+            {/* Information Banner & Bulk Actions */}
+            <div className="px-6 py-3 bg-white/[0.02] border-b border-white/5 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-slate-400">
+                <i className="fa-solid fa-circle-info text-cyan-400 text-xs" />
+                <span>Items are preserved for 30 days before permanent deletion.</span>
+              </div>
+              {trash.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={restoreAllFromTrash}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 text-emerald-400 text-xs font-semibold transition-all"
+                  >
+                    <i className="fa-solid fa-rotate-left text-[11px]" />
+                    <span>Restore All</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={emptyTrash}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 text-rose-400 text-xs font-semibold transition-all"
+                  >
+                    <i className="fa-solid fa-broom text-[11px]" />
+                    <span>Empty Bin</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Trash Items List */}
+            <div className="p-6 max-h-[420px] overflow-y-auto space-y-3 custom-scrollbar">
               {trash.length === 0 ? (
-                <p className="text-center text-slate-500 py-8 text-xs">Recycle bin is empty.</p>
+                <div className="flex flex-col items-center justify-center py-12 text-center text-slate-500">
+                  <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-2xl text-slate-600 mb-3 border border-white/5">
+                    <i className="fa-regular fa-trash-can" />
+                  </div>
+                  <h4 className="text-sm font-semibold text-white mb-1">Recycle Bin is Empty</h4>
+                  <p className="text-xs text-slate-400 max-w-xs">
+                    Deleted milestones will be held here for 30 days for instant recovery.
+                  </p>
+                </div>
               ) : (
                 trash.map((item) => {
                   const daysLeft = 30 - Math.floor((Date.now() - (item.deletedAt || Date.now())) / 86400000);
                   return (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between p-3 border-b border-slate-800 last:border-b-0"
+                      className="flex items-center justify-between gap-4 p-4 rounded-xl bg-[#0a1120] border border-white/5 hover:border-white/10 transition-all group"
                     >
-                      <div>
-                        <div className="text-sm font-semibold text-slate-200">{item.title}</div>
-                        <div className="text-[10px] text-slate-500">
-                          {daysLeft > 0 ? `${daysLeft} days remaining before permanent purge` : 'Eligible for purge'}
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-accent text-base shrink-0">
+                          <i className={item.icon?.startsWith('fa-') && !item.icon.includes(' ') ? `fa-solid ${item.icon}` : item.icon || 'fa-solid fa-layer-group'} />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="text-sm font-bold text-white truncate">{item.title}</h4>
+                          <div className="flex flex-wrap items-center gap-2 mt-1">
+                            <span className="text-[11px] text-slate-400 font-medium">
+                              {item.metaLabel || item.year || 'Milestone'}
+                            </span>
+                            <span className="text-[10px] text-slate-500">•</span>
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                              <i className="fa-regular fa-clock text-[9px]" />
+                              {daysLeft > 0 ? `${daysLeft} days left` : 'Purge due'}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        className="btn btn-primary text-xs py-1 px-3"
-                        onClick={() => restoreFromTrash(item.id)}
-                      >
-                        <i className="fa-solid fa-arrow-rotate-left" /> Restore
-                      </button>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-semibold shadow-sm transition-all"
+                          onClick={() => restoreFromTrash(item.id)}
+                        >
+                          <i className="fa-solid fa-rotate-left text-[11px]" />
+                          <span>Restore</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="w-8 h-8 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 flex items-center justify-center text-xs transition-colors"
+                          onClick={() => permanentlyDeleteFromTrash(item.id)}
+                          title="Delete Permanently"
+                        >
+                          <i className="fa-regular fa-trash-can" />
+                        </button>
+                      </div>
                     </div>
                   );
                 })
               )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-3 border-t border-white/10 bg-[#0a1120] flex items-center justify-between">
+              <span className="text-[11px] text-slate-500 font-mono">
+                Total Deleted: {trash.length}
+              </span>
+              <button
+                type="button"
+                className="px-4 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-medium border border-white/10 transition-colors"
+                onClick={() => setIsRecycleBinOpen(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
