@@ -120,6 +120,46 @@ function validateProjectInput(body, isPartial = false) {
     else data.displayOrder = num;
   }
 
+  if (body.caseStudy !== undefined) {
+    if (!body.caseStudy || typeof body.caseStudy !== 'object') {
+      data.caseStudy = null;
+    } else {
+      const cs = body.caseStudy;
+      const caseStudyData = {
+        problem: sanitizeText(cs.problem, 5000),
+        approach: sanitizeText(cs.approach, 5000),
+        techDecisions: sanitizeText(cs.techDecisions, 5000),
+        learnings: sanitizeText(cs.learnings, 5000),
+        architectureDiagramUrl: sanitizeText(cs.architectureDiagramUrl, 2000000),
+        beforeScreenshots: Array.isArray(cs.beforeScreenshots)
+          ? cs.beforeScreenshots.slice(0, 5).map(s => sanitizeText(s, 2000000)).filter(Boolean)
+          : [],
+        afterScreenshots: Array.isArray(cs.afterScreenshots)
+          ? cs.afterScreenshots.slice(0, 5).map(s => sanitizeText(s, 2000000)).filter(Boolean)
+          : [],
+        result: {
+          summary: sanitizeText(cs.result?.summary, 5000),
+          metrics: Array.isArray(cs.result?.metrics)
+            ? cs.result.metrics.slice(0, 10).map(m => ({
+                label: sanitizeText(m?.label, 100),
+                value: sanitizeText(m?.value, 100)
+              })).filter(m => m.label || m.value)
+            : []
+        }
+      };
+
+      // Ensure max 5 screenshots validation
+      if (Array.isArray(cs.beforeScreenshots) && cs.beforeScreenshots.length > 5) {
+        errors.push('Before screenshots array cannot exceed 5 items.');
+      }
+      if (Array.isArray(cs.afterScreenshots) && cs.afterScreenshots.length > 5) {
+        errors.push('After screenshots array cannot exceed 5 items.');
+      }
+
+      data.caseStudy = caseStudyData;
+    }
+  }
+
   return { valid: errors.length === 0, errors, data };
 }
 

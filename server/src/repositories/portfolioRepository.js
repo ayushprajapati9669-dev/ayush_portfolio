@@ -128,7 +128,7 @@ class PortfolioDataStore {
 
   getPublicProjectBySlug(slug) {
     const found = (this.state.projects || []).find(
-      p => p.slug === slug && p.status === 'published'
+      p => (p.slug === slug || p.id === slug) && p.status === 'published'
     );
     return found ? JSON.parse(JSON.stringify(found)) : null;
   }
@@ -173,6 +173,7 @@ class PortfolioDataStore {
       githubUrl: projectData.githubUrl || '',
       liveDemoUrl: projectData.liveDemoUrl || '',
       featured: Boolean(projectData.featured),
+      caseStudy: projectData.caseStudy || null,
       status: projectData.status === 'published' ? 'published' : 'draft',
       displayOrder: typeof projectData.displayOrder === 'number' ? projectData.displayOrder : this.state.projects.length + 1,
       createdAt: now,

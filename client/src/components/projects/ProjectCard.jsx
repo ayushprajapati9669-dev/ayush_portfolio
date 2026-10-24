@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 
 function getTechIcon(name) {
@@ -115,6 +116,18 @@ export function ProjectCard({
     }
   };
 
+  const hasCaseStudy = Boolean(
+    proj.caseStudy &&
+      (proj.caseStudy.problem ||
+        proj.caseStudy.approach ||
+        proj.caseStudy.techDecisions ||
+        proj.caseStudy.architectureDiagramUrl ||
+        proj.caseStudy.learnings ||
+        proj.caseStudy.result?.summary ||
+        (Array.isArray(proj.caseStudy.result?.metrics) && proj.caseStudy.result.metrics.length > 0))
+  );
+  const detailLink = `/projects/${proj.slug || proj.id}`;
+
   return (
     <article
       ref={cardRef}
@@ -137,6 +150,9 @@ export function ProjectCard({
         <img src={imgSrc} alt={proj.title} loading="lazy" />
         <div className="project-badges">
           <div className="p-badge">{badgeText}</div>
+          {hasCaseStudy && (
+            <div className="p-badge case-study">📖 Case Study</div>
+          )}
           {liveHref && /^https?:\/\//i.test(liveHref) && (
             <div className="p-badge live">Live Deployed</div>
           )}
@@ -163,6 +179,16 @@ export function ProjectCard({
         </div>
 
         <div className="project-actions">
+          {hasCaseStudy && (
+            <Link
+              to={detailLink}
+              className="btn-case-study"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span>Read Case Study</span>
+              <i className="fa-solid fa-arrow-right" style={{ fontSize: '11px' }} />
+            </Link>
+          )}
           {liveHref && (
             <a
               href={liveHref}

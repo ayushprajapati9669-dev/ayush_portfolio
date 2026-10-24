@@ -138,6 +138,7 @@ export function AdminMilestones({
   });
   const [skillInput, setSkillInput] = useState('');
   const [errors, setErrors] = useState({});
+  const [milestoneStep, setMilestoneStep] = useState(1);
 
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
@@ -213,6 +214,7 @@ export function AdminMilestones({
     playTick();
     const item = milestones[idx];
     setEditingIdx(idx);
+    setMilestoneStep(1);
     setForm({
       phase: item.phase || 'Full-Stack Practice',
       yearBadge: item.yearBadge || item.year || 'Year 3',
@@ -235,6 +237,7 @@ export function AdminMilestones({
   const handleCancel = () => {
     playTick();
     setEditingIdx(null);
+    setMilestoneStep(1);
     setForm({
       phase: 'Full-Stack Practice',
       yearBadge: 'Year 3',
@@ -252,6 +255,7 @@ export function AdminMilestones({
 
   const handleApplyPreset = (preset) => {
     playTick();
+    setMilestoneStep(1);
     setForm({
       phase: preset.phase,
       yearBadge: preset.yearBadge,
@@ -269,6 +273,41 @@ export function AdminMilestones({
     setTimeout(() => {
       formTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 50);
+  };
+
+  const validateMilestoneStep = (step) => {
+    const errs = {};
+    if (step === 1) {
+      if (!form.phase.trim()) errs.phase = 'Phase category is required.';
+      if (!form.yearBadge.trim()) errs.yearBadge = 'Timeline / year badge is required.';
+    } else if (step === 2) {
+      if (!form.title.trim()) errs.title = 'Milestone title is required.';
+      if (!form.description.trim()) errs.description = 'Milestone description is required.';
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleNextMilestoneStep = () => {
+    playTick();
+    if (validateMilestoneStep(milestoneStep)) {
+      setErrors({});
+      setMilestoneStep((prev) => Math.min(prev + 1, 3));
+    }
+  };
+
+  const handlePrevMilestoneStep = () => {
+    playTick();
+    setErrors({});
+    setMilestoneStep((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleJumpToMilestoneStep = (targetStep) => {
+    playTick();
+    if (targetStep < milestoneStep || validateMilestoneStep(milestoneStep)) {
+      setErrors({});
+      setMilestoneStep(targetStep);
+    }
   };
 
   const handleDelete = (idx) => {
@@ -696,18 +735,23 @@ export function AdminMilestones({
         <div className="space-y-6">
           {/* Milestone Creation / Edit Form (when open) */}
           {isFormOpen && (
-            <div ref={formTopRef} className="glass-card-admin p-6 sm:p-7 rounded-2xl border border-cyan-400/30 bg-black/50 shadow-2xl space-y-5 animate-in fade-in duration-200">
+            <div ref={formTopRef} className="glass-card-admin p-6 sm:p-7 rounded-2xl border border-cyan-400/30 bg-black/50 shadow-2xl space-y-6 animate-in fade-in duration-200">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-sm border border-cyan-500/30">
                     <i className="fa-solid fa-pen-ruler" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-white">
-                      {editingIdx !== null ? 'Edit Milestone Highlight' : 'Create New Journey Milestone'}
-                    </h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-base font-bold text-white">
+                        {editingIdx !== null ? 'Edit Milestone Highlight' : 'Create New Journey Milestone'}
+                      </h3>
+                      <span className="font-mono text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                        Step {milestoneStep} of 3
+                      </span>
+                    </div>
                     <p className="text-xs text-slate-400">
-                      Configure phase, timeline tag, title, achievement metrics, and associated tech stack.
+                      Multi-step milestone creator: configure phase & timeline, achievement details, and tech skills.
                     </p>
                   </div>
                 </div>
@@ -721,285 +765,434 @@ export function AdminMilestones({
                 </button>
               </div>
 
-              <form onSubmit={handleSaveMilestone} noValidate className="space-y-4">
-                {/* Row 1: Phase, Year Badge, Status */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
-                      Phase Category <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.phase}
-                      onChange={(e) => setForm({ ...form, phase: e.target.value })}
-                      placeholder="e.g. Full-Stack Practice or Academic Degree"
-                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
-                    />
-                    {/* Phase Chips */}
-                    <div className="flex flex-wrap gap-1 mt-1.5">
-                      {PHASE_PRESETS.map((pSet) => (
-                        <button
-                          key={pSet.name}
-                          type="button"
-                          onClick={() => {
-                            playTick();
-                            setForm({ ...form, phase: pSet.name, icon: pSet.icon });
-                          }}
-                          className={`text-[9px] font-mono px-2 py-0.5 rounded-md border transition-all ${
-                            form.phase === pSet.name
-                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold'
-                              : 'border-white/10 bg-white/5 text-slate-400 hover:text-slate-200'
-                          }`}
-                        >
-                          {pSet.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
-                      Timeline / Year Badge <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.yearBadge}
-                      onChange={(e) => setForm({ ...form, yearBadge: e.target.value })}
-                      placeholder="e.g. Year 3, Present, or 2023 - 2027"
-                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
-                    />
-                    {/* Year Chips */}
-                    <div className="flex flex-wrap gap-1 mt-1.5">
-                      {YEAR_PRESETS.map((yr) => (
-                        <button
-                          key={yr}
-                          type="button"
-                          onClick={() => {
-                            playTick();
-                            setForm({ ...form, yearBadge: yr });
-                          }}
-                          className={`text-[9px] font-mono px-2 py-0.5 rounded-md border transition-all ${
-                            form.yearBadge === yr
-                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold'
-                              : 'border-white/10 bg-white/5 text-slate-400 hover:text-slate-200'
-                          }`}
-                        >
-                          {yr}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
-                      Status & Progress
-                    </label>
-                    <div className="grid grid-cols-3 gap-1.5 h-[38px]">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playTick();
-                          setForm({ ...form, status: 'completed' });
-                        }}
-                        className={`rounded-xl text-[11px] font-bold border transition-all flex items-center justify-center gap-1 ${
-                          form.status === 'completed'
-                            ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300 shadow-sm'
-                            : 'border-white/10 bg-black/40 text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        <i className="fa-solid fa-check text-[10px]" />
-                        <span>Completed</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playTick();
-                          setForm({ ...form, status: 'in-progress' });
-                        }}
-                        className={`rounded-xl text-[11px] font-bold border transition-all flex items-center justify-center gap-1 ${
-                          form.status === 'in-progress'
-                            ? 'border-cyan-500 bg-cyan-500/20 text-cyan-300 shadow-sm'
-                            : 'border-white/10 bg-black/40 text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        <i className="fa-solid fa-bolt text-[10px]" />
-                        <span>Focus</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playTick();
-                          setForm({ ...form, status: 'planned' });
-                        }}
-                        className={`rounded-xl text-[11px] font-bold border transition-all flex items-center justify-center gap-1 ${
-                          form.status === 'planned'
-                            ? 'border-purple-500 bg-purple-500/20 text-purple-300 shadow-sm'
-                            : 'border-white/10 bg-black/40 text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        <i className="fa-solid fa-crosshairs text-[10px]" />
-                        <span>Planned</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Row 2: Title, Metric, Icon */}
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
-                  <div className="sm:col-span-7">
-                    <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
-                      Milestone Title <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.title}
-                      onChange={(e) => setForm({ ...form, title: e.target.value })}
-                      placeholder="e.g. MERN Stack & Interactive Systems or B.Tech CSE (CGPA 8.42)"
-                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all font-semibold"
-                    />
-                    <FormErrorMessage message={errors.title} />
-                  </div>
-
-                  <div className="sm:col-span-3">
-                    <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
-                      Achievement Metric / Pill
-                    </label>
-                    <input
-                      type="text"
-                      value={form.metric}
-                      onChange={(e) => setForm({ ...form, metric: e.target.value })}
-                      placeholder="e.g. 8.42 CGPA or 10+ Clones"
-                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all font-mono"
-                    />
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
-                      Icon
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={form.icon}
-                        onChange={(e) => setForm({ ...form, icon: e.target.value })}
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all appearance-none cursor-pointer"
-                      >
-                        {ICON_OPTIONS.map((opt) => (
-                          <option key={opt.id} value={opt.id} className="bg-slate-900 text-white">
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-                      <i className={`fa-solid ${form.icon} absolute right-3 top-1/2 -translate-y-1/2 text-cyan-400 pointer-events-none text-xs`} />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Row 3: Description */}
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block font-mono text-xs text-slate-300 font-semibold">
-                      Description & Key Learnings <span className="text-red-400">*</span>
-                    </label>
-                    <span className="text-[10px] font-mono text-slate-500">
-                      {form.description.length} chars
-                    </span>
-                  </div>
-                  <textarea
-                    rows="3"
-                    value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    placeholder="Details about achievements, coursework, practical projects, or leadership highlights..."
-                    className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 leading-relaxed"
+              {/* Multi-Step Stepper Progress Bar */}
+              <div className="space-y-3">
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
+                    style={{ width: `${(milestoneStep / 3) * 100}%` }}
                   />
-                  <FormErrorMessage message={errors.description} />
                 </div>
 
-                {/* Row 4: Technologies & Skills Tag Picker */}
-                <div>
-                  <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
-                    Technologies & Skills Acquired
-                  </label>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="relative flex-1">
-                      <i className="fa-solid fa-tags absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs" />
-                      <input
-                        type="text"
-                        value={skillInput}
-                        onChange={(e) => setSkillInput(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault();
-                            handleAddSkill();
-                          }
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  {/* Step 1 Pill */}
+                  <button
+                    type="button"
+                    onClick={() => handleJumpToMilestoneStep(1)}
+                    className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
+                      milestoneStep === 1
+                        ? 'border-cyan-400 bg-cyan-500/10 text-white shadow-md shadow-cyan-500/15'
+                        : milestoneStep > 1
+                        ? 'border-emerald-500/30 bg-emerald-500/5 text-slate-300'
+                        : 'border-white/10 bg-black/40 text-slate-400'
+                    }`}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                        milestoneStep === 1
+                          ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/40'
+                          : milestoneStep > 1
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                          : 'bg-white/10 text-slate-400'
+                      }`}
+                    >
+                      {milestoneStep > 1 ? <i className="fa-solid fa-check text-xs" /> : '01'}
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 block">Step 01</span>
+                      <p className="text-xs font-bold text-white truncate">Phase & Timeline</p>
+                    </div>
+                  </button>
+
+                  {/* Step 2 Pill */}
+                  <button
+                    type="button"
+                    onClick={() => handleJumpToMilestoneStep(2)}
+                    className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
+                      milestoneStep === 2
+                        ? 'border-cyan-400 bg-cyan-500/10 text-white shadow-md shadow-cyan-500/15'
+                        : milestoneStep > 2
+                        ? 'border-emerald-500/30 bg-emerald-500/5 text-slate-300'
+                        : 'border-white/10 bg-black/40 text-slate-400'
+                    }`}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                        milestoneStep === 2
+                          ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/40'
+                          : milestoneStep > 2
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                          : 'bg-white/10 text-slate-400'
+                      }`}
+                    >
+                      {milestoneStep > 2 ? <i className="fa-solid fa-check text-xs" /> : '02'}
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 block">Step 02</span>
+                      <p className="text-xs font-bold text-white truncate">Title & Details</p>
+                    </div>
+                  </button>
+
+                  {/* Step 3 Pill */}
+                  <button
+                    type="button"
+                    onClick={() => handleJumpToMilestoneStep(3)}
+                    className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
+                      milestoneStep === 3
+                        ? 'border-cyan-400 bg-cyan-500/10 text-white shadow-md shadow-cyan-500/15'
+                        : 'border-white/10 bg-black/40 text-slate-400'
+                    }`}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                        milestoneStep === 3
+                          ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/40'
+                          : 'bg-white/10 text-slate-400'
+                      }`}
+                    >
+                      03
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 block">Step 03</span>
+                      <p className="text-xs font-bold text-white truncate">Skills & Summary</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <form onSubmit={handleSaveMilestone} noValidate className="space-y-5">
+                {/* STEP 1: Phase Category & Timeline */}
+                {milestoneStep === 1 && (
+                  <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
+                          Phase Category <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={form.phase}
+                          onChange={(e) => {
+                            setForm({ ...form, phase: e.target.value });
+                            if (errors.phase) setErrors((prev) => ({ ...prev, phase: '' }));
+                          }}
+                          placeholder="e.g. Full-Stack Practice or Academic Degree"
+                          className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                        />
+                        <FormErrorMessage message={errors.phase} />
+
+                        {/* Phase Chips */}
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {PHASE_PRESETS.map((pSet) => (
+                            <button
+                              key={pSet.name}
+                              type="button"
+                              onClick={() => {
+                                playTick();
+                                setForm({ ...form, phase: pSet.name, icon: pSet.icon });
+                                if (errors.phase) setErrors((prev) => ({ ...prev, phase: '' }));
+                              }}
+                              className={`text-[9px] font-mono px-2 py-0.5 rounded-md border transition-all ${
+                                form.phase === pSet.name
+                                  ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold'
+                                  : 'border-white/10 bg-white/5 text-slate-400 hover:text-slate-200'
+                              }`}
+                            >
+                              {pSet.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
+                          Timeline / Year Badge <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={form.yearBadge}
+                          onChange={(e) => {
+                            setForm({ ...form, yearBadge: e.target.value });
+                            if (errors.yearBadge) setErrors((prev) => ({ ...prev, yearBadge: '' }));
+                          }}
+                          placeholder="e.g. Year 3, Present, or 2023 - 2027"
+                          className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                        />
+                        <FormErrorMessage message={errors.yearBadge} />
+
+                        {/* Year Chips */}
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {YEAR_PRESETS.map((yr) => (
+                            <button
+                              key={yr}
+                              type="button"
+                              onClick={() => {
+                                playTick();
+                                setForm({ ...form, yearBadge: yr });
+                                if (errors.yearBadge) setErrors((prev) => ({ ...prev, yearBadge: '' }));
+                              }}
+                              className={`text-[9px] font-mono px-2 py-0.5 rounded-md border transition-all ${
+                                form.yearBadge === yr
+                                  ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold'
+                                  : 'border-white/10 bg-white/5 text-slate-400 hover:text-slate-200'
+                              }`}
+                            >
+                              {yr}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block font-mono text-xs text-slate-300 font-semibold mb-1.5">
+                        Status & Progress Stage
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playTick();
+                            setForm({ ...form, status: 'completed' });
+                          }}
+                          className={`p-3 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-2 ${
+                            form.status === 'completed'
+                              ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300 shadow-sm'
+                              : 'border-white/10 bg-black/40 text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <i className="fa-solid fa-check text-xs" />
+                          <span>Completed</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playTick();
+                            setForm({ ...form, status: 'in-progress' });
+                          }}
+                          className={`p-3 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-2 ${
+                            form.status === 'in-progress'
+                              ? 'border-cyan-500 bg-cyan-500/20 text-cyan-300 shadow-sm'
+                              : 'border-white/10 bg-black/40 text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <i className="fa-solid fa-bolt text-xs" />
+                          <span>Current Focus</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            playTick();
+                            setForm({ ...form, status: 'planned' });
+                          }}
+                          className={`p-3 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-2 ${
+                            form.status === 'planned'
+                              ? 'border-purple-500 bg-purple-500/20 text-purple-300 shadow-sm'
+                              : 'border-white/10 bg-black/40 text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <i className="fa-solid fa-crosshairs text-xs" />
+                          <span>Planned Target</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 2: Title, Metric, Icon & Description */}
+                {milestoneStep === 2 && (
+                  <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                      <div className="sm:col-span-6">
+                        <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
+                          Milestone Title <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={form.title}
+                          onChange={(e) => {
+                            setForm({ ...form, title: e.target.value });
+                            if (errors.title) setErrors((prev) => ({ ...prev, title: '' }));
+                          }}
+                          placeholder="e.g. MERN Stack & Scalable Systems or B.Tech CSE (8.42 CGPA)"
+                          className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all font-semibold"
+                        />
+                        <FormErrorMessage message={errors.title} />
+                      </div>
+
+                      <div className="sm:col-span-3">
+                        <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
+                          Achievement Metric / Pill
+                        </label>
+                        <input
+                          type="text"
+                          value={form.metric}
+                          onChange={(e) => setForm({ ...form, metric: e.target.value })}
+                          placeholder="e.g. 8.42 CGPA or 10+ Clones"
+                          className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all font-mono"
+                        />
+                      </div>
+
+                      <div className="sm:col-span-3">
+                        <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
+                          Icon
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={form.icon}
+                            onChange={(e) => setForm({ ...form, icon: e.target.value })}
+                            className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all appearance-none cursor-pointer"
+                          >
+                            {ICON_OPTIONS.map((opt) => (
+                              <option key={opt.id} value={opt.id} className="bg-slate-900 text-white">
+                                {opt.label}
+                              </option>
+                            ))}
+                          </select>
+                          <i className={`fa-solid ${form.icon} absolute right-3 top-1/2 -translate-y-1/2 text-cyan-400 pointer-events-none text-xs`} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block font-mono text-xs text-slate-300 font-semibold">
+                          Description & Key Learnings <span className="text-red-400">*</span>
+                        </label>
+                        <span className="text-[10px] font-mono text-slate-500">
+                          {form.description.length} chars
+                        </span>
+                      </div>
+                      <textarea
+                        rows="3"
+                        value={form.description}
+                        onChange={(e) => {
+                          setForm({ ...form, description: e.target.value });
+                          if (errors.description) setErrors((prev) => ({ ...prev, description: '' }));
                         }}
-                        placeholder="Add technology tag and press Enter (e.g. React, MongoDB)..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-3.5 py-2 text-xs text-white outline-none focus:border-cyan-400 transition-all"
+                        placeholder="Details about achievements, coursework, practical projects, or leadership highlights..."
+                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 leading-relaxed"
+                      />
+                      <FormErrorMessage message={errors.description} />
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 3: Technologies, Skills & Final Summary */}
+                {milestoneStep === 3 && (
+                  <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-200">
+                    <div>
+                      <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
+                        Technologies & Skills Acquired
+                      </label>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="relative flex-1">
+                          <i className="fa-solid fa-tags absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs" />
+                          <input
+                            type="text"
+                            value={skillInput}
+                            onChange={(e) => setSkillInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleAddSkill();
+                              }
+                            }}
+                            placeholder="Add technology tag and press Enter (e.g. React, MongoDB)..."
+                            className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-3.5 py-2 text-xs text-white outline-none focus:border-cyan-400 transition-all"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleAddSkill()}
+                          className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-mono font-bold transition-all border border-white/10"
+                        >
+                          + Tag
+                        </button>
+                      </div>
+
+                      {/* Current Active Tags */}
+                      {currentSkills.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                          {currentSkills.map((sk) => (
+                            <span
+                              key={sk}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-cyan-400/30 bg-cyan-500/10 text-cyan-300 text-xs font-mono"
+                            >
+                              <span>{sk}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveSkill(sk)}
+                                className="text-cyan-400 hover:text-white"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Recommended Quick Click Tags */}
+                      <div className="flex flex-wrap items-center gap-1">
+                        <span className="text-[10px] font-mono text-slate-500 mr-1">Recommended:</span>
+                        {RECOMMENDED_SKILLS.slice(0, 8).map((rec) => {
+                          const isAdded = currentSkills.some((s) => s.toLowerCase() === rec.toLowerCase());
+                          return (
+                            <button
+                              key={rec}
+                              type="button"
+                              onClick={() => {
+                                if (isAdded) {
+                                  handleRemoveSkill(rec);
+                                } else {
+                                  handleAddSkill(rec);
+                                }
+                              }}
+                              className={`text-[9px] font-mono px-2 py-0.5 rounded border transition-all ${
+                                isAdded
+                                  ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold'
+                                  : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              {isAdded ? '✓ ' : '+ '}
+                              {rec}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block font-mono text-xs text-slate-300 font-semibold mb-1">
+                        Reference Link (Optional URL to Project, Certificate, or University Portal)
+                      </label>
+                      <input
+                        type="url"
+                        value={form.link}
+                        onChange={(e) => setForm({ ...form, link: e.target.value })}
+                        placeholder="https://github.com/ayushprajapati9669-dev or credential link"
+                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all font-mono"
                       />
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleAddSkill()}
-                      className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-mono font-bold transition-all border border-white/10"
-                    >
-                      + Tag
-                    </button>
-                  </div>
 
-                  {/* Current Active Tags */}
-                  {currentSkills.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-2">
-                      {currentSkills.map((sk) => (
-                        <span
-                          key={sk}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-cyan-400/30 bg-cyan-500/10 text-cyan-300 text-xs font-mono"
-                        >
-                          <span>{sk}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveSkill(sk)}
-                            className="text-cyan-400 hover:text-white"
-                          >
-                            ×
-                          </button>
+                    {/* Milestone Live Summary Card */}
+                    <div className="p-3.5 rounded-xl border border-cyan-400/20 bg-black/40 space-y-1.5">
+                      <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+                        <span className="text-cyan-400 font-semibold flex items-center gap-1.5">
+                          <i className={`fa-solid ${form.icon}`} /> {form.phase || 'Phase Category'}
                         </span>
-                      ))}
+                        <span>{form.yearBadge || 'Timeline'}</span>
+                      </div>
+                      <h4 className="text-sm font-bold text-white truncate">{form.title || 'Untitled Milestone'}</h4>
+                      <p className="text-xs text-slate-400 line-clamp-2">{form.description || 'No description provided.'}</p>
                     </div>
-                  )}
-
-                  {/* Recommended Quick Click Tags */}
-                  <div className="flex flex-wrap items-center gap-1">
-                    <span className="text-[10px] font-mono text-slate-500 mr-1">Recommended:</span>
-                    {RECOMMENDED_SKILLS.slice(0, 8).map((rec) => {
-                      const isAdded = currentSkills.some((s) => s.toLowerCase() === rec.toLowerCase());
-                      return (
-                        <button
-                          key={rec}
-                          type="button"
-                          onClick={() => {
-                            if (isAdded) {
-                              handleRemoveSkill(rec);
-                            } else {
-                              handleAddSkill(rec);
-                            }
-                          }}
-                          className={`text-[9px] font-mono px-2 py-0.5 rounded border transition-all ${
-                            isAdded
-                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold'
-                              : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
-                          }`}
-                        >
-                          {isAdded ? '✓ ' : '+ '}
-                          {rec}
-                        </button>
-                      );
-                    })}
                   </div>
-                </div>
+                )}
 
-                {/* Form Action Buttons */}
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+                {/* Form Stepper Footer Buttons */}
+                <div className="flex items-center justify-between gap-3 pt-3 border-t border-white/10">
                   <button
                     type="button"
                     onClick={handleCancel}
@@ -1007,13 +1200,37 @@ export function AdminMilestones({
                   >
                     Cancel
                   </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-2"
-                  >
-                    <i className="fa-solid fa-check" />
-                    <span>{editingIdx !== null ? 'Save Milestone Changes' : 'Publish Milestone'}</span>
-                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {milestoneStep > 1 && (
+                      <button
+                        type="button"
+                        onClick={handlePrevMilestoneStep}
+                        className="px-4 py-2 rounded-xl border border-white/15 bg-black/40 text-slate-300 hover:text-white text-xs font-mono transition-all flex items-center gap-1.5"
+                      >
+                        <i className="fa-solid fa-arrow-left text-[10px]" /> Back
+                      </button>
+                    )}
+
+                    {milestoneStep < 3 ? (
+                      <button
+                        type="button"
+                        onClick={handleNextMilestoneStep}
+                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-1.5"
+                      >
+                        <span>Continue</span>
+                        <i className="fa-solid fa-arrow-right text-[10px]" />
+                      </button>
+                    ) : (
+                      <button
+                        type="submit"
+                        className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-2"
+                      >
+                        <i className="fa-solid fa-check" />
+                        <span>{editingIdx !== null ? 'Save Milestone Changes' : 'Publish Milestone'}</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
               </form>
             </div>
@@ -1065,8 +1282,8 @@ export function AdminMilestones({
             </div>
           </div>
 
-          {/* Milestones Timeline Cards List */}
-          <div className="space-y-3">
+          {/* Milestones Timeline Cards List with scrollbar limit */}
+          <div className="space-y-3 max-h-[620px] overflow-y-auto pr-2 custom-scrollbar">
             {filteredMilestones.length === 0 ? (
               <div className="glass-card-admin p-12 text-center rounded-2xl border border-white/10 bg-black/30">
                 <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mx-auto mb-3 text-lg border border-cyan-500/20">

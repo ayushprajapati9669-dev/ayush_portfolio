@@ -4,6 +4,7 @@ import { HomePage } from '../pages/Home/Home';
 import { AboutPage } from '../pages/About/About';
 import { SkillsPage } from '../pages/Skills/Skills';
 import { ProjectsPage } from '../pages/Projects/Projects';
+import { ProjectDetail } from '../pages/Projects/ProjectDetail';
 import { CertificatesPage } from '../pages/Certificates/Certificates';
 import { ContactPage } from '../pages/Contact/Contact';
 import { AdminPage } from '../pages/Admin/Admin';
@@ -20,7 +21,7 @@ export function AppRouter() {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/skills" element={<SkillsPage />} />
       <Route path="/projects" element={<ProjectsPage viewMode="projects" />} />
-      <Route path="/projects/:slug" element={<ProjectsPage viewMode="projects" />} />
+      <Route path="/projects/:slug" element={<ProjectDetail />} />
       <Route path="/certificates" element={<CertificatesPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/connect" element={<ContactPage />} />

@@ -116,11 +116,37 @@
 - **Project Cards**:
   - High-resolution thumbnail with smooth hover zoom.
   - Category badge, feature pill, and project title.
+  - **Case Study Badge (`📖 Case Study`)**: Rendered automatically on cards for projects with rich case study data.
   - Tech stack tags with official brand icons.
-  - Interactive Action Links:
+  - **Action Links**:
+    - **Read Case Study → Button (`.btn-case-study`)**: Directly routes to `/projects/:slug`.
     - **Live Demo Link** (with external link icon).
     - **GitHub Repository Link** (with brand icon).
-- **Slug-Based Routing (`/projects/:slug`)**: Direct URL routing for individual project case studies.
+- **Slug-Based Routing (`/projects/:slug`)**: Direct URL routing for individual project case studies with fallback lookup by slug or ID.
+
+### 2.5.1 In-Depth Case Study Page (`ProjectDetail.jsx`)
+- **Visual Design & High-Contrast Layout**:
+  - **Opaque Obsidian Surfaces (`#0B1120`)**: Deep solid card background that completely eliminates background 3D canvas sphere bleed-through and ensures perfect contrast.
+  - **High-Contrast Typography**: Crisp `#FFFFFF` headings, `#F8FAFC` alabaster body text, `#38BDF8` cyan highlights and inline code pills.
+  - **Sticky Sub-Navigation Bar**: Glassmorphic pill bar pinned below global header (`top: 96px`) with active section tracking (`Overview`, `Problem`, `Approach`, `Tech Decisions`, `Results & Metrics`, `Architecture`, `Learnings`, `Live Demo`).
+- **Comprehensive Case Study Architecture**:
+  1. **Hero Section**: High-resolution cover banner with gradient fade, category badge, dynamic reading time badge, project title, overview summary, and 4-fact metadata strip (Role, Architecture stack, Deployment status, Open source repository).
+  2. **The Problem Statement**: Highlight callout box with core challenge excerpt + markdown-rendered deep dive.
+  3. **My Approach & Strategy**: Execution methodology badge + markdown-rendered system design and phased rollout.
+  4. **Tech Decisions & Trade-offs**: Technical rationale callout + markdown-rendered comparative engineering analysis.
+  5. **Results & Measurable Outcomes**:
+     - Impact summary statement.
+     - **3D Tilt Metric Cards**: Dynamic key performance indicators with mouse-tracking perspective tilt (`handleMetricMouseMove`).
+     - **Visual Evolution (Before & After)**: Side-by-side screenshot comparisons with hover zoom and click-to-expand lightbox modal.
+  6. **System Architecture Diagram**:
+     - **Blueprint Grid Frame**: Monospace blueprint grid styling with click-to-enlarge lightbox modal.
+     - **Architectural Highlights Strip**: Dynamically derived Client Tier, API Gateway & Logic, and Data Store summaries tailored to the project's actual technology stack.
+  7. **What I Learned (Retrospective)**: Key takeaway callout + markdown-rendered post-mortem analysis.
+  8. **Exploration Footer**: Next Project card with direct navigation link, All Projects link, and external demo/code CTAs.
+- **XSS Sanitization & Markdown Engine**: Uses `marked` + `DOMPurify` via reusable `MarkdownView.jsx` with strict tag and protocol whitelisting.
+- **MIGRATION NOTE (Graceful Fallback)**:
+  - Existing projects without a `caseStudy` object (or with null/empty fields) render gracefully without breaking or throwing runtime errors.
+  - Empty case study sections are automatically hidden on public views, and the page renders a clean project overview with hero action buttons.
 
 ### 2.6 Certificates & Verified Credentials (`Certificates.jsx` & `CertificateCard.jsx`)
 - **Accredited Credentials Showcase**:
@@ -233,12 +259,22 @@
 
 ### 3.4 Projects Manager (`AdminProjects.jsx`)
 - **Full Project Lifecycle**: Draft, Published, Featured flags.
-- **Multi-Step Project Wizard**:
-  - Step 1: Title, Slug (auto-generated), Category, Status.
-  - Step 2: Short description, Detailed case study narrative.
-  - Step 3: Technology stack picker with brand tags and presets.
-  - Step 4: Thumbnail upload (Cloudinary or local data URI fallback), Live Demo URL, GitHub URL.
-- **Live Simulated Card Preview**: Real-time 3D tilt preview of the project card matching public view.
+- **5-Step Project & Case Study Wizard**:
+  - **Step 1: Core Info**: Title, Category (with quick presets), auto-generated slug preview.
+  - **Step 2: Description**: High-level project overview description (minimum 10 characters) shown on cards and heroes.
+  - **Step 3: Tech Stack & Links**: Comma-separated technologies, quick-add preset badges, active tag removal, Live Demo URL (with link tester), and GitHub repository URL.
+  - **Step 4: Media & Visibility**: Cover image drag-and-drop dropzone, direct URL input, Publish Status radio buttons (`Published`, `Draft`, `Archived`), and Homepage feature toggle. Displays real-time **Live Simulated Card Preview** in the right column.
+  - **Step 5: Case Study**:
+    - **Problem Statement** textarea (supports Markdown, character counter, max 5000 chars, markdown preview toggle).
+    - **Engineering Approach** textarea (supports Markdown, character counter, max 5000 chars, markdown preview toggle).
+    - **Tech Decisions & Trade-offs** textarea (supports Markdown, character counter, max 5000 chars, markdown preview toggle).
+    - **Result Summary & Dynamic Metrics**: Summary textarea + dynamic quantitative metrics list (label + value pairs, Add/Remove buttons, max 10 metrics).
+    - **Architecture Diagram**: Cloudinary uploader / direct URL input with image preview and clear button.
+    - **Before & After Screenshots**: Dedicated multi-image uploaders (max 5 each) with preview thumbnails and deletion.
+    - **Learnings & Retrospective** textarea (supports Markdown, character counter, max 5000 chars, markdown preview toggle).
+    - **Live Case Study Preview**: Right-column widget displaying immediate summary, metrics pills, and architecture status as user types.
+    - **Skip Case Study Button**: Allows saving/publishing the project without case study content.
+    - **Preview Case Study Modal**: Opens a full-screen simulated modal showing the exact public case study layout before publishing.
 - **Reordering & Batch Actions**:
   - Drag-and-drop reordering with visual highlight.
   - Multi-select projects for bulk publishing, bulk drafting, or bulk deletion.
@@ -266,19 +302,18 @@
   2. **Academic Qualifications**: Live editing of Degree, College, CGPA, Class XII school, board, score.
   3. **About Bio & Story**: Multi-paragraph narrative story editor with character counters and eyebrow tag editor.
   4. **Live Public Preview**: Real-time simulation of public About page cards with 3D tilt physics.
+- **3-Step Milestone Creation Wizard**:
+  - **Step 1: Phase & Timeline**: Select Phase category preset (with color & icon) or enter custom phase, select Year badge preset (`Year 3`, `Year 1-2`, `Present`, etc.), and set Status (`Completed`, `Current Focus`, `Planned Target`).
+  - **Step 2: Title & Details**: Milestone Title (minimum 3 characters), Milestone description (minimum 10 characters), and Milestone icon picker (10 FontAwesome icons).
+  - **Step 3: Skills & Verification**: Key achievement metric badge (e.g. `8.42 CGPA`, `Production Grade`), skills tags (with 1-click recommended skill chips), and optional verification/credential link.
+- **Scrollbar-Constrained Milestones List**:
+  - Milestone cards list container is constrained with `max-h-[620px]` and `custom-scrollbar` so that the admin page maintains a compact, clean viewport even with a large volume of milestones.
 - **One-Click Curated Presets**:
   - *B.Tech Computer Science & Engineering (CGPA 8.42 @ SISTec)*
   - *MERN Stack & Scalable Systems Architecture*
   - *Core Programming, DSA & CS Fundamentals*
   - *Algorithmic Fluency & Applied AI Integration*
   - *Higher Secondary (Class XII) 80% MPBSE*
-- **Milestone Form Controls**:
-  - Phase selector chips with color codes (Full-Stack, Academic, Foundation, Current Focus, AI, Honors).
-  - Year badge chips (`Year 3`, `Year 1-2`, `Present`, `2023 - 2027`, `2022`).
-  - Status toggle (`Completed`, `Current Focus`, `Planned Target`).
-  - Icon picker (10 FontAwesome icons).
-  - Achievement Metric pill (e.g., `8.42 CGPA`, `Production Grade`).
-  - Interactive skill tags with recommended tag chips.
 - **Timeline Management**:
   - Search milestones by keyword, title, phase, or skill.
   - Filter by status (`All`, `Completed`, `Focus`, `Planned`).
