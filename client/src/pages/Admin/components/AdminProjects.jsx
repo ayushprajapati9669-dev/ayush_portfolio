@@ -2635,13 +2635,6 @@ export function AdminProjects({
           </div>
         )}
 
-            <span className="font-sans text-xs text-slate-400 flex items-center gap-1.5">
-              <i className="fa-solid fa-grip-vertical text-slate-500"></i>
-              <span>Drag to reorder</span>
-            </span>
-          </div>
-        </div>
-
         {/* Project Cards Grid (Matching Image 3) */}
         {filteredProjects.length === 0 ? (
           <div className="p-12 text-center rounded-2xl border border-dashed border-white/10 bg-black/20 space-y-3">
