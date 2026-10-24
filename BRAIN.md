@@ -243,14 +243,22 @@
   - Updates master password with persistent backend save.
 
 ### 3.2 Focus Mode & Sidebar Navigation (`AdminSidebar.jsx`)
-- **Focus Mode Toggle**: Collapse/expand sidebar to maximize screen space for editing.
+- **Focus Mode Toggle**: Collapse/expand sidebar to maximize screen space for editing (80px vs 260px).
 - **Live Metric Badges**: Shows active counts for:
   - Projects (`counts.projects`)
   - Certificates (`counts.certificates`)
   - Skills (`counts.skills`)
   - About & Milestones (`counts.journey`)
   - Unread Messages (`counts.unreadMessages` with orange alert badge)
-- **Menu Search Filter**: Fast search input to filter sidebar options.
+  - Recycle Bin (`counts.trash` live count of deleted milestones)
+- **Navigation Sections**:
+  - Overview (`dashboard`)
+  - Portfolio Content (`projects`, `certificates`, `skills`, `journey`)
+  - Site Settings (`profile`, `media`, `security`)
+  - Communication (`messages`)
+  - Advanced (`recycle-bin`, `activity-log`, `linkedin-import`, `github-sync`)
+  - Resources (`guide`, `api-docs`)
+- **Menu Search Filter**: Fast search input to filter sidebar options with 1-click clear.
 - **Sliding Highlight Bar**: Smooth bar that anchors to hovered and active navigation items even during vertical scrolling.
 - **Quick Profile & Logout**: Shows Super Admin profile avatar with 1-click sign out.
 
@@ -301,28 +309,78 @@
 - **Skill Operations**: Add, edit, delete, toggle visibility, and drag-and-drop reorder within categories.
 - **Manage Categories Modal**: Add custom categories and adjust category display order.
 
-### 3.7 About & Milestones Hub (`AdminMilestones.jsx`)
-- **4 Dedicated Workspace Sub-Tabs**:
-  1. **Milestones Timeline**: Full chronological roadmap management.
-  2. **Academic Qualifications**: Live editing of Degree, College, CGPA, Class XII school, board, score.
-  3. **About Bio & Story**: Multi-paragraph narrative story editor with character counters and eyebrow tag editor.
-  4. **Live Public Preview**: Real-time simulation of public About page cards with 3D tilt physics.
-- **3-Step Milestone Creation Wizard**:
-  - **Step 1: Phase & Timeline**: Select Phase category preset (with color & icon) or enter custom phase, select Year badge preset (`Year 3`, `Year 1-2`, `Present`, etc.), and set Status (`Completed`, `Current Focus`, `Planned Target`).
-  - **Step 2: Title & Details**: Milestone Title (minimum 3 characters), Milestone description (minimum 10 characters), and Milestone icon picker (10 FontAwesome icons).
-  - **Step 3: Skills & Verification**: Key achievement metric badge (e.g. `8.42 CGPA`, `Production Grade`), skills tags (with 1-click recommended skill chips), and optional verification/credential link.
-- **Scrollbar-Constrained Milestones List**:
-  - Milestone cards list container is constrained with `max-h-[620px]` and `custom-scrollbar` so that the admin page maintains a compact, clean viewport even with a large volume of milestones.
-- **One-Click Curated Presets**:
-  - *B.Tech Computer Science & Engineering (CGPA 8.42 @ SISTec)*
-  - *MERN Stack & Scalable Systems Architecture*
-  - *Core Programming, DSA & CS Fundamentals*
-  - *Algorithmic Fluency & Applied AI Integration*
-  - *Higher Secondary (Class XII) 80% MPBSE*
-- **Timeline Management**:
-  - Search milestones by keyword, title, phase, or skill.
-  - Filter by status (`All`, `Completed`, `Focus`, `Planned`).
-  - Up / Down reordering handles, 1-click milestone duplication, and safe confirmation deletion.
+### 3.7 About & Milestones Hub (`AdminMilestones.jsx` — Enterprise CMS v9)
+- **Dedicated Sub-Tabs Workspace**:
+  1. **Journey Roadmap**: Complete chronological roadmap and milestone ecosystem.
+  2. **Academic Credentials**: Full editor for Degree, College, CGPA, Class XII school, score, board, location, and stage/batch with immediate database & JSON sync.
+  3. **Bio & Story**: Multi-paragraph public biography editor supporting paragraph creation, deletion, reordering, and live review.
+- **Top Control Suite & Navigation**:
+  - **Theme Selector**: Dynamic switching between 5 themes: `🌙 Midnight`, `☀️ Light`, `🌊 Ocean`, `🌲 Forest`, and `🌅 Sunset`.
+  - **Accent Color Palette**: 6 curated color accents (Cyan, Violet, Rose, Emerald, Amber, Pink).
+  - **Voice Command Controller**: SpeechRecognition listener for voice commands ("New milestone", "Search React", "Recycle bin", "Focus mode", "Templates", "Stop/Cancel") with active pulsing banner.
+  - **Focus Mode**: 1-click toggle to eliminate interface distractions.
+  - **Density Toggle**: Switch between `Comfort` and `Compact` data density modes.
+  - **Keyboard Shortcuts Overlay (`?`)**: Full shortcut reference (`⌘K`, `N`, `Esc`, `F`, `?`, `Shift+Click`).
+  - **Command Palette (`⌘K` / `Ctrl+K`)**: Instant search for all actions, navigation, and milestones with arrow key navigation.
+- **Header & Stats Grid**:
+  - "Live in Portfolio" status badge with animated pulse dot.
+  - Stats Grid: Total Milestones, Completed count, Active Focus count, and live B.Tech CGPA (`8.42`).
+- **Sticky Controls Toolbar**:
+  - Multi-criteria filtering: Status (`All`, `Focus`, `Completed`, `Planned`), Academic Year (`Year 1` - `Year 4`, `Present`), Sort (`Newest`, `Oldest`, `A-Z`, `Most Viewed`), and Tag filter.
+  - **Shift-Click Multi-Select & Bulk Operations**: Bulk Complete, Bulk Delete (with mandatory typed `DELETE` confirmation), and Side-by-Side Compare.
+  - Action buttons: GitHub Sync, LinkedIn Import, Templates Library, and "+ New Milestone".
+- **Centered Search Bar**:
+  - Centered search input with instant debounced filtering across milestone title, description, and technology tags.
+- **Milestone Cards & Interactive Mechanics**:
+  - Drag-and-drop visual reordering (`onDragStart`, `onDragOver`, `onDrop`).
+  - Multi-select checkbox with Shift-click range support.
+  - Double-click inline title renaming.
+  - Star ratings (0 to 5 stars).
+  - Live vs Draft toggle switch with immediate public state updates.
+  - View count tracking badge.
+  - Progress bar with percentage display.
+  - Pinned milestone state with amber left border and top-of-list pinning.
+  - Technology tags with official devicon and FontAwesome badges.
+  - External link / case study resource chip.
+  - Card action buttons: Pin, Move Up, Move Down, Compare, Duplicate, Edit, Delete.
+  - Right-click Context Menu (`onContextMenu`): Edit, Duplicate, Compare, Pin/Unpin, Copy Link, Share, Save as Template, Move Up, Move Down, Delete.
+- **Resizable Live Preview Right Panel**:
+  - Sticky / scrollable live preview showing all published milestones in real-time.
+  - Picture-in-Picture (PiP) toggle button to detach preview into a floating bottom-right window.
+  - Interactive resize handle to drag-and-resize panel width between 280px and 650px with `localStorage` width persistence.
+- **4-Step Milestone Creation & Editing Wizard Modal**:
+  - **Step 1: Basics**:
+    - Milestone Title with Levenshtein-distance duplicate detection warning (Merge, Keep Both, Cancel options).
+    - AI Smart Categorization: Suggests appropriate category, status, and icon based on title analysis.
+    - Meta Label, Academic Year, Status, Progress %, and Self-Rating slider (0-5 stars).
+  - **Step 2: Content & Rich Text Editor (RTE)**:
+    - Text formatting: Undo, Redo, Bold, Italic, Underline, H2, H3, Bullet List, Numbered List, Link, Code block (`<pre>`).
+    - Color picker with 12 preset swatches and custom picker.
+    - Emoji picker with 12 quick-insert emojis.
+    - Voice Dictation speech-to-text input.
+    - Grammar check simulator.
+    - AI Description Generator: Auto-writes comprehensive, structured milestone descriptions.
+    - Live word counter and character counter.
+    - AI Summary generator and Auto-Tag keyword extractor.
+  - **Step 3: Media & Tags**:
+    - Icon grid selector (10 icons).
+    - Cover image drag-and-drop uploader.
+    - AI SVG Image Generator: Generates realistic, illustration, or abstract vector SVG graphics on the fly.
+    - Alt text generator.
+    - Comma-separated technology tags and external resource link.
+  - **Step 4: Review & Persistence**:
+    - Structured review section displaying basic parameters, sanitized description preview, tags, and media before final commit.
+    - Autosave status indicator.
+    - "Save as Template" button to add custom templates to library.
+- **Integrated Modals & Overlays**:
+  - **Templates Library Modal**: 12 pre-crafted professional templates (Hackathon Win, Internship, Open Source, Research Paper, Certification, Project Launch, Competition Honor, Leadership, Tech Talk, Blog Post, Client Delivery, Volunteering) + user custom saved templates.
+  - **GitHub Sync Modal**: Connects to GitHub repository to fetch recent commits and convert commits into roadmap milestones with 1 click.
+  - **LinkedIn Import Modal**: Simulates importing verified certifications and competition awards directly into portfolio milestones.
+  - **Recycle Bin Modal**: Stores deleted milestones with 30-day retention countdown and 1-click restore.
+  - **Activity Log Modal**: Detailed chronological audit log of all admin operations with timestamp and device user-agent info.
+  - **Side-by-Side Compare Panel**: Split-screen comparative review for two selected milestones.
+  - **Bulk Delete Modal**: Requires typing `DELETE` into input field before allowing multi-item purge.
+  - **Canvas Confetti & Celebrations**: Fires festive physics confetti and toast on milestone counts (1, 3, 5, 10, 15, 20, etc.).
 
 ### 3.8 Profile & Resume Manager (`AdminProfile.jsx`)
 - **Dual-Column Layout**:

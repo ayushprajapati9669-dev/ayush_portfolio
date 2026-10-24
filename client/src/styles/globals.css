@@ -10,6 +10,7 @@
 @import './pages/projects.css';
 @import './pages/certificates.css';
 @import './pages/contact.css';
+@import './pages/admin-milestones.css';
 
 @tailwind base;
 @tailwind components;

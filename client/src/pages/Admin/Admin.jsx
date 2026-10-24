@@ -132,12 +132,19 @@ export function AdminPage() {
   const skillsCount = (appState.skills || []).reduce((acc, cat) => acc + (cat.items || []).length, 0);
   const unreadMsgCount = (appState.messages || []).filter((m) => m.status === 'unread').length;
 
+  let trashCount = 0;
+  try {
+    const rawTrash = localStorage.getItem('admin_trash_v9');
+    if (rawTrash) trashCount = JSON.parse(rawTrash).length;
+  } catch (e) {}
+
   const counts = {
     projects: publishedCount,
     certificates: certCount,
     skills: skillsCount,
     journey: (appState.profile?.learningJourney || []).length,
-    unreadMessages: unreadMsgCount
+    unreadMessages: unreadMsgCount,
+    trash: trashCount
   };
 
   // Quick project save handler from modal

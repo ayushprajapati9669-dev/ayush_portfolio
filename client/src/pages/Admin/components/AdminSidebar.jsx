@@ -51,6 +51,15 @@ export function AdminSidebar({
       ]
     },
     {
+      title: 'Advanced',
+      items: [
+        { id: 'recycle-bin', label: 'Recycle Bin', icon: 'fa-trash-can', badge: counts.trash || 0, isAction: true, modalType: 'recycleBin' },
+        { id: 'activity-log', label: 'Activity Log', icon: 'fa-clock-rotate-left', badge: null, isAction: true, modalType: 'activityLog' },
+        { id: 'linkedin-import', label: 'LinkedIn Import', icon: 'fa-brands fa-linkedin', badge: null, isAction: true, modalType: 'linkedin' },
+        { id: 'github-sync', label: 'GitHub Sync', icon: 'fa-brands fa-github', badge: null, isAction: true, modalType: 'github' }
+      ]
+    },
+    {
       title: 'Resources',
       items: [
         { id: 'guide', label: 'User Guide', icon: 'fa-book-open', badge: null, route: '/admin/guide' },
@@ -203,7 +212,14 @@ export function AdminSidebar({
                     className={`nav-item ${isActive ? 'active' : ''}`}
                     onClick={(e) => {
                       playTick();
-                      onSelectTab(item.id, item.route);
+                      if (item.isAction) {
+                        onSelectTab('journey');
+                        setTimeout(() => {
+                          window.dispatchEvent(new CustomEvent('ams-open-modal', { detail: { modal: item.modalType } }));
+                        }, 120);
+                      } else {
+                        onSelectTab(item.id, item.route);
+                      }
                       moveHighlight(e.currentTarget);
                     }}
                     onMouseEnter={(e) => moveHighlight(e.currentTarget)}

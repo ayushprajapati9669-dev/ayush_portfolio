@@ -40,20 +40,31 @@ export function AboutPage() {
   // Map CMS learningJourney or fallback to defaultMilestones
   const milestones =
     p.learningJourney && Array.isArray(p.learningJourney) && p.learningJourney.length > 0
-      ? p.learningJourney.map((m, idx) => ({
-          phase: m.phase || `Phase ${idx + 1}`,
-          yearBadge: m.yearBadge || m.year || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
-          title: m.title,
-          description: m.description || m.detail,
-          icon: m.icon,
-          status: m.status,
-          metric: m.metric,
-          skills: Array.isArray(m.skills)
-            ? m.skills
-            : m.skills
-            ? m.skills.split(',').map((s) => s.trim()).filter(Boolean)
-            : []
-        }))
+      ? p.learningJourney
+          .filter((m) => m.published !== false)
+          .map((m, idx) => ({
+            id: m.id || `m-${idx}`,
+            phase: m.phase || m.metaLabel || `Phase ${idx + 1}`,
+            yearBadge: m.yearBadge || m.year || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
+            title: m.title,
+            description: m.description || m.desc || m.detail || '',
+            icon: m.icon || 'fa-layer-group',
+            status: m.status,
+            metric: m.metric,
+            image: m.image || null,
+            link: m.link || '',
+            progress: m.progress !== undefined ? Number(m.progress) : null,
+            rating: m.rating !== undefined ? Number(m.rating) : 0,
+            skills: Array.isArray(m.skills)
+              ? m.skills
+              : Array.isArray(m.tags)
+              ? m.tags
+              : m.skills
+              ? m.skills.split(',').map((s) => s.trim()).filter(Boolean)
+              : m.tags
+              ? m.tags.split(',').map((s) => s.trim()).filter(Boolean)
+              : []
+          }))
       : defaultMilestones;
 
   // 3D Card Tilt Physics
@@ -430,7 +441,42 @@ export function AboutPage() {
                     </span>
                   )}
                 </div>
-                <div className="timeline-desc">{item.description}</div>
+                <div
+                  className="timeline-desc"
+                  dangerouslySetInnerHTML={{ __html: item.description }}
+                />
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    loading="lazy"
+                    className="max-h-36 rounded-lg mt-2.5 border border-white/10 object-cover"
+                  />
+                )}
+                {item.progress !== null && item.status === 'focus' && (
+                  <div className="mt-2.5 max-w-xs">
+                    <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"
+                        style={{ width: `${item.progress}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+                      {item.progress}% progress
+                    </span>
+                  </div>
+                )}
+                {item.link && (
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 font-semibold mt-2"
+                  >
+                    <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
+                    <span>View Project Resource</span>
+                  </a>
+                )}
                 {item.skills && item.skills.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2.5">
                     {item.skills.map((sk, skIdx) => (
