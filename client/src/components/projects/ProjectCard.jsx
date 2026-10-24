@@ -116,16 +116,8 @@ export function ProjectCard({
     }
   };
 
-  const hasCaseStudy = Boolean(
-    proj.caseStudy &&
-      (proj.caseStudy.problem ||
-        proj.caseStudy.approach ||
-        proj.caseStudy.techDecisions ||
-        proj.caseStudy.architectureDiagramUrl ||
-        proj.caseStudy.learnings ||
-        proj.caseStudy.result?.summary ||
-        (Array.isArray(proj.caseStudy.result?.metrics) && proj.caseStudy.result.metrics.length > 0))
-  );
+  // Every project features an in-depth architectural breakdown & case study
+  const hasCaseStudy = true;
   const detailLink = `/projects/${proj.slug || proj.id}`;
 
   return (

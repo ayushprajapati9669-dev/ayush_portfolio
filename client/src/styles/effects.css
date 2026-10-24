@@ -17,6 +17,15 @@
   background: linear-gradient(135deg, #0a1118 0%, #1e3a4d 50%, #0d2c3d 100%);
 }
 
+.liquid-bg-case-study {
+  background: #070B14 !important;
+}
+
+.liquid-bg-case-study .aurora-blob {
+  opacity: 0.12 !important;
+  filter: blur(160px) !important;
+}
+
 .liquid-bg::after,
 .aurora-bg::after {
   content: '';
@@ -79,7 +88,7 @@
 .spheres-container {
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
   perspective: 1000px;

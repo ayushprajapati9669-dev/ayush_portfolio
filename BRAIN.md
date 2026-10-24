@@ -126,10 +126,13 @@
 
 ### 2.5.1 In-Depth Case Study Page (`ProjectDetail.jsx`)
 - **Visual Design & High-Contrast Layout**:
-  - **Opaque Obsidian Surfaces (`#0B1120`)**: Deep solid card background that completely eliminates background 3D canvas sphere bleed-through and ensures perfect contrast.
-  - **High-Contrast Typography**: Crisp `#FFFFFF` headings, `#F8FAFC` alabaster body text, `#38BDF8` cyan highlights and inline code pills.
-  - **Sticky Sub-Navigation Bar**: Glassmorphic pill bar pinned below global header (`top: 96px`) with active section tracking (`Overview`, `Problem`, `Approach`, `Tech Decisions`, `Results & Metrics`, `Architecture`, `Learnings`, `Live Demo`).
-- **Comprehensive Case Study Architecture**:
+  - **Opaque Obsidian Surfaces (`#0B1120`)**: Deep solid card background (`#0B1120 !important`) with 1px border (`rgba(255, 255, 255, 0.14)`) and deep shadow that completely blocks background layer bleed-through.
+  - **Background Distraction Elimination**: Automatically mutes/hides background 3D floating droplets (`BackgroundLayers.jsx` via `isCaseStudy` route detection) on case study detail pages, setting a calm deep `#070B14` oceanic backdrop for distraction-free reading.
+  - **High-Contrast Typography**: Crisp `#FFFFFF` headings, `#F8FAFC` alabaster body text, `#38BDF8` cyan highlights and inline code pills with zero text clipping or opacity locks.
+  - **Top Glowing Reading Progress Bar**: Fixed cyan-to-emerald gradient progress bar at the very top of the window tracking scroll depth (0–100%).
+  - **Sticky Sub-Navigation Bar with Smooth Scrolling**: Glassmorphic pill bar pinned below global header (`top: 96px`) with active section tracking and smooth programmatic scrolling with a 150px header offset (`scrollToSection`).
+  - **One-Click Share & Copy Link**: Action button with clipboard API and toast feedback for sharing direct case study links.
+- **Modular Components & Interactive Visualizers**:
   1. **Hero Section**: High-resolution cover banner with gradient fade, category badge, dynamic reading time badge, project title, overview summary, and 4-fact metadata strip (Role, Architecture stack, Deployment status, Open source repository).
   2. **The Problem Statement**: Highlight callout box with core challenge excerpt + markdown-rendered deep dive.
   3. **My Approach & Strategy**: Execution methodology badge + markdown-rendered system design and phased rollout.
@@ -137,16 +140,18 @@
   5. **Results & Measurable Outcomes**:
      - Impact summary statement.
      - **3D Tilt Metric Cards**: Dynamic key performance indicators with mouse-tracking perspective tilt (`handleMetricMouseMove`).
-     - **Visual Evolution (Before & After)**: Side-by-side screenshot comparisons with hover zoom and click-to-expand lightbox modal.
-  6. **System Architecture Diagram**:
+     - **Interactive Before & After Visual Evolution (`BeforeAfterCompare.jsx`)**:
+       - **Interactive Split Slider**: Draggable range slider with glowing cyan splitter bar and `clipPath` polygon rendering to preserve native aspect ratio without distortion.
+       - **Side-by-Side Toggle**: Alternative comparison view with badged evidence lists and click-to-enlarge lightbox modal.
+  6. **System Architecture Diagram & Blueprint Viewer (`ArchBlueprintViewer.jsx`)**:
      - **Blueprint Grid Frame**: Monospace blueprint grid styling with click-to-enlarge lightbox modal.
-     - **Architectural Highlights Strip**: Dynamically derived Client Tier, API Gateway & Logic, and Data Store summaries tailored to the project's actual technology stack.
+     - **Interactive Architecture Tier Explorer**: Interactive tab switcher (*1. Client Tier*, *2. API Gateway & Logic*, *3. Data Store & ACID Isolation Tier*) with dynamic stack tags, architectural highlights, and security characteristics.
   7. **What I Learned (Retrospective)**: Key takeaway callout + markdown-rendered post-mortem analysis.
-  8. **Exploration Footer**: Next Project card with direct navigation link, All Projects link, and external demo/code CTAs.
+  8. **Dual Exploration Footer**: Previous Project & Next Project navigation buttons with title truncation, All Projects link, and external demo/code CTAs.
+- **Case Study Enrichment Engine (`projectCaseStudyData.js`)**:
+  - `getEnrichedCaseStudy(project)`: Automatically provides realistic, production-grade architectural documentation, quantitative metrics, visual evolution screenshots, and system blueprint diagrams whenever CMS entries are minimal or missing.
+  - Preserves custom CMS inputs if present while seamlessly filling any gaps with rich archetype-tailored engineering content.
 - **XSS Sanitization & Markdown Engine**: Uses `marked` + `DOMPurify` via reusable `MarkdownView.jsx` with strict tag and protocol whitelisting.
-- **MIGRATION NOTE (Graceful Fallback)**:
-  - Existing projects without a `caseStudy` object (or with null/empty fields) render gracefully without breaking or throwing runtime errors.
-  - Empty case study sections are automatically hidden on public views, and the page renders a clean project overview with hero action buttons.
 
 ### 2.6 Certificates & Verified Credentials (`Certificates.jsx` & `CertificateCard.jsx`)
 - **Accredited Credentials Showcase**:

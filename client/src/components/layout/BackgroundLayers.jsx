@@ -1,8 +1,17 @@
 import React, { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 
 export function BackgroundLayers() {
   const mouseLightRef = useRef(null);
+  const location = useLocation();
+
+  // Detect individual project case study page (e.g. /projects/airbnb-clone)
+  const isCaseStudy = Boolean(
+    location.pathname &&
+    location.pathname.startsWith('/projects/') &&
+    location.pathname !== '/projects'
+  );
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -31,21 +40,23 @@ export function BackgroundLayers() {
   return (
     <>
       {/* Realistic 3D Deep Oceanic Liquid Background */}
-      <div className="liquid-bg" aria-hidden="true">
+      <div className={`liquid-bg ${isCaseStudy ? 'liquid-bg-case-study' : ''}`} aria-hidden="true">
         <div className="aurora-blob aurora-1" />
         <div className="aurora-blob aurora-2" />
         <div className="aurora-blob aurora-3" />
       </div>
 
-      {/* 6 Realistic 3D Floating Liquid Droplets */}
-      <div className="spheres-container" aria-hidden="true">
-        <div className="droplet" />
-        <div className="droplet" />
-        <div className="droplet" />
-        <div className="droplet" />
-        <div className="droplet" />
-        <div className="droplet" />
-      </div>
+      {/* 6 Realistic 3D Floating Liquid Droplets — hidden on case study detail pages to ensure 100% text legibility */}
+      {!isCaseStudy && (
+        <div className="spheres-container" aria-hidden="true">
+          <div className="droplet" />
+          <div className="droplet" />
+          <div className="droplet" />
+          <div className="droplet" />
+          <div className="droplet" />
+          <div className="droplet" />
+        </div>
+      )}
 
       {/* Noise Texture Overlay at opacity: 0.04 */}
       <div className="bg-noise" aria-hidden="true" />

@@ -626,11 +626,11 @@
 
 /* ===== CASE STUDY DETAIL PAGE STYLES (PREMIUM & HIGH CONTRAST) ===== */
 .case-study-page {
-  padding: 160px 5% 120px;
+  padding: 150px 5% 120px;
   max-width: 1140px;
   margin: 0 auto;
   position: relative;
-  z-index: 10;
+  z-index: 20;
 }
 
 /* Floating Sub-Navigation Bar */
@@ -638,16 +638,17 @@
   position: sticky;
   top: 96px;
   z-index: 40;
-  background: rgba(11, 17, 32, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(11, 17, 32, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 9999px;
   padding: 8px 16px;
-  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.85), 0 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
-.case-study-subnav a {
+.case-study-subnav a,
+.case-study-subnav button {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 600;
@@ -657,10 +658,15 @@
   transition: all 0.2s ease;
   white-space: nowrap;
   text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
 }
 
 .case-study-subnav a:hover,
-.case-study-subnav a.active {
+.case-study-subnav a.active,
+.case-study-subnav button:hover,
+.case-study-subnav button.active {
   color: #ffffff;
   background: rgba(6, 182, 212, 0.15);
   border: 1px solid rgba(6, 182, 212, 0.35);
@@ -670,11 +676,14 @@
 /* Opaque Solid Case Study Hero */
 .case-study-hero {
   border-radius: 28px;
-  background: #0B1120;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background-color: #0B1120 !important;
+  background: #0B1120 !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
   overflow: hidden;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
   position: relative;
+  z-index: 2;
+  opacity: 1 !important;
 }
 
 .case-study-hero-img-wrap {
@@ -692,21 +701,24 @@
   transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Opaque, Deep Obsidian Cards — Eliminates background orb collisions */
+/* Opaque, Deep Obsidian Cards — Completely blocks background and eliminates orb bleed */
 .case-study-card {
   border-radius: 24px;
-  background: #0B1120;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background-color: #0B1120 !important;
+  background: #0B1120 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   padding: 36px;
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   position: relative;
-  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04);
-  scroll-margin-top: 130px;
+  z-index: 2;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+  scroll-margin-top: 140px;
+  opacity: 1 !important;
 }
 
 .case-study-card:hover {
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(6, 182, 212, 0.15);
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.95), 0 0 25px rgba(6, 182, 212, 0.15) !important;
 }
 
 .case-study-badge {
