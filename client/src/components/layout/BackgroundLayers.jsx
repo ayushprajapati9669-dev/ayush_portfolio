@@ -13,6 +13,12 @@ export function BackgroundLayers() {
     location.pathname !== '/projects'
   );
 
+  // Detect admin or login pages
+  const isAdmin = Boolean(
+    location.pathname &&
+    (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
+  );
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -46,8 +52,8 @@ export function BackgroundLayers() {
         <div className="aurora-blob aurora-3" />
       </div>
 
-      {/* 6 Realistic 3D Floating Liquid Droplets — hidden on case study detail pages to ensure 100% text legibility */}
-      {!isCaseStudy && (
+      {/* 6 Realistic 3D Floating Liquid Droplets — hidden on case study detail pages and admin to ensure 100% text legibility */}
+      {!isCaseStudy && !isAdmin && (
         <div className="spheres-container" aria-hidden="true">
           <div className="droplet" />
           <div className="droplet" />

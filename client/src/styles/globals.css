@@ -48,3 +48,45 @@ h1, h2, h3, .font-display {
     scroll-behavior: auto !important;
   }
 }
+
+/* Global Brand Utility Classes */
+.brand-text { color: var(--brand-color) !important; }
+.brand-bg { background-color: var(--brand-color) !important; color: #020617 !important; }
+.brand-border { border-color: var(--brand-color) !important; }
+.brand-glow { box-shadow: 0 0 20px var(--brand-glow) !important; }
+.brand-light { background-color: var(--brand-light) !important; }
+
+/* Floating Exit Focus Mode Button */
+.exit-focus-btn {
+  position: fixed !important;
+  top: 18px !important;
+  right: 24px !important;
+  z-index: 100000 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid var(--brand-color, #06b6d4) !important;
+  box-shadow: 0 0 20px var(--brand-glow, rgba(6, 182, 212, 0.45)), 0 8px 30px rgba(0, 0, 0, 0.8) !important;
+  color: #ffffff !important;
+  padding: 8px 18px !important;
+  border-radius: 9999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  backdrop-filter: blur(16px) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.exit-focus-btn:hover {
+  transform: scale(1.05) !important;
+  background: var(--brand-color, #06b6d4) !important;
+  color: #020617 !important;
+}
+.exit-focus-btn kbd {
+  background: rgba(255, 255, 255, 0.15) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-family: monospace !important;
+  font-size: 10px !important;
+}
+

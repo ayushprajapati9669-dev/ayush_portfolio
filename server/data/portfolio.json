@@ -41,19 +41,83 @@
     "heroDescription": "I’m a Computer Science student exploring the intersection of web engineering, problem solving, and intelligent applications. I enjoy turning ideas into useful digital products and continuously improving how I build them.",
     "learningJourney": [
       {
-        "phase": "Foundation · Year 1–2",
-        "title": "Core Programming & Computer Science Fundamentals",
-        "description": "Built a strong foundation in C, Java, Python, object-oriented programming, relational databases (MySQL), and HTML/CSS layouts at SISTec, Bhopal."
+        "id": "m-1792835816020",
+        "title": "Ai-ml learning",
+        "desc": "",
+        "year": "Year 3",
+        "status": "focus",
+        "metaLabel": "year 3",
+        "progress": 70,
+        "rating": 4,
+        "tags": [
+          "C",
+          "AI / ML"
+        ],
+        "icon": "fa-layer-group",
+        "image": null,
+        "imageAlt": "",
+        "link": "",
+        "published": true,
+        "pinned": false,
+        "views": 0,
+        "createdAt": "2026-10-24T09:56:56.020Z"
       },
       {
-        "phase": "Full-Stack Practice · Year 3",
+        "id": "m-2-1792835712842",
         "title": "MERN Stack & Interactive Systems",
-        "description": "Transitioned to full-stack JavaScript engineering with React.js, Node.js, Express.js, and MongoDB—building a Zerodha-inspired trading dashboard and a ChatGPT-inspired conversational AI workspace."
+        "desc": "Transitioned to full-stack JavaScript engineering with React.js, Node.js, Express.js, and MongoDB—building a Zerodha-inspired trading dashboard and a ChatGPT-inspired conversational AI workspace.",
+        "year": "Year 1-2",
+        "status": "completed",
+        "metaLabel": "Full-Stack Practice · Year 3",
+        "progress": 70,
+        "rating": 4,
+        "tags": [],
+        "icon": "fa-layer-group",
+        "image": null,
+        "imageAlt": "",
+        "link": "",
+        "published": true,
+        "pinned": false,
+        "views": 98,
+        "createdAt": "2026-10-24T09:55:12.842Z"
       },
       {
-        "phase": "Current Focus · Present",
+        "id": "m-3-1792835712842",
         "title": "Algorithmic Depth & AI/ML Integration",
-        "description": "Deepening Data Structures and Algorithms fluency while exploring practical AI/ML integration and targeting software engineering internship opportunities."
+        "desc": "",
+        "year": "Present",
+        "status": "completed",
+        "metaLabel": "Current Focus · Present",
+        "progress": 70,
+        "rating": 4,
+        "tags": [],
+        "icon": "fa-layer-group",
+        "image": null,
+        "imageAlt": "",
+        "link": "",
+        "published": true,
+        "pinned": false,
+        "views": 192,
+        "createdAt": "2026-10-24T09:55:12.842Z"
+      },
+      {
+        "id": "m-1-1792835712842",
+        "title": "Core Programming & Computer Science Fundamentals",
+        "desc": "Built a strong foundation in C, Java, Python, object-oriented programming, relational databases (MySQL), and HTML/CSS layouts at SISTec, Bhopal.",
+        "year": "Year 3",
+        "status": "focus",
+        "metaLabel": "Foundation · Year 1–2",
+        "progress": 70,
+        "rating": 4,
+        "tags": [],
+        "icon": "fa-layer-group",
+        "image": null,
+        "imageAlt": "",
+        "link": "",
+        "published": true,
+        "pinned": false,
+        "views": 60,
+        "createdAt": "2026-10-24T09:55:12.842Z"
       }
     ],
     "monogram": "AP",
@@ -251,6 +315,14 @@
             {
               "label": "Lighthouse",
               "value": "92"
+            },
+            {
+              "label": "Search Latency",
+              "value": "< 45ms"
+            },
+            {
+              "label": "Booking Collisions",
+              "value": "0.0%"
             }
           ]
         }

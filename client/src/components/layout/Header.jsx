@@ -25,6 +25,92 @@ export function Header() {
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
 
+  // Theme & Accent controls for Admin Top Navbar
+  const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem('admin_theme_v9') || 'theme-midnight');
+  const [currentAccent, setCurrentAccent] = useState(() => localStorage.getItem('admin_accent_v9') || 'accent-cyan');
+  const [currentDensity, setCurrentDensity] = useState(() => localStorage.getItem('admin_density_v9') || 'comfortable');
+  const [accentPaletteOpen, setAccentPaletteOpen] = useState(false);
+  const [isFocusMode, setIsFocusMode] = useState(false);
+
+  const THEME_CLASSES = ['theme-midnight', 'theme-ocean', 'theme-forest', 'theme-sunset', 'theme-cyberpunk', 'theme-gold'];
+  const ACCENT_CLASSES = ['accent-cyan', 'accent-violet', 'accent-rose', 'accent-emerald', 'accent-amber', 'accent-pink', 'accent-lime', 'accent-blue'];
+
+  useEffect(() => {
+    let savedTheme = localStorage.getItem('portfolio_theme') || localStorage.getItem('admin_theme_v9') || 'theme-midnight';
+    if (savedTheme === 'theme-light') savedTheme = 'theme-midnight';
+    const savedAccent = localStorage.getItem('portfolio_accent') || localStorage.getItem('admin_accent_v9') || 'accent-cyan';
+
+    document.body.classList.remove('theme-light', ...THEME_CLASSES);
+    document.body.classList.add(savedTheme);
+    setCurrentTheme(savedTheme);
+
+    document.body.classList.remove(...ACCENT_CLASSES);
+    document.body.classList.add(savedAccent);
+    setCurrentAccent(savedAccent);
+  }, []);
+
+  const handleThemeChange = (newTheme) => {
+    playTick();
+    setCurrentTheme(newTheme);
+    document.body.classList.remove('theme-light', ...THEME_CLASSES);
+    document.body.classList.add(newTheme);
+    try {
+      localStorage.setItem('portfolio_theme', newTheme);
+      localStorage.setItem('admin_theme_v9', newTheme);
+    } catch (e) {}
+    window.dispatchEvent(new CustomEvent('admin-theme-changed', { detail: { theme: newTheme } }));
+    showToast(`Switched theme to ${newTheme.replace('theme-', '')}`);
+  };
+
+  const handleAccentChange = (newAccent) => {
+    playTick();
+    setCurrentAccent(newAccent);
+    document.body.classList.remove(...ACCENT_CLASSES);
+    document.body.classList.add(newAccent);
+    try {
+      localStorage.setItem('portfolio_accent', newAccent);
+      localStorage.setItem('admin_accent_v9', newAccent);
+    } catch (e) {}
+    setAccentPaletteOpen(false);
+    window.dispatchEvent(new CustomEvent('admin-accent-changed', { detail: { accent: newAccent } }));
+    showToast('Updated accent color');
+  };
+
+  const handleToggleFocus = () => {
+    playTick();
+    setIsFocusMode((prev) => {
+      const next = !prev;
+      if (next) document.body.classList.add('focus-mode');
+      else document.body.classList.remove('focus-mode');
+      return next;
+    });
+  };
+
+  // Keyboard shortcut listener for Esc / F to exit focus mode
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape' || (e.key === 'f' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName) && !document.activeElement?.isContentEditable)) {
+        if (document.body.classList.contains('focus-mode')) {
+          document.body.classList.remove('focus-mode');
+          setIsFocusMode(false);
+          showToast('Exited Focus Mode');
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, []);
+
+  const handleToggleVoice = () => {
+    playTick();
+    window.dispatchEvent(new CustomEvent('ams-toggle-voice'));
+  };
+
+  const handleOpenShortcuts = () => {
+    playTick();
+    window.dispatchEvent(new CustomEvent('ams-open-shortcuts'));
+  };
+
   // Register global command palette opener for shortcuts
   useEffect(() => {
     window.__openCommandPalette = (opts) => {
@@ -371,6 +457,82 @@ export function Header() {
                 </div>
               )}
 
+              {/* Theme & Accent Controls (Available across ALL pages: Public & Admin) */}
+              <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
+                {/* Theme Selector Dropdown (No Light theme, 6 rich dark themes) */}
+                <select
+                  className="theme-selector"
+                  value={currentTheme}
+                  onChange={(e) => handleThemeChange(e.target.value)}
+                  aria-label="Theme Selector"
+                >
+                  <option value="theme-midnight">🌙 Midnight</option>
+                  <option value="theme-ocean">🌊 Ocean</option>
+                  <option value="theme-forest">🌲 Forest</option>
+                  <option value="theme-sunset">🌅 Sunset</option>
+                  <option value="theme-cyberpunk">⚡ Cyberpunk</option>
+                  <option value="theme-gold">👑 Luxury Gold</option>
+                </select>
+
+                {/* Accent Color Palette (8 vibrant colors) */}
+                <div className="accent-picker-wrapper relative">
+                  <button
+                    type="button"
+                    className="accent-picker-btn"
+                    onClick={() => setAccentPaletteOpen((prev) => !prev)}
+                    title="Accent Color"
+                    aria-label="Accent color"
+                  />
+                  {accentPaletteOpen && (
+                    <div className="accent-palette active" style={{ display: 'flex' }}>
+                      <div className={`accent-swatch ${currentAccent === 'accent-cyan' ? 'selected' : ''}`} style={{ background: '#06b6d4' }} onClick={() => handleAccentChange('accent-cyan')} title="Electric Cyan" />
+                      <div className={`accent-swatch ${currentAccent === 'accent-violet' ? 'selected' : ''}`} style={{ background: '#a855f7' }} onClick={() => handleAccentChange('accent-violet')} title="Neon Violet" />
+                      <div className={`accent-swatch ${currentAccent === 'accent-rose' ? 'selected' : ''}`} style={{ background: '#f43f5e' }} onClick={() => handleAccentChange('accent-rose')} title="Crimson Rose" />
+                      <div className={`accent-swatch ${currentAccent === 'accent-emerald' ? 'selected' : ''}`} style={{ background: '#10b981' }} onClick={() => handleAccentChange('accent-emerald')} title="Cyber Emerald" />
+                      <div className={`accent-swatch ${currentAccent === 'accent-amber' ? 'selected' : ''}`} style={{ background: '#f59e0b' }} onClick={() => handleAccentChange('accent-amber')} title="Royal Amber" />
+                      <div className={`accent-swatch ${currentAccent === 'accent-pink' ? 'selected' : ''}`} style={{ background: '#ec4899' }} onClick={() => handleAccentChange('accent-pink')} title="Hot Pink" />
+                      <div className={`accent-swatch ${currentAccent === 'accent-lime' ? 'selected' : ''}`} style={{ background: '#84cc16' }} onClick={() => handleAccentChange('accent-lime')} title="Toxic Lime" />
+                      <div className={`accent-swatch ${currentAccent === 'accent-blue' ? 'selected' : ''}`} style={{ background: '#3b82f6' }} onClick={() => handleAccentChange('accent-blue')} title="Sapphire Blue" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Admin-Specific Action Icons Pill */}
+                {isAdmin && (
+                  <div className="flex items-center gap-1 px-1 border-l border-r border-white/10 mx-0.5">
+                    <button
+                      type="button"
+                      className="btn-icon"
+                      onClick={handleToggleVoice}
+                      title="Voice Command"
+                      aria-label="Voice Command"
+                    >
+                      <i className="fa-solid fa-microphone text-xs" />
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`btn-icon ${isFocusMode ? 'active' : ''}`}
+                      onClick={handleToggleFocus}
+                      title="Toggle Fullscreen / Focus Mode"
+                      aria-label="Focus Mode"
+                    >
+                      <i className="fa-solid fa-expand text-xs" />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn-icon"
+                      onClick={handleOpenShortcuts}
+                      title="Keyboard Shortcuts (?)"
+                      aria-label="Shortcuts"
+                    >
+                      <i className="fa-solid fa-keyboard text-xs" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
               {/* Command Palette Trigger (Search ⌘K) (Only visible on Admin Dashboard) */}
               {isAdmin && (
                 <div className="magnetic">
@@ -541,6 +703,21 @@ export function Header() {
           </Link>
         </div>
       </div>
+
+      {/* Floating Exit Focus Mode Button */}
+      {isFocusMode && (
+        <button
+          type="button"
+          className="exit-focus-btn"
+          onClick={handleToggleFocus}
+          title="Exit Focus Mode (Esc or F)"
+          aria-label="Exit Focus Mode"
+        >
+          <i className="fa-solid fa-compress" />
+          <span>Exit Focus Mode</span>
+          <kbd>Esc</kbd>
+        </button>
+      )}
 
       {/* Global Command Palette */}
       <CommandPalette

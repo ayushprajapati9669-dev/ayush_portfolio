@@ -20,6 +20,7 @@
 
 /* When on admin page with sidebar */
 body.has-admin-sidebar .nav-wrapper {
+  top: 16px;
   left: 260px;
   right: 0;
   margin-left: auto;
@@ -30,6 +31,7 @@ body.has-admin-sidebar .nav-wrapper {
 }
 
 body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
+  top: 16px;
   left: 80px;
   right: 0;
   margin-left: auto;
@@ -714,4 +716,126 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 .mobile-drawer-link:hover {
   color: white;
   background: rgba(0, 240, 255, 0.1);
+}
+
+/* Top Navbar Admin Controls */
+.theme-selector {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #f8fafc !important;
+  padding: 5px 10px !important;
+  border-radius: 9999px !important;
+  font-size: 0.75rem !important;
+  cursor: pointer !important;
+  outline: none !important;
+  font-family: inherit !important;
+  transition: border-color 0.2s !important;
+}
+.theme-selector:focus {
+  border-color: rgba(34, 211, 238, 0.6) !important;
+}
+.accent-picker-wrapper {
+  position: relative !important;
+}
+.accent-picker-btn {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  cursor: pointer !important;
+  transition: transform 0.2s, border-color 0.2s !important;
+}
+.accent-picker-btn:hover {
+  transform: scale(1.08) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+.accent-picker-btn::after {
+  content: '' !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  background: var(--accent-primary, #22d3ee) !important;
+}
+.accent-palette {
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  margin-top: 8px !important;
+  background: #0d1526 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  padding: 8px !important;
+  display: none !important;
+  z-index: 1000 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8) !important;
+  gap: 6px !important;
+}
+.accent-palette.active {
+  display: flex !important;
+}
+.accent-swatch {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  border: 2px solid transparent !important;
+  transition: transform 0.2s !important;
+}
+.accent-swatch:hover {
+  transform: scale(1.15) !important;
+}
+.accent-swatch.selected {
+  border-color: #ffffff !important;
+}
+.btn-icon {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 9999px !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #94a3b8 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 0.82rem !important;
+  transition: all 0.2s !important;
+}
+.btn-icon:hover {
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+.btn-icon.active {
+  color: var(--accent-primary, #22d3ee) !important;
+  border-color: var(--accent-primary, #22d3ee) !important;
+  background: rgba(34, 211, 238, 0.12) !important;
+}
+.density-toggle {
+  display: flex !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 9999px !important;
+  padding: 2px !important;
+}
+.density-btn {
+  background: transparent !important;
+  border: none !important;
+  color: #94a3b8 !important;
+  padding: 3px 9px !important;
+  border-radius: 9999px !important;
+  cursor: pointer !important;
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  font-family: inherit !important;
+  transition: all 0.2s !important;
+}
+.density-btn.active {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: var(--accent-primary, #22d3ee) !important;
 }

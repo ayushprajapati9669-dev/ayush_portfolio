@@ -144,7 +144,7 @@ export function AdminMilestones({
   // Filters & Search
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterYear, setFilterYear] = useState('all');
-  const [filterSort, setFilterSort] = useState('newest');
+  const [filterSort, setFilterSort] = useState('manual');
   const [filterTag, setFilterTag] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [displayedCount, setDisplayedCount] = useState(8);
@@ -304,7 +304,7 @@ export function AdminMilestones({
     };
   }, []);
 
-  // Listen for sidebar custom events (Recycle Bin, Activity Log, etc.)
+  // Listen for sidebar and header custom events
   useEffect(() => {
     const handleCustomModal = (e) => {
       const modal = e.detail?.modal;
@@ -313,8 +313,48 @@ export function AdminMilestones({
       else if (modal === 'linkedin') setIsLinkedInOpen(true);
       else if (modal === 'github') setIsGitHubOpen(true);
     };
+
+    const handleThemeEvent = (e) => {
+      if (e.detail?.theme) setTheme(e.detail.theme);
+    };
+
+    const handleAccentEvent = (e) => {
+      if (e.detail?.accent) setAccent(e.detail.accent);
+    };
+
+    const handleDensityEvent = (e) => {
+      if (e.detail?.density) setDensity(e.detail.density);
+    };
+
+    const handleVoiceEvent = () => {
+      toggleVoiceCommand();
+    };
+
+    const handleShortcutsEvent = () => {
+      setIsShortcutsOpen(true);
+    };
+
+    const handleCmdPaletteEvent = () => {
+      setIsCommandPaletteOpen(true);
+    };
+
     window.addEventListener('ams-open-modal', handleCustomModal);
-    return () => window.removeEventListener('ams-open-modal', handleCustomModal);
+    window.addEventListener('admin-theme-changed', handleThemeEvent);
+    window.addEventListener('admin-accent-changed', handleAccentEvent);
+    window.addEventListener('admin-density-changed', handleDensityEvent);
+    window.addEventListener('ams-toggle-voice', handleVoiceEvent);
+    window.addEventListener('ams-open-shortcuts', handleShortcutsEvent);
+    window.addEventListener('ams-open-command-palette', handleCmdPaletteEvent);
+
+    return () => {
+      window.removeEventListener('ams-open-modal', handleCustomModal);
+      window.removeEventListener('admin-theme-changed', handleThemeEvent);
+      window.removeEventListener('admin-accent-changed', handleAccentEvent);
+      window.removeEventListener('admin-density-changed', handleDensityEvent);
+      window.removeEventListener('ams-toggle-voice', handleVoiceEvent);
+      window.removeEventListener('ams-open-shortcuts', handleShortcutsEvent);
+      window.removeEventListener('ams-open-command-palette', handleCmdPaletteEvent);
+    };
   }, []);
 
   // Keyboard shortcut listener
@@ -346,19 +386,28 @@ export function AdminMilestones({
   // Theme & Accent setters
   const changeTheme = (newTheme) => {
     setTheme(newTheme);
-    localStorage.setItem('admin_theme_v9', newTheme);
+    document.body.classList.remove('theme-midnight', 'theme-light', 'theme-ocean', 'theme-forest', 'theme-sunset');
+    document.body.classList.add(newTheme);
+    try { localStorage.setItem('admin_theme_v9', newTheme); } catch (e) {}
+    window.dispatchEvent(new CustomEvent('admin-theme-changed', { detail: { theme: newTheme } }));
     showToast(`Switched theme to ${newTheme.replace('theme-', '')}`, 'fa-palette');
   };
 
   const changeAccent = (newAccent) => {
     setAccent(newAccent);
-    localStorage.setItem('admin_accent_v9', newAccent);
+    document.body.classList.remove('accent-cyan', 'accent-violet', 'accent-rose', 'accent-emerald', 'accent-amber', 'accent-pink');
+    document.body.classList.add(newAccent);
+    try { localStorage.setItem('admin_accent_v9', newAccent); } catch (e) {}
+    window.dispatchEvent(new CustomEvent('admin-accent-changed', { detail: { accent: newAccent } }));
     showToast('Updated accent color', 'fa-sparkles');
   };
 
   const changeDensity = (newDensity) => {
     setDensity(newDensity);
-    localStorage.setItem('admin_density_v9', newDensity);
+    if (newDensity === 'compact') document.body.classList.add('compact');
+    else document.body.classList.remove('compact');
+    try { localStorage.setItem('admin_density_v9', newDensity); } catch (e) {}
+    window.dispatchEvent(new CustomEvent('admin-density-changed', { detail: { density: newDensity } }));
   };
 
   // Canvas Confetti Celebration
@@ -501,10 +550,10 @@ export function AdminMilestones({
       result.sort((a, b) => (a.id > b.id ? 1 : -1));
     } else if (filterSort === 'views') {
       result.sort((a, b) => (b.views || 0) - (a.views || 0));
-    } else {
-      // Newest
+    } else if (filterSort === 'newest') {
       result.sort((a, b) => (a.id < b.id ? 1 : -1));
     }
+    // When filterSort === 'manual', preserve exact natural array order!
 
     // Always sort pinned to top
     result.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
@@ -539,24 +588,42 @@ export function AdminMilestones({
     setSelectedIds(updated);
   };
 
-  // Drag and Drop reordering
-  const handleDragStart = (e, index) => {
-    setDraggedIndex(index);
+  // Drag and Drop reordering by milestone ID
+  const handleDragStart = (e, id) => {
+    e.dataTransfer.setData('text/plain', id);
     e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.classList.add('dragging');
+  };
+
+  const handleDragEnd = (e) => {
+    e.currentTarget.classList.remove('dragging');
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drag-over');
   };
 
-  const handleDrop = (e, dropIndex) => {
+  const handleDragLeave = (e) => {
+    e.currentTarget.classList.remove('drag-over');
+  };
+
+  const handleDrop = (e, targetId) => {
     e.preventDefault();
-    if (draggedIndex === null || draggedIndex === dropIndex) return;
+    e.currentTarget.classList.remove('drag-over');
+    const draggedId = e.dataTransfer.getData('text/plain');
+    if (!draggedId || draggedId === targetId) return;
+
+    const fromIdx = milestones.findIndex((m) => m.id === draggedId);
+    const toIdx = milestones.findIndex((m) => m.id === targetId);
+    if (fromIdx === -1 || toIdx === -1) return;
+
     const updated = [...milestones];
-    const moved = updated.splice(draggedIndex, 1)[0];
-    updated.splice(dropIndex, 0, moved);
-    setDraggedIndex(null);
-    persistMilestones(updated, 'Reorder', `Reordered "${moved.title}" to position ${dropIndex + 1}`);
+    const [moved] = updated.splice(fromIdx, 1);
+    updated.splice(toIdx, 0, moved);
+    setFilterSort('manual');
+    persistMilestones(updated, 'Reorder', `Reordered "${moved.title}" to position ${toIdx + 1}`);
     showToast(`Reordered "${moved.title}"`, 'fa-arrow-down-up-across-line');
   };
 
@@ -582,6 +649,7 @@ export function AdminMilestones({
       const temp = updated[idx];
       updated[idx] = updated[idx - 1];
       updated[idx - 1] = temp;
+      setFilterSort('manual');
       persistMilestones(updated, 'Move Up', `Moved "${temp.title}" up`);
       showToast('Moved up', 'fa-arrow-up');
     }
@@ -590,11 +658,12 @@ export function AdminMilestones({
   const handleMoveDown = (id) => {
     playTick();
     const idx = milestones.findIndex((m) => m.id === id);
-    if (idx < milestones.length - 1) {
+    if (idx < milestones.length - 1 && idx !== -1) {
       const updated = [...milestones];
       const temp = updated[idx];
       updated[idx] = updated[idx + 1];
       updated[idx + 1] = temp;
+      setFilterSort('manual');
       persistMilestones(updated, 'Move Down', `Moved "${temp.title}" down`);
       showToast('Moved down', 'fa-arrow-down');
     }
@@ -1123,9 +1192,10 @@ export function AdminMilestones({
     showToast(`Generated ${style} SVG graphic!`, 'fa-palette');
   };
 
-  // Submit Milestone from Wizard
+  // Submit Milestone from Wizard (Only permitted on Step 4 Review)
   const handleWizardSubmit = (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
+    if (wizardStep !== 4) return;
     if (isWizardSaving) return;
     if (!wizardTitle.trim()) {
       showToast('Title is required.', 'fa-exclamation');
@@ -1417,119 +1487,7 @@ export function AdminMilestones({
       {/* Canvas for Confetti */}
       <canvas ref={canvasRef} id="confettiCanvas" className="pointer-events-none" />
 
-      {/* Top Controls Bar */}
-      <div className="top-navbar mb-4 flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-2">
-          <div className="text-xs font-bold tracking-wider uppercase text-slate-400 flex items-center gap-1.5">
-            <i className="fa-solid fa-sitemap text-cyan-400" />
-            <span>Enterprise CMS v9</span>
-          </div>
-        </div>
 
-        <div className="top-nav-actions flex items-center gap-2 flex-wrap">
-          {/* Theme Selector */}
-          <select
-            className="theme-selector"
-            value={theme}
-            onChange={(e) => changeTheme(e.target.value)}
-            aria-label="Theme Selector"
-          >
-            <option value="theme-midnight">🌙 Midnight</option>
-            <option value="theme-light">☀️ Light</option>
-            <option value="theme-ocean">🌊 Ocean</option>
-            <option value="theme-forest">🌲 Forest</option>
-            <option value="theme-sunset">🌅 Sunset</option>
-          </select>
-
-          {/* Accent Color Palette */}
-          <div className="accent-picker-wrapper relative">
-            <button
-              type="button"
-              className="accent-picker-btn"
-              onClick={() => setIsColorPaletteOpen((prev) => !prev)}
-              title="Change Accent Color"
-              aria-label="Accent Palette"
-            />
-            {isColorPaletteOpen && (
-              <div className="accent-palette active" style={{ display: 'flex' }}>
-                <div className={`accent-swatch ${accent === 'accent-cyan' ? 'selected' : ''}`} style={{ background: '#22d3ee' }} onClick={() => changeAccent('accent-cyan')} />
-                <div className={`accent-swatch ${accent === 'accent-violet' ? 'selected' : ''}`} style={{ background: '#a78bfa' }} onClick={() => changeAccent('accent-violet')} />
-                <div className={`accent-swatch ${accent === 'accent-rose' ? 'selected' : ''}`} style={{ background: '#fb7185' }} onClick={() => changeAccent('accent-rose')} />
-                <div className={`accent-swatch ${accent === 'accent-emerald' ? 'selected' : ''}`} style={{ background: '#34d399' }} onClick={() => changeAccent('accent-emerald')} />
-                <div className={`accent-swatch ${accent === 'accent-amber' ? 'selected' : ''}`} style={{ background: '#fbbf24' }} onClick={() => changeAccent('accent-amber')} />
-                <div className={`accent-swatch ${accent === 'accent-pink' ? 'selected' : ''}`} style={{ background: '#f472b6' }} onClick={() => changeAccent('accent-pink')} />
-              </div>
-            )}
-          </div>
-
-          {/* Voice Command Button */}
-          <button
-            type="button"
-            className={`btn-icon ${isVoiceCmdListening ? 'recording' : ''}`}
-            onClick={toggleVoiceCommand}
-            title="Voice Commands"
-            aria-label="Voice Commands"
-          >
-            <i className="fa-solid fa-microphone-lines" />
-          </button>
-
-          {/* Focus Mode Toggle */}
-          <button
-            type="button"
-            className={`btn-icon ${isFocusMode ? 'active' : ''}`}
-            onClick={() => setIsFocusMode((prev) => !prev)}
-            title="Toggle Focus Mode"
-            aria-label="Focus Mode"
-          >
-            <i className="fa-solid fa-expand" />
-          </button>
-
-          {/* Density Toggle */}
-          <div className="density-toggle">
-            <button
-              type="button"
-              className={`density-btn ${density === 'comfortable' ? 'active' : ''}`}
-              onClick={() => changeDensity('comfortable')}
-            >
-              Comfort
-            </button>
-            <button
-              type="button"
-              className={`density-btn ${density === 'compact' ? 'active' : ''}`}
-              onClick={() => changeDensity('compact')}
-            >
-              Compact
-            </button>
-          </div>
-
-          {/* Shortcuts Overlay Button */}
-          <button
-            type="button"
-            className="btn-icon"
-            onClick={() => setIsShortcutsOpen(true)}
-            title="Keyboard Shortcuts"
-            aria-label="Shortcuts"
-          >
-            <i className="fa-solid fa-keyboard" />
-          </button>
-
-          {/* Command Palette Trigger */}
-          <button
-            type="button"
-            className="search-btn"
-            onClick={() => setIsCommandPaletteOpen(true)}
-            aria-label="Command Palette"
-          >
-            <i className="fa-solid fa-magnifying-glass" />
-            <span>Search</span>
-            <kbd>⌘K</kbd>
-          </button>
-
-          <span className="btn-admin-cms">
-            <i className="fa-solid fa-shield-halved" /> Admin CMS
-          </span>
-        </div>
-      </div>
 
       {/* Voice Command Indicator Banner */}
       {isVoiceCmdListening && (
@@ -1664,6 +1622,7 @@ export function AdminMilestones({
                       onChange={(e) => setFilterSort(e.target.value)}
                       aria-label="Sort milestones"
                     >
+                      <option value="manual">Manual Order</option>
                       <option value="newest">Newest First</option>
                       <option value="oldest">Oldest First</option>
                       <option value="az">Alphabetical A-Z</option>
@@ -1811,9 +1770,11 @@ export function AdminMilestones({
                         key={m.id}
                         className={`milestone-card ${m.pinned ? 'pinned' : ''} ${isSelected ? 'selected' : ''}`}
                         draggable
-                        onDragStart={(e) => handleDragStart(e, index)}
+                        onDragStart={(e) => handleDragStart(e, m.id)}
+                        onDragEnd={handleDragEnd}
                         onDragOver={handleDragOver}
-                        onDrop={(e) => handleDrop(e, index)}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => handleDrop(e, m.id)}
                         onContextMenu={(e) => handleContextMenu(e, m.id)}
                       >
                         {/* Checkbox */}
@@ -2334,7 +2295,23 @@ export function AdminMilestones({
               </div>
             </div>
 
-            <form onSubmit={handleWizardSubmit} className="flex flex-col flex-1 overflow-hidden">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (wizardStep !== 4) {
+                  handleWizardNext();
+                  return;
+                }
+                handleWizardSubmit(e);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && e.target.tagName === 'INPUT' && wizardStep !== 4) {
+                  e.preventDefault();
+                  handleWizardNext();
+                }
+              }}
+              className="flex flex-col flex-1 overflow-hidden"
+            >
               <div className="wizard-body">
                 {/* STEP 1: BASICS */}
                 {wizardStep === 1 && (
@@ -2910,7 +2887,12 @@ export function AdminMilestones({
                       Next <i className="fa-solid fa-chevron-right" />
                     </button>
                   ) : (
-                    <button type="submit" className="btn btn-primary" disabled={isWizardSaving}>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={handleWizardSubmit}
+                      disabled={isWizardSaving}
+                    >
                       {isWizardSaving ? (
                         <>
                           <i className="fa-solid fa-spinner fa-spin" /> Saving...
