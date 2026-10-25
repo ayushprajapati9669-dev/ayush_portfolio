@@ -59,31 +59,17 @@
         ],
         "icon": "fa-chalkboard-user",
         "image": "/images/ayush-workshop-lead.jpg",
+        "images": [
+          "/images/ayush-workshop-lead.jpg"
+        ],
+        "hdImages": [],
         "imageAlt": "Ayush Prajapati delivering MERN Stack Workshop on stage in front of students",
         "link": "https://github.com/ayushprajapati9669-dev",
         "published": true,
         "pinned": true,
+        "spotlight": true,
         "views": 320,
         "createdAt": "2026-10-24T19:30:00.000Z"
-      },
-      {
-        "id": "m-1792908995865",
-        "title": "Test Milestone",
-        "desc": "This is a test description for milestone.",
-        "year": "Year 3",
-        "status": "focus",
-        "metaLabel": "Milestone",
-        "progress": 70,
-        "rating": 4,
-        "tags": [],
-        "icon": "fa-layer-group",
-        "image": null,
-        "imageAlt": "",
-        "link": "",
-        "published": true,
-        "pinned": false,
-        "views": 0,
-        "createdAt": "2026-10-25T06:16:35.865Z"
       },
       {
         "id": "m-1792870175334",
@@ -100,12 +86,37 @@
         ],
         "icon": "fa-briefcase",
         "image": null,
+        "images": [],
+        "hdImages": [],
+        "imageAlt": "",
+        "link": "",
+        "published": true,
+        "pinned": true,
+        "spotlight": true,
+        "views": 0,
+        "createdAt": "2026-10-24T19:29:35.334Z"
+      },
+      {
+        "id": "m-1792908995865",
+        "title": "Test Milestone",
+        "desc": "This is a test description for milestone.",
+        "year": "Year 3",
+        "status": "focus",
+        "metaLabel": "Milestone",
+        "progress": 70,
+        "rating": 4,
+        "tags": [],
+        "icon": "fa-layer-group",
+        "image": null,
+        "images": [],
+        "hdImages": [],
         "imageAlt": "",
         "link": "",
         "published": true,
         "pinned": false,
+        "spotlight": false,
         "views": 0,
-        "createdAt": "2026-10-24T19:29:35.334Z"
+        "createdAt": "2026-10-25T06:16:35.865Z"
       },
       {
         "id": "m-1792870162021",
@@ -123,10 +134,13 @@
         ],
         "icon": "fa-trophy",
         "image": null,
+        "images": [],
+        "hdImages": [],
         "imageAlt": "",
         "link": "",
         "published": true,
-        "pinned": false,
+        "pinned": true,
+        "spotlight": true,
         "views": 0,
         "createdAt": "2026-10-24T19:29:22.021Z"
       },
@@ -142,10 +156,13 @@
         "tags": [],
         "icon": "fa-layer-group",
         "image": null,
+        "images": [],
+        "hdImages": [],
         "imageAlt": "",
         "link": "",
         "published": true,
         "pinned": false,
+        "spotlight": false,
         "views": 60,
         "createdAt": "2026-10-24T09:55:12.842Z"
       },
@@ -164,10 +181,13 @@
         ],
         "icon": "fa-layer-group",
         "image": null,
+        "images": [],
+        "hdImages": [],
         "imageAlt": "",
         "link": "",
         "published": true,
         "pinned": false,
+        "spotlight": false,
         "views": 0,
         "createdAt": "2026-10-24T09:56:56.020Z"
       },
@@ -183,10 +203,13 @@
         "tags": [],
         "icon": "fa-layer-group",
         "image": null,
+        "images": [],
+        "hdImages": [],
         "imageAlt": "",
         "link": "",
         "published": true,
         "pinned": false,
+        "spotlight": false,
         "views": 98,
         "createdAt": "2026-10-24T09:55:12.842Z"
       }
@@ -211,7 +234,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "Full-Stack MERN Developer & Systems Builder.",
-    "updatedAt": "2026-10-25T04:05:02.942Z",
+    "updatedAt": "2026-10-25T07:52:31.640Z",
     "headerSubtitle": "Full-Stack Developer · CSE | SISTec, Bhopal",
     "email": "ayushprajapati9669@gmail.com",
     "phone": "(+91) 9669802554",
@@ -291,7 +314,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-10-25T04:04:58.449Z"
+      "updatedAt": "2026-10-25T07:52:29.783Z"
     },
     {
       "id": "proj-1792430599188",
@@ -319,7 +342,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
-      "updatedAt": "2026-10-25T04:04:59.184Z"
+      "updatedAt": "2026-10-25T07:52:29.868Z"
     },
     {
       "id": "proj-1792496192331",
@@ -344,7 +367,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80",
       "title": "ai chat boat",
-      "updatedAt": "2026-10-25T04:04:59.618Z"
+      "updatedAt": "2026-10-25T07:52:29.935Z"
     },
     {
       "id": "proj-1792781601076",
@@ -372,7 +395,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
-      "updatedAt": "2026-10-25T04:04:59.685Z"
+      "updatedAt": "2026-10-25T07:52:29.998Z"
     },
     {
       "id": "proj-1792669669594",
@@ -400,7 +423,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-10-25T04:05:00.171Z"
+      "updatedAt": "2026-10-25T07:52:30.083Z"
     }
   ],
   "skills": [
@@ -460,7 +483,7 @@
           "createdAt": 1792600863119
         }
       ],
-      "updatedAt": "2026-10-25T04:05:01.368Z"
+      "updatedAt": "2026-10-25T07:52:30.745Z"
     },
     {
       "id": "skill-cat-frontend",
@@ -502,7 +525,7 @@
           "createdAt": 1792600868119
         }
       ],
-      "updatedAt": "2026-10-25T04:05:01.441Z"
+      "updatedAt": "2026-10-25T07:52:30.819Z"
     },
     {
       "id": "skill-cat-backend",
@@ -536,7 +559,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-10-25T04:05:01.556Z"
+      "updatedAt": "2026-10-25T07:52:30.890Z"
     },
     {
       "id": "skill-cat-databases",
@@ -562,7 +585,7 @@
           "createdAt": 1792600878119
         }
       ],
-      "updatedAt": "2026-10-25T04:05:01.624Z"
+      "updatedAt": "2026-10-25T07:52:30.978Z"
     },
     {
       "id": "skill-cat-tools",
@@ -596,7 +619,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-10-25T04:05:01.699Z"
+      "updatedAt": "2026-10-25T07:52:31.048Z"
     },
     {
       "id": "skill-cat-dsa",
@@ -614,7 +637,7 @@
           "createdAt": 1792600883119
         }
       ],
-      "updatedAt": "2026-10-25T04:05:01.818Z"
+      "updatedAt": "2026-10-25T07:52:31.129Z"
     }
   ],
   "certificates": [
@@ -628,7 +651,7 @@
       "issuer": "apna college",
       "skillsCovered": "HTML,CSS,JAVASCRIPT,NODEJS,EXPRESS",
       "title": "mern stack certificate ",
-      "updatedAt": "2026-10-25T04:05:00.319Z"
+      "updatedAt": "2026-10-25T07:52:30.215Z"
     },
     {
       "id": "cert-1792434116249",
@@ -640,7 +663,7 @@
       "issuer": "code with harry",
       "skillsCovered": "",
       "title": "ai-ml certificate",
-      "updatedAt": "2026-10-25T04:05:00.505Z"
+      "updatedAt": "2026-10-25T07:52:30.284Z"
     },
     {
       "id": "cert-1792578230937",
@@ -652,7 +675,7 @@
       "issuer": "Apna college",
       "skillsCovered": "html, css, javasript, nodejs, react, mongodb, express",
       "title": "Full Stack Development (Copy)",
-      "updatedAt": "2026-10-25T04:05:00.671Z"
+      "updatedAt": "2026-10-25T07:52:30.342Z"
     },
     {
       "id": "cert-1792588849135",
@@ -664,7 +687,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, GraphQL",
       "title": "mern stack",
-      "updatedAt": "2026-10-25T04:05:00.821Z"
+      "updatedAt": "2026-10-25T07:52:30.406Z"
     },
     {
       "id": "cert-1792595305806",
@@ -676,7 +699,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "cyber security",
-      "updatedAt": "2026-10-25T04:05:00.969Z"
+      "updatedAt": "2026-10-25T07:52:30.523Z"
     },
     {
       "id": "cert-1792663342696",
@@ -688,48 +711,11 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "mern stack",
-      "updatedAt": "2026-10-25T04:05:01.128Z"
+      "updatedAt": "2026-10-25T07:52:30.592Z"
     }
   ],
   "media": [],
-  "messages": [
-    {
-      "id": "msg-1792813214696",
-      "name": "ajit kumar",
-      "email": "ajit@gmail.com",
-      "subject": "help",
-      "message": "i need some help from you please support me",
-      "status": "read",
-      "createdAt": "2026-10-24T03:40:14.696Z"
-    },
-    {
-      "id": "msg-1792776034240",
-      "name": "ajay prajapati",
-      "email": "ajay@gmail.com",
-      "subject": "personal",
-      "message": "you can aaply for the tcs",
-      "status": "read",
-      "createdAt": "2026-10-23T17:20:34.240Z"
-    },
-    {
-      "id": "msg-1792775992794",
-      "name": "sonali prajapati",
-      "email": "sonali@gmail.com",
-      "subject": "connect",
-      "message": "i am connect to you",
-      "status": "read",
-      "createdAt": "2026-10-23T17:19:52.794Z"
-    },
-    {
-      "id": "msg-1792775905527",
-      "name": "rohit prajapati",
-      "email": "rohti626861@gmail.com",
-      "subject": "hiring",
-      "message": "i hired you",
-      "status": "read",
-      "createdAt": "2026-10-23T17:18:25.527Z"
-    }
-  ],
+  "messages": [],
   "settings": {
     "siteTitle": "Ayush Prajapati — Developer Portfolio",
     "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",

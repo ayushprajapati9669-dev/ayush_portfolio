@@ -3,14 +3,14 @@
 @import './effects.css';
 @import './navbar.css';
 @import './footer.css';
-@import './admin.css';
 @import './components/cards.css';
 @import './pages/skills.css';
 @import './pages/about.css';
 @import './pages/projects.css';
 @import './pages/certificates.css';
 @import './pages/contact.css';
-@import './pages/admin-milestones.css';
+/* admin.css and admin-milestones.css are imported lazily in Admin.jsx */
+
 
 @tailwind base;
 @tailwind components;

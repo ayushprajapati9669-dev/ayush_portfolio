@@ -46,8 +46,26 @@ function createPortfolioServer(customOptions = {}) {
         const mime = ext === '.png' ? 'image/png' : ext === '.webp' ? 'image/webp' : ext === '.pdf' ? 'application/pdf' : 'image/jpeg';
         res.statusCode = 200;
         res.setHeader('Content-Type', mime);
-        res.setHeader('Cache-Control', 'public, max-age=3600');
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         return fs.createReadStream(filePath).pipe(res);
+      }
+
+      if (req.method === 'POST' && pathname === '/api/admin/optimize-asset') {
+        let body = '';
+        req.on('data', (chunk) => { body += chunk; });
+        req.on('end', () => {
+          try {
+            const { filename, base64 } = JSON.parse(body);
+            const targetPath = path.resolve(__dirname, '../../client/public/images', filename);
+            const data = base64.replace(/^data:image\/\w+;base64,/, '');
+            fs.writeFileSync(targetPath, Buffer.from(data, 'base64'));
+            const size = fs.statSync(targetPath).size;
+            return sendJson(res, 200, { success: true, filename, size });
+          } catch (e) {
+            return sendJson(res, 500, { error: e.message });
+          }
+        });
+        return;
       }
 
       const handled = await dispatchApiRoutes(req, res, pathname, parsedUrl, controllers, config);

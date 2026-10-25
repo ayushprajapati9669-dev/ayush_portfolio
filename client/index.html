@@ -4,20 +4,96 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Ayush Prajapati — Full-Stack Developer Portfolio</title>
+
+    <!-- Primary SEO Meta Tags -->
+    <title>Ayush Prajapati — Full-Stack Developer &amp; Software Engineer</title>
     <meta
       name="description"
-      content="Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB."
+      content="Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, and scalable full-stack web applications."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <meta name="keywords" content="Ayush Prajapati, Full-Stack Developer, MERN Stack, React, Node.js, SISTec Bhopal, Software Engineer, Portfolio" />
+    <meta name="author" content="Ayush Prajapati" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="https://ayushprajapati.dev/" />
+
+    <!-- Open Graph & Social Cards -->
+    <meta property="og:title" content="Ayush Prajapati — Full-Stack Developer &amp; Software Engineer" />
+    <meta property="og:description" content="Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, and scalable full-stack web applications." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ayushprajapati.dev/" />
+    <meta property="og:image" content="https://ayushprajapati.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Ayush Prajapati Portfolio" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ayush Prajapati — Full-Stack Developer Portfolio" />
+    <meta name="twitter:description" content="Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development and scalable architectures." />
+    <meta name="twitter:image" content="https://ayushprajapati.dev/og-image.png" />
+
+    <!-- Schema.org Structured Data for Google Rich Snippets -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Ayush Prajapati",
+        "url": "https://ayushprajapati.dev",
+        "jobTitle": "Full-Stack Developer",
+        "description": "B.Tech CSE student at SISTec, Bhopal specializing in MERN stack development",
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Sagar Institute of Science and Technology (SISTec), Bhopal"
+        },
+        "sameAs": [
+          "https://github.com/ayushprajapati9669-dev",
+          "https://linkedin.com/in/ayushprajapati"
+        ],
+        "knowsAbout": ["React.js", "Node.js", "MongoDB", "Express.js", "C", "Java", "Python", "Full-Stack Architecture"]
+      }
+    </script>
+
+    <!-- Critical Inline CSS for above-the-fold content (eliminates render-blocking) -->
+    <style>
+      *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { color-scheme: dark; scroll-behavior: smooth; }
+      body {
+        background: #030712;
+        color: #f8fafc;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+      #root { min-height: 100vh; }
+      /* Prevent CLS from async font load */
+      h1, h2, h3 { font-size: clamp(1.5rem, 4vw, 3.5rem); line-height: 1.1; }
+    </style>
+
+    <!-- DNS Prefetch for faster external resource resolution -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+
+    <!-- Preload LCP hero portrait image (critical for performance score) -->
+    <link rel="preload" as="image" href="/images/ayush-hero-portrait.jpg" fetchpriority="high" />
+
+    <!-- Non-render-blocking Google Fonts: loaded asynchronously -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
-    <!-- Icons: FontAwesome & Devicon (Non-render-blocking with noscript fallback) -->
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      />
+    </noscript>
+
+    <!-- Icons: FontAwesome & Devicon (Non-render-blocking) -->
     <link
       rel="preload"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"

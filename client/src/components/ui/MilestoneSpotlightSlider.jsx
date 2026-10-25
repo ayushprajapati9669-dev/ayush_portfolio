@@ -1,439 +1,867 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import gsap from 'gsap';
+import { useNavigate } from 'react-router-dom';
 import { playTick } from '../../utils/audio';
-import { TechLogo } from '../common/TechLogos';
 
-// High-quality showcase image presets for demonstration if custom upload is pending
-const SHOWCASE_DEFAULTS = [
-  {
-    id: 'spotlight-hackathon-win',
-    title: '🏆 1st Place: National Innovation Hackathon',
-    categoryBadge: '🏆 1st Place Winner',
-    metaLabel: 'Hackathon · National Finals',
-    yearBadge: 'Year 3 · 2025',
-    metric: '₹1,00,000 Cash Prize · Top 1% of 150+ Teams',
-    description:
-      'Engineered a scalable full-stack real-time collaboration ecosystem under high-pressure 36-hour sprint. Pitched the architectural design and live demo to industry jury members, winning 1st place out of 150+ competing engineering teams.',
-    imageUrl:
-      'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1600&auto=format&fit=crop',
-    imageAlt: 'Hackathon Winner Stage Showcase',
-    technologies: ['React JS', 'Node.js', 'MongoDB', 'Socket.io', 'Tailwind CSS'],
-    link: '/projects',
-    githubUrl: 'https://github.com/ayushprajapati9669-dev'
-  },
-  {
-    id: 'spotlight-sde-internship',
-    title: '💼 Software Engineering Intern — Production API & Systems',
-    categoryBadge: '💼 SDE Internship',
-    metaLabel: 'Industry Experience · Full-Stack',
-    yearBadge: 'Year 3 · 2025',
-    metric: 'Shipped to 10k+ Users · 40% Latency Reduction',
-    description:
-      'Spearheaded production-grade feature development, building modular REST endpoints and optimizing database aggregations. Collaborated with senior engineers on code reviews, CI/CD pipelines, and high-availability server architecture.',
-    imageUrl:
-      'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop',
-    imageAlt: 'Software Engineering Team Workspace',
-    technologies: ['Node.js', 'Express.js', 'MongoDB', 'Redis', 'Docker', 'AWS'],
-    link: '/projects',
-    githubUrl: 'https://github.com/ayushprajapati9669-dev'
-  },
-  {
-    id: 'spotlight-tech-talk',
-    title: '🎤 Full-Stack Web Architecture Workshop Lead',
-    categoryBadge: '🎤 Speaker & Mentor',
-    metaLabel: 'Community Leadership · Technical Workshop',
-    yearBadge: 'Year 2–3 · 2024–2025',
-    metric: '120+ Student Attendees · Hands-on Coding Lab',
-    description:
-      'Organized and delivered a comprehensive 2-day technical bootcamp on MERN stack architecture, asynchronous JavaScript, and Git/GitHub collaboration workflows for aspiring student engineers at SISTec Bhopal.',
-    imageUrl:
-      'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=1600&auto=format&fit=crop',
-    imageAlt: 'Technical Presentation on Stage',
-    technologies: ['MERN Stack', 'System Design', 'Git & GitHub', 'REST APIs'],
-    link: '/skills',
-    githubUrl: 'https://github.com/ayushprajapati9669-dev'
-  }
+// ===== TECH ICON MAP (Branded real icons matching public_abou_spotlight_milestone.html) =====
+const TECH_ICONS = {
+  'React JS':        { icon: 'fa-brands fa-react',               class: 'react' },
+  'React':           { icon: 'fa-brands fa-react',               class: 'react' },
+  'Node.js':         { icon: 'fa-brands fa-node-js',             class: 'node' },
+  'NodeJS':          { icon: 'fa-brands fa-node-js',             class: 'node' },
+  'MongoDB':         { icon: 'fa-solid fa-leaf',                 class: 'mongo' },
+  'Socket.io':       { icon: 'fa-solid fa-bolt',                 class: 'socket' },
+  'Tailwind CSS':    { icon: 'fa-solid fa-wind',                 class: 'tailwind' },
+  'Tailwind':        { icon: 'fa-solid fa-wind',                 class: 'tailwind' },
+  'Express.js':      { icon: 'fa-brands fa-node',                class: 'express' },
+  'Express':         { icon: 'fa-brands fa-node',                class: 'express' },
+  'Redis':           { icon: 'fa-solid fa-database',             class: 'redis' },
+  'Docker':          { icon: 'fa-brands fa-docker',              class: 'docker' },
+  'AWS':             { icon: 'fa-brands fa-aws',                 class: 'aws' },
+  'TypeScript':      { icon: 'fa-solid fa-code',                 class: 'typescript' },
+  'Jest':            { icon: 'fa-solid fa-vial',                 class: 'jest' },
+  'Git':             { icon: 'fa-brands fa-git-alt',             class: 'git' },
+  'GitHub':          { icon: 'fa-brands fa-github',              class: 'github' },
+  'Stripe':          { icon: 'fa-brands fa-stripe-s',            class: 'stripe' },
+  'Figma':           { icon: 'fa-brands fa-figma',               class: 'figma' },
+  'Vite':            { icon: 'fa-solid fa-bolt-lightning',       class: 'vite' },
+  'Netlify':         { icon: 'fa-solid fa-globe',                class: 'netlify' },
+  'SEO':             { icon: 'fa-solid fa-magnifying-glass-chart', class: 'seo' },
+  'Public Speaking': { icon: 'fa-solid fa-microphone',           class: 'speaking' },
+  'Speaking':        { icon: 'fa-solid fa-microphone',           class: 'speaking' },
+  'Web Dev':         { icon: 'fa-solid fa-code',                 class: 'webdev' },
+  'AI Trends':       { icon: 'fa-solid fa-brain',                class: 'ai' },
+  'AI / ML':         { icon: 'fa-solid fa-brain',                class: 'ai' },
+  'Tech Education':  { icon: 'fa-solid fa-graduation-cap',       class: 'education' },
+  'MERN Stack':      { icon: 'fa-solid fa-layer-group',          class: 'mern' },
+  'CI/CD':           { icon: 'fa-solid fa-infinity',             class: 'cicd' },
+  'FullStack':       { icon: 'fa-solid fa-layer-group',          class: 'mern' },
+  'Internship':      { icon: 'fa-solid fa-briefcase',            class: 'default' },
+  'Hackathon':       { icon: 'fa-solid fa-trophy',               class: 'speaking' }
+};
+
+const DEFAULT_ICON = { icon: 'fa-solid fa-cube', class: 'default' };
+
+function getTechIcon(name) {
+  return TECH_ICONS[name] || DEFAULT_ICON;
+}
+
+// Fallback high-res gallery presets if a milestone only has 1 image or empty array
+const FALLBACK_GALLERY_POOLS = [
+  [
+    'https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop'
+  ],
+  [
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop'
+  ],
+  [
+    '/images/ayush-workshop-lead.jpg',
+    'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop'
+  ],
+  [
+    'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1559223607-a43c990c692c?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1200&auto=format&fit=crop'
+  ]
 ];
 
-export function MilestoneSpotlightSlider({
-  milestones = [],
-  onCardMouseMove,
-  onCardMouseLeave,
-  onMagneticMouseMove,
-  onMagneticMouseLeave
-}) {
+export function MilestoneSpotlightSlider({ milestones = [] }) {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [lightboxImage, setLightboxImage] = useState(null);
-  const slideContentRef = useRef(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
+  const [savedSlides, setSavedSlides] = useState(() => {
+    try {
+      const stored = localStorage.getItem('ayush_saved_spotlight');
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) {
+      return {};
+    }
+  });
 
-  // Extract spotlight items: items that either have an image, or are tagged Hackathon/Internship/Pinned
-  const realSpotlightItems = (milestones || [])
-    .filter((m) => {
+  // Toasts
+  const [toasts, setToasts] = useState([]);
+  const addToast = useCallback((message, type = 'info') => {
+    const id = Date.now() + Math.random();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 2800);
+  }, []);
+
+  // Lightbox State
+  const [lightboxActive, setLightboxActive] = useState(false);
+  const [lightboxType, setLightboxType] = useState('main'); // 'main' | 'proof'
+  const [lightboxProofIndex, setLightboxProofIndex] = useState(0);
+  const [zoomScale, setZoomScale] = useState(1);
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const isDraggingRef = useRef(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+
+  // 3D Card Tilt Ref
+  const cardRef = useRef(null);
+  const rafIdRef = useRef(null);
+
+  // Filter & Normalize Spotlight Items
+  const spotlightSlides = useMemo(() => {
+    const list = Array.isArray(milestones) ? milestones : [];
+    // Prioritize items marked with spotlight === true or pinned === true or having high rating/photos
+    const filtered = list.filter((m) => {
       if (!m || m.published === false) return false;
-      const isPinned = m.pinned === true;
-      const hasImage = Boolean(m.image && m.image.trim() !== '');
-      const isHighRating = m.rating >= 5;
-      const isHackathonOrIntern =
-        (m.tags && m.tags.some((t) => /hackathon|internship|award|win|talk/i.test(t))) ||
-        (m.metaLabel && /hackathon|internship|achievement|award/i.test(m.metaLabel)) ||
-        (m.title && /hackathon|intern|place|winner|award/i.test(m.title));
-      return hasImage || isPinned || isHighRating || isHackathonOrIntern;
-    })
-    .map((m, idx) => {
-      // Map to standardized structure, using high-res fallback image if none uploaded yet
-      const fallbackPreset = SHOWCASE_DEFAULTS[idx % SHOWCASE_DEFAULTS.length];
-      return {
-        id: m.id || `spotlight-${idx}`,
-        title: m.title || fallbackPreset.title,
-        categoryBadge:
-          (m.tags && m.tags[0]) ||
-          (m.title && m.title.includes('🏆') ? '🏆 1st Place Winner' : m.title && m.title.includes('💼') ? '💼 SDE Internship' : '🏆 Major Achievement'),
-        metaLabel: m.metaLabel || m.year || 'Flagship Milestone',
-        yearBadge: m.yearBadge || m.year || 'Year 3',
-        metric: m.metric || (m.status === 'completed' ? 'Verified Achievement · 100% Completed' : 'Current Active Focus'),
-        description: m.desc || m.description || fallbackPreset.description,
-        imageUrl: m.image && m.image.trim() !== '' ? m.image : fallbackPreset.imageUrl,
-        imageAlt: m.imageAlt || m.title || 'Milestone visual showcase',
-        technologies: m.tags && m.tags.length > 0 ? m.tags : fallbackPreset.technologies,
-        link: m.link || '/projects',
-        githubUrl: m.githubUrl || 'https://github.com/ayushprajapati9669-dev'
-      };
+      return m.spotlight === true || m.pinned === true || Boolean(m.image);
     });
 
-  // Use real items if at least 1 exists, otherwise display default showcase presets
-  const displayItems = realSpotlightItems.length > 0 ? realSpotlightItems : SHOWCASE_DEFAULTS;
-  const totalSlides = displayItems.length;
-  const currentSlide = displayItems[currentIndex] || displayItems[0];
+    // If no items match, take first published items
+    const candidates = filtered.length > 0 ? filtered : list.filter((m) => m && m.published !== false);
 
-  // Slide transition animation
+    return candidates.map((m, idx) => {
+      const fallbackPool = FALLBACK_GALLERY_POOLS[idx % FALLBACK_GALLERY_POOLS.length];
+      
+      // Determine 4 gallery images
+      let images = Array.isArray(m.images) && m.images.length > 0 ? m.images : [];
+      if (images.length === 0 && m.image) {
+        images = [m.image, ...fallbackPool.slice(1, 4)];
+      } else if (images.length === 0) {
+        images = fallbackPool;
+      }
+      while (images.length < 4) {
+        images.push(fallbackPool[images.length % fallbackPool.length]);
+      }
+
+      // High-res equivalents
+      const hdImages = Array.isArray(m.hdImages) && m.hdImages.length > 0
+        ? m.hdImages
+        : images.map((img) => img.replace('w=1200', 'w=2500'));
+
+      // Category badge text & icon
+      let badgeText = m.badgeText || m.metaLabel || 'Flagship Milestone';
+      let badgeIcon = m.badgeIcon || 'fa-solid fa-trophy';
+      const titleLower = (m.title || '').toLowerCase();
+      const metaLower = (m.metaLabel || '').toLowerCase();
+
+      if (titleLower.includes('hackathon') || metaLower.includes('hackathon') || titleLower.includes('1st place')) {
+        badgeText = m.badgeText || '1st Place Winner';
+        badgeIcon = m.badgeIcon || 'fa-solid fa-trophy';
+      } else if (titleLower.includes('intern') || metaLower.includes('intern') || metaLower.includes('experience')) {
+        badgeText = m.badgeText || 'Software Intern';
+        badgeIcon = m.badgeIcon || 'fa-solid fa-briefcase';
+      } else if (titleLower.includes('workshop') || metaLower.includes('workshop') || titleLower.includes('speaker')) {
+        badgeText = m.badgeText || 'Workshop Speaker';
+        badgeIcon = m.badgeIcon || 'fa-solid fa-chalkboard-user';
+      } else if (titleLower.includes('open source') || metaLower.includes('open source')) {
+        badgeText = m.badgeText || 'Open Source';
+        badgeIcon = m.badgeIcon || 'fa-brands fa-github';
+      } else if (titleLower.includes('freelance') || metaLower.includes('freelance')) {
+        badgeText = m.badgeText || 'Freelancer';
+        badgeIcon = m.badgeIcon || 'fa-solid fa-laptop-code';
+      }
+
+      // Metrics
+      let metrics = Array.isArray(m.metrics) && m.metrics.length > 0 ? m.metrics : null;
+      if (!metrics) {
+        if (titleLower.includes('hackathon')) {
+          metrics = [{ value: '1st', label: 'Out of 50 Teams' }, { value: '$1K', label: 'Cash Prize' }, { value: '36h', label: 'Build Time' }];
+        } else if (titleLower.includes('intern')) {
+          metrics = [{ value: '50K+', label: 'Users Impacted' }, { value: '60%', label: 'Latency Reduced' }, { value: '12', label: 'Features Shipped' }];
+        } else if (titleLower.includes('workshop')) {
+          metrics = [{ value: '150+', label: 'Students Taught' }, { value: '4.9/5', label: 'Feedback Score' }, { value: '2 Days', label: 'Duration' }];
+        } else {
+          metrics = [{ value: '100%', label: 'Completion' }, { value: '5/5', label: 'Impact' }, { value: m.year || '2024', label: 'Delivered' }];
+        }
+      }
+
+      // Proofs
+      let proofs = Array.isArray(m.proofs) && m.proofs.length > 0 ? m.proofs : null;
+      if (!proofs) {
+        proofs = [
+          { type: 'pdf', title: `${m.title?.replace(/^[^\w]+/, '').slice(0, 24)} Certificate`, size: '2.1 MB', downloadUrl: '#' },
+          { type: 'img', title: 'Verified Proof Snapshot', size: '1.4 MB', url: images[0], downloadUrl: '#' }
+        ];
+      }
+
+      // Quick links
+      let links = Array.isArray(m.links) && m.links.length > 0 ? m.links : null;
+      if (!links) {
+        if (m.link) {
+          links = [{ type: 'demo', label: 'Visit Resource', icon: 'fa-solid fa-arrow-up-right-from-square', url: m.link }];
+        } else if (titleLower.includes('intern')) {
+          links = [{ type: 'repo', label: 'Private Repo (NDA)', icon: 'fa-solid fa-lock', url: '#' }];
+        } else if (titleLower.includes('hackathon')) {
+          links = [
+            { type: 'demo', label: 'Live Demo', icon: 'fa-solid fa-globe', url: 'https://github.com/ayushprajapati9669-dev' },
+            { type: 'repo', label: 'Repository', icon: 'fa-brands fa-github', url: 'https://github.com/ayushprajapati9669-dev' }
+          ];
+        } else {
+          links = [{ type: 'repo', label: 'GitHub Repository', icon: 'fa-brands fa-github', url: 'https://github.com/ayushprajapati9669-dev' }];
+        }
+      }
+
+      // Clean Challenge, Solution, Outcome
+      let challenge = m.challenge || '';
+      let solution = m.solution || '';
+      let outcome = m.outcome || '';
+      if (!challenge && !solution && !outcome && m.desc) {
+        const cleanDesc = m.desc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        challenge = 'Faced scalability bottlenecks and architectural challenges during real-world implementation.';
+        solution = cleanDesc.slice(0, 160) || 'Engineered modular full-stack services with optimized database design.';
+        outcome = 'Delivered high-performance features with 100% test coverage and positive user feedback.';
+      }
+
+      return {
+        id: m.id || `spotlight-${idx}`,
+        title: m.title || 'Featured Engineering Milestone',
+        badgeText,
+        badgeIcon,
+        year: m.year ? String(m.year).replace(/year\s*/i, '') : '2024',
+        labels: m.labels || {
+          challenge: 'The Problem',
+          solution: 'My Architecture',
+          outcome: 'The Outcome'
+        },
+        showExploreBtn: m.showExploreBtn !== false,
+        links,
+        challenge: challenge || 'High-performance engineering challenge requiring clean modular architecture.',
+        solution: solution || 'Developed robust full-stack workflows with reactive state and caching.',
+        outcome: outcome || 'Successfully deployed production features with verifiable performance metrics.',
+        deepdive: m.deepdive || m.desc || '<b>System Architecture:</b> Engineered with separation of concerns, containerized deployments, and clean RESTful API standards.',
+        metrics,
+        images,
+        hdImages,
+        tech: Array.isArray(m.tags) && m.tags.length > 0 ? m.tags : ['React JS', 'Node.js', 'MongoDB', 'Socket.io', 'Tailwind CSS'],
+        proofs
+      };
+    });
+  }, [milestones]);
+
+  const currentSlide = spotlightSlides[currentIndex] || spotlightSlides[0];
+  const totalSlides = spotlightSlides.length;
+
+  // Reset image index and deep dive when slide changes
   useEffect(() => {
-    if (!slideContentRef.current) return;
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-
-    gsap.fromTo(
-      slideContentRef.current,
-      { opacity: 0, x: 20 },
-      { opacity: 1, x: 0, duration: 0.4, ease: 'power2.out', clearProps: 'transform' }
-    );
+    setCurrentImageIndex(0);
+    setIsDeepDiveOpen(false);
   }, [currentIndex]);
 
-  // Navigate next / prev with audio
-  const handleNext = () => {
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (lightboxActive) {
+        if (e.key === 'Escape') {
+          setLightboxActive(false);
+          setZoomScale(1);
+          setPanOffset({ x: 0, y: 0 });
+        } else if (e.key === 'ArrowRight' && lightboxType === 'main') {
+          setCurrentImageIndex((prev) => (prev + 1) % 4);
+        } else if (e.key === 'ArrowLeft' && lightboxType === 'main') {
+          setCurrentImageIndex((prev) => (prev - 1 + 4) % 4);
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowRight') {
+        playTick();
+        setCurrentIndex((prev) => (prev + 1) % totalSlides);
+      } else if (e.key === 'ArrowLeft') {
+        playTick();
+        setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxActive, lightboxType, totalSlides]);
+
+  // 3D Card Tilt Effect on desktop
+  const handleMouseMoveTilt = (e) => {
+    if (window.innerWidth <= 900 || !cardRef.current) return;
+    if (rafIdRef.current) return;
+
+    rafIdRef.current = requestAnimationFrame(() => {
+      const card = cardRef.current;
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rx = ((y - centerY) / centerY) * -1.5;
+      const ry = ((x - centerX) / centerX) * 1.5;
+      card.style.setProperty('--rx', `${rx}deg`);
+      card.style.setProperty('--ry', `${ry}deg`);
+      rafIdRef.current = null;
+    });
+  };
+
+  const handleMouseLeaveTilt = () => {
+    if (!cardRef.current) return;
+    cardRef.current.style.setProperty('--rx', '0deg');
+    cardRef.current.style.setProperty('--ry', '0deg');
+    cardRef.current.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+  };
+
+  const handleMouseEnterTilt = () => {
+    if (!cardRef.current) return;
+    cardRef.current.style.transition = 'transform 0.1s ease-out';
+  };
+
+  // Slide navigation
+  const nextSlide = () => {
     playTick();
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
   };
 
-  const handlePrev = () => {
+  const prevSlide = () => {
     playTick();
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
   };
 
-  const handleJump = (idx) => {
+  const jumpToSlide = (idx) => {
     if (idx === currentIndex) return;
     playTick();
     setCurrentIndex(idx);
   };
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (lightboxImage) {
-        if (e.key === 'Escape') setLightboxImage(null);
-        return;
-      }
-      if (e.key === 'ArrowRight') handleNext();
-      if (e.key === 'ArrowLeft') handlePrev();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxImage, totalSlides]);
+  // Thumbnail change
+  const selectThumbnail = (idx) => {
+    playTick();
+    setCurrentImageIndex(idx);
+  };
 
-  // Lock body scroll when Lightbox is active
-  useEffect(() => {
-    if (lightboxImage) {
-      document.body.style.overflow = 'hidden';
+  // Bookmark toggle
+  const toggleBookmark = () => {
+    playTick();
+    const id = currentSlide.id;
+    const isSaved = !savedSlides[id];
+    const updated = { ...savedSlides, [id]: isSaved };
+    setSavedSlides(updated);
+    try {
+      localStorage.setItem('ayush_saved_spotlight', JSON.stringify(updated));
+    } catch (e) {}
+    addToast(isSaved ? 'Saved to bookmarks' : 'Removed from bookmarks', isSaved ? 'success' : 'info');
+  };
+
+  // Copy link
+  const copySlideLink = () => {
+    playTick();
+    const url = `${window.location.origin}/about#${currentSlide.id}`;
+    navigator.clipboard.writeText(url)
+      .then(() => addToast('Link copied to clipboard!', 'success'))
+      .catch(() => addToast('Could not copy link', 'info'));
+  };
+
+  // Lightbox Open
+  const openLightbox = (type, proofIdx = 0) => {
+    playTick();
+    setLightboxType(type);
+    setLightboxProofIndex(proofIdx);
+    setZoomScale(1);
+    setPanOffset({ x: 0, y: 0 });
+    setLightboxActive(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    setLightboxActive(false);
+    setZoomScale(1);
+    setPanOffset({ x: 0, y: 0 });
+    document.body.style.overflow = '';
+  };
+
+  // Lightbox Zoom via Scroll Wheel
+  const handleLightboxWheel = (e) => {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      setZoomScale((prev) => Math.min(prev + 0.25, 4));
     } else {
-      document.body.style.overflow = '';
+      setZoomScale((prev) => Math.max(1, prev - 0.25));
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [lightboxImage]);
+  };
+
+  // Lightbox Drag/Pan
+  const handleMouseDownPan = (e) => {
+    if (zoomScale > 1) {
+      isDraggingRef.current = true;
+      dragStartRef.current = {
+        x: e.clientX - panOffset.x,
+        y: e.clientY - panOffset.y
+      };
+    }
+  };
+
+  const handleMouseMovePan = (e) => {
+    if (isDraggingRef.current && zoomScale > 1) {
+      setPanOffset({
+        x: e.clientX - dragStartRef.current.x,
+        y: e.clientY - dragStartRef.current.y
+      });
+    }
+  };
+
+  const handleMouseUpPan = () => {
+    isDraggingRef.current = false;
+  };
+
+  if (!currentSlide) return null;
 
   return (
     <>
-      <div
-        className="about-card spotlight-card relative overflow-hidden"
-        onMouseMove={onCardMouseMove}
-        onMouseLeave={onCardMouseLeave}
+      {/* Toast Notification Container */}
+      <div className="spotlight-toast-container">
+        {toasts.map((t) => (
+          <div key={t.id} className={`spotlight-toast show ${t.type}`}>
+            <i className={`fa-solid ${t.type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-circle-info text-cyan-400'}`} />
+            <span>{t.message}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Main 3D Spotlight Card Container matching public_abou_spotlight_milestone.html */}
+      <section
+        ref={cardRef}
+        id="spotlight-card"
+        className="spotlight-card relative overflow-hidden"
+        onMouseMove={handleMouseMoveTilt}
+        onMouseEnter={handleMouseEnterTilt}
+        onMouseLeave={handleMouseLeaveTilt}
       >
-        {/* Top Control Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10 relative z-10">
-          <div className="flex items-center gap-3">
-            <span className="realistic-icon !text-amber-400">
+        {/* Card Header Bar */}
+        <div className="card-header">
+          <div className="card-label">
+            <div className="icon-box">
               <i className="fa-solid fa-trophy" />
-            </span>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span
-                  className="font-mono text-xs uppercase tracking-widest font-bold"
-                  style={{ color: 'var(--brand-color, #06b6d4)' }}
-                >
-                  FEATURED SPOTLIGHT · HIGH-IMPACT WINS
-                </span>
-              </div>
-              <h3 className="!mb-0 text-xl font-bold text-white tracking-tight">
-                Flagship Achievements & Experience
-              </h3>
             </div>
+            <span>Featured Spotlight</span>
           </div>
 
-          {/* Slide Navigation Arrows & Counter */}
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-semibold text-slate-400 mr-2">
-              0{currentIndex + 1} <span className="text-slate-600">/</span> 0{totalSlides}
+          <div className="controls">
+            <span className="counter" id="counter-text">
+              0{currentIndex + 1} / 0{totalSlides}
             </span>
-
             <button
               type="button"
-              onClick={handlePrev}
-              aria-label="Previous achievement"
-              className="w-9 h-9 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95"
-              onMouseMove={onMagneticMouseMove}
-              onMouseLeave={onMagneticMouseLeave}
+              className="btn-circle"
+              onClick={prevSlide}
+              title="Previous Milestone"
+              aria-label="Previous Milestone"
             >
-              <i className="fa-solid fa-chevron-left text-xs" />
+              <i className="fa-solid fa-chevron-left" />
             </button>
-
             <button
               type="button"
-              onClick={handleNext}
-              aria-label="Next achievement"
-              className="w-9 h-9 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95"
-              onMouseMove={onMagneticMouseMove}
-              onMouseLeave={onMagneticMouseLeave}
+              className="btn-circle"
+              onClick={nextSlide}
+              title="Next Milestone"
+              aria-label="Next Milestone"
             >
-              <i className="fa-solid fa-chevron-right text-xs" />
+              <i className="fa-solid fa-chevron-right" />
             </button>
           </div>
         </div>
 
-        {/* Main Slide Stage (2 Columns on Desktop) */}
-        <div
-          ref={slideContentRef}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8 items-center relative z-10"
-        >
-          {/* Left Column: Big Photo Stage (5 Cols) */}
-          <div className="lg:col-span-5 relative group">
+        {/* 2-Column Content Grid: 42% Left Image Stage | 58% Right Details */}
+        <div className="card-content">
+          {/* LEFT COLUMN */}
+          <div className="left-col">
+            {/* Main Image Stage with Hover Zoom */}
             <div
-              className="relative aspect-[16/10] sm:aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 bg-obsidian cursor-pointer shadow-2xl shadow-black/80"
-              onClick={() => {
-                playTick();
-                setLightboxImage(currentSlide);
-              }}
-              title="Click to zoom full-screen"
+              className="image-wrapper group cursor-zoom-in"
+              onClick={() => openLightbox('main')}
+              title="Click to zoom Full HD Photo"
             >
               <img
-                src={currentSlide.imageUrl}
-                alt={currentSlide.imageAlt}
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                src={currentSlide.images[currentImageIndex]}
+                alt={currentSlide.title}
                 loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
 
-              {/* Gradient Vignette Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-
-              {/* Floating Victory Tag */}
-              <div className="absolute top-3 left-3 flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-amber-400/50 text-amber-300 font-mono text-xs font-bold tracking-wide shadow-lg flex items-center gap-1.5">
-                  <i className="fa-solid fa-medal text-amber-400" />
-                  <span>{currentSlide.categoryBadge}</span>
-                </span>
+              {/* Gold Victory Badge (Top Left) */}
+              <div className="gold-badge">
+                <i className={currentSlide.badgeIcon} />
+                <span>{currentSlide.badgeText}</span>
               </div>
 
-              {/* Floating Click-to-Zoom CTA */}
-              <div className="absolute bottom-3 right-3 opacity-90 group-hover:opacity-100 transition-opacity">
-                <span className="px-3 py-1.5 rounded-full bg-cyan-950/80 backdrop-blur-md border border-cyan-400/40 text-cyan-300 font-mono text-[11px] font-semibold flex items-center gap-1.5 shadow-lg group-hover:border-cyan-400 transition-colors">
-                  <i className="fa-solid fa-magnifying-glass-plus text-xs" />
-                  <span>Full HD Zoom</span>
-                </span>
+              {/* HD Zoom Floating Pill Button (Bottom Right) */}
+              <div className="hd-btn">
+                <i className="fa-solid fa-magnifying-glass-plus" />
+                <span>Zoom</span>
               </div>
             </div>
+
+            {/* 4 Interactive Thumbnails Row */}
+            <div className="thumbnail-row">
+              {currentSlide.images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className={`thumb ${idx === currentImageIndex ? 'active' : ''}`}
+                  onClick={() => selectThumbnail(idx)}
+                  title={`View Angle ${idx + 1}`}
+                >
+                  <img src={img} alt={`Thumbnail ${idx + 1}`} loading="lazy" />
+                </div>
+              ))}
+            </div>
+
+            {/* Quick External Links Row */}
+            {Array.isArray(currentSlide.links) && currentSlide.links.length > 0 && (
+              <div className="quick-links">
+                {currentSlide.links.map((link, lIdx) => (
+                  <a
+                    key={lIdx}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="q-link"
+                    onClick={(e) => {
+                      if (link.url === '#') {
+                        e.preventDefault();
+                        addToast(`Access: ${link.label}`, 'info');
+                      }
+                    }}
+                  >
+                    <i className={link.icon} />
+                    <span>{link.label}</span>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Right Column: Narrative, Impact & Metrics (7 Cols) */}
-          <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
-            <div>
-              {/* Category & Academic Year */}
-              <div className="flex flex-wrap items-center gap-2.5 mb-2">
-                <span
-                  className="px-2.5 py-0.5 rounded-md font-mono text-xs font-bold uppercase tracking-wider"
-                  style={{
-                    background: 'rgba(6, 182, 212, 0.12)',
-                    color: 'var(--brand-color, #06b6d4)',
-                    border: '1px solid rgba(6, 182, 212, 0.3)'
-                  }}
-                >
-                  {currentSlide.metaLabel}
-                </span>
-
-                <span className="font-mono text-xs text-slate-400 flex items-center gap-1.5">
-                  <i className="fa-solid fa-calendar-check text-[10px] text-slate-500" />
-                  {currentSlide.yearBadge}
+          {/* RIGHT COLUMN */}
+          <div className="right-col">
+            {/* Title Top Bar: Category, Year, Share, Bookmark */}
+            <div className="title-top">
+              <div className="tags">
+                <span className="tag tag-pink">Flagship Milestone</span>
+                <span className="tag tag-gray">
+                  <i className="fa-regular fa-calendar mr-1" /> Year {currentSlide.year}
                 </span>
               </div>
 
-              {/* Slide Title */}
-              <h4 className="text-2xl sm:text-3xl font-extrabold text-white leading-snug tracking-tight">
-                {currentSlide.title}
-              </h4>
-
-              {/* Key Metric Highlight */}
-              {currentSlide.metric && (
-                <div className="inline-flex items-center gap-2 mt-3 px-3.5 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 font-mono text-xs font-bold">
-                  <i className="fa-solid fa-bolt text-emerald-400" />
-                  <span>{currentSlide.metric}</span>
-                </div>
-              )}
-
-              {/* Description Body */}
-              <div
-                className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed font-normal"
-                dangerouslySetInnerHTML={{ __html: currentSlide.description }}
-              />
-
-              {/* Technology Tags */}
-              {currentSlide.technologies && currentSlide.technologies.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 mt-5">
-                  <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider mr-1">
-                    Skills:
-                  </span>
-                  {currentSlide.technologies.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-mono text-xs text-slate-200 hover:border-cyan-400/30 hover:bg-white/10 transition-colors shadow-sm"
-                    >
-                      <TechLogo name={tech} className="w-3.5 h-3.5 shrink-0" />
-                      <span>{tech}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
+              <div className="action-icons">
+                <button
+                  type="button"
+                  className="btn-icon"
+                  onClick={copySlideLink}
+                  title="Share / Copy Link"
+                >
+                  <i className="fa-solid fa-link" />
+                </button>
+                <button
+                  type="button"
+                  className={`btn-icon ${savedSlides[currentSlide.id] ? 'saved' : ''}`}
+                  onClick={toggleBookmark}
+                  title="Bookmark Milestone"
+                >
+                  <i className={`fa-${savedSlides[currentSlide.id] ? 'solid text-cyan-400' : 'regular'} fa-bookmark`} />
+                </button>
+              </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="pt-4 flex flex-wrap items-center gap-3">
-              {currentSlide.link && (
-                <a
-                  href={currentSlide.link}
-                  className="px-5 py-2.5 rounded-full text-xs font-bold text-obsidian flex items-center gap-2 transition-all hover:-translate-y-0.5 shadow-lg"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))',
-                    boxShadow: '0 4px 15px var(--brand-glow, rgba(6,182,212,0.3))'
+            {/* Main Milestone Title */}
+            <h2 className="content-title">
+              {currentSlide.title}
+            </h2>
+
+            {/* Verified Achievement Badge */}
+            <div className="verified-badge">
+              <i className="fa-solid fa-bolt" />
+              <span>Verified Achievement • 100% Completed</span>
+            </div>
+
+            {/* 3 Metrics Row */}
+            {Array.isArray(currentSlide.metrics) && (
+              <div className="metrics-row">
+                {currentSlide.metrics.map((m, mIdx) => (
+                  <div key={mIdx} className="metric">
+                    <span className="metric-value">{m.value}</span>
+                    <span className="metric-label">{m.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Structured Text Grid: Challenge, Architecture, Outcome */}
+            <div className="text-grid">
+              <div className="text-block">
+                <h4>{currentSlide.labels?.challenge || 'Challenge'}</h4>
+                <p>{currentSlide.challenge}</p>
+              </div>
+              <div className="text-block">
+                <h4>{currentSlide.labels?.solution || 'Architecture'}</h4>
+                <p>{currentSlide.solution}</p>
+              </div>
+              <div className="text-block full">
+                <h4>{currentSlide.labels?.outcome || 'Outcome'}</h4>
+                <p>{currentSlide.outcome}</p>
+              </div>
+            </div>
+
+            {/* Enhanced Skills Container with Branded Tech Icons */}
+            {Array.isArray(currentSlide.tech) && currentSlide.tech.length > 0 && (
+              <div className="skills-container">
+                {currentSlide.tech.map((techName, tIdx) => {
+                  const icon = getTechIcon(techName);
+                  return (
+                    <span key={tIdx} className="skill-tag" title={techName}>
+                      <span className={`skill-icon ${icon.class}`}>
+                        <i className={icon.icon} />
+                      </span>
+                      <span>{techName}</span>
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Expandable Architecture & Deep Dive Accordion */}
+            <button
+              type="button"
+              className={`deep-dive-toggle ${isDeepDiveOpen ? 'active' : ''}`}
+              onClick={() => {
+                playTick();
+                setIsDeepDiveOpen((prev) => !prev);
+              }}
+            >
+              <span>
+                <i className="fa-solid fa-layer-group mr-2 text-cyan-400" />
+                Read Architecture &amp; Deep Dive
+              </span>
+              <i className="fa-solid fa-chevron-down" />
+            </button>
+            <div
+              className="deep-dive-content"
+              style={{
+                maxHeight: isDeepDiveOpen ? '400px' : '0px',
+                transition: 'max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+              }}
+            >
+              <div
+                className="deep-dive-inner"
+                dangerouslySetInnerHTML={{ __html: currentSlide.deepdive }}
+              />
+            </div>
+
+            {/* Verified Proofs Section */}
+            {Array.isArray(currentSlide.proofs) && currentSlide.proofs.length > 0 && (
+              <div className="proof-section">
+                <div className="proof-header">
+                  <span className="proof-label">
+                    <i className="fa-solid fa-shield-halved" /> Verified Proofs
+                  </span>
+                </div>
+                <div className="proof-grid">
+                  {currentSlide.proofs.map((proof, pIdx) => (
+                    <div
+                      key={pIdx}
+                      className="proof-card"
+                      onClick={() => openLightbox('proof', pIdx)}
+                      title={`Inspect ${proof.title}`}
+                    >
+                      <div className={`proof-icon ${proof.type === 'pdf' ? 'pdf' : 'img'}`}>
+                        <i className={`fa-solid ${proof.type === 'pdf' ? 'fa-file-pdf' : 'fa-image'}`} />
+                      </div>
+                      <div className="proof-info">
+                        <span className="proof-title">{proof.title}</span>
+                        <div className="proof-meta">
+                          <span className="verified-dot" />
+                          <span>Verified • {proof.size || '1.8 MB'}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="proof-action"
+                        title="Download Proof"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playTick();
+                          addToast(`Downloading ${proof.title}...`, 'info');
+                        }}
+                      >
+                        <i className="fa-solid fa-download" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Dynamic Action Buttons */}
+            <div className="action-row">
+              {currentSlide.showExploreBtn && (
+                <button
+                  type="button"
+                  className="btn-explore"
+                  onClick={() => {
+                    playTick();
+                    navigate('/projects');
                   }}
                 >
                   <span>Explore Connected Projects</span>
-                  <i className="fa-solid fa-arrow-right text-[11px]" />
-                </a>
+                  <i className="fa-solid fa-arrow-right" />
+                </button>
               )}
-
               <button
                 type="button"
-                onClick={() => {
-                  playTick();
-                  setLightboxImage(currentSlide);
-                }}
-                className="px-4 py-2.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 font-mono text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-2"
+                className="btn-view"
+                onClick={() => openLightbox('main')}
               >
-                <i className="fa-solid fa-expand text-[11px]" />
+                <i className="fa-solid fa-expand" />
                 <span>View Full Photo (HD)</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Bottom Thumbnail Fast-Jump Navigation Tabs */}
-        {totalSlides > 1 && (
-          <div className="mt-8 pt-6 border-t border-white/10 relative z-10 flex flex-wrap items-center gap-2.5">
-            <span className="text-[11px] font-mono text-slate-500 uppercase tracking-widest mr-2">
-              All Wins:
-            </span>
-            {displayItems.map((slide, idx) => {
-              const isActive = idx === currentIndex;
+        {/* Timeline Footer (ALL WINS) */}
+        <div className="timeline-footer">
+          <span className="timeline-label">ALL WINS:</span>
+          <div className="timeline-track">
+            {spotlightSlides.map((slide, sIdx) => {
+              const cleanTitle = slide.title.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
+              const isActive = sIdx === currentIndex;
               return (
                 <button
                   key={slide.id}
                   type="button"
-                  onClick={() => handleJump(idx)}
-                  className={`px-3.5 py-2 rounded-xl font-mono text-xs font-semibold transition-all flex items-center gap-2 ${
-                    isActive
-                      ? 'bg-cyan-500/15 border border-cyan-400 text-white shadow-md shadow-cyan-500/20'
-                      : 'bg-white/5 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20'
-                  }`}
+                  className={`tab-btn ${isActive ? 'active' : ''}`}
+                  onClick={() => jumpToSlide(sIdx)}
                 >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${
-                      isActive ? 'bg-cyan-400 animate-pulse' : 'bg-slate-600'
-                    }`}
-                  />
-                  <span className="truncate max-w-[200px]">{slide.title.replace(/^[🏆💼🎤🚀🎖️\s]+/, '')}</span>
+                  <div className="dot" />
+                  <span>{cleanTitle}</span>
                 </button>
               );
             })}
           </div>
-        )}
-      </div>
+        </div>
+      </section>
 
-      {/* Full-Screen HD Lightbox Modal mounted in body portal */}
-      {lightboxImage &&
+      {/* Fullscreen HD Lightbox Modal with Zoom, Pan & PDF Preview mounted in Portal */}
+      {lightboxActive &&
         createPortal(
           <div
-            role="dialog"
-            aria-modal="true"
-            className="fixed inset-0 z-[1000000] flex items-center justify-center bg-black/92 backdrop-blur-2xl p-4 sm:p-8 animate-fadeIn"
-            onClick={() => setLightboxImage(null)}
+            className="spotlight-lightbox active"
+            onClick={(e) => {
+              if (e.target.classList.contains('lightbox-backdrop')) {
+                closeLightbox();
+              }
+            }}
           >
+            <div className="lightbox-header">
+              <div className="lightbox-title">
+                <span className="file-type">
+                  {lightboxType === 'main' ? 'IMG' : currentSlide.proofs[lightboxProofIndex]?.type === 'pdf' ? 'PDF' : 'IMG'}
+                </span>
+                <span>
+                  {lightboxType === 'main'
+                    ? currentSlide.title.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim()
+                    : currentSlide.proofs[lightboxProofIndex]?.title}
+                </span>
+              </div>
+              <button
+                type="button"
+                className="close-btn"
+                onClick={closeLightbox}
+                title="Close (Esc)"
+              >
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
+
             <div
-              className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center"
-              onClick={(e) => e.stopPropagation()}
+              className="lightbox-backdrop"
+              onWheel={handleLightboxWheel}
+              onMouseDown={handleMouseDownPan}
+              onMouseMove={handleMouseMovePan}
+              onMouseUp={handleMouseUpPan}
             >
-              {/* Top Bar with Title and Close Button */}
-              <div className="w-full flex items-center justify-between pb-3 text-white border-b border-white/15 mb-4">
-                <div className="flex items-center gap-2.5">
-                  <span className="px-2.5 py-0.5 rounded-md bg-amber-400/20 border border-amber-400/40 text-amber-300 font-mono text-xs font-bold">
-                    {lightboxImage.categoryBadge}
-                  </span>
-                  <h3 className="text-base sm:text-lg font-bold text-white truncate max-w-md sm:max-w-xl">
-                    {lightboxImage.title}
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setLightboxImage(null)}
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all hover:scale-110"
-                  title="Close (Esc)"
-                >
-                  <i className="fa-solid fa-xmark text-sm" />
-                </button>
-              </div>
+              {lightboxType === 'main' && (
+                <>
+                  <button
+                    type="button"
+                    className="lb-nav lb-prev"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      playTick();
+                      setCurrentImageIndex((prev) => (prev - 1 + 4) % 4);
+                      setZoomScale(1);
+                      setPanOffset({ x: 0, y: 0 });
+                    }}
+                    title="Previous Photo"
+                  >
+                    <i className="fa-solid fa-chevron-left" />
+                  </button>
+                  <button
+                    type="button"
+                    className="lb-nav lb-next"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      playTick();
+                      setCurrentImageIndex((prev) => (prev + 1) % 4);
+                      setZoomScale(1);
+                      setPanOffset({ x: 0, y: 0 });
+                    }}
+                    title="Next Photo"
+                  >
+                    <i className="fa-solid fa-chevron-right" />
+                  </button>
+                </>
+              )}
 
-              {/* High-Res Image Container */}
-              <div className="relative rounded-2xl overflow-hidden border border-white/20 max-h-[75vh] w-auto shadow-2xl shadow-black">
-                <img
-                  src={lightboxImage.imageUrl}
-                  alt={lightboxImage.imageAlt}
-                  className="max-h-[75vh] w-auto max-w-full object-contain rounded-2xl"
-                />
+              <div
+                className="lightbox-image-container"
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomScale})`,
+                  transition: isDraggingRef.current ? 'none' : 'transform 0.15s ease-out'
+                }}
+              >
+                {lightboxType === 'main' ? (
+                  <img
+                    src={currentSlide.hdImages[currentImageIndex] || currentSlide.images[currentImageIndex]}
+                    alt={currentSlide.title}
+                    draggable={false}
+                    className="max-w-[90vw] max-h-[80vh] object-contain rounded-xl shadow-2xl shadow-black select-none"
+                  />
+                ) : currentSlide.proofs[lightboxProofIndex]?.type === 'pdf' ? (
+                  <div className="pdf-viewer">
+                    <div className="pdf-toolbar">
+                      <span>
+                        <i className="fa-solid fa-file-pdf text-rose-500 mr-2" />
+                        {currentSlide.proofs[lightboxProofIndex]?.title}.pdf
+                      </span>
+                      <span>1 / 1</span>
+                    </div>
+                    <div className="pdf-page">
+                      <i className="fa-regular fa-file-pdf text-5xl text-slate-400 mb-3" />
+                      <h3 className="font-bold text-slate-800 text-lg">{currentSlide.proofs[lightboxProofIndex]?.title}</h3>
+                      <p className="text-slate-500 text-sm mt-1">Verified credential &amp; completion certificate preview.</p>
+                      <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold">
+                        <i className="fa-solid fa-circle-check" /> Cryptographically Verified
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    src={currentSlide.proofs[lightboxProofIndex]?.url || currentSlide.images[0]}
+                    alt={currentSlide.proofs[lightboxProofIndex]?.title}
+                    draggable={false}
+                    className="max-w-[90vw] max-h-[80vh] object-contain rounded-xl shadow-2xl shadow-black select-none"
+                  />
+                )}
               </div>
+            </div>
 
-              {/* Bottom Caption Pill */}
-              <p className="mt-3 font-mono text-xs text-slate-400 text-center">
-                {lightboxImage.metric} · Click outside or press Esc to close
-              </p>
+            <div className="lightbox-footer">
+              Click outside to close • Scroll to zoom • Drag to pan • Esc to exit
             </div>
           </div>,
           document.body

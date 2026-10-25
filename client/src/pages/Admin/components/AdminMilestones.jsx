@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import DOMPurify from 'dompurify';
 import { playTick } from '../../../utils/audio';
+import {
+  RealisticMilestoneFlagIcon,
+  RealisticCheckmarkIcon,
+  RealisticBullseyeIcon,
+  RealisticGraduationCapIcon
+} from '../../../components/common/RealisticMilestoneIcons';
 
 // Helper for safe localStorage parsing
 function safeParse(key, fallback) {
@@ -111,11 +117,14 @@ export function AdminMilestones({
         ? item.skills.split(',').map((t) => t.trim()).filter(Boolean)
         : [],
       icon: item.icon || 'fa-layer-group',
-      image: item.image || null,
+      image: item.image || (Array.isArray(item.images) && item.images[0]) || null,
+      images: Array.isArray(item.images) ? item.images : (item.image ? [item.image] : []),
+      hdImages: Array.isArray(item.hdImages) ? item.hdImages : [],
       imageAlt: item.imageAlt || '',
       link: item.link || '',
       published: item.published !== false,
       pinned: !!item.pinned,
+      spotlight: item.spotlight !== undefined ? !!item.spotlight : !!item.pinned,
       views: item.views !== undefined ? Number(item.views) : 100 + (idx * 25),
       createdAt: item.createdAt || new Date().toISOString()
     }));
@@ -146,7 +155,11 @@ export function AdminMilestones({
   const [filterSort, setFilterSort] = useState('manual');
   const [filterTag, setFilterTag] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [displayedCount, setDisplayedCount] = useState(8);
+  const [displayedCount, setDisplayedCount] = useState(12);
+
+  // Right Panel: Live Portfolio Preview
+  const [activeEditorId, setActiveEditorId] = useState(() => rawJourney[0]?.id || null);
+  const [newTagInput, setNewTagInput] = useState('');
 
   // Multi-select & Bulk actions
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -187,6 +200,7 @@ export function AdminMilestones({
   const [wizardRating, setWizardRating] = useState(4);
   const [wizardMetric, setWizardMetric] = useState('');
   const [wizardPinned, setWizardPinned] = useState(false);
+  const [wizardSpotlight, setWizardSpotlight] = useState(false);
   const [wizardTags, setWizardTags] = useState('');
   const [wizardLink, setWizardLink] = useState('');
   const [wizardIcon, setWizardIcon] = useState('fa-layer-group');
@@ -256,6 +270,123 @@ export function AdminMilestones({
       localStorage.setItem('admin_milestones_v9', JSON.stringify(updatedList));
     } catch (e) {}
   }, [updateAppState, session]);
+
+  // Ensure activeEditorId points to a valid milestone
+  useEffect(() => {
+    if ((!activeEditorId || !milestones.some((m) => m.id === activeEditorId)) && milestones.length > 0) {
+      setActiveEditorId(milestones[0].id);
+    }
+  }, [milestones, activeEditorId]);
+
+  const activeEditorMilestone = useMemo(() => {
+    if (!activeEditorId) return milestones[0] || null;
+    return milestones.find((m) => m.id === activeEditorId) || milestones[0] || null;
+  }, [activeEditorId, milestones]);
+
+  // Live Inline field updater for the right panel editor
+  const handleUpdateActiveField = useCallback((field, value) => {
+    if (!activeEditorId) return;
+    const updatedList = milestones.map((m) => {
+      if (m.id === activeEditorId) {
+        return { ...m, [field]: value };
+      }
+      return m;
+    });
+    persistMilestones(updatedList, 'Inline Edit Milestone', `Updated ${field} for milestone ${activeEditorId}`);
+  }, [activeEditorId, milestones, persistMilestones]);
+
+  // Add Tag in live editor
+  const handleAddActiveTag = useCallback((newTag) => {
+    if (!activeEditorId || !newTag.trim()) return;
+    const trimmed = newTag.trim();
+    const updatedList = milestones.map((m) => {
+      if (m.id === activeEditorId) {
+        const currentTags = Array.isArray(m.tags) ? m.tags : [];
+        if (currentTags.includes(trimmed)) return m;
+        return { ...m, tags: [...currentTags, trimmed] };
+      }
+      return m;
+    });
+    persistMilestones(updatedList, 'Add Tag', `Added tag "${trimmed}" to milestone ${activeEditorId}`);
+  }, [activeEditorId, milestones, persistMilestones]);
+
+  // Remove Tag in live editor
+  const handleRemoveActiveTag = useCallback((tagToRemove) => {
+    if (!activeEditorId) return;
+    const updatedList = milestones.map((m) => {
+      if (m.id === activeEditorId) {
+        const currentTags = Array.isArray(m.tags) ? m.tags : [];
+        return { ...m, tags: currentTags.filter((t) => t !== tagToRemove) };
+      }
+      return m;
+    });
+    persistMilestones(updatedList, 'Remove Tag', `Removed tag "${tagToRemove}" from milestone ${activeEditorId}`);
+  }, [activeEditorId, milestones, persistMilestones]);
+
+  // Quick Tech Tag filter toggle
+  const handleToggleQuickTag = useCallback((tag) => {
+    playTick();
+    setFilterTag((prev) => (prev.toLowerCase() === tag.toLowerCase() ? '' : tag));
+  }, []);
+
+  // Category presentation mapping matching Photos 1-5
+  const getCategoryPresentation = useCallback((m) => {
+    const meta = (m.metaLabel || '').toLowerCase();
+    const title = (m.title || '').toLowerCase();
+
+    if (meta.includes('workshop') || title.includes('workshop') || title.includes('speaker') || title.includes('bootcamp')) {
+      return {
+        type: 'WORKSHOP',
+        bg: 'rgba(244, 63, 94, 0.12)',
+        border: 'rgba(244, 63, 94, 0.3)',
+        text: '#fb7185',
+        icon: 'fa-solid fa-chalkboard-user'
+      };
+    }
+    if (meta.includes('internship') || title.includes('intern') || meta.includes('experience')) {
+      return {
+        type: 'INTERNSHIP',
+        bg: 'rgba(59, 130, 246, 0.12)',
+        border: 'rgba(59, 130, 246, 0.3)',
+        text: '#60a5fa',
+        icon: 'fa-solid fa-briefcase'
+      };
+    }
+    if (meta.includes('award') || meta.includes('achievement') || title.includes('1st place') || title.includes('hackathon') || title.includes('winner')) {
+      return {
+        type: 'AWARD',
+        bg: 'rgba(245, 158, 11, 0.12)',
+        border: 'rgba(245, 158, 11, 0.3)',
+        text: '#fbbf24',
+        icon: 'fa-solid fa-trophy'
+      };
+    }
+    if (meta.includes('project') || title.includes('launched') || title.includes('built')) {
+      return {
+        type: 'PROJECT',
+        bg: 'rgba(34, 211, 238, 0.12)',
+        border: 'rgba(34, 211, 238, 0.3)',
+        text: '#22d3ee',
+        icon: 'fa-solid fa-rocket'
+      };
+    }
+    if (meta.includes('cert') || title.includes('cert')) {
+      return {
+        type: 'CERTIFICATE',
+        bg: 'rgba(168, 85, 247, 0.12)',
+        border: 'rgba(168, 85, 247, 0.3)',
+        text: '#c084fc',
+        icon: 'fa-solid fa-certificate'
+      };
+    }
+    return {
+      type: (m.metaLabel || 'MILESTONE').toUpperCase(),
+      bg: 'rgba(56, 189, 248, 0.12)',
+      border: 'rgba(56, 189, 248, 0.3)',
+      text: '#38bdf8',
+      icon: m.icon?.startsWith('fa-') && !m.icon.includes(' ') ? `fa-solid ${m.icon}` : (m.icon || 'fa-solid fa-layer-group')
+    };
+  }, []);
 
   // Log activity helper
   const logActivity = useCallback((action, details) => {
@@ -565,7 +696,7 @@ export function AdminMilestones({
   const totalCount = milestones.length;
   const completedCount = milestones.filter((m) => m.status === 'completed').length;
   const focusCount = milestones.filter((m) => m.status === 'focus').length;
-  const cgpaDisplay = String(profile.education?.cgpa || '8.42').replace(/[^0-9.]/g, '') || '8.42';
+  const spotlightCount = milestones.filter((m) => m.spotlight || m.pinned).length;
 
   // Card Multi-select
   const handleToggleSelect = (id, e) => {
@@ -640,6 +771,20 @@ export function AdminMilestones({
     const target = milestones.find((m) => m.id === id);
     persistMilestones(updated, 'Pin', `${target?.pinned ? 'Unpinned' : 'Pinned'} "${target?.title}"`);
     showToast(`${target?.pinned ? 'Unpinned' : 'Pinned'} milestone to top`, 'fa-thumbtack');
+  };
+
+  const handleToggleSpotlight = (id) => {
+    playTick();
+    const target = milestones.find((m) => m.id === id);
+    const newSpotlight = !(target?.spotlight ?? target?.pinned);
+    const updated = milestones.map((m) => {
+      if (m.id === id) {
+        return { ...m, spotlight: newSpotlight, pinned: newSpotlight };
+      }
+      return m;
+    });
+    persistMilestones(updated, 'Spotlight Toggle', `${newSpotlight ? 'Featured' : 'Removed from'} Spotlight: "${target?.title}"`);
+    showToast(newSpotlight ? 'Featured in Public Spotlight Carousel!' : 'Removed from Spotlight Carousel', 'fa-trophy');
   };
 
   const handleMoveUp = (id) => {
@@ -920,7 +1065,8 @@ export function AdminMilestones({
     setWizardProgress(70);
     setWizardRating(4);
     setWizardMetric('');
-    setWizardPinned(false);
+    setWizardPinned(true);
+    setWizardSpotlight(true);
     setWizardTags('');
     setWizardLink('');
     setWizardIcon('fa-layer-group');
@@ -950,7 +1096,8 @@ export function AdminMilestones({
     setWizardProgress(m.progress || 0);
     setWizardRating(m.rating || 0);
     setWizardMetric(m.metric || '');
-    setWizardPinned(Boolean(m.pinned));
+    setWizardPinned(Boolean(m.pinned || m.spotlight));
+    setWizardSpotlight(Boolean(m.spotlight ?? m.pinned));
     setWizardTags(m.tags ? m.tags.join(', ') : '');
     setWizardLink(m.link || '');
     setWizardIcon(m.icon || 'fa-layer-group');
@@ -1271,12 +1418,14 @@ export function AdminMilestones({
               progress: Number(wizardProgress) || 0,
               rating: Number(wizardRating) || 0,
               metric: wizardMetric.trim(),
-              pinned: wizardPinned,
+              pinned: wizardPinned || wizardSpotlight,
+              spotlight: wizardSpotlight,
               desc: sanitizedDesc,
               tags: parsedTags,
               link: wizardLink.trim(),
               icon: wizardIcon,
-              image: wizardImageData || wizardImageUrl.trim() || null,
+              image: wizardImageData || wizardImageUrl.trim() || m.image || null,
+              images: (wizardImageData || wizardImageUrl.trim()) ? [wizardImageData || wizardImageUrl.trim(), ...(Array.isArray(m.images) ? m.images.slice(1) : [])] : (Array.isArray(m.images) ? m.images : []),
               imageAlt: wizardImageAlt.trim(),
               updatedAt: new Date().toISOString()
             };
@@ -1287,6 +1436,7 @@ export function AdminMilestones({
         showToast(`Milestone "${wizardTitle.trim()}" updated successfully!`, 'fa-check');
       } else {
         // Add new milestone
+        const finalImg = wizardImageData || wizardImageUrl.trim() || null;
         const newMilestone = {
           id: `m-${Date.now()}`,
           title: wizardTitle.trim(),
@@ -1300,10 +1450,12 @@ export function AdminMilestones({
           tags: parsedTags,
           link: wizardLink.trim(),
           icon: wizardIcon,
-          image: wizardImageData || wizardImageUrl.trim() || null,
+          image: finalImg,
+          images: finalImg ? [finalImg] : [],
           imageAlt: wizardImageAlt.trim(),
           published: true,
-          pinned: wizardPinned,
+          pinned: wizardPinned || wizardSpotlight,
+          spotlight: wizardSpotlight,
           views: 0,
           createdAt: new Date().toISOString()
         };
@@ -1533,643 +1685,670 @@ export function AdminMilestones({
         </div>
       )}
 
-      {/* 0. TOP ACTION BANNER — dedicated Milestones Studio matching Projects and Certificates */}
-      <div className="admin-proj-top-banner">
+      {/* 0. TOP ACTION BANNER — Matching Photo 4 */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pt-1">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
-            <i className="fa-solid fa-flag" /> MILESTONES STUDIO
-          </span>
-          <h2 className="text-xl font-bold text-white mt-1">Milestones & Career Roadmap</h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Manage your chronological roadmap, workshop showcases, hackathons, and flagship spotlights.
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse" />
+            <span className="font-mono text-xs uppercase tracking-widest font-bold text-rose-500">
+              MILESTONES STUDIO
+            </span>
+          </div>
+          <h2 className="text-2xl font-bold font-display text-white tracking-tight">
+            Milestones &amp; Career Roadmap
+          </h2>
+          <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
+            Manage your chronological roadmap, workshop showcases, hackathons, and flagship spotlights. Drag the ⠿ icon to reorder.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
           {onSelectTab && (
             <button
               type="button"
               onClick={() => { playTick(); onSelectTab('profile'); }}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 text-xs text-slate-300 hover:text-cyan-400 hover:border-cyan-500/30 transition-all font-mono"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/10 bg-[#0d1526]/80 hover:bg-[#121c32] hover:border-white/20 text-xs text-slate-300 hover:text-white transition-all font-medium shadow-sm"
               title="Edit Profile, Bio narrative, and college credentials"
             >
-              <i className="fa-solid fa-user-pen text-cyan-400" />
-              <span>Edit Bio & Credentials →</span>
+              <i className="fa-solid fa-pen text-slate-400 text-xs" />
+              <span>Edit Bio</span>
             </button>
           )}
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold" style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981' }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
-            Live in Portfolio
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-emerald-950/40 border border-emerald-500/30 text-emerald-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]" />
+            <span>Live in Portfolio</span>
           </div>
           <button
             type="button"
-            onClick={() => { playTick(); setIsWizardOpen(true); setWizardStep(1); }}
-            className="btn-create-project"
-            style={{ background: 'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(6,182,212,0.4))' }}
+            onClick={openNewWizard}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white text-xs font-semibold shadow-lg shadow-rose-950/50 transition-all active:scale-95"
           >
-            <i className="fa-solid fa-plus" />
+            <i className="fa-solid fa-plus text-xs" />
             <span>New Milestone</span>
           </button>
         </div>
       </div>
 
-      {/* Stats Cards — use global stat-card classes matching Overview & Certificates */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-header">
-            <div className="stat-label">Total Milestones</div>
-            <div className="stat-icon icon-cyan"><i className="fa-solid fa-flag" /></div>
-          </div>
+      {/* 4 REALISTIC STAT CARDS — Matching Photo 4 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Total Milestones */}
+        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
           <div>
-            <div className="stat-value cyan">{totalCount}</div>
-            <div className="stat-trend"><i className="fa-solid fa-route" style={{ color: 'var(--brand-color, #06b6d4)' }} /><span>Recorded entries</span></div>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
+              TOTAL MILESTONES
+            </div>
+            <div className="text-3xl font-bold font-display text-white">
+              {totalCount}
+            </div>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center shrink-0">
+            <RealisticMilestoneFlagIcon size={34} />
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-header">
-            <div className="stat-label">Completed</div>
-            <div className="stat-icon icon-green"><i className="fa-solid fa-circle-check" /></div>
-          </div>
+
+        {/* Completed */}
+        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
           <div>
-            <div className="stat-value green">{completedCount}</div>
-            <div className="stat-trend"><i className="fa-solid fa-check-double" style={{ color: '#4ade80' }} /><span>Milestones achieved</span></div>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
+              COMPLETED
+            </div>
+            <div className="text-3xl font-bold font-display text-emerald-400">
+              {completedCount}
+            </div>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+            <RealisticCheckmarkIcon size={34} />
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-header">
-            <div className="stat-label">Active Focus</div>
-            <div className="stat-icon icon-purple"><i className="fa-solid fa-bullseye" /></div>
-          </div>
+
+        {/* Active Focus */}
+        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
           <div>
-            <div className="stat-value purple">{focusCount}</div>
-            <div className="stat-trend"><i className="fa-solid fa-fire" style={{ color: '#c084fc' }} /><span>In progress now</span></div>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
+              ACTIVE FOCUS
+            </div>
+            <div className="text-3xl font-bold font-display text-sky-400">
+              {focusCount}
+            </div>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shrink-0">
+            <RealisticBullseyeIcon size={34} />
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-header">
-            <div className="stat-label">B.Tech CGPA</div>
-            <div className="stat-icon icon-orange"><i className="fa-solid fa-graduation-cap" /></div>
-          </div>
+
+        {/* Featured Spotlight */}
+        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-amber-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
           <div>
-            <div className="stat-value orange">{cgpaDisplay}</div>
-            <div className="stat-trend"><i className="fa-solid fa-star" style={{ color: '#fbbf24' }} /><span>Academic record</span></div>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-amber-400/80 transition-colors">
+              FEATURED SPOTLIGHT
+            </div>
+            <div className="text-3xl font-bold font-display text-amber-400">
+              {spotlightCount}
+            </div>
+          </div>
+          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <i className="fa-solid fa-trophy text-2xl text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.4)]" />
           </div>
         </div>
       </div>
 
-      {/* MILESTONES ROADMAP & TOOLBAR */}
-      <div className="flex gap-4 items-start w-full relative">
-          {/* Main Left Content */}
-          <div className="flex-1 min-w-0">
-            {/* Sticky Controls Toolbar */}
-            <div className="sticky-toolbar-wrapper">
-              <div className="controls-toolbar">
-                <div className="toolbar-row">
-                  <div className="filters-group">
-                    <select
-                      className="filter-select"
-                      value={filterStatus}
-                      onChange={(e) => setFilterStatus(e.target.value)}
-                      aria-label="Filter status"
-                    >
-                      <option value="all">Status: All</option>
-                      <option value="focus">Focus</option>
-                      <option value="completed">Completed</option>
-                      <option value="planned">Planned</option>
-                    </select>
+      {/* TWO-COLUMN LAYOUT — Left: Milestones Management | Right: Editor / Preview / Data */}
+      <div className="flex flex-col lg:flex-row gap-5 items-start w-full relative">
+        {/* LEFT COLUMN: Controls, Filters, Search & Milestones List (~60% width) */}
+        <div className="w-full lg:w-[60%] flex flex-col gap-4 min-w-0">
+          {/* Controls Toolbar Container */}
+          <div className="bg-[#080e1b] border border-white/[0.08] rounded-2xl p-4 flex flex-col gap-3 shadow-sm">
+            {/* Filter Selects Row */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <select
+                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 cursor-pointer"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                aria-label="Filter status"
+              >
+                <option value="all">Status: All</option>
+                <option value="focus">Focus</option>
+                <option value="completed">Completed</option>
+                <option value="planned">Planned</option>
+              </select>
 
-                    <select
-                      className="filter-select"
-                      value={filterYear}
-                      onChange={(e) => setFilterYear(e.target.value)}
-                      aria-label="Filter year"
-                    >
-                      <option value="all">Year: All</option>
-                      <option value="Year 1">Year 1</option>
-                      <option value="Year 2">Year 2</option>
-                      <option value="Year 3">Year 3</option>
-                      <option value="Year 4">Year 4</option>
-                      <option value="Present">Present</option>
-                    </select>
+              <select
+                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 cursor-pointer"
+                value={filterYear}
+                onChange={(e) => setFilterYear(e.target.value)}
+                aria-label="Filter year"
+              >
+                <option value="all">Year: All</option>
+                <option value="Year 1">Year 1</option>
+                <option value="Year 2">Year 2</option>
+                <option value="Year 3">Year 3</option>
+                <option value="Year 4">Year 4</option>
+                <option value="2023">Year 2023</option>
+                <option value="2024">Year 2024</option>
+                <option value="2025">Year 2025</option>
+                <option value="Present">Present</option>
+              </select>
 
-                    <select
-                      className="filter-select"
-                      value={filterSort}
-                      onChange={(e) => setFilterSort(e.target.value)}
-                      aria-label="Sort milestones"
-                    >
-                      <option value="manual">Manual Order</option>
-                      <option value="newest">Newest First</option>
-                      <option value="oldest">Oldest First</option>
-                      <option value="az">Alphabetical A-Z</option>
-                      <option value="views">Most Viewed</option>
-                    </select>
+              <select
+                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 cursor-pointer"
+                value={filterSort}
+                onChange={(e) => setFilterSort(e.target.value)}
+                aria-label="Sort milestones"
+              >
+                <option value="manual">Manual Order</option>
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="az">Alphabetical A-Z</option>
+                <option value="views">Most Viewed</option>
+              </select>
 
-                    <input
-                      type="text"
-                      className="filter-input"
-                      placeholder="Filter by tag..."
-                      value={filterTag}
-                      onChange={(e) => setFilterTag(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="toolbar-row">
-                  {/* Bulk Actions Indicator */}
-                  {selectedIds.size > 0 ? (
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs font-semibold text-slate-300">
-                        {selectedIds.size} selected
-                      </span>
-                      <button
-                        type="button"
-                        className="btn btn-secondary text-xs"
-                        onClick={handleBulkComplete}
-                      >
-                        <i className="fa-solid fa-check" /> Complete
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-danger text-xs"
-                        onClick={handleBulkDeletePrompt}
-                      >
-                        <i className="fa-solid fa-trash-can" /> Delete
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary text-xs"
-                        onClick={() => {
-                          if (selectedIds.size < 2) {
-                            showToast('Select at least 2 milestones to compare', 'fa-info');
-                            return;
-                          }
-                          setCompareIds(Array.from(selectedIds).slice(0, 2));
-                          setIsCompareActive(true);
-                        }}
-                      >
-                        <i className="fa-solid fa-columns" /> Compare
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary text-xs"
-                        onClick={() => setSelectedIds(new Set())}
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="text-xs text-slate-400">
-                      Tip: Hold <kbd className="px-1.5 py-0.5 bg-slate-800 rounded font-mono text-[10px]">Shift</kbd> to multi-select
-                    </div>
-                  )}
-
-                  {/* Action Buttons Right */}
-                  <div className="action-buttons ml-auto flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={() => setIsGitHubOpen(true)}
-                      title="Sync from GitHub Commits"
-                      aria-label="GitHub Sync"
-                    >
-                      <i className="fa-brands fa-github" />
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={() => setIsLinkedInOpen(true)}
-                      title="Import from LinkedIn"
-                      aria-label="LinkedIn Import"
-                    >
-                      <i className="fa-brands fa-linkedin text-sky-500" />
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={() => setIsTemplatesOpen(true)}
-                      title="Open Milestone Templates Library"
-                    >
-                      <i className="fa-solid fa-layer-group text-violet-400" /> Templates
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={openNewWizard}
-                    >
-                      <i className="fa-solid fa-plus" /> New Milestone
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <input
+                type="text"
+                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60"
+                placeholder="Filter by tag..."
+                value={filterTag}
+                onChange={(e) => setFilterTag(e.target.value)}
+              />
             </div>
 
-            {/* Centered Search Bar */}
-            <div className="search-center-wrapper">
-              <div className="search-center-inner">
-                <i className="fa-solid fa-magnifying-glass" />
-                <input
-                  type="text"
-                  placeholder="Search milestones across title, description, or technology tags..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                {searchQuery && (
+            {/* Toolbar Row 2: Multi-select info & Action Buttons */}
+            <div className="flex items-center justify-between gap-3 pt-1 border-t border-white/[0.06] flex-wrap">
+              <div className="text-xs text-slate-400 flex items-center gap-2">
+                {selectedIds.size > 0 ? (
+                  <span className="font-semibold text-cyan-400">
+                    {selectedIds.size} selected
+                  </span>
+                ) : (
+                  <span>Hold Shift to multi-select</span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 ml-auto">
+                <button
+                  type="button"
+                  className="w-8 h-8 rounded-xl bg-[#0c1424] border border-white/10 hover:border-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all text-xs"
+                  onClick={() => setIsGitHubOpen(true)}
+                  title="Sync from GitHub Commits"
+                  aria-label="GitHub Sync"
+                >
+                  <i className="fa-brands fa-github text-sm" />
+                </button>
+                <button
+                  type="button"
+                  className="w-8 h-8 rounded-xl bg-[#0c1424] border border-white/10 hover:border-white/20 text-sky-400 hover:text-sky-300 flex items-center justify-center transition-all text-xs"
+                  onClick={() => setIsLinkedInOpen(true)}
+                  title="Import from LinkedIn"
+                  aria-label="LinkedIn Import"
+                >
+                  <i className="fa-brands fa-linkedin text-sm" />
+                </button>
+                <button
+                  type="button"
+                  className="px-3 py-1.5 rounded-xl bg-[#0c1424] border border-white/10 hover:border-white/20 text-xs font-medium text-slate-200 hover:text-white flex items-center gap-1.5 transition-all"
+                  onClick={() => setIsTemplatesOpen(true)}
+                  title="Open Milestone Templates Library"
+                >
+                  <i className="fa-solid fa-layer-group text-cyan-400" />
+                  <span>Templates</span>
+                </button>
+                <button
+                  type="button"
+                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-rose-950/40 transition-all active:scale-95"
+                  onClick={openNewWizard}
+                >
+                  <i className="fa-solid fa-plus text-xs" />
+                  <span>New Milestone</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Search Bar & Quick Tech Filters */}
+          <div className="flex flex-col gap-2">
+            <div className="relative w-full">
+              <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs" />
+              <input
+                type="text"
+                placeholder="Search milestones across title, description, or technology tags..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#080e1b] border border-white/[0.08] focus:border-cyan-500/60 rounded-xl pl-9 pr-9 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white text-xs"
+                  onClick={() => setSearchQuery('')}
+                >
+                  <i className="fa-solid fa-xmark" />
+                </button>
+              )}
+            </div>
+
+          </div>
+
+          {/* Milestones Cards List */}
+          <div className="flex flex-col gap-3" ref={scrollContainerRef}>
+            {filteredMilestones.length === 0 ? (
+              <div className="text-center py-16 px-6 bg-[#080e1b] border border-dashed border-white/10 rounded-2xl">
+                <i className="fa-solid fa-magnifying-glass text-3xl text-cyan-400/50 mb-3" />
+                <h3 className="font-display font-semibold text-base text-white mb-1">No Milestones Found</h3>
+                <p className="text-xs text-slate-400 mb-4">No entries match your search criteria or filters.</p>
+                <button type="button" className="btn btn-primary text-xs" onClick={openNewWizard}>
+                  <i className="fa-solid fa-plus" /> Add First Milestone
+                </button>
+              </div>
+            ) : (
+              filteredMilestones.slice(0, displayedCount).map((m) => {
+                const isSelected = selectedIds.has(m.id);
+                const isCurrentActive = activeEditorId === m.id;
+                const catInfo = getCategoryPresentation(m);
+                const cardImg = m.image || (Array.isArray(m.images) && m.images[0]) || null;
+
+                return (
+                  <article
+                    key={m.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, m.id)}
+                    onDragEnd={handleDragEnd}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, m.id)}
+                    onContextMenu={(e) => handleContextMenu(e, m.id)}
+                    onClick={() => {
+                      playTick();
+                      setActiveEditorId(m.id);
+                    }}
+                    onDoubleClick={() => openEditWizard(m.id)}
+                    className={`group relative flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 ease-out cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-10px_rgba(6,182,212,0.22)] ${
+                      isCurrentActive
+                        ? 'bg-[#0b1424] border-2 border-cyan-500/80 shadow-[0_0_24px_rgba(6,182,212,0.25)]'
+                        : isSelected
+                        ? 'bg-[#0c1626] border-2 border-purple-500/60'
+                        : 'bg-[#080e1b] border border-white/[0.08] hover:border-cyan-500/40 hover:bg-[#0c1524]'
+                    }`}
+                  >
+                    {/* Checkbox */}
+                    <div className="pt-1" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={(e) => handleToggleSelect(m.id, e.nativeEvent)}
+                        className="w-4 h-4 rounded bg-[#070d18] border-white/20 text-cyan-500 focus:ring-0 cursor-pointer"
+                        aria-label={`Select ${m.title}`}
+                      />
+                    </div>
+
+                    {/* Drag Grip ⠿ */}
+                    <div className="pt-1 text-slate-600 group-hover:text-slate-400 cursor-grab active:cursor-grabbing text-xs">
+                      <i className="fa-solid fa-grip-vertical" title="Drag to reorder" />
+                    </div>
+
+                    {/* Thumbnail Image (Hackathons, Internships, etc.) or Category Icon */}
+                    {cardImg ? (
+                      <div className="relative w-24 sm:w-32 h-20 sm:h-24 rounded-xl overflow-hidden border border-white/10 shrink-0 shadow-md group/thumb bg-black/40">
+                        <img
+                          src={cardImg}
+                          alt={m.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                        <div
+                          className="absolute top-1.5 left-1.5 w-6 h-6 rounded-md flex items-center justify-center text-[10px] shadow backdrop-blur-md"
+                          style={{
+                            backgroundColor: catInfo.bg,
+                            border: `1px solid ${catInfo.border}`,
+                            color: catInfo.text
+                          }}
+                        >
+                          <i className={catInfo.icon} />
+                        </div>
+                        {(m.spotlight || m.pinned) && (
+                          <div className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/85 border border-amber-500/50 text-[9px] font-mono font-bold text-amber-300 flex items-center gap-1 backdrop-blur-sm shadow">
+                            <i className="fa-solid fa-trophy text-[8px] text-amber-400" />
+                            <span>Spotlight</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div
+                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 text-base shadow-inner"
+                        style={{
+                          backgroundColor: catInfo.bg,
+                          border: `1px solid ${catInfo.border}`,
+                          color: catInfo.text
+                        }}
+                      >
+                        <i className={catInfo.icon} />
+                      </div>
+                    )}
+
+                    {/* Main Card Content */}
+                    <div className="flex-1 min-w-0 pr-9">
+                      {/* Metadata Header */}
+                      <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span
+                            className="text-[11px] font-bold font-mono uppercase tracking-wider"
+                            style={{ color: catInfo.text }}
+                          >
+                            {catInfo.type}
+                          </span>
+                          <span className="text-slate-600 text-xs">•</span>
+                          <span className="text-xs font-mono text-slate-400">
+                            Year {m.year ? m.year.replace(/year\s*/i, '') : '2023'}
+                          </span>
+                          {m.status === 'completed' && (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 flex items-center gap-1">
+                              <i className="fa-solid fa-check text-[9px]" /> DONE
+                            </span>
+                          )}
+                          {m.status === 'focus' && (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-950/60 border border-sky-500/40 text-sky-400 flex items-center gap-1">
+                              <i className="fa-solid fa-bolt text-[9px]" /> FOCUS
+                            </span>
+                          )}
+                          {(m.spotlight || m.pinned) && !cardImg && (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-950/60 border border-amber-500/40 text-amber-400 flex items-center gap-1">
+                              <i className="fa-solid fa-trophy text-[9px]" /> SPOTLIGHT
+                            </span>
+                          )}
+                        </div>
+
+                        {/* 5 Gold Stars */}
+                        <div className="flex items-center gap-0.5 text-amber-400 text-xs">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <i
+                              key={star}
+                              className={`fa-solid fa-star ${star <= (m.rating || 5) ? 'text-amber-400' : 'text-slate-700'}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Title */}
+                      <h3
+                        className="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors mb-1 line-clamp-1"
+                        onDoubleClick={() => openEditWizard(m.id)}
+                        title="Double click to edit in modal"
+                      >
+                        {m.title}
+                      </h3>
+
+                      {/* Description snippet */}
+                      <div
+                        className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-2"
+                        dangerouslySetInnerHTML={{ __html: m.desc }}
+                      />
+
+                      {/* Tech Tags */}
+                      {Array.isArray(m.tags) && m.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {m.tags.map((tag, tIdx) => (
+                            <span
+                              key={tIdx}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#070e1b] border border-white/10 text-[10px] font-mono text-cyan-300/90 hover:border-cyan-500/40 transition-colors"
+                            >
+                              <span className="text-cyan-400 text-[9px] font-bold">&lt;/&gt;</span>
+                              <span>{tag}</span>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Vertical Floating Action Strip on Card Hover */}
+                    <div
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center bg-[#070d18]/95 border border-white/15 rounded-xl shadow-2xl py-1 px-0.5 opacity-90 group-hover:opacity-100 transition-all z-10 gap-0.5"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => handleMoveUp(m.id)}
+                        className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-[11px]"
+                        title="Move Up"
+                      >
+                        <i className="fa-solid fa-arrow-up" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleMoveDown(m.id)}
+                        className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-[11px]"
+                        title="Move Down"
+                      >
+                        <i className="fa-solid fa-arrow-down" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleSpotlight(m.id)}
+                        className={`w-6 h-6 flex items-center justify-center rounded-lg transition-colors text-[11px] ${
+                          m.spotlight || m.pinned
+                            ? 'text-amber-400 bg-amber-500/20'
+                            : 'text-slate-400 hover:text-amber-400 hover:bg-white/10'
+                        }`}
+                        title={m.spotlight || m.pinned ? 'Featured in Spotlight (Click to remove)' : 'Add to Spotlight Carousel'}
+                      >
+                        <i className="fa-solid fa-trophy" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleTogglePublish(m.id, !m.published)}
+                        className={`w-6 h-6 flex items-center justify-center rounded-lg transition-colors text-[11px] ${
+                          m.published
+                            ? 'text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/20'
+                            : 'text-slate-500 hover:text-slate-300 hover:bg-white/10'
+                        }`}
+                        title={m.published ? 'Live in Portfolio (Click to hide)' : 'Draft (Click to publish)'}
+                      >
+                        <i className={`fa-solid ${m.published ? 'fa-eye' : 'fa-eye-slash'}`} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openEditWizard(m.id)}
+                        className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:bg-white/10 rounded-lg transition-colors text-[11px]"
+                        title="Edit Milestone in Modal"
+                      >
+                        <i className="fa-solid fa-pen-to-square" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handlePromptDelete(m.id)}
+                        className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-rose-400 hover:bg-white/10 rounded-lg transition-colors text-[11px]"
+                        title="Delete Milestone"
+                      >
+                        <i className="fa-solid fa-trash-can" />
+                      </button>
+                    </div>
+                  </article>
+                );
+              })
+            )}
+
+            {/* Pagination Controls */}
+            {filteredMilestones.length > 12 && (
+              <div className="pagination-controls mt-2 flex items-center justify-center gap-2">
+                {displayedCount < filteredMilestones.length && (
                   <button
                     type="button"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
-                    onClick={() => setSearchQuery('')}
+                    className="btn btn-secondary text-xs"
+                    onClick={() => setDisplayedCount((prev) => prev + 6)}
                   >
-                    <i className="fa-solid fa-xmark" />
+                    Load More <i className="fa-solid fa-chevron-down" />
+                  </button>
+                )}
+                {displayedCount > 12 && (
+                  <button
+                    type="button"
+                    className="btn btn-secondary text-xs"
+                    onClick={() => setDisplayedCount(12)}
+                  >
+                    Show Less <i className="fa-solid fa-chevron-up" />
                   </button>
                 )}
               </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: LIVE PORTFOLIO PREVIEW (~40% width) */}
+        <div className="w-full lg:w-[40%] bg-[#080e1b] border border-white/[0.08] rounded-2xl p-5 sticky top-24 max-h-[calc(100vh-120px)] flex flex-col overflow-y-auto shadow-sm">
+          {/* Live Preview Header */}
+          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xs shadow-inner">
+                <i className="fa-regular fa-eye" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold font-mono uppercase tracking-wider text-white">LIVE PORTFOLIO PREVIEW</h4>
+                <p className="text-[10px] text-slate-400">Visitor Timeline &amp; Spotlight Ecosystem</p>
+              </div>
             </div>
-
-            {/* Milestones Scroll Container */}
-            <div className="milestones-scroll-container" ref={scrollContainerRef}>
-              {filteredMilestones.length === 0 ? (
-                <div className="text-center py-16 px-6 bg-slate-900/40 border border-dashed border-slate-700/60 rounded-2xl">
-                  <i className="fa-solid fa-magnifying-glass text-3xl text-cyan-400/50 mb-3" />
-                  <h3 className="font-display font-semibold text-base mb-1">No Milestones Found</h3>
-                  <p className="text-sm text-slate-400 mb-4">No entries match your search criteria or filters.</p>
-                  <button type="button" className="btn btn-primary" onClick={openNewWizard}>
-                    <i className="fa-solid fa-plus" /> Add First Milestone
-                  </button>
-                </div>
-              ) : (
-                <div className="milestones-list">
-                  {filteredMilestones.slice(0, displayedCount).map((m, index) => {
-                    const isSelected = selectedIds.has(m.id);
-                    return (
-                      <article
-                        key={m.id}
-                        className={`milestone-card ${m.pinned ? 'pinned' : ''} ${isSelected ? 'selected' : ''}`}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, m.id)}
-                        onDragEnd={handleDragEnd}
-                        onDragOver={handleDragOver}
-                        onDragLeave={handleDragLeave}
-                        onDrop={(e) => handleDrop(e, m.id)}
-                        onContextMenu={(e) => handleContextMenu(e, m.id)}
-                      >
-                        {/* Checkbox */}
-                        <input
-                          type="checkbox"
-                          className="card-checkbox"
-                          checked={isSelected}
-                          onChange={(e) => handleToggleSelect(m.id, e.nativeEvent)}
-                          aria-label={`Select ${m.title}`}
-                        />
-
-                        {/* Milestone Icon */}
-                        <div className="card-icon">
-                          <i className={m.icon.startsWith('fa-') && !m.icon.includes(' ') ? `fa-solid ${m.icon}` : m.icon} />
-                        </div>
-
-                        {/* Card Content */}
-                        <div className="card-content">
-                          <div className="card-meta">
-                            <span className="meta-text">{m.metaLabel || 'Milestone'}</span>
-                            <span className="meta-badge">{m.year}</span>
-                            {m.status === 'focus' && (
-                              <span className="meta-badge badge-focus">
-                                <i className="fa-solid fa-bolt" /> FOCUS
-                              </span>
-                            )}
-                            {m.status === 'completed' && (
-                              <span className="meta-badge badge-completed">
-                                <i className="fa-solid fa-check" /> DONE
-                              </span>
-                            )}
-                            {m.status === 'planned' && (
-                              <span className="meta-badge badge-planned">
-                                <i className="fa-solid fa-clock" /> PLANNED
-                              </span>
-                            )}
-                            {m.rating > 0 && (
-                              <div className="star-rating">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                  <i
-                                    key={star}
-                                    className={`fa-solid fa-star ${star <= m.rating ? '' : 'off'}`}
-                                  />
-                                ))}
-                              </div>
-                            )}
-                            <label className="switch ml-1" title={m.published ? 'Published' : 'Draft'}>
-                              <input
-                                type="checkbox"
-                                checked={m.published}
-                                onChange={(e) => handleTogglePublish(m.id, e.target.checked)}
-                              />
-                              <span className="slider" />
-                            </label>
-                            <span className="views-badge">
-                              <i className="fa-solid fa-eye" /> {m.views || 0}
-                            </span>
-                          </div>
-
-                          {/* Editable Title */}
-                          <h3
-                            className="card-title"
-                            onDoubleClick={() => handleStartInlineEdit(m.id, m.title)}
-                            title="Double-click to quick rename"
-                          >
-                            {m.title}
-                          </h3>
-
-                          {/* Description */}
-                          <div
-                            className="card-desc"
-                            dangerouslySetInnerHTML={{ __html: m.desc }}
-                          />
-
-                          {/* Cover Image */}
-                          {m.image && (
-                            <img
-                              src={m.image}
-                              alt={m.imageAlt || m.title}
-                              loading="lazy"
-                              className="max-h-24 rounded-lg mt-2 border border-slate-700/50"
-                            />
-                          )}
-
-                          {/* Tech Tags */}
-                          {m.tags && m.tags.length > 0 && (
-                            <div className="card-tags">
-                              {m.tags.map((tag, tIdx) => (
-                                <span key={tIdx} className="tag-chip">
-                                  <i className="fa-solid fa-tag text-[10px]" /> {tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Progress Bar */}
-                          {m.status === 'focus' && m.progress > 0 && (
-                            <div className="mt-2">
-                              <div className="progress-bar-container">
-                                <div className="progress-bar-fill" style={{ width: `${m.progress}%` }} />
-                              </div>
-                              <span className="progress-text">{m.progress}% Completed</span>
-                            </div>
-                          )}
-
-                          {/* External Link */}
-                          {m.link && (
-                            <a
-                              href={m.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-cyan-400 font-semibold inline-flex items-center gap-1 mt-2 hover:underline"
-                            >
-                              <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" /> Visit Resource
-                            </a>
-                          )}
-                        </div>
-
-                        {/* Action Buttons Right */}
-                        <div className="card-actions">
-                          <button
-                            type="button"
-                            className={`action-btn pin-btn ${m.pinned ? 'active' : ''}`}
-                            onClick={() => handleTogglePin(m.id)}
-                            title={m.pinned ? 'Unpin' : 'Pin to top'}
-                          >
-                            <i className="fa-solid fa-thumbtack" />
-                          </button>
-                          <button
-                            type="button"
-                            className="action-btn"
-                            onClick={() => handleMoveUp(m.id)}
-                            title="Move Up"
-                          >
-                            <i className="fa-solid fa-arrow-up" />
-                          </button>
-                          <button
-                            type="button"
-                            className="action-btn"
-                            onClick={() => handleMoveDown(m.id)}
-                            title="Move Down"
-                          >
-                            <i className="fa-solid fa-arrow-down" />
-                          </button>
-                          <button
-                            type="button"
-                            className="action-btn"
-                            onClick={() => handleAddToCompare(m.id)}
-                            title="Compare"
-                          >
-                            <i className="fa-solid fa-columns" />
-                          </button>
-                          <button
-                            type="button"
-                            className="action-btn"
-                            onClick={() => handleDuplicate(m.id)}
-                            title="Duplicate"
-                          >
-                            <i className="fa-solid fa-copy" />
-                          </button>
-                          <button
-                            type="button"
-                            className="action-btn edit-btn"
-                            onClick={() => openEditWizard(m.id)}
-                            title="Edit Milestone"
-                          >
-                            <i className="fa-solid fa-pen-to-square" />
-                          </button>
-                          <button
-                            type="button"
-                            className="action-btn delete-btn"
-                            onClick={() => handlePromptDelete(m.id)}
-                            title="Delete"
-                          >
-                            <i className="fa-solid fa-trash-can" />
-                          </button>
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Pagination Controls */}
-              {filteredMilestones.length > 8 && (
-                <div className="pagination-controls mt-4 flex items-center justify-center gap-2">
-                  {displayedCount < filteredMilestones.length && (
-                    <button
-                      type="button"
-                      className="btn btn-secondary text-xs"
-                      onClick={() => setDisplayedCount((prev) => prev + 6)}
-                    >
-                      Load More <i className="fa-solid fa-chevron-down" />
-                    </button>
-                  )}
-                  {displayedCount > 8 && (
-                    <button
-                      type="button"
-                      className="btn btn-secondary text-xs"
-                      onClick={() => setDisplayedCount(8)}
-                    >
-                      Show Less <i className="fa-solid fa-chevron-up" />
-                    </button>
-                  )}
-                </div>
-              )}
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-[11px] font-mono font-medium text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Live Connected</span>
             </div>
           </div>
 
-          {/* Resizer Divider Bar between Main Content and Live Preview */}
-          {!isPiP && (
-            <div
-              className="preview-resizer-bar"
-              onMouseDown={handleMouseDownResize}
-              role="separator"
-              aria-orientation="vertical"
-              title="Drag to resize Live Portfolio Preview"
-            >
-              <div className="resizer-handle-pill" />
-            </div>
-          )}
-
-          {/* Resizable Live Preview Right Panel */}
-          <div
-            className={`right-panel ${isPiP ? 'pip-mode' : ''}`}
-            style={{
-              width: isPiP ? '360px' : `${rightPanelWidth}px`,
-              minWidth: isPiP ? '360px' : `${rightPanelWidth}px`,
-              maxWidth: isPiP ? '360px' : `${rightPanelWidth}px`,
-              flexBasis: isPiP ? '360px' : `${rightPanelWidth}px`,
-              '--preview-panel-width': isPiP ? '360px' : `${rightPanelWidth}px`
-            }}
-          >
-            <div className="preview-header">
-              <div className="flex items-center gap-2">
-                <i className="fa-regular fa-eye text-accent" />
-                <h3 className="text-white font-semibold text-[13px] tracking-wide">Live Portfolio Preview</h3>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white/10 text-slate-300 ml-1">
-                  {milestones.filter((m) => m.published).length}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  className="btn-icon"
-                  onClick={() => {
-                    playTick();
-                    navigator.clipboard.writeText(`${window.location.origin}/about`);
-                    showToast('Public portfolio link copied!', 'fa-copy');
-                  }}
-                  title="Copy Public About Link"
-                  style={{ width: '26px', height: '26px' }}
-                >
-                  <i className="fa-regular fa-copy text-xs" />
-                </button>
-                <button
-                  type="button"
-                  className="btn-icon"
-                  onClick={() => setIsPiP((prev) => !prev)}
-                  title={isPiP ? 'Dock Preview' : 'Picture-in-Picture Floating Mode'}
-                  style={{ width: '26px', height: '26px' }}
-                >
-                  <i className={`fa-solid ${isPiP ? 'fa-window-restore' : 'fa-clone'}`} />
-                </button>
-              </div>
+          {/* Timeline Content */}
+          <div className="flex flex-col">
+            <div className="text-center mb-6">
+              <h3 className="text-base font-bold text-white font-display">Portfolio Timeline</h3>
+              <p className="text-xs text-slate-400 mt-0.5">This is how your milestones appear to visitors.</p>
             </div>
 
-            <div className="preview-body">
-              {milestones.filter((m) => m.published).length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center text-slate-500">
-                  <i className="fa-regular fa-folder-open text-2xl mb-2 opacity-50" />
-                  <p className="text-xs">No published milestones yet.</p>
-                </div>
-              ) : (
-                <div className="space-y-4 border-l border-white/10 pl-4 ml-2 my-1">
-                  {milestones
-                    .filter((m) => m.published)
-                    .map((m) => (
+            {/* Connected Timeline */}
+            <div className="relative border-l-2 border-white/10 ml-4 pl-6 space-y-6">
+              {milestones
+                .filter((m) => m.published)
+                .map((m) => {
+                  const catInfo = getCategoryPresentation(m);
+                  const isCurrentActive = activeEditorId === m.id;
+                  const itemImg = m.image || (Array.isArray(m.images) && m.images[0]) || null;
+                  return (
+                    <div
+                      key={m.id}
+                      onClick={() => {
+                        playTick();
+                        setActiveEditorId(m.id);
+                      }}
+                      onDoubleClick={() => openEditWizard(m.id)}
+                      className={`relative group p-3.5 rounded-xl transition-all cursor-pointer ${
+                        isCurrentActive ? 'bg-cyan-500/10 border border-cyan-500/35 shadow-md' : 'hover:bg-white/[0.03]'
+                      }`}
+                      title="Click to select • Double-click to edit"
+                    >
+                      {/* Node indicator */}
                       <div
-                        key={m.id}
-                        draggable={true}
-                        onDragStart={(e) => handleDragStart(e, m.id)}
-                        onDragEnd={handleDragEnd}
-                        onDragOver={handleDragOver}
-                        onDragLeave={handleDragLeave}
-                        onDrop={(e) => handleDrop(e, m.id)}
-                        className="preview-milestone relative group transition-all duration-200 cursor-grab active:cursor-grabbing p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-white/10"
-                      >
-                        {/* Timeline Node Dot */}
-                        <div className="absolute -left-[23px] top-4 w-2.5 h-2.5 rounded-full bg-accent border-2 border-[#0a111c] group-hover:scale-125 transition-transform shadow-[0_0_8px_rgba(255,75,157,0.4)]" />
+                        className={`absolute -left-[31px] top-4 w-3.5 h-3.5 rounded-full border-2 bg-[#091120] transition-transform ${
+                          m.spotlight || m.pinned
+                            ? 'border-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)]'
+                            : 'border-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.6)]'
+                        } group-hover:scale-125`}
+                      />
 
-                        <div className="flex items-start justify-between gap-2 mb-1.5">
-                          <h4 className="text-accent font-semibold text-[13px] leading-snug flex items-center gap-1.5 flex-1">
-                            <i className="fa-solid fa-grip-vertical text-slate-500 group-hover:text-accent text-[11px] cursor-grab" title="Drag to reorder" />
-                            <i className={m.icon.startsWith('fa-') && !m.icon.includes(' ') ? `fa-solid ${m.icon} text-[11px]` : `${m.icon} text-[11px]`} />
-                            <span>{m.title}</span>
-                          </h4>
-
-                          {/* Quick Up/Down Buttons on hover */}
-                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleMoveUp(m.id);
-                              }}
-                              className="w-5 h-5 rounded bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-[9px] transition-colors"
-                              title="Move Up"
-                            >
-                              <i className="fa-solid fa-arrow-up" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleMoveDown(m.id);
-                              }}
-                              className="w-5 h-5 rounded bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center text-[9px] transition-colors"
-                              title="Move Down"
-                            >
-                              <i className="fa-solid fa-arrow-down" />
-                            </button>
-                          </div>
+                      {/* Meta Header */}
+                      <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
+                        <div className="flex items-center gap-1.5">
+                          <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono uppercase tracking-wider text-slate-300 font-semibold">
+                            {catInfo.type}
+                          </span>
+                          {(m.spotlight || m.pinned) && (
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center gap-1">
+                              <i className="fa-solid fa-trophy text-[8px]" /> SPOTLIGHT
+                            </span>
+                          )}
                         </div>
-
-                        {/* Description snippet */}
-                        <div
-                          className="text-slate-400 text-[11.5px] leading-relaxed line-clamp-2"
-                          dangerouslySetInnerHTML={{ __html: m.desc }}
-                        />
-
-                        {/* Skills / Technology Tags */}
-                        {Array.isArray(m.tags) && m.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-2.5">
-                            {m.tags.map((tag, tIdx) => (
-                              <span
-                                key={tIdx}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-medium text-slate-300"
-                              >
-                                <i className="fa-solid fa-code text-[8px] text-cyan-400" />
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-
-                        {m.image && (
-                          <img
-                            src={m.image}
-                            alt={m.imageAlt || m.title}
-                            className="rounded-lg mt-2 max-h-24 w-full object-cover border border-white/10"
-                          />
-                        )}
+                        <span className="text-xs font-mono text-slate-400">
+                          Year {m.year ? m.year.replace(/year\s*/i, '') : '2023'}
+                        </span>
                       </div>
-                    ))}
-                </div>
-              )}
+
+                      {/* Title */}
+                      <h4 className="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors">
+                        {m.title}
+                      </h4>
+
+                      {/* Description */}
+                      <div
+                        className="text-xs text-slate-400 leading-relaxed mt-1"
+                        dangerouslySetInnerHTML={{ __html: m.desc }}
+                      />
+
+                      {/* Tech Tags */}
+                      {Array.isArray(m.tags) && m.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {m.tags.map((tag, tIdx) => (
+                            <span
+                              key={tIdx}
+                              className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-slate-300"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Cover Image */}
+                      {itemImg && (
+                        <img
+                          src={itemImg}
+                          alt={m.title}
+                          loading="lazy"
+                          className="w-full rounded-xl mt-3 border border-white/10 object-cover max-h-48 shadow-lg group-hover:scale-[1.02] transition-transform"
+                        />
+                      )}
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
+      </div>
+
+      {/* FLOATING MULTI-SELECT BOTTOM DOCK — Matching Photo 2 */}
+      {selectedIds.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#091120]/95 backdrop-blur-xl border border-white/15 shadow-2xl animate-fade-in">
+          <span className="text-xs font-bold text-white px-2">
+            {selectedIds.size} selected
+          </span>
+          <button
+            type="button"
+            onClick={handleBulkComplete}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-500/40 text-xs font-medium text-emerald-400 transition-all"
+          >
+            <i className="fa-solid fa-check" /> Complete
+          </button>
+          <button
+            type="button"
+            onClick={handleBulkDeletePrompt}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-xs font-medium text-rose-400 transition-all"
+          >
+            <i className="fa-solid fa-trash-can" /> Delete
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedIds.size < 2) {
+                showToast('Select at least 2 milestones to compare', 'fa-info');
+                return;
+              }
+              setCompareIds(Array.from(selectedIds).slice(0, 2));
+              setIsCompareActive(true);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-xs font-medium text-slate-200 transition-all"
+          >
+            <i className="fa-solid fa-columns" /> Compare
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedIds(new Set())}
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors ml-1"
+            title="Clear Selection"
+          >
+            <i className="fa-solid fa-xmark" />
+          </button>
+        </div>
+      )}
 
       {/* 4-STEP WIZARD MODAL */}
       {isWizardOpen && (
@@ -2399,20 +2578,23 @@ export function AdminMilestones({
 
                     {/* Feature in Spotlight Toggle */}
                     <div className="form-group">
-                      <label className="flex items-center gap-3 p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/25 cursor-pointer hover:bg-cyan-500/15 transition-all">
+                      <label className="flex items-center gap-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 cursor-pointer hover:bg-amber-500/15 transition-all">
                         <input
                           type="checkbox"
-                          checked={wizardPinned}
-                          onChange={(e) => setWizardPinned(e.target.checked)}
-                          className="w-4 h-4 rounded text-cyan-500 accent-cyan-500"
+                          checked={wizardSpotlight}
+                          onChange={(e) => {
+                            setWizardSpotlight(e.target.checked);
+                            setWizardPinned(e.target.checked);
+                          }}
+                          className="w-4 h-4 rounded text-amber-500 accent-amber-500 cursor-pointer"
                         />
                         <div>
                           <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <i className="fa-solid fa-star text-amber-400" />
-                            Feature in Flagship Spotlight Carousel (Badi Photo Showcase)
+                            <i className="fa-solid fa-trophy text-amber-400" />
+                            Feature in Flagship Spotlight Carousel (Public About Page)
                           </div>
-                          <div className="text-[11px] text-slate-400">
-                            Displays prominently in the flagship carousel on the About page with high-res photo, metrics, and lightbox zoom.
+                          <div className="text-[11px] text-slate-300">
+                            When enabled, displays in the luxury 3D Spotlight Ecosystem with HD gallery &amp; verified proofs. If unchecked, appears in the bottom journey timeline.
                           </div>
                         </div>
                       </label>

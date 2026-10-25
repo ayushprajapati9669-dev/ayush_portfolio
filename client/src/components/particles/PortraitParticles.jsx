@@ -115,6 +115,9 @@ export function PortraitParticles({
         <img
           src={imageUrl}
           alt={alt || name}
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
           className={`h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-[1.03] ${manualDissolve ? 'opacity-20' : ''}`}
         />
         <canvas

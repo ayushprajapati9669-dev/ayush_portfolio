@@ -5,6 +5,10 @@ import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useAuth } from '../../app/providers/AuthProvider';
 import { playTick } from '../../utils/audio';
 
+// Admin-specific CSS (only loaded when admin page is visited)
+import '../../styles/admin.css';
+import '../../styles/pages/admin-milestones.css';
+
 // Subcomponents
 import { AdminSidebar } from './components/AdminSidebar';
 import { AdminOverview } from './components/AdminOverview';
@@ -23,7 +27,9 @@ import { AdminAuthModal } from './components/AdminAuthModal';
 // Modals
 import { QuickProjectModal } from './components/modals/QuickProjectModal';
 import { ActivityDetailModal } from './components/modals/ActivityDetailModal';
+import { SEO } from '../../components/SEO';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
+
 
 export function AdminPage() {
   const { appState, updateAppState, showToast, openConfirmModal } = usePortfolio();
@@ -193,6 +199,11 @@ export function AdminPage() {
 
   return (
     <div className="min-h-screen flex text-white relative">
+      <SEO
+        title="Admin Management Studio & Milestones CMS"
+        description="Administrative management studio for Ayush Prajapati's developer portfolio, managing career milestones, projects, skills, and verified credentials."
+        url="https://ayushprajapati.dev/admin"
+      />
       {/* 1. Admin Sidebar with Focus Mode */}
       <AdminSidebar
         activeTab={activeTab}

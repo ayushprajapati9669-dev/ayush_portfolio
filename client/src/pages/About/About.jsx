@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
@@ -45,18 +45,24 @@ export function AboutPage() {
       ? p.learningJourney
           .filter((m) => m.published !== false)
           .map((m, idx) => ({
+            ...m,
             id: m.id || `m-${idx}`,
             phase: m.phase || m.metaLabel || `Phase ${idx + 1}`,
             yearBadge: m.yearBadge || m.year || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
             title: m.title,
             description: m.description || m.desc || m.detail || '',
+            desc: m.desc || m.description || m.detail || '',
             icon: m.icon || 'fa-layer-group',
             status: m.status,
             metric: m.metric,
-            image: m.image || null,
+            image: m.image || (Array.isArray(m.images) && m.images[0]) || null,
+            images: Array.isArray(m.images) && m.images.length > 0 ? m.images : (m.image ? [m.image] : []),
+            hdImages: Array.isArray(m.hdImages) && m.hdImages.length > 0 ? m.hdImages : (Array.isArray(m.images) && m.images.length > 0 ? m.images : (m.image ? [m.image] : [])),
             link: m.link || '',
             progress: m.progress !== undefined ? Number(m.progress) : null,
             rating: m.rating !== undefined ? Number(m.rating) : 0,
+            spotlight: m.spotlight !== undefined ? Boolean(m.spotlight) : Boolean(m.pinned),
+            pinned: Boolean(m.pinned),
             skills: Array.isArray(m.skills)
               ? m.skills
               : Array.isArray(m.tags)
@@ -68,6 +74,17 @@ export function AboutPage() {
               : []
           }))
       : defaultMilestones;
+
+  // Separate into spotlight highlights vs journey timeline items
+  const spotlightMilestones = useMemo(() => {
+    const list = milestones.filter((m) => m.spotlight === true || (m.spotlight === undefined && m.pinned === true));
+    return list.length > 0 ? list : milestones;
+  }, [milestones]);
+
+  const timelineMilestones = useMemo(() => {
+    const nonSpotlight = milestones.filter((m) => !m.spotlight && !m.pinned);
+    return nonSpotlight.length > 0 ? nonSpotlight : milestones;
+  }, [milestones]);
 
   // 3D Card Tilt Physics
   const handleCardMouseMove = (e) => {
@@ -334,7 +351,7 @@ export function AboutPage() {
       {/* Featured Milestone Spotlight Carousel (Hackathons, SDE Internships, High-Impact Wins) */}
       <div className="spotlight-section">
         <MilestoneSpotlightSlider
-          milestones={milestones}
+          milestones={spotlightMilestones}
           onCardMouseMove={handleCardMouseMove}
           onCardMouseLeave={handleCardMouseLeave}
           onMagneticMouseMove={handleMagneticMouseMove}
@@ -400,7 +417,7 @@ export function AboutPage() {
           </h3>
 
           <div className="timeline-list">
-            {milestones.map((item, idx) => (
+            {timelineMilestones.map((item, idx) => (
               <div key={idx} className="timeline-item">
                 <div className="timeline-dot" />
                 <div className="timeline-year">
