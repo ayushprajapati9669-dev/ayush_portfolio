@@ -693,25 +693,16 @@ export function AdminApiReference({ onSelectTab, showToast }) {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Top Header & Breadcrumb */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-400 shadow-lg shadow-cyan-400/15">
-            <i className="fa-solid fa-terminal text-lg" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2.5">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                API Reference & Developer Docs
-              </h2>
-              <span className="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-bold uppercase tracking-wider">
-                v1.0 REST
-              </span>
-            </div>
-            <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-              Complete documentation for public endpoints, authentication headers, administrative mutations, and status codes.
-            </p>
-          </div>
+      {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+            <i className="fa-solid fa-terminal" /> API PROTOCOLS & INTEGRATION SCHEMA
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">API Reference & Developer Docs</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Complete documentation for public endpoints, authentication headers, administrative mutations, and status codes.
+          </p>
         </div>
 
         {/* Action Button to User Guide */}
@@ -719,7 +710,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
           <button
             type="button"
             onClick={() => onSelectTab && onSelectTab('guide', '/admin/guide')}
-            className="flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border border-white/15 bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 transition-all shadow-sm"
+            className="flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border border-white/10 bg-black/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/30 transition-all shadow-sm"
           >
             <i className="fa-solid fa-book-open text-cyan-400" />
             <span>Open User Guide</span>

@@ -459,6 +459,35 @@ export function AdminHeroPortrait({
 
   return (
     <div className="space-y-6">
+      {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+            <i className="fa-solid fa-image" /> HERO SECTION STUDIO
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">Hero Portrait & Config</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Manage your hero image, headline, CTA buttons, and live preview settings.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className={`font-mono text-xs px-3 py-1.5 rounded-xl border flex items-center gap-2 ${autosaveStatus === 'saving' ? 'border-amber-400/30 bg-amber-500/10 text-amber-400' : 'border-emerald-400/30 bg-emerald-500/10 text-emerald-400'}`}>
+            {autosaveStatus === 'saving' ? <i className="fa-solid fa-spinner fa-spin" /> : <i className="fa-solid fa-circle-check" />}
+            {autosaveStatus === 'saving' ? 'Saving draft...' : 'Saved to draft'}
+          </span>
+          <button
+            type="button"
+            className="btn-create-project"
+            style={{ background: 'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(6,182,212,0.4))' }}
+            onClick={handleSave}
+            disabled={isSaving}
+          >
+            <i className={isSaving ? 'fa-solid fa-circle-check' : 'fa-solid fa-floppy-disk'} />
+            <span>{isSaving ? 'Saved!' : 'Save Changes'}</span>
+          </button>
+        </div>
+      </div>
+
       {/* 1. TOP STICKY NAVBAR CONFIG BAR */}
       <div className="hero-top-navbar">
         <div className="hero-top-left">

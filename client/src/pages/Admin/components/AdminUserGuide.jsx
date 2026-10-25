@@ -63,25 +63,16 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Top Header & Breadcrumb */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-400 shadow-lg shadow-cyan-400/15">
-            <i className="fa-solid fa-book-open text-lg" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2.5">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                User Guide & CMS Manual
-              </h2>
-              <span className="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-bold uppercase tracking-wider">
-                Documentation
-              </span>
-            </div>
-            <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-              Learn how to manage your portfolio content, upload documents, and publish showcase items.
-            </p>
-          </div>
+      {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+            <i className="fa-solid fa-book-open" /> DOCUMENTATION & OPERATIONS MANUAL
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">User Guide & CMS Manual</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Learn how to manage your portfolio content, upload documents, and publish showcase items.
+          </p>
         </div>
 
         {/* Action Button to API Docs */}
@@ -89,7 +80,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           <button
             type="button"
             onClick={() => onSelectTab && onSelectTab('api-docs', '/admin/api-docs')}
-            className="flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400/50 transition-all shadow-sm shadow-cyan-500/10"
+            className="flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border border-white/10 bg-black/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/30 transition-all shadow-sm"
           >
             <i className="fa-solid fa-terminal text-cyan-400" />
             <span>Developer API Reference</span>

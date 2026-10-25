@@ -917,45 +917,57 @@ export function AdminProjects({
 
   return (
     <div className="space-y-6">
-      {/* Top Header Matching Photo 2 */}
-      <div className="flex flex-wrap items-center justify-between gap-6 pb-2">
+      {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
+      <div className="admin-proj-top-banner">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Deploy & Showcase Applications</h1>
-          <p className="text-slate-400 text-[13px] mt-1">
-            Create, edit, organize, filter and maintain live projects showcased across your portfolio.
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+            <i className="fa-solid fa-layer-group" /> FULL-STACK ARCHITECTURES & APPS
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">Deploy & Showcase Applications</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Create, edit, organize, filter, and maintain live projects showcased across your portfolio.
           </p>
         </div>
 
-        {/* Pulse Stats Card (Matching Photo 2) */}
-        <div className="bg-[#0a111c] border border-white/10 rounded-2xl px-6 py-3 flex items-center gap-6 shadow-premium">
-          <div>
-            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">TOTAL</span>
-            <span className="text-xl font-bold text-white">{projects.length}</span>
-          </div>
-          <div className="w-px h-8 bg-white/10" />
-          <div>
-            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">ACTIVE</span>
-            <span className="text-xl font-bold text-emerald-400">{activeProjectsCount}</span>
-          </div>
-          <div className="w-px h-8 bg-white/10" />
-          <div>
-            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">PULSE</span>
-            <div className="flex items-center gap-2 mt-1">
-              <svg className="w-16 h-5 text-cyan-400" viewBox="0 0 64 20" fill="none">
-                <path
-                  d="M0 10 L15 10 L22 3 L30 17 L38 7 L45 13 L52 10 L64 10"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
-              </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4 bg-black/40 border border-white/10 rounded-xl px-4 py-2 font-mono text-xs">
+            <div>
+              <span className="text-slate-400">TOTAL: </span>
+              <span className="font-bold text-white">{projects.length}</span>
+            </div>
+            <div className="w-px h-4 bg-white/10" />
+            <div>
+              <span className="text-slate-400">ACTIVE: </span>
+              <span className="font-bold text-emerald-400">{activeProjectsCount}</span>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              playTick();
+              setEditingId(null);
+              setForm({
+                title: '',
+                category: 'Full-Stack Web App',
+                status: 'published',
+                shortDescription: '',
+                technologies: 'React JS, Node.js, Express.js, MongoDB',
+                liveDemoUrl: '',
+                githubUrl: 'https://github.com/ayushprajapati9669-dev',
+                thumbnailUrl: '',
+                featured: true
+              });
+              setIsFormOpen(true);
+              setTimeout(() => {
+                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
+            }}
+            className="btn-create-project"
+            style={{ background: 'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(6,182,212,0.4))' }}
+          >
+            <i className="fa-solid fa-plus font-bold" />
+            <span>New Project</span>
+          </button>
         </div>
       </div>
 

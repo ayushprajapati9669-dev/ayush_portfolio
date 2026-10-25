@@ -1455,7 +1455,7 @@ export function AdminMilestones({
     }, 1000);
   };
 
-  // Resize Handle Logic for Live Preview Right Panel
+  // Resize Handle Logic for Live Preview Right Panel with Full-Screen Drag Capture
   const handleMouseDownResize = (e) => {
     e.preventDefault();
     isResizingRef.current = true;
@@ -1465,10 +1465,15 @@ export function AdminMilestones({
     const startX = e.clientX;
     const startWidth = rightPanelWidth;
 
+    // Full-screen capture overlay during drag to prevent event dropping
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:999999;cursor:col-resize;user-select:none;';
+    document.body.appendChild(overlay);
+
     const handleMouseMove = (moveEvent) => {
       if (!isResizingRef.current) return;
       const delta = startX - moveEvent.clientX;
-      const newWidth = Math.min(650, Math.max(280, startWidth + delta));
+      const newWidth = Math.min(650, Math.max(280, Math.round(startWidth + delta)));
       setRightPanelWidth(newWidth);
     };
 
@@ -1476,6 +1481,7 @@ export function AdminMilestones({
       isResizingRef.current = false;
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
       setRightPanelWidth((curr) => {
         try {
           localStorage.setItem('admin_panel_width_v9', String(curr));
@@ -1594,7 +1600,35 @@ export function AdminMilestones({
         </div>
       )}
 
-      {/* Sub-Tabs: Journey | Academic | Bio (Moved to top per Photo 1) */}
+      {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+            <i className="fa-solid fa-sitemap" /> ABOUT & MILESTONES STUDIO
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">Journey & Story</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Manage your academic credentials, chronological milestones roadmap, and live public biography.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold" style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981' }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
+            Live in Portfolio
+          </div>
+          <button
+            type="button"
+            onClick={() => { playTick(); setIsWizardOpen(true); setWizardStep(1); }}
+            className="btn-create-project"
+            style={{ background: 'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(6,182,212,0.4))' }}
+          >
+            <i className="fa-solid fa-plus" />
+            <span>New Milestone</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Sub-Tabs: Journey | Academic | Bio */}
       <div className="sub-tabs-sticky-header">
         <div className="sub-tabs" role="tablist">
           <button
@@ -1621,51 +1655,47 @@ export function AdminMilestones({
         </div>
       </div>
 
-      {/* Header & Stats Grid */}
-      <div className="page-header">
-        <div className="page-title">
-          <h1>
-            <span className="title-icon">
-              <i className="fa-solid fa-sitemap" />
-            </span>
-            About & Milestones
-          </h1>
-          <p>Manage your academic credentials, chronological journey roadmap, and live public biography.</p>
-        </div>
-        <div className="status-badge">
-          <span className="pulse-dot" /> Live in Portfolio
-        </div>
-      </div>
-
-      {/* Stats Cards */}
+      {/* Stats Cards — use global stat-card classes matching Overview & Certificates */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon" style={{ color: 'var(--ams-accent-secondary)' }}>
-            <i className="fa-solid fa-flag" />
+          <div className="stat-header">
+            <div className="stat-label">Total Milestones</div>
+            <div className="stat-icon icon-cyan"><i className="fa-solid fa-flag" /></div>
           </div>
-          <div className="stat-value">{totalCount}</div>
-          <div className="stat-label">Total Milestones</div>
+          <div>
+            <div className="stat-value cyan">{totalCount}</div>
+            <div className="stat-trend"><i className="fa-solid fa-route" style={{ color: 'var(--brand-color, #06b6d4)' }} /><span>Recorded entries</span></div>
+          </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon" style={{ color: 'var(--ams-accent-emerald)' }}>
-            <i className="fa-solid fa-circle-check" />
+          <div className="stat-header">
+            <div className="stat-label">Completed</div>
+            <div className="stat-icon icon-green"><i className="fa-solid fa-circle-check" /></div>
           </div>
-          <div className="stat-value">{completedCount}</div>
-          <div className="stat-label">Completed</div>
+          <div>
+            <div className="stat-value green">{completedCount}</div>
+            <div className="stat-trend"><i className="fa-solid fa-check-double" style={{ color: '#4ade80' }} /><span>Milestones achieved</span></div>
+          </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon" style={{ color: 'var(--ams-accent-primary)' }}>
-            <i className="fa-solid fa-bullseye" />
+          <div className="stat-header">
+            <div className="stat-label">Active Focus</div>
+            <div className="stat-icon icon-purple"><i className="fa-solid fa-bullseye" /></div>
           </div>
-          <div className="stat-value">{focusCount}</div>
-          <div className="stat-label">Active Focus</div>
+          <div>
+            <div className="stat-value purple">{focusCount}</div>
+            <div className="stat-trend"><i className="fa-solid fa-fire" style={{ color: '#c084fc' }} /><span>In progress now</span></div>
+          </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon" style={{ color: 'var(--ams-accent-amber)' }}>
-            <i className="fa-solid fa-graduation-cap" />
+          <div className="stat-header">
+            <div className="stat-label">B.Tech CGPA</div>
+            <div className="stat-icon icon-orange"><i className="fa-solid fa-graduation-cap" /></div>
           </div>
-          <div className="stat-value">{cgpaDisplay}</div>
-          <div className="stat-label">B.Tech CGPA</div>
+          <div>
+            <div className="stat-value orange">{cgpaDisplay}</div>
+            <div className="stat-trend"><i className="fa-solid fa-star" style={{ color: '#fbbf24' }} /><span>Academic record</span></div>
+          </div>
         </div>
       </div>
 
@@ -2073,23 +2103,30 @@ export function AdminMilestones({
             </div>
           </div>
 
+          {/* Resizer Divider Bar between Main Content and Live Preview */}
+          {!isPiP && (
+            <div
+              className="preview-resizer-bar"
+              onMouseDown={handleMouseDownResize}
+              role="separator"
+              aria-orientation="vertical"
+              title="Drag to resize Live Portfolio Preview"
+            >
+              <div className="resizer-handle-pill" />
+            </div>
+          )}
+
           {/* Resizable Live Preview Right Panel */}
           <div
             className={`right-panel ${isPiP ? 'pip-mode' : ''}`}
             style={{
               width: isPiP ? '360px' : `${rightPanelWidth}px`,
+              minWidth: isPiP ? '360px' : `${rightPanelWidth}px`,
+              maxWidth: isPiP ? '360px' : `${rightPanelWidth}px`,
+              flexBasis: isPiP ? '360px' : `${rightPanelWidth}px`,
               '--preview-panel-width': isPiP ? '360px' : `${rightPanelWidth}px`
             }}
           >
-            {/* Resize Handle */}
-            {!isPiP && (
-              <div
-                className="resize-handle"
-                onMouseDown={handleMouseDownResize}
-                title="Drag to resize preview panel"
-              />
-            )}
-
             <div className="preview-header">
               <div className="flex items-center gap-2">
                 <i className="fa-regular fa-eye text-accent" />

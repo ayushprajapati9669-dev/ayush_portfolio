@@ -281,7 +281,7 @@ export function AdminMessages({
       {/* 0. Top Action Banner (Matching Projects & Certificates) */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold flex items-center gap-2">
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
             <i className="fa-solid fa-inbox" /> COMMUNICATIONS & CLIENT INQUIRIES
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Inbox Workspace</h2>
@@ -326,7 +326,14 @@ export function AdminMessages({
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-white tracking-wide">Inbox</span>
               {unreadCount > 0 && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                <span
+                  className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                  style={{
+                    backgroundColor: 'rgba(6,182,212,0.15)',
+                    color: 'var(--brand-color, #06b6d4)',
+                    border: '1px solid rgba(6,182,212,0.3)'
+                  }}
+                >
                   {unreadCount} new
                 </span>
               )}
@@ -350,9 +357,10 @@ export function AdminMessages({
                 onClick={() => { playTick(); setFilter('unread'); }}
                 className={`px-3 py-1 rounded-md text-[11px] font-semibold transition-all ${
                   filter === 'unread'
-                    ? 'bg-cyan-500/20 text-cyan-300 shadow-sm'
+                    ? 'bg-white/10 text-cyan-300 shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
+                style={filter === 'unread' ? { color: 'var(--brand-color, #06b6d4)' } : undefined}
               >
                 Unread
               </button>
@@ -387,9 +395,10 @@ export function AdminMessages({
                         onContextMenu={(e) => handleContextMenu(e, m.id)}
                         className={`group relative p-3.5 border-b border-white/5 flex gap-3 cursor-pointer transition-all ${
                           isActive
-                            ? 'bg-white/[0.06] border-l-2 border-l-cyan-400'
-                            : 'hover:bg-white/[0.03] border-l-2 border-l-transparent'
+                            ? 'bg-white/[0.06]'
+                            : 'hover:bg-white/[0.03]'
                         }`}
+                        style={isActive ? { borderLeft: '2px solid var(--brand-color, #06b6d4)' } : { borderLeft: '2px solid transparent' }}
                       >
                         {/* Avatar */}
                         <div
@@ -403,7 +412,13 @@ export function AdminMessages({
                           <div className="flex items-center justify-between mb-0.5">
                             <div className="flex items-center gap-1.5 truncate">
                               {isUnread && (
-                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)] shrink-0" />
+                                <span
+                                  className="w-1.5 h-1.5 rounded-full shrink-0"
+                                  style={{
+                                    backgroundColor: 'var(--brand-color, #06b6d4)',
+                                    boxShadow: '0 0 8px var(--brand-glow, rgba(6,182,212,0.8))'
+                                  }}
+                                />
                               )}
                               <h4
                                 className={`text-xs truncate ${

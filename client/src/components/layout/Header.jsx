@@ -289,6 +289,12 @@ export function Header() {
     const navbar = navbarRef.current;
     if (!navWrapper || !navbar) return;
 
+    // In Admin mode, keep navbar solid and stable without 3D tilting
+    if (isAdmin) {
+      gsap.set(navbar, { rotateX: 0, rotateY: 0, x: 0, y: 0 });
+      return;
+    }
+
     // 1. Entrance drop-in
     gsap.from(navWrapper, {
       y: -30,
@@ -382,7 +388,7 @@ export function Header() {
       window.removeEventListener('scroll', handleScroll);
       magneticCleanups.forEach((fn) => fn());
     };
-  }, []);
+  }, [isAdmin]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {

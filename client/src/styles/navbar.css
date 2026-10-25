@@ -67,6 +67,22 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
   }
 }
 
+/* Admin-friendly stabilization: no 3D tilting, jitter, or distracting wobbles */
+body.has-admin-sidebar .navbar {
+  transform: none !important;
+  perspective: none !important;
+}
+
+body.has-admin-sidebar .notif-dropdown {
+  transform: none !important;
+  transition: opacity 0.15s ease-out !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+body.has-admin-sidebar .notif-btn:hover .fa-bell {
+  transform: none !important;
+}
+
 @media (max-width: 1024px) {
   .nav-wrapper,
   body.has-admin-sidebar .nav-wrapper,

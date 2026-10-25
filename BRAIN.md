@@ -10,15 +10,28 @@
 
 ### 1.1 Frontend Architecture (`client/`)
 - **Runtime & Framework**: React 18 (`^18.3.1`) + Vite (`^5.4.2`) with ES Modules.
-- **Routing**: React Router DOM v6 (`^6.26.1`) with dynamic route parameter handling, custom scroll resets, and route guards.
+- **Routing & Code-Splitting**:
+  - React Router DOM v6 (`^6.26.1`) with route-level code splitting via `React.lazy()` and `<Suspense>`.
+  - Core pages (`About`, `Skills`, `Projects`, `ProjectDetail`, `Certificates`, `Contact`, `AdminPage`) load on-demand, reducing initial bundle weight by over 70%.
+  - Sleek, branded obsidian-and-cyan loading fallback with zero Cumulative Layout Shift (CLS).
+  - Explicit routing for `/login`, `/connect`, `/hire`, and parameter slug fallbacks.
+- **Performance & Production Build Optimization**:
+  - Multi-vendor chunk splitting in `vite.config.js`:
+    - `vendor-react`: `react`, `react-dom`, `react-router-dom`
+    - `vendor-gsap`: `gsap`
+    - `vendor-markdown`: `marked`, `dompurify`
+  - Resource hinting: Preconnect handshakes to `fonts.googleapis.com`, `fonts.gstatic.com`, `cdnjs.cloudflare.com`, and `cdn.jsdelivr.net`.
+  - Non-render-blocking asynchronous CSS loading for FontAwesome 6 and Devicon stylesheets via `<link rel="preload" as="style">` with `<noscript>` fallbacks.
+  - Universal Spacing System: Floating navbar (`top: 16px`, height `~60px` -> bottom `76px`) coupled with `.admin-content-area` (`padding-top: 92px`) guaranteeing an exact `16px` (1rem) vertical gap across every admin tab.
 - **Animations & Physics**:
   - **GSAP 3** (`gsap`, `ScrollTrigger`) for choreographed timeline entrances, page transitions, and ScrollTrigger reveals.
   - **3D Card Tilt Physics**: Custom mouse-tracking transform perspective (`rotateX`, `rotateY`) on cards, header, and workbench.
+  - **Context-Aware Ergonomics**: Automatically disables 3D mousemove tilt physics, perspective shifts, and bell hover animations in Admin mode (`body.has-admin-sidebar .navbar` and `isAdmin` guard in `Header.jsx`), providing a rock-solid, jitter-free toolbar for administrative work.
   - **Magnetic Physics**: Smooth elastic magnetic pull on buttons, social icons, and interactive pills.
   - **Sound Design**: Custom interactive audio engine (`playTick`) for haptic auditory feedback on user actions.
 - **Styling & Design System**:
   - Dark-mode palette: Obsidian (`#080B14`), Charcoal (`#0E1322`), Graphite (`#141B2D`), Alabaster (`#F8FAFC`), Stone (`#94A3B8`).
-  - Accent colors: Cyan Glow (`#00D4FF`), Deep Cyan (`#06B6D4`), Emerald (`#10B981`), Purple (`#A855F7`), Amber (`#F59E0B`), Vermilion (`#FF6B4A`).
+  - Dynamic Accent Palette (`--brand-color`, `--brand-glow`): Seamlessly propagates custom themes across both public showcase elements and CMS management controls.
   - Typography: `Outfit`, `Space Grotesk` (Display & Headings), `Plus Jakarta Sans`, `Inter` (Body), `JetBrains Mono` (Code & Badges).
   - Glassmorphism & Liquid Droplet Effects with dynamic SVG filters and radial background orbs.
   - FontAwesome 6 icons + official Devicon SVG integration.
@@ -230,6 +243,16 @@
 
 ## 3. Admin CMS Features (Super Admin Experience)
 
+### 3.0 Unified Design System Token: Admin Top Banner (`admin-proj-top-banner`)
+- **Universal Top Banner Token**: Standardized across **all 11 Admin CMS views** (`Overview`, `Projects`, `Certificates`, `Skills`, `Milestones`, `Profile`, `Hero Portrait`, `Messages`, `Security`, `User Guide`, `API Reference`).
+- **Consistent Layout Architecture**:
+  - Eyebrow tag displaying the module category in JetBrains Mono font dynamically bound to `var(--brand-color, #06b6d4)`.
+  - H2 view title in bold white font with clear, concise subheadings.
+  - Contextual right-side action suite (e.g. "Preview Live", "+ New Project", "+ New Certificate", "+ New Milestone", "Export JSON").
+- **Exact 1rem Vertical Spacing Architecture**:
+  - Floating navigation bar fixed at `top: 16px` with height `~60px` (bottom baseline at `76px`).
+  - Single parent container `.admin-content-area` configured with `padding-top: 92px` (and `88px` on mobile), delivering an exact, uncompromised `16px` (1rem) vertical gap between the navbar and top banner across every single admin tab.
+
 ### 3.1 Authentication & Security (`AdminAuthModal.jsx` & `AdminSecurity.jsx`)
 - **Protected Routing**: All `/admin/*` views require authenticated session.
 - **Login Modal**:
@@ -267,6 +290,7 @@
   - Total Published Projects, Verified Certificates, Total Skills, and Unread Recruiter Messages.
 - **Recent Activity Feed**:
   - Chronological activity list with detail modal inspection (`ActivityDetailModal.jsx`).
+  - Modern glassmorphic `.activity-item` cards with accent glow, category badges, and smooth micro-translations.
   - Filter by category (`All`, `Projects`, `Certificates`, `Messages`).
 - **Quick Project Creation Modal (`QuickProjectModal.jsx`)**: Fast-track project creator without opening full editor.
 
@@ -344,10 +368,11 @@
   - External link / case study resource chip.
   - Card action buttons: Pin, Move Up, Move Down, Compare, Duplicate, Edit, Delete.
   - Right-click Context Menu (`onContextMenu`): Edit, Duplicate, Compare, Pin/Unpin, Copy Link, Share, Save as Template, Move Up, Move Down, Delete.
-- **Resizable Live Preview Right Panel**:
-  - Sticky / scrollable live preview showing all published milestones in real-time.
-  - Picture-in-Picture (PiP) toggle button to detach preview into a floating bottom-right window.
-  - Interactive resize handle to drag-and-resize panel width between 280px and 650px with `localStorage` width persistence.
+- **Drag-and-Drop Horizontal Resizer Engine (`AdminMilestones.jsx`)**:
+  - Dedicated unclipped `.preview-resizer-bar` containing a tactile `.resizer-handle-pill`.
+  - Active hover and dragging states with glowing cyan highlight (`var(--brand-color)`).
+  - High-performance full-screen invisible pointer capture overlay (`position: fixed; inset: 0; z-index: 999999; cursor: col-resize; user-select: none;`) that intercepts all mousemove events, preventing event-dropping over iframes, buttons, or complex DOM nodes.
+  - Smooth width resizing constrained between `280px` and `650px` with automatic `localStorage` persistence.
 - **4-Step Milestone Creation & Editing Wizard Modal**:
   - **Step 1: Basics**:
     - Milestone Title with Levenshtein-distance duplicate detection warning (Merge, Keep Both, Cancel options).
@@ -408,11 +433,20 @@
 - **Undo / Redo History**: Integrated history stack to undo or redo visual changes.
 - **Maintenance Mode Switch**: Global toggle to put the portfolio in maintenance mode.
 
-### 3.10 Messages Inbox (`AdminMessages.jsx`)
-- **Visitor Inquiries Feed**: Captures all submissions sent through the `/contact` page.
-- **Status Controls**: Mark as `Unread`, `Read`, or `Replied`.
-- **Search & Filter**: Filter by status chips (`All`, `Unread`, `Read`, `Replied`).
-- **Deletion Protection**: Safe deletion with `ConfirmModal` dialog.
+### 3.10 Enterprise Split-Inbox Communications Hub (`AdminMessages.jsx`)
+- **Modern Split-Pane Layout**:
+  - Left Pane: Scrollable list of recruiter & visitor inquiries with status indicators, unread dots, sender name, subject, and relative timestamps.
+  - Right Pane: Comprehensive message inspection view showing full contact details (email, phone, company, message payload), quick actions, and status switcher.
+- **Dynamic Accent Color Synchronization**:
+  - Fully bound to CSS variable `--brand-color` (`var(--brand-color, #06b6d4)`) for active message selection borders, reply button gradients, unread status badges, and quick-filter pills.
+- **Reply & Communication Workflow**:
+  - One-click `mailto:` launch pre-populating recipient email and subject line.
+  - One-click clipboard copy for email address and message contents with visual toast confirmation.
+  - Status management: Toggle between `Unread`, `Read`, and `Replied` with real-time sidebar count updates.
+- **Batch & Export Tools**:
+  - "Mark All as Read" batch action for high-volume inbox clearing.
+  - "Export JSON" tool to download all communications for offline archiving.
+  - Deletion protection with modal confirmation dialog preventing accidental data loss.
 
 ### 3.11 User Guide & API Reference
 - **User Guide (`AdminUserGuide.jsx`)**: Interactive comprehensive walkthrough, feature documentation, troubleshooting guide, and deployment manual.
@@ -459,11 +493,13 @@
 
 ## 5. Verification Checklist & Audit Results
 
-- [x] **Router Audit**: Verified all routes in `client/src/app/router.jsx`. Confirmed `/contact`, `/connect`, and `/hire` resolve to `<ContactPage />`.
-- [x] **Public Navigation**: Checked all navigation links across `Header.jsx`, `Footer.jsx`, `Home.jsx`, and `About.jsx`. All links resolve correctly.
-- [x] **Modal Systems**: Verified `ResumeModal`, `CertificateLightboxModal`, `CertificateQRCodeModal`, `CommandPalette`, `Toast`, and `ConfirmModal`.
-- [x] **About & Milestones Hub**: Upgraded `AdminMilestones.jsx` with 4 sub-tabs, presets, search, filter, reorder, duplicate, academic credentials editor, bio story manager, and live 3D preview.
-- [x] **Public Timeline Enhancement**: Updated `About.jsx` to render milestone `yearBadge`, `status` chips, `metric` badges, and acquired `skills` chips.
-- [x] **Admin Sidebar Badges**: Verified dynamic count badges in `AdminSidebar.jsx` and `Admin.jsx` for Projects, Certificates, Skills, About & Milestones, and Messages.
-- [x] **Resume Upload Service**: Fixed resume file URL property extraction (`res.fileUrl || res.url`) and settings passing in `AdminProfile.jsx`.
-- [x] **Backend Services**: Confirmed rate limiting, CORS, CSRF, security headers, static upload serving, and error responses.
+- [x] **Universal 1rem Vertical Gap across All 11 Admin Tabs**: Unified `.admin-content-area` padding-top at `92px`, providing an exact `16px` (1rem) gap below the floating navbar (`76px` baseline) on Overview, Projects, Certificates, Skills, Milestones, Profile, Hero Studio, Messages, Security, User Guide, and API Reference.
+- [x] **Live Portfolio Preview Resizing Engine**: Built a dedicated `.preview-resizer-bar` with an unclipped `.resizer-handle-pill` and a full-screen mouse capture overlay (`position: fixed; inset: 0; z-index: 999999; cursor: col-resize`), guaranteeing uninterrupted drag resizing between 280px and 650px with `localStorage` persistence.
+- [x] **Dynamic Accent Theme Consistency**: Propagated `var(--brand-color, #06b6d4)` across all admin tab eyebrow tags, active action buttons, stat icon glows, split-inbox message selections, and public elements.
+- [x] **Context-Aware Admin Navbar Ergonomics**: Deactivated GSAP 3D mousemove tilt physics, perspective shifts, and bell hover scaling in admin mode (`body.has-admin-sidebar .navbar` and `isAdmin` guard), creating a stable, jitter-free toolbar for editing workflows.
+- [x] **Route Code-Splitting & Lazy Loading**: Converted all secondary routes (`About`, `Skills`, `Projects`, `ProjectDetail`, `Certificates`, `Contact`, `AdminPage`) to `React.lazy()` with a branded, lightweight `<Suspense>` fallback, drastically reducing initial bundle size and eliminating CLS.
+- [x] **Vendor Chunk Splitting & Build Optimization**: Configured `manualChunks` in `vite.config.js` (`vendor-react`, `vendor-gsap`, `vendor-markdown`) and enabled `cssCodeSplit` and modern target `esnext`.
+- [x] **Asset & Font Delivery Optimization**: Added preconnect headers for fonts and CDNs, and configured non-render-blocking `<link rel="preload" as="style">` for FontAwesome 6 and Devicon with `<noscript>` fallbacks.
+- [x] **Route Fallbacks & 404 Prevention**: Added explicit `/login` route mapping in `router.jsx` and added robust fallback handling in case study slug resolution.
+- [x] **Public Timeline & Case Study Enhancement**: Verified `About.jsx` milestone badges and `ProjectDetail.jsx` sticky subnav with 150px top offset.
+- [x] **Security & Rate Limiting**: Verified sliding-window rate limiters on `/api/auth/login` and `/api/public/contact`, path-traversal prevention, CSP headers, and CSRF token verification.

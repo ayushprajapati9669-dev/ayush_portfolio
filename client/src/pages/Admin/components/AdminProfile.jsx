@@ -203,26 +203,17 @@ export function AdminProfile({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Top Breadcrumb & Status Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-400 shadow-sm shadow-cyan-400/10">
-            <i className="fa-solid fa-user-gear text-base" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl font-bold text-white">Profile & Resume Management</h2>
-              <span className="font-mono text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                Core Settings
-              </span>
-            </div>
-            <p className="text-xs text-slate-400">
-              Update personal identity, official resume PDF, credentials, and live bio.
-            </p>
-          </div>
+      {/* Top Action Banner — consistent with all other admin tabs */}
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+            <i className="fa-solid fa-user-gear" /> IDENTITY & RESUME SETTINGS
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">Profile & Resume Management</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Update personal identity, official resume PDF, credentials, and live bio.
+          </p>
         </div>
-
-        {/* Auto-Save & Action Status Indicator */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 font-mono text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-black/40">
             {isDirty ? (
@@ -237,19 +228,19 @@ export function AdminProfile({
               </>
             )}
           </div>
-
           {directResumeUrl && (
             <button
               type="button"
               onClick={() => handlePreviewResume(directResumeUrl)}
-              className="flex items-center gap-1.5 font-mono text-xs px-3.5 py-1.5 rounded-xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 transition-all shadow-sm shadow-cyan-500/10"
+              className="flex items-center gap-1.5 font-mono text-xs px-3.5 py-1.5 rounded-xl border border-white/10 bg-black/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/30 transition-all"
             >
               <i className="fa-solid fa-file-pdf text-red-400" />
-              <span>Preview Live Resume</span>
+              <span>Preview Resume</span>
             </button>
           )}
         </div>
       </div>
+
 
       {/* Main 12-Column Layout Grid (Matching reference deepseek_html_20261022_d14817.html) */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">

@@ -868,7 +868,7 @@ export function AdminCertificates({
          ======================================================== */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 font-bold flex items-center gap-2">
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
             <i className="fa-solid fa-certificate"></i> ACCREDITED CREDENTIALS MANAGER
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Certifications & Honors</h2>

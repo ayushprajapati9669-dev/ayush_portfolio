@@ -304,6 +304,32 @@ export function AdminOverview({
 
   return (
     <div className="space-y-8">
+      {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+            <i className="fa-solid fa-chart-line" /> COMMAND CENTER
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">Portfolio Dashboard</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Real-time analytics, activity feed, and quick actions for your live portfolio.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <a
+            href="/"
+            target="_blank"
+            rel="noreferrer"
+            className="btn-create-project"
+            style={{ background: 'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(6,182,212,0.4))' }}
+            onClick={() => showToast('Live portfolio opened in new tab')}
+          >
+            <i className="fa-solid fa-arrow-up-right-from-square" />
+            <span>View Live Site</span>
+          </a>
+        </div>
+      </div>
+
       {/* 4 STATS CARDS */}
       <div className="stats-grid scroll-reveal" ref={statsGridRef}>
         {/* Card 1: Live Projects */}

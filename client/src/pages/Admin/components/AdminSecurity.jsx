@@ -68,17 +68,26 @@ export function AdminSecurity({
   };
 
   return (
-    <div className="space-y-8">
-      <div className="glass-card-admin p-6 sm:p-8 space-y-5 max-w-2xl">
-        <div className="border-b border-white/10 pb-4">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <i className="fa-solid fa-lock text-cyan-400" />
-            <span>Admin Authentication & Security</span>
-          </h2>
-          <p className="text-xs text-slate-400 mt-1">
+    <div className="space-y-6">
+      {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
+      <div className="admin-proj-top-banner">
+        <div>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+            <i className="fa-solid fa-shield-halved" /> SYSTEM SECURITY & ACCESS CONTROL
+          </span>
+          <h2 className="text-xl font-bold text-white mt-1">Admin Authentication & Security</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
             Update your master password used to authenticate into the portfolio CMS and protect your live content.
           </p>
         </div>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs px-3 py-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 flex items-center gap-1.5">
+            <i className="fa-solid fa-lock" /> Master Access Protected
+          </span>
+        </div>
+      </div>
+
+      <div className="glass-card-admin p-6 sm:p-8 space-y-5 max-w-2xl">
 
         <form onSubmit={handleUpdate} noValidate className="space-y-4">
           <div>
