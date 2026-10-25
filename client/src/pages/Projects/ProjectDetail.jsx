@@ -355,65 +355,134 @@ await session.withTransaction(async () => {
       <div className="cs-layout-wrapper" ref={containerRef}>
         {/* LEFT COLUMN: Sticky Case Study Sidebar Navigation */}
         <aside className="cs-sidebar">
-          <div className="cs-sidebar-title">Case Study</div>
+          {/* Back to All Projects */}
+          <Link to="/projects" className="cs-sidebar-back-btn" title="Return to Projects Library">
+            <i className="fa-solid fa-arrow-left text-xs" />
+            <span>All Projects</span>
+          </Link>
+
+          {/* Reading Progress Card */}
+          <div className="cs-sidebar-progress-card">
+            <div className="cs-sidebar-progress-card-top">
+              <span>READING PROGRESS</span>
+              <span className="font-bold text-cyan-400">{Math.round(readingProgress)}%</span>
+            </div>
+            <div className="cs-sidebar-progress-card-track">
+              <div
+                className="cs-sidebar-progress-card-bar"
+                style={{ width: `${readingProgress}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="cs-sidebar-title">
+            <span>Case Study</span>
+            <span className="text-[10px] text-slate-500 font-mono">INDEX</span>
+          </div>
+
           <nav className="cs-sidebar-nav" id="sidebarNav" aria-label="Case Study Navigation">
             <button
               type="button"
               onClick={(e) => scrollToSection(e, 'overview')}
               className={`cs-side-link ${activeSection === 'overview' ? 'active' : ''}`}
             >
-              Overview
+              <span>Overview</span>
+              <span className="cs-side-link-dot" />
             </button>
             <button
               type="button"
               onClick={(e) => scrollToSection(e, 'problem')}
               className={`cs-side-link ${activeSection === 'problem' ? 'active' : ''}`}
             >
-              01. Problem Statement
+              <span>01. Problem Statement</span>
+              <span className="cs-side-link-dot" />
             </button>
             <button
               type="button"
               onClick={(e) => scrollToSection(e, 'approach')}
               className={`cs-side-link ${activeSection === 'approach' ? 'active' : ''}`}
             >
-              02. Engineering Approach
+              <span>02. Engineering Approach</span>
+              <span className="cs-side-link-dot" />
             </button>
             <button
               type="button"
               onClick={(e) => scrollToSection(e, 'decisions')}
               className={`cs-side-link ${activeSection === 'decisions' ? 'active' : ''}`}
             >
-              03. Tech Decisions
+              <span>03. Tech Decisions</span>
+              <span className="cs-side-link-dot" />
             </button>
             <button
               type="button"
               onClick={(e) => scrollToSection(e, 'results')}
               className={`cs-side-link ${activeSection === 'results' ? 'active' : ''}`}
             >
-              04. Results & Metrics
+              <span>04. Results &amp; Metrics</span>
+              <span className="cs-side-link-dot" />
             </button>
             <button
               type="button"
               onClick={(e) => scrollToSection(e, 'architecture')}
               className={`cs-side-link ${activeSection === 'architecture' ? 'active' : ''}`}
             >
-              05. System Blueprint
+              <span>05. System Blueprint</span>
+              <span className="cs-side-link-dot" />
             </button>
             <button
               type="button"
               onClick={(e) => scrollToSection(e, 'evolution')}
               className={`cs-side-link ${activeSection === 'evolution' ? 'active' : ''}`}
             >
-              06. Visual Evolution
+              <span>06. Visual Evolution</span>
+              <span className="cs-side-link-dot" />
             </button>
             <button
               type="button"
               onClick={(e) => scrollToSection(e, 'learnings')}
               className={`cs-side-link ${activeSection === 'learnings' ? 'active' : ''}`}
             >
-              07. Retrospective
+              <span>07. Retrospective</span>
+              <span className="cs-side-link-dot" />
             </button>
           </nav>
+
+          {/* Quick External Actions */}
+          <div className="cs-sidebar-footer-actions">
+            {project.liveDemoUrl && (
+              <a
+                href={project.liveDemoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cs-sidebar-action-btn primary"
+                title="Launch Live Application"
+              >
+                <i className="fa-solid fa-arrow-up-right-from-square" />
+                <span>Launch Live App</span>
+              </a>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cs-sidebar-action-btn"
+                title="Inspect Source Code on GitHub"
+              >
+                <i className="fa-brands fa-github" />
+                <span>Source Code</span>
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={handleCopyLink}
+              className="cs-sidebar-action-btn"
+              title="Copy Case Study Link"
+            >
+              <i className={`fa-solid ${copied ? 'fa-check text-emerald-400' : 'fa-link'}`} />
+              <span>{copied ? 'Link Copied!' : 'Share Case Study'}</span>
+            </button>
+          </div>
         </aside>
 
         {/* RIGHT COLUMN: Main Case Study Content */}
@@ -1047,6 +1116,20 @@ await session.withTransaction(async () => {
           </div>
         </div>
       )}
+
+      {/* 4. FLOATING BACK-TO-TOP BUTTON */}
+      <button
+        type="button"
+        onClick={() => {
+          playTick();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        className={`cs-floating-top-btn ${readingProgress > 12 ? 'visible' : ''}`}
+        title="Scroll to Top"
+        aria-label="Scroll to Top"
+      >
+        <i className="fa-solid fa-arrow-up" />
+      </button>
     </>
   );
 }

@@ -1588,13 +1588,13 @@ export function AdminMilestones({
               image: finalPrimaryImage || m.image || null,
               images: cleanGallery.length > 0 ? cleanGallery : (Array.isArray(m.images) ? m.images : []),
               imageAlt: wizardImageAlt.trim(),
-              badgeText: wizardBadgeText.trim() || m.badgeText || undefined,
-              badgeIcon: wizardBadgeIcon.trim() || m.badgeIcon || undefined,
-              challenge: wizardChallenge.trim() || m.challenge || undefined,
-              solution: wizardSolution.trim() || m.solution || undefined,
-              outcome: wizardOutcome.trim() || m.outcome || undefined,
-              metrics: cleanMetrics.length > 0 ? cleanMetrics : (Array.isArray(m.metrics) && m.metrics.length > 0 ? m.metrics : undefined),
-              links: cleanLinks.length > 0 ? cleanLinks : (Array.isArray(m.links) && m.links.length > 0 ? m.links : undefined),
+              badgeText: wizardBadgeText.trim() ? wizardBadgeText.trim() : undefined,
+              badgeIcon: wizardBadgeIcon.trim() ? wizardBadgeIcon.trim() : undefined,
+              challenge: wizardChallenge.trim() ? wizardChallenge.trim() : undefined,
+              solution: wizardSolution.trim() ? wizardSolution.trim() : undefined,
+              outcome: wizardOutcome.trim() ? wizardOutcome.trim() : undefined,
+              metrics: cleanMetrics.length > 0 ? cleanMetrics : [],
+              links: cleanLinks.length > 0 ? cleanLinks : [],
               updatedAt: new Date().toISOString()
             };
           }
@@ -1620,13 +1620,13 @@ export function AdminMilestones({
           image: finalPrimaryImage,
           images: cleanGallery,
           imageAlt: wizardImageAlt.trim(),
-          badgeText: wizardBadgeText.trim() || undefined,
-          badgeIcon: wizardBadgeIcon.trim() || undefined,
-          challenge: wizardChallenge.trim() || undefined,
-          solution: wizardSolution.trim() || undefined,
-          outcome: wizardOutcome.trim() || undefined,
-          metrics: cleanMetrics.length > 0 ? cleanMetrics : undefined,
-          links: cleanLinks.length > 0 ? cleanLinks : undefined,
+          badgeText: wizardBadgeText.trim() ? wizardBadgeText.trim() : undefined,
+          badgeIcon: wizardBadgeIcon.trim() ? wizardBadgeIcon.trim() : undefined,
+          challenge: wizardChallenge.trim() ? wizardChallenge.trim() : undefined,
+          solution: wizardSolution.trim() ? wizardSolution.trim() : undefined,
+          outcome: wizardOutcome.trim() ? wizardOutcome.trim() : undefined,
+          metrics: cleanMetrics.length > 0 ? cleanMetrics : [],
+          links: cleanLinks.length > 0 ? cleanLinks : [],
           published: true,
           pinned: wizardPinned || wizardSpotlight,
           spotlight: wizardSpotlight,
@@ -2100,8 +2100,24 @@ export function AdminMilestones({
 
           </div>
 
-          {/* Milestones Cards List */}
-          <div className="flex flex-col gap-3" ref={scrollContainerRef}>
+          {/* List Meta & Scroll Indicator */}
+          <div className="flex items-center justify-between px-1 text-[11px] text-slate-400 font-mono">
+            <span>
+              Showing <strong className="text-cyan-400 font-bold">{filteredMilestones.length}</strong> milestones
+            </span>
+            {filteredMilestones.length > 3 && (
+              <span className="text-slate-500 flex items-center gap-1.5 text-[10px]">
+                <i className="fa-solid fa-arrows-up-down text-[9px] text-cyan-500/70" />
+                <span>Scrollable list</span>
+              </span>
+            )}
+          </div>
+
+          {/* Milestones Cards List with smooth custom scrollbar */}
+          <div
+            className="flex flex-col gap-3 max-h-[calc(100vh-270px)] min-h-[440px] overflow-y-auto pr-2 custom-scrollbar"
+            ref={scrollContainerRef}
+          >
             {filteredMilestones.length === 0 ? (
               <div className="text-center py-16 px-6 bg-[#080e1b] border border-dashed border-white/10 rounded-2xl">
                 <i className="fa-solid fa-magnifying-glass text-3xl text-cyan-400/50 mb-3" />
@@ -3404,19 +3420,21 @@ export function AdminMilestones({
                       <div className="review-row">
                         <span className="review-row-label">Spotlight Victory Badge</span>
                         <span className="review-row-value text-amber-400">
-                          {wizardBadgeText || 'Default (Auto)'}
+                          {wizardBadgeText.trim() ? wizardBadgeText.trim() : 'None (Hidden)'}
                         </span>
                       </div>
                       <div className="review-row">
                         <span className="review-row-label">Spotlight Metrics</span>
                         <span className="review-row-value">
-                          {wizardMetrics.filter((m) => m.value || m.label).length} Active Stats
+                          {wizardMetrics.filter((m) => m.value || m.label).length > 0
+                            ? `${wizardMetrics.filter((m) => m.value || m.label).length} Active Stats`
+                            : 'None (Hidden)'}
                         </span>
                       </div>
                       <div className="review-row">
                         <span className="review-row-label">Spotlight Pillars</span>
                         <span className="review-row-value text-emerald-400">
-                          {wizardChallenge || wizardSolution || wizardOutcome ? 'Configured' : 'Default'}
+                          {wizardChallenge || wizardSolution || wizardOutcome ? 'Configured' : 'None (Hidden)'}
                         </span>
                       </div>
                     </div>

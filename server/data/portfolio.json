@@ -153,7 +153,7 @@
       },
       {
         "id": "m-1792908995865",
-        "title": "Test Milestone new title",
+        "title": "new milestone",
         "desc": "<h3><br></h3>",
         "year": "Year 3",
         "status": "focus",
@@ -173,17 +173,7 @@
         "imageAlt": "Illustration for Test Milestone",
         "link": "",
         "metric": "spotlight key metric",
-        "badgeText": "1st place winner",
-        "badgeIcon": "fa-trophy",
-        "challenge": "problem statement",
-        "solution": "mern,state management ,rest api",
-        "outcome": "award won this is the outcome",
-        "metrics": [
-          {
-            "value": "4",
-            "label": ""
-          }
-        ],
+        "metrics": [],
         "links": [],
         "deepdive": "",
         "proofs": [],
@@ -191,7 +181,8 @@
         "pinned": true,
         "spotlight": true,
         "views": 0,
-        "createdAt": "2026-10-25T06:16:35.865Z"
+        "createdAt": "2026-10-25T06:16:35.865Z",
+        "updatedAt": "2026-10-25T18:50:34.936Z"
       },
       {
         "id": "m-1792870162021",

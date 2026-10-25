@@ -136,13 +136,8 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
 
       let images = [];
       if (rawImages.length > 0) {
-        // Use user's own images! If fewer than 4, cycle through user's own images so no stranger photos appear
         images = [...rawImages];
-        while (images.length < 4) {
-          images.push(rawImages[images.length % rawImages.length]);
-        }
       } else {
-        // Only if absolutely NO image was uploaded/configured, use fallbackPool
         images = [...fallbackPool];
       }
 
@@ -151,89 +146,38 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
         ? m.hdImages
         : images.map((img) => (typeof img === 'string' && img.includes('w=1200') ? img.replace('w=1200', 'w=2500') : img));
 
-      // Dynamic Gold Victory Badge
-      let badgeText = m.badgeText || m.metaLabel;
-      let badgeIcon = m.badgeIcon;
-      const titleLower = (m.title || '').toLowerCase();
-      const metaLower = (m.metaLabel || '').toLowerCase();
+      // Victory Badge: Only display if explicitly configured by the user
+      const badgeText = (m.badgeText || '').trim();
+      const badgeIcon = (m.badgeIcon || '').trim() || 'fa-solid fa-trophy';
 
-      if (!badgeText) {
-        if (titleLower.includes('hackathon') || metaLower.includes('hackathon') || titleLower.includes('1st place')) {
-          badgeText = '1st Place Winner';
-          badgeIcon = badgeIcon || 'fa-solid fa-trophy';
-        } else if (titleLower.includes('intern') || metaLower.includes('intern') || metaLower.includes('experience')) {
-          badgeText = 'Software Intern';
-          badgeIcon = badgeIcon || 'fa-solid fa-briefcase';
-        } else if (titleLower.includes('workshop') || metaLower.includes('workshop') || titleLower.includes('speaker')) {
-          badgeText = 'Workshop Speaker';
-          badgeIcon = badgeIcon || 'fa-solid fa-chalkboard-user';
-        } else if (titleLower.includes('open source') || metaLower.includes('open source')) {
-          badgeText = 'Open Source';
-          badgeIcon = badgeIcon || 'fa-brands fa-github';
-        } else if (titleLower.includes('freelance') || metaLower.includes('freelance')) {
-          badgeText = 'Freelancer';
-          badgeIcon = badgeIcon || 'fa-solid fa-laptop-code';
-        } else {
-          badgeText = 'Flagship Milestone';
-          badgeIcon = badgeIcon || 'fa-solid fa-trophy';
-        }
-      }
-      if (!badgeIcon) badgeIcon = 'fa-solid fa-trophy';
-
-      // Dynamic 3 Key Metrics
-      let metrics = Array.isArray(m.metrics) && m.metrics.some((item) => item && (item.value || item.label))
+      // 3 Key Metrics: Only display if explicitly configured by the user
+      const metrics = Array.isArray(m.metrics) && m.metrics.some((item) => item && (item.value || item.label))
         ? m.metrics.filter((item) => item && (item.value || item.label))
-        : null;
-      if (!metrics || metrics.length === 0) {
-        if (titleLower.includes('hackathon')) {
-          metrics = [{ value: '1st', label: 'Out of 50 Teams' }, { value: '$1K', label: 'Cash Prize' }, { value: '36h', label: 'Build Time' }];
-        } else if (titleLower.includes('intern')) {
-          metrics = [{ value: '50K+', label: 'Users Impacted' }, { value: '60%', label: 'Latency Reduced' }, { value: '12', label: 'Features Shipped' }];
-        } else if (titleLower.includes('workshop')) {
-          metrics = [{ value: '150+', label: 'Students Taught' }, { value: '4.9/5', label: 'Feedback Score' }, { value: '2 Days', label: 'Duration' }];
-        } else {
-          metrics = [{ value: '100%', label: 'Completion' }, { value: '5/5', label: 'Impact' }, { value: m.year || '2024', label: 'Delivered' }];
-        }
-      }
+        : [];
 
-      // Proofs
-      let proofs = Array.isArray(m.proofs) && m.proofs.length > 0 ? m.proofs : null;
-      if (!proofs) {
-        proofs = [
-          { type: 'pdf', title: `${m.title?.replace(/^[^\w]+/, '').slice(0, 24)} Certificate`, size: '2.1 MB', downloadUrl: '#' },
-          { type: 'img', title: 'Verified Proof Snapshot', size: '1.4 MB', url: images[0], downloadUrl: '#' }
-        ];
-      }
+      // Verified Proofs: Only display if explicitly configured
+      const proofs = Array.isArray(m.proofs) && m.proofs.length > 0
+        ? m.proofs.filter((p) => p && (p.title || p.url || p.downloadUrl))
+        : [];
 
-      // Dynamic Links (Live Demo, GitHub Repository)
+      // Links: Only display if explicitly configured
       let links = Array.isArray(m.links) && m.links.some((l) => l && l.url)
         ? m.links.filter((l) => l && l.url)
-        : null;
-      if (!links || links.length === 0) {
-        if (m.link) {
-          links = [{ type: 'demo', label: 'Visit Resource', icon: 'fa-solid fa-arrow-up-right-from-square', url: m.link }];
-        } else if (titleLower.includes('intern')) {
-          links = [{ type: 'repo', label: 'Private Repo (NDA)', icon: 'fa-solid fa-lock', url: '#' }];
-        } else if (titleLower.includes('hackathon')) {
-          links = [
-            { type: 'demo', label: 'Live Demo', icon: 'fa-solid fa-globe', url: 'https://github.com/ayushprajapati9669-dev' },
-            { type: 'repo', label: 'Repository', icon: 'fa-brands fa-github', url: 'https://github.com/ayushprajapati9669-dev' }
-          ];
-        } else {
-          links = [{ type: 'repo', label: 'GitHub Repository', icon: 'fa-brands fa-github', url: 'https://github.com/ayushprajapati9669-dev' }];
-        }
+        : [];
+      if (links.length === 0 && m.link && m.link.trim()) {
+        links = [{ type: 'demo', label: 'Visit Resource', icon: 'fa-solid fa-arrow-up-right-from-square', url: m.link.trim() }];
       }
 
-      // Dynamic Challenge, Solution, Outcome Pillars
-      let challenge = m.challenge || '';
-      let solution = m.solution || '';
-      let outcome = m.outcome || '';
-      if (!challenge && !solution && !outcome && m.desc) {
-        const cleanDesc = m.desc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-        challenge = 'Faced scalability bottlenecks and architectural challenges during real-world implementation.';
-        solution = cleanDesc.slice(0, 160) || 'Engineered modular full-stack services with optimized database design.';
-        outcome = 'Delivered high-performance features with 100% test coverage and positive user feedback.';
-      }
+      // Challenge, Solution, Outcome Pillars: Only display what the user actually filled
+      const challenge = (m.challenge || '').trim();
+      const solution = (m.solution || '').trim();
+      const outcome = (m.outcome || '').trim();
+
+      // Deep dive / description
+      const deepdive = (m.deepdive || m.desc || '').trim();
+
+      // Tech tags
+      const tech = Array.isArray(m.tags) && m.tags.length > 0 ? m.tags : [];
 
       return {
         id: m.id || `spotlight-${idx}`,
@@ -248,14 +192,14 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
         },
         showExploreBtn: m.showExploreBtn !== false,
         links,
-        challenge: challenge || 'High-performance engineering challenge requiring clean modular architecture.',
-        solution: solution || 'Developed robust full-stack workflows with reactive state and caching.',
-        outcome: outcome || 'Successfully deployed production features with verifiable performance metrics.',
-        deepdive: m.deepdive || m.desc || '<b>System Architecture:</b> Engineered with separation of concerns, containerized deployments, and clean RESTful API standards.',
+        challenge,
+        solution,
+        outcome,
+        deepdive,
         metrics,
         images,
         hdImages,
-        tech: Array.isArray(m.tags) && m.tags.length > 0 ? m.tags : ['React JS', 'Node.js', 'MongoDB', 'Socket.io', 'Tailwind CSS'],
+        tech,
         proofs
       };
     });
@@ -502,11 +446,13 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
 
-              {/* Gold Victory Badge (Top Left) */}
-              <div className="gold-badge">
-                <i className={currentSlide.badgeIcon} />
-                <span>{currentSlide.badgeText}</span>
-              </div>
+              {/* Gold Victory Badge (Top Left) - Only if explicitly set */}
+              {currentSlide.badgeText && (
+                <div className="gold-badge">
+                  <i className={currentSlide.badgeIcon} />
+                  <span>{currentSlide.badgeText}</span>
+                </div>
+              )}
 
               {/* HD Zoom Floating Pill Button (Bottom Right) */}
               <div className="hd-btn">
@@ -515,19 +461,21 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               </div>
             </div>
 
-            {/* 4 Interactive Thumbnails Row */}
-            <div className="thumbnail-row">
-              {currentSlide.images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className={`thumb ${idx === currentImageIndex ? 'active' : ''}`}
-                  onClick={() => selectThumbnail(idx)}
-                  title={`View Angle ${idx + 1}`}
-                >
-                  <img src={img} alt={`Thumbnail ${idx + 1}`} loading="lazy" />
-                </div>
-              ))}
-            </div>
+            {/* Interactive Thumbnails Row - Only if multiple images exist */}
+            {currentSlide.images && currentSlide.images.length > 1 && (
+              <div className="thumbnail-row">
+                {currentSlide.images.map((img, idx) => (
+                  <div
+                    key={idx}
+                    className={`thumb ${idx === currentImageIndex ? 'active' : ''}`}
+                    onClick={() => selectThumbnail(idx)}
+                    title={`View Angle ${idx + 1}`}
+                  >
+                    <img src={img} alt={`Thumbnail ${idx + 1}`} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Quick External Links Row */}
             {Array.isArray(currentSlide.links) && currentSlide.links.length > 0 && (
@@ -596,8 +544,8 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               <span>Verified Achievement • 100% Completed</span>
             </div>
 
-            {/* 3 Metrics Row */}
-            {Array.isArray(currentSlide.metrics) && (
+            {/* 3 Metrics Row - Only if metrics exist */}
+            {Array.isArray(currentSlide.metrics) && currentSlide.metrics.length > 0 && (
               <div className="metrics-row">
                 {currentSlide.metrics.map((m, mIdx) => (
                   <div key={mIdx} className="metric">
@@ -608,21 +556,29 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               </div>
             )}
 
-            {/* Structured Text Grid: Challenge, Architecture, Outcome */}
-            <div className="text-grid">
-              <div className="text-block">
-                <h4>{currentSlide.labels?.challenge || 'Challenge'}</h4>
-                <p>{currentSlide.challenge}</p>
+            {/* Structured Text Grid: Challenge, Architecture, Outcome - Only if any field is populated */}
+            {(currentSlide.challenge || currentSlide.solution || currentSlide.outcome) && (
+              <div className="text-grid">
+                {currentSlide.challenge && (
+                  <div className={`text-block ${!currentSlide.solution ? 'full' : ''}`}>
+                    <h4>{currentSlide.labels?.challenge || 'Challenge'}</h4>
+                    <p>{currentSlide.challenge}</p>
+                  </div>
+                )}
+                {currentSlide.solution && (
+                  <div className={`text-block ${!currentSlide.challenge ? 'full' : ''}`}>
+                    <h4>{currentSlide.labels?.solution || 'Architecture'}</h4>
+                    <p>{currentSlide.solution}</p>
+                  </div>
+                )}
+                {currentSlide.outcome && (
+                  <div className="text-block full">
+                    <h4>{currentSlide.labels?.outcome || 'Outcome'}</h4>
+                    <p>{currentSlide.outcome}</p>
+                  </div>
+                )}
               </div>
-              <div className="text-block">
-                <h4>{currentSlide.labels?.solution || 'Architecture'}</h4>
-                <p>{currentSlide.solution}</p>
-              </div>
-              <div className="text-block full">
-                <h4>{currentSlide.labels?.outcome || 'Outcome'}</h4>
-                <p>{currentSlide.outcome}</p>
-              </div>
-            </div>
+            )}
 
             {/* Enhanced Skills Container with Branded Tech Icons */}
             {Array.isArray(currentSlide.tech) && currentSlide.tech.length > 0 && (
@@ -641,33 +597,37 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               </div>
             )}
 
-            {/* Expandable Architecture & Deep Dive Accordion */}
-            <button
-              type="button"
-              className={`deep-dive-toggle ${isDeepDiveOpen ? 'active' : ''}`}
-              onClick={() => {
-                playTick();
-                setIsDeepDiveOpen((prev) => !prev);
-              }}
-            >
-              <span>
-                <i className="fa-solid fa-layer-group mr-2 text-cyan-400" />
-                Read Architecture &amp; Deep Dive
-              </span>
-              <i className="fa-solid fa-chevron-down" />
-            </button>
-            <div
-              className="deep-dive-content"
-              style={{
-                maxHeight: isDeepDiveOpen ? '400px' : '0px',
-                transition: 'max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
-              }}
-            >
-              <div
-                className="deep-dive-inner"
-                dangerouslySetInnerHTML={{ __html: currentSlide.deepdive }}
-              />
-            </div>
+            {/* Expandable Architecture & Deep Dive Accordion - Only if deepdive exists */}
+            {Boolean(currentSlide.deepdive) && (
+              <>
+                <button
+                  type="button"
+                  className={`deep-dive-toggle ${isDeepDiveOpen ? 'active' : ''}`}
+                  onClick={() => {
+                    playTick();
+                    setIsDeepDiveOpen((prev) => !prev);
+                  }}
+                >
+                  <span>
+                    <i className="fa-solid fa-layer-group mr-2 text-cyan-400" />
+                    Read Architecture &amp; Deep Dive
+                  </span>
+                  <i className="fa-solid fa-chevron-down" />
+                </button>
+                <div
+                  className="deep-dive-content"
+                  style={{
+                    maxHeight: isDeepDiveOpen ? '400px' : '0px',
+                    transition: 'max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+                  }}
+                >
+                  <div
+                    className="deep-dive-inner"
+                    dangerouslySetInnerHTML={{ __html: currentSlide.deepdive }}
+                  />
+                </div>
+              </>
+            )}
 
             {/* Verified Proofs Section */}
             {Array.isArray(currentSlide.proofs) && currentSlide.proofs.length > 0 && (

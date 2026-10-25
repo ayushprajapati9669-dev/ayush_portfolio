@@ -26,7 +26,7 @@ html, body {
   background-color: var(--bg-obsidian);
   color: var(--text-alabaster);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
 }
