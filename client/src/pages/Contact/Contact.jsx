@@ -232,18 +232,19 @@ export function ContactPage() {
           <form className="contact-form" id="contactForm" onSubmit={handleSubmit} noValidate>
             <div className="form-row">
               <div className="form-group">
+                <label htmlFor="name" className="form-label">
+                  <span>Your Name</span>
+                  <span className="label-req">*</span>
+                </label>
                 <input
                   type="text"
                   className={`form-control ${errors.name ? 'error' : ''}`}
                   id="name"
-                  placeholder=" "
+                  placeholder="e.g. Ayush Prajapati"
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
                   required
                 />
-                <label htmlFor="name" className="form-label">
-                  Your Name
-                </label>
                 {errors.name && (
                   <div className="field-error-message">
                     <i className="fa-solid fa-circle-exclamation" />
@@ -253,18 +254,19 @@ export function ContactPage() {
               </div>
 
               <div className="form-group">
+                <label htmlFor="email" className="form-label">
+                  <span>Your Email</span>
+                  <span className="label-req">*</span>
+                </label>
                 <input
                   type="email"
                   className={`form-control ${errors.email ? 'error' : ''}`}
                   id="email"
-                  placeholder=" "
+                  placeholder="name@example.com"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
                   required
                 />
-                <label htmlFor="email" className="form-label">
-                  Your Email
-                </label>
                 {errors.email && (
                   <div className="field-error-message">
                     <i className="fa-solid fa-circle-exclamation" />
@@ -275,18 +277,19 @@ export function ContactPage() {
             </div>
 
             <div className="form-group">
+              <label htmlFor="subject" className="form-label">
+                <span>Subject</span>
+                <span className="label-req">*</span>
+              </label>
               <input
                 type="text"
                 className={`form-control ${errors.subject ? 'error' : ''}`}
                 id="subject"
-                placeholder=" "
+                placeholder="e.g. Hiring / Full-Stack Project Collaboration"
                 value={formData.subject}
                 onChange={(e) => handleChange('subject', e.target.value)}
                 required
               />
-              <label htmlFor="subject" className="form-label">
-                Subject
-              </label>
               {errors.subject && (
                 <div className="field-error-message">
                   <i className="fa-solid fa-circle-exclamation" />
@@ -296,17 +299,18 @@ export function ContactPage() {
             </div>
 
             <div className="form-group">
+              <label htmlFor="message" className="form-label">
+                <span>Message</span>
+                <span className="label-req">*</span>
+              </label>
               <textarea
                 className={`form-control ${errors.message ? 'error' : ''}`}
                 id="message"
-                placeholder=" "
+                placeholder="Describe your project, role, timeline or inquiry..."
                 value={formData.message}
                 onChange={(e) => handleChange('message', e.target.value)}
                 required
               />
-              <label htmlFor="message" className="form-label">
-                Message
-              </label>
               <div className="field-meta">
                 {errors.message ? (
                   <div className="field-error-message !mt-0">

@@ -126,48 +126,65 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
     return candidates.map((m, idx) => {
       const fallbackPool = FALLBACK_GALLERY_POOLS[idx % FALLBACK_GALLERY_POOLS.length];
       
-      // Determine 4 gallery images
-      let images = Array.isArray(m.images) && m.images.length > 0 ? m.images : [];
-      if (images.length === 0 && m.image) {
-        images = [m.image, ...fallbackPool.slice(1, 4)];
-      } else if (images.length === 0) {
-        images = fallbackPool;
+      // Determine 4 gallery images: prioritize user-uploaded / configured images
+      let rawImages = Array.isArray(m.images) && m.images.length > 0
+        ? m.images.filter(Boolean)
+        : [];
+      if (rawImages.length === 0 && m.image) {
+        rawImages = [m.image];
       }
-      while (images.length < 4) {
-        images.push(fallbackPool[images.length % fallbackPool.length]);
+
+      let images = [];
+      if (rawImages.length > 0) {
+        // Use user's own images! If fewer than 4, cycle through user's own images so no stranger photos appear
+        images = [...rawImages];
+        while (images.length < 4) {
+          images.push(rawImages[images.length % rawImages.length]);
+        }
+      } else {
+        // Only if absolutely NO image was uploaded/configured, use fallbackPool
+        images = [...fallbackPool];
       }
 
       // High-res equivalents
       const hdImages = Array.isArray(m.hdImages) && m.hdImages.length > 0
         ? m.hdImages
-        : images.map((img) => img.replace('w=1200', 'w=2500'));
+        : images.map((img) => (typeof img === 'string' && img.includes('w=1200') ? img.replace('w=1200', 'w=2500') : img));
 
-      // Category badge text & icon
-      let badgeText = m.badgeText || m.metaLabel || 'Flagship Milestone';
-      let badgeIcon = m.badgeIcon || 'fa-solid fa-trophy';
+      // Dynamic Gold Victory Badge
+      let badgeText = m.badgeText || m.metaLabel;
+      let badgeIcon = m.badgeIcon;
       const titleLower = (m.title || '').toLowerCase();
       const metaLower = (m.metaLabel || '').toLowerCase();
 
-      if (titleLower.includes('hackathon') || metaLower.includes('hackathon') || titleLower.includes('1st place')) {
-        badgeText = m.badgeText || '1st Place Winner';
-        badgeIcon = m.badgeIcon || 'fa-solid fa-trophy';
-      } else if (titleLower.includes('intern') || metaLower.includes('intern') || metaLower.includes('experience')) {
-        badgeText = m.badgeText || 'Software Intern';
-        badgeIcon = m.badgeIcon || 'fa-solid fa-briefcase';
-      } else if (titleLower.includes('workshop') || metaLower.includes('workshop') || titleLower.includes('speaker')) {
-        badgeText = m.badgeText || 'Workshop Speaker';
-        badgeIcon = m.badgeIcon || 'fa-solid fa-chalkboard-user';
-      } else if (titleLower.includes('open source') || metaLower.includes('open source')) {
-        badgeText = m.badgeText || 'Open Source';
-        badgeIcon = m.badgeIcon || 'fa-brands fa-github';
-      } else if (titleLower.includes('freelance') || metaLower.includes('freelance')) {
-        badgeText = m.badgeText || 'Freelancer';
-        badgeIcon = m.badgeIcon || 'fa-solid fa-laptop-code';
+      if (!badgeText) {
+        if (titleLower.includes('hackathon') || metaLower.includes('hackathon') || titleLower.includes('1st place')) {
+          badgeText = '1st Place Winner';
+          badgeIcon = badgeIcon || 'fa-solid fa-trophy';
+        } else if (titleLower.includes('intern') || metaLower.includes('intern') || metaLower.includes('experience')) {
+          badgeText = 'Software Intern';
+          badgeIcon = badgeIcon || 'fa-solid fa-briefcase';
+        } else if (titleLower.includes('workshop') || metaLower.includes('workshop') || titleLower.includes('speaker')) {
+          badgeText = 'Workshop Speaker';
+          badgeIcon = badgeIcon || 'fa-solid fa-chalkboard-user';
+        } else if (titleLower.includes('open source') || metaLower.includes('open source')) {
+          badgeText = 'Open Source';
+          badgeIcon = badgeIcon || 'fa-brands fa-github';
+        } else if (titleLower.includes('freelance') || metaLower.includes('freelance')) {
+          badgeText = 'Freelancer';
+          badgeIcon = badgeIcon || 'fa-solid fa-laptop-code';
+        } else {
+          badgeText = 'Flagship Milestone';
+          badgeIcon = badgeIcon || 'fa-solid fa-trophy';
+        }
       }
+      if (!badgeIcon) badgeIcon = 'fa-solid fa-trophy';
 
-      // Metrics
-      let metrics = Array.isArray(m.metrics) && m.metrics.length > 0 ? m.metrics : null;
-      if (!metrics) {
+      // Dynamic 3 Key Metrics
+      let metrics = Array.isArray(m.metrics) && m.metrics.some((item) => item && (item.value || item.label))
+        ? m.metrics.filter((item) => item && (item.value || item.label))
+        : null;
+      if (!metrics || metrics.length === 0) {
         if (titleLower.includes('hackathon')) {
           metrics = [{ value: '1st', label: 'Out of 50 Teams' }, { value: '$1K', label: 'Cash Prize' }, { value: '36h', label: 'Build Time' }];
         } else if (titleLower.includes('intern')) {
@@ -188,9 +205,11 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
         ];
       }
 
-      // Quick links
-      let links = Array.isArray(m.links) && m.links.length > 0 ? m.links : null;
-      if (!links) {
+      // Dynamic Links (Live Demo, GitHub Repository)
+      let links = Array.isArray(m.links) && m.links.some((l) => l && l.url)
+        ? m.links.filter((l) => l && l.url)
+        : null;
+      if (!links || links.length === 0) {
         if (m.link) {
           links = [{ type: 'demo', label: 'Visit Resource', icon: 'fa-solid fa-arrow-up-right-from-square', url: m.link }];
         } else if (titleLower.includes('intern')) {
@@ -205,7 +224,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
         }
       }
 
-      // Clean Challenge, Solution, Outcome
+      // Dynamic Challenge, Solution, Outcome Pillars
       let challenge = m.challenge || '';
       let solution = m.solution || '';
       let outcome = m.outcome || '';

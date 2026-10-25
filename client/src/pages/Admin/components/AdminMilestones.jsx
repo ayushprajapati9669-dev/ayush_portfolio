@@ -122,6 +122,16 @@ export function AdminMilestones({
       hdImages: Array.isArray(item.hdImages) ? item.hdImages : [],
       imageAlt: item.imageAlt || '',
       link: item.link || '',
+      metric: item.metric || '',
+      badgeText: item.badgeText || '',
+      badgeIcon: item.badgeIcon || '',
+      challenge: item.challenge || '',
+      solution: item.solution || '',
+      outcome: item.outcome || '',
+      metrics: Array.isArray(item.metrics) ? item.metrics : [],
+      links: Array.isArray(item.links) ? item.links : [],
+      deepdive: item.deepdive || '',
+      proofs: Array.isArray(item.proofs) ? item.proofs : [],
       published: item.published !== false,
       pinned: !!item.pinned,
       spotlight: item.spotlight !== undefined ? !!item.spotlight : !!item.pinned,
@@ -207,6 +217,74 @@ export function AdminMilestones({
   const [wizardImageData, setWizardImageData] = useState(null);
   const [wizardImageUrl, setWizardImageUrl] = useState('');
   const [wizardImageAlt, setWizardImageAlt] = useState('');
+
+  // Multi-image gallery state (up to 4 gallery slots for spotlight switcher)
+  const [wizardGalleryImages, setWizardGalleryImages] = useState([]);
+
+  // Spotlight Dynamic Fields
+  const [wizardBadgeText, setWizardBadgeText] = useState('');
+  const [wizardBadgeIcon, setWizardBadgeIcon] = useState('fa-trophy');
+  const [wizardChallenge, setWizardChallenge] = useState('');
+  const [wizardSolution, setWizardSolution] = useState('');
+  const [wizardOutcome, setWizardOutcome] = useState('');
+  const [wizardMetrics, setWizardMetrics] = useState([
+    { value: '', label: '' },
+    { value: '', label: '' },
+    { value: '', label: '' }
+  ]);
+  const [wizardDemoLink, setWizardDemoLink] = useState('');
+  const [wizardRepoLink, setWizardRepoLink] = useState('');
+
+  // Helper functions for 4-slot gallery
+  const handleGallerySlotFile = (slotIdx, file) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Image file must be under 5MB', 'fa-triangle-exclamation');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      setWizardGalleryImages((prev) => {
+        const next = [...prev];
+        next[slotIdx] = dataUrl;
+        return next;
+      });
+      if (slotIdx === 0) {
+        setWizardImageData(dataUrl);
+      }
+      showToast(`Gallery Slot ${slotIdx + 1} updated!`, 'fa-image');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleGallerySlotUrl = (slotIdx, url) => {
+    setWizardGalleryImages((prev) => {
+      const next = [...prev];
+      next[slotIdx] = url;
+      return next;
+    });
+    if (slotIdx === 0) {
+      setWizardImageData(url);
+      setWizardImageUrl(url);
+    }
+  };
+
+  const removeGallerySlot = (slotIdx) => {
+    setWizardGalleryImages((prev) => {
+      const next = [...prev];
+      next[slotIdx] = '';
+      // Clean trailing empties
+      while (next.length > 0 && !next[next.length - 1]) {
+        next.pop();
+      }
+      return next;
+    });
+    if (slotIdx === 0) {
+      setWizardImageData(wizardGalleryImages[1] || null);
+    }
+  };
+
   const [duplicateWarning, setDuplicateWarning] = useState(null);
   const [duplicateOverride, setDuplicateOverride] = useState(false);
   const [aiCategorySuggestion, setAiCategorySuggestion] = useState(null);
@@ -236,6 +314,7 @@ export function AdminMilestones({
 
   // Resize handle for Live Preview Right Panel
   const isResizingRef = useRef(false);
+  const twoColumnContainerRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -1073,6 +1152,19 @@ export function AdminMilestones({
     setWizardImageData(null);
     setWizardImageUrl('');
     setWizardImageAlt('');
+    setWizardGalleryImages([]);
+    setWizardBadgeText('');
+    setWizardBadgeIcon('fa-trophy');
+    setWizardChallenge('');
+    setWizardSolution('');
+    setWizardOutcome('');
+    setWizardMetrics([
+      { value: '', label: '' },
+      { value: '', label: '' },
+      { value: '', label: '' }
+    ]);
+    setWizardDemoLink('');
+    setWizardRepoLink('');
     setDuplicateWarning(null);
     setDuplicateOverride(false);
     setAiCategorySuggestion(null);
@@ -1101,9 +1193,42 @@ export function AdminMilestones({
     setWizardTags(m.tags ? m.tags.join(', ') : '');
     setWizardLink(m.link || '');
     setWizardIcon(m.icon || 'fa-layer-group');
-    setWizardImageData(m.image || null);
-    setWizardImageUrl(typeof m.image === 'string' && (m.image.startsWith('http') || m.image.startsWith('/images/')) ? m.image : '');
+    
+    // Gallery & Cover Image
+    let imgs = Array.isArray(m.images) && m.images.length > 0 ? [...m.images] : [];
+    if (imgs.length === 0 && m.image) {
+      imgs = [m.image];
+    }
+    setWizardGalleryImages(imgs);
+    setWizardImageData(imgs[0] || m.image || null);
+    setWizardImageUrl(typeof (imgs[0] || m.image) === 'string' && ((imgs[0] || m.image).startsWith('http') || (imgs[0] || m.image).startsWith('/images/')) ? (imgs[0] || m.image) : '');
     setWizardImageAlt(m.imageAlt || '');
+
+    // Spotlight Dynamic Fields
+    setWizardBadgeText(m.badgeText || '');
+    setWizardBadgeIcon(m.badgeIcon || 'fa-trophy');
+    setWizardChallenge(m.challenge || '');
+    setWizardSolution(m.solution || '');
+    setWizardOutcome(m.outcome || '');
+    if (Array.isArray(m.metrics) && m.metrics.length > 0) {
+      setWizardMetrics([
+        m.metrics[0] ? { value: m.metrics[0].value || '', label: m.metrics[0].label || '' } : { value: '', label: '' },
+        m.metrics[1] ? { value: m.metrics[1].value || '', label: m.metrics[1].label || '' } : { value: '', label: '' },
+        m.metrics[2] ? { value: m.metrics[2].value || '', label: m.metrics[2].label || '' } : { value: '', label: '' }
+      ]);
+    } else {
+      setWizardMetrics([
+        { value: m.metric || '', label: m.metric ? 'Key Impact' : '' },
+        { value: '', label: '' },
+        { value: '', label: '' }
+      ]);
+    }
+
+    const demoUrl = Array.isArray(m.links) ? (m.links.find((l) => l.type === 'demo')?.url || '') : '';
+    const repoUrl = Array.isArray(m.links) ? (m.links.find((l) => l.type === 'repo')?.url || '') : '';
+    setWizardDemoLink(demoUrl || m.link || '');
+    setWizardRepoLink(repoUrl || '');
+
     setDuplicateWarning(null);
     setDuplicateOverride(false);
     setAiCategorySuggestion(null);
@@ -1404,6 +1529,42 @@ export function AdminMilestones({
       .map((t) => t.trim())
       .filter(Boolean);
 
+    const cleanGallery = wizardGalleryImages.map((s) => (typeof s === 'string' ? s.trim() : s)).filter(Boolean);
+    if (cleanGallery.length === 0 && (wizardImageData || wizardImageUrl.trim())) {
+      cleanGallery.push(wizardImageData || wizardImageUrl.trim());
+    }
+    const finalPrimaryImage = cleanGallery[0] || wizardImageData || wizardImageUrl.trim() || null;
+
+    const cleanMetrics = wizardMetrics
+      .map((met) => ({ value: (met.value || '').trim(), label: (met.label || '').trim() }))
+      .filter((met) => met.value || met.label);
+
+    const cleanLinks = [];
+    if (wizardDemoLink.trim()) {
+      cleanLinks.push({
+        type: 'demo',
+        label: 'Live Demo',
+        icon: 'fa-solid fa-arrow-up-right-from-square',
+        url: wizardDemoLink.trim()
+      });
+    }
+    if (wizardRepoLink.trim()) {
+      cleanLinks.push({
+        type: 'repo',
+        label: 'Repository',
+        icon: 'fa-brands fa-github',
+        url: wizardRepoLink.trim()
+      });
+    }
+    if (cleanLinks.length === 0 && wizardLink.trim()) {
+      cleanLinks.push({
+        type: 'demo',
+        label: 'Visit Resource',
+        icon: 'fa-solid fa-arrow-up-right-from-square',
+        url: wizardLink.trim()
+      });
+    }
+
     try {
       if (wizardEditingId) {
         // Update existing
@@ -1424,9 +1585,16 @@ export function AdminMilestones({
               tags: parsedTags,
               link: wizardLink.trim(),
               icon: wizardIcon,
-              image: wizardImageData || wizardImageUrl.trim() || m.image || null,
-              images: (wizardImageData || wizardImageUrl.trim()) ? [wizardImageData || wizardImageUrl.trim(), ...(Array.isArray(m.images) ? m.images.slice(1) : [])] : (Array.isArray(m.images) ? m.images : []),
+              image: finalPrimaryImage || m.image || null,
+              images: cleanGallery.length > 0 ? cleanGallery : (Array.isArray(m.images) ? m.images : []),
               imageAlt: wizardImageAlt.trim(),
+              badgeText: wizardBadgeText.trim() || m.badgeText || undefined,
+              badgeIcon: wizardBadgeIcon.trim() || m.badgeIcon || undefined,
+              challenge: wizardChallenge.trim() || m.challenge || undefined,
+              solution: wizardSolution.trim() || m.solution || undefined,
+              outcome: wizardOutcome.trim() || m.outcome || undefined,
+              metrics: cleanMetrics.length > 0 ? cleanMetrics : (Array.isArray(m.metrics) && m.metrics.length > 0 ? m.metrics : undefined),
+              links: cleanLinks.length > 0 ? cleanLinks : (Array.isArray(m.links) && m.links.length > 0 ? m.links : undefined),
               updatedAt: new Date().toISOString()
             };
           }
@@ -1436,7 +1604,6 @@ export function AdminMilestones({
         showToast(`Milestone "${wizardTitle.trim()}" updated successfully!`, 'fa-check');
       } else {
         // Add new milestone
-        const finalImg = wizardImageData || wizardImageUrl.trim() || null;
         const newMilestone = {
           id: `m-${Date.now()}`,
           title: wizardTitle.trim(),
@@ -1450,9 +1617,16 @@ export function AdminMilestones({
           tags: parsedTags,
           link: wizardLink.trim(),
           icon: wizardIcon,
-          image: finalImg,
-          images: finalImg ? [finalImg] : [],
+          image: finalPrimaryImage,
+          images: cleanGallery,
           imageAlt: wizardImageAlt.trim(),
+          badgeText: wizardBadgeText.trim() || undefined,
+          badgeIcon: wizardBadgeIcon.trim() || undefined,
+          challenge: wizardChallenge.trim() || undefined,
+          solution: wizardSolution.trim() || undefined,
+          outcome: wizardOutcome.trim() || undefined,
+          metrics: cleanMetrics.length > 0 ? cleanMetrics : undefined,
+          links: cleanLinks.length > 0 ? cleanLinks : undefined,
           published: true,
           pinned: wizardPinned || wizardSpotlight,
           spotlight: wizardSpotlight,
@@ -1612,7 +1786,7 @@ export function AdminMilestones({
     const handleMouseMove = (moveEvent) => {
       if (!isResizingRef.current) return;
       const delta = startX - moveEvent.clientX;
-      const newWidth = Math.min(650, Math.max(280, Math.round(startWidth + delta)));
+      const newWidth = Math.min(750, Math.max(280, Math.round(startWidth + delta)));
       setRightPanelWidth(newWidth);
     };
 
@@ -1792,9 +1966,9 @@ export function AdminMilestones({
       </div>
 
       {/* TWO-COLUMN LAYOUT — Left: Milestones Management | Right: Editor / Preview / Data */}
-      <div className="flex flex-col lg:flex-row gap-5 items-start w-full relative">
-        {/* LEFT COLUMN: Controls, Filters, Search & Milestones List (~60% width) */}
-        <div className="w-full lg:w-[60%] flex flex-col gap-4 min-w-0">
+      <div ref={twoColumnContainerRef} className="flex flex-col lg:flex-row gap-0 items-start w-full relative">
+        {/* LEFT COLUMN: Controls, Filters, Search & Milestones List */}
+        <div className="w-full lg:flex-1 lg:min-w-0 pr-0 lg:pr-3 flex flex-col gap-4">
           {/* Controls Toolbar Container */}
           <div className="bg-[#080e1b] border border-white/[0.08] rounded-2xl p-4 flex flex-col gap-3 shadow-sm">
             {/* Filter Selects Row */}
@@ -2099,7 +2273,7 @@ export function AdminMilestones({
 
                     {/* Vertical Floating Action Strip on Card Hover */}
                     <div
-                      className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center bg-[#070d18]/95 border border-white/15 rounded-xl shadow-2xl py-1 px-0.5 opacity-90 group-hover:opacity-100 transition-all z-10 gap-0.5"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center bg-[#070d18]/95 border border-white/15 rounded-xl shadow-2xl py-1 px-0.5 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-10 gap-0.5 translate-x-1 group-hover:translate-x-0"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
@@ -2190,8 +2364,20 @@ export function AdminMilestones({
           </div>
         </div>
 
-        {/* RIGHT COLUMN: LIVE PORTFOLIO PREVIEW (~40% width) */}
-        <div className="w-full lg:w-[40%] bg-[#080e1b] border border-white/[0.08] rounded-2xl p-5 sticky top-24 max-h-[calc(100vh-120px)] flex flex-col overflow-y-auto shadow-sm">
+        {/* Resizer Divider Bar */}
+        <div
+          onMouseDown={handleMouseDownResize}
+          className="hidden lg:flex flex-col items-center justify-center w-3 hover:w-3.5 bg-transparent hover:bg-cyan-500/20 active:bg-cyan-500/40 cursor-col-resize transition-all relative z-20 shrink-0 mx-0.5 self-stretch rounded-full py-6 group"
+          title="Drag horizontally to resize panels"
+        >
+          <div className="w-1 h-14 bg-white/20 group-hover:bg-cyan-400 group-hover:h-24 rounded-full transition-all" />
+        </div>
+
+        {/* RIGHT COLUMN: LIVE PORTFOLIO PREVIEW */}
+        <div
+          style={{ width: `${rightPanelWidth}px` }}
+          className="w-full lg:shrink-0 bg-[#080e1b] border border-white/[0.08] rounded-2xl p-5 sticky top-24 max-h-[calc(100vh-120px)] flex flex-col overflow-y-auto shadow-sm"
+        >
           {/* Live Preview Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
             <div className="flex items-center gap-2.5">
@@ -2805,109 +2991,316 @@ export function AdminMilestones({
                       </div>
                     </div>
 
-                    {/* Cover Image Upload / AI Generation */}
-                    <div className="form-group">
-                      <label>Cover Graphic</label>
-                      {!wizardImageData ? (
-                        <div
-                          className="drop-zone"
-                          onClick={() => document.getElementById('wizardFileInput')?.click()}
-                          onDragOver={(e) => e.preventDefault()}
-                          onDrop={(e) => {
-                            e.preventDefault();
-                            if (e.dataTransfer.files?.[0]) handleImageFile(e.dataTransfer.files[0]);
-                          }}
-                        >
-                          <i className="fa-solid fa-cloud-arrow-up" />
-                          <span>
-                            Drag & drop or <strong>click to browse image</strong>
-                          </span>
-                          <input
-                            id="wizardFileInput"
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => {
-                              if (e.target.files?.[0]) handleImageFile(e.target.files[0]);
-                            }}
-                          />
+                    {/* Multi-Photo Gallery for Spotlight Switcher (4 Interactive Slots) */}
+                    <div className="bg-[#060b15] border border-cyan-500/25 rounded-2xl p-4 flex flex-col gap-3 shadow-inner">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div>
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <i className="fa-solid fa-images text-cyan-400" />
+                            Spotlight Photo Gallery (4 Interactive Angles)
+                          </div>
+                          <p className="text-[11px] text-slate-400">
+                            Public Spotlight displays a prominent photo with a 4-thumbnail switcher underneath. Configure all 4 photos below.
+                          </p>
                         </div>
-                      ) : (
-                        <div className="image-preview-wrapper" style={{ display: 'block' }}>
-                          <img src={wizardImageData} alt="Preview" />
-                          <button
-                            type="button"
-                            className="remove-image-btn"
-                            onClick={() => setWizardImageData(null)}
-                            title="Remove image"
-                          >
-                            <i className="fa-solid fa-xmark" />
-                          </button>
-                          <input
-                            type="text"
-                            className="form-control mt-2 text-xs"
-                            placeholder="Image Alt text"
-                            value={wizardImageAlt}
-                            onChange={(e) => setWizardImageAlt(e.target.value)}
-                          />
-                        </div>
-                      )}
-
-                      {/* AI Graphic Generators */}
-                      <div className="flex items-center gap-2 mt-2 flex-wrap">
-                        <span className="text-[11px] text-slate-400 font-semibold">Generate AI Graphic:</span>
-                        <button
-                          type="button"
-                          className="btn btn-secondary text-xs py-1 px-2.5"
-                          onClick={() => generateAiSvgImage('realistic')}
-                        >
-                          <i className="fa-solid fa-camera" /> Realistic
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-secondary text-xs py-1 px-2.5"
-                          onClick={() => generateAiSvgImage('illustration')}
-                        >
-                          <i className="fa-solid fa-palette" /> Illustration
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-secondary text-xs py-1 px-2.5"
-                          onClick={() => generateAiSvgImage('abstract')}
-                        >
-                          <i className="fa-solid fa-shapes" /> Abstract
-                        </button>
+                        <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300">
+                          {wizardGalleryImages.filter(Boolean).length} / 4 Slots Configured
+                        </span>
                       </div>
 
-                      {/* Direct Image URL input */}
-                      <div className="mt-3">
-                        <label className="text-xs text-slate-300 font-semibold mb-1 block">
-                          Or Direct Image URL (High Performance):
-                        </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {[
+                          { idx: 0, label: 'Slot 1 • Hero / Stage Cover', role: 'Main Cover Photo' },
+                          { idx: 1, label: 'Slot 2 • Workshop / Lab Angle', role: 'Secondary Lab Photo' },
+                          { idx: 2, label: 'Slot 3 • Architecture / Slides', role: 'Architecture / Demo Slide' },
+                          { idx: 3, label: 'Slot 4 • Team / Verification', role: 'Proof / Ceremony Photo' }
+                        ].map((slot) => {
+                          const slotVal = wizardGalleryImages[slot.idx] || (slot.idx === 0 ? (wizardImageData || wizardImageUrl) : '');
+                          return (
+                            <div
+                              key={slot.idx}
+                              className="bg-[#0b1424] border border-white/10 hover:border-cyan-500/40 rounded-xl p-3 flex flex-col gap-2 transition-all relative group/slot"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-mono font-bold text-cyan-300 flex items-center gap-1">
+                                  <i className="fa-regular fa-image text-xs" />
+                                  {slot.label}
+                                </span>
+                                {slotVal ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => removeGallerySlot(slot.idx)}
+                                    className="text-rose-400 hover:text-rose-300 text-xs px-1.5 py-0.5 rounded hover:bg-rose-500/10 transition-colors"
+                                    title="Remove this slot photo"
+                                  >
+                                    <i className="fa-solid fa-trash-can" />
+                                  </button>
+                                ) : (
+                                  <span className="text-[10px] text-slate-500 font-mono">Empty</span>
+                                )}
+                              </div>
+
+                              {slotVal ? (
+                                <div className="relative w-full h-24 rounded-lg overflow-hidden border border-white/15 bg-black/50 group/img">
+                                  <img
+                                    src={slotVal}
+                                    alt={slot.label}
+                                    className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300"
+                                  />
+                                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 flex items-center justify-center gap-2 transition-opacity backdrop-blur-[2px]">
+                                    <label
+                                      htmlFor={`slot-file-${slot.idx}`}
+                                      className="px-2 py-1 rounded bg-cyan-600 text-white text-[10px] font-bold cursor-pointer hover:bg-cyan-500 transition-colors"
+                                    >
+                                      Replace
+                                    </label>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeGallerySlot(slot.idx)}
+                                      className="px-2 py-1 rounded bg-rose-600 text-white text-[10px] font-bold hover:bg-rose-500 transition-colors"
+                                    >
+                                      Clear
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div
+                                  className="border border-dashed border-white/15 hover:border-cyan-500/50 rounded-lg h-24 flex flex-col items-center justify-center cursor-pointer bg-[#070e1b] hover:bg-[#0c1626] transition-all p-2 text-center"
+                                  onClick={() => document.getElementById(`slot-file-${slot.idx}`)?.click()}
+                                  onDragOver={(e) => e.preventDefault()}
+                                  onDrop={(e) => {
+                                    e.preventDefault();
+                                    if (e.dataTransfer.files?.[0]) handleGallerySlotFile(slot.idx, e.dataTransfer.files[0]);
+                                  }}
+                                >
+                                  <i className="fa-solid fa-cloud-arrow-up text-cyan-400 text-base mb-1" />
+                                  <span className="text-[11px] text-slate-300 font-medium">Click or Drag Image</span>
+                                  <span className="text-[9px] text-slate-500 font-mono">PNG, JPG, WebP under 5MB</span>
+                                </div>
+                              )}
+
+                              <input
+                                id={`slot-file-${slot.idx}`}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                  if (e.target.files?.[0]) handleGallerySlotFile(slot.idx, e.target.files[0]);
+                                }}
+                              />
+
+                              {/* Direct URL input for this slot */}
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <input
+                                  type="text"
+                                  placeholder="Paste direct image URL..."
+                                  value={slotVal}
+                                  onChange={(e) => handleGallerySlotUrl(slot.idx, e.target.value)}
+                                  className="w-full bg-[#070e1a] border border-white/10 rounded px-2 py-1 text-[11px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 font-mono"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Quick Preset Buttons */}
+                      <div className="flex items-center justify-between pt-2 border-t border-white/10 flex-wrap gap-2">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[10px] text-slate-400 font-semibold uppercase font-mono">Quick Demo Presets:</span>
+                          <button
+                            type="button"
+                            className="btn btn-secondary text-[10px] py-0.5 px-2"
+                            onClick={() => {
+                              setWizardGalleryImages([
+                                '/images/ayush-workshop-lead.jpg',
+                                'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop'
+                              ]);
+                              setWizardImageData('/images/ayush-workshop-lead.jpg');
+                              showToast('Loaded 4 High-Res Workshop Demo Photos!', 'fa-images');
+                            }}
+                          >
+                            <i className="fa-solid fa-chalkboard-user text-cyan-400" /> Workshop Preset
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-secondary text-[10px] py-0.5 px-2"
+                            onClick={() => {
+                              setWizardGalleryImages([
+                                'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop'
+                              ]);
+                              setWizardImageData('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop');
+                              showToast('Loaded 4 High-Res Hackathon Photos!', 'fa-trophy');
+                            }}
+                          >
+                            <i className="fa-solid fa-trophy text-amber-400" /> Hackathon Preset
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          className="btn btn-secondary text-[10px] py-0.5 px-2 text-rose-300"
+                          onClick={() => {
+                            setWizardGalleryImages([]);
+                            setWizardImageData(null);
+                            setWizardImageUrl('');
+                            showToast('Cleared all gallery slots', 'fa-trash');
+                          }}
+                        >
+                          Clear All Slots
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Spotlight Deep-Dive Ecosystem Configuration */}
+                    <div className="bg-[#08101e] border border-amber-500/30 rounded-2xl p-4 flex flex-col gap-3">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                         <div className="flex items-center gap-2">
+                          <i className="fa-solid fa-trophy text-amber-400 text-sm" />
+                          <span className="text-xs font-bold text-white uppercase tracking-wider">
+                            Spotlight Metrics &amp; Architecture Details
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                          100% Dynamic CMS
+                        </span>
+                      </div>
+
+                      {/* Custom Victory Badge Text & Icon */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[11px] font-semibold text-slate-300 mb-1 block">
+                            Gold Victory Badge Text (Top Left of Card)
+                          </label>
                           <input
                             type="text"
-                            className="form-control text-xs flex-1"
-                            placeholder="https://... or /images/ayush-workshop-lead.jpg"
-                            value={wizardImageUrl}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setWizardImageUrl(val);
-                              if (val.trim()) setWizardImageData(val.trim());
-                            }}
+                            className="form-control text-xs"
+                            placeholder="e.g. 1st Place Winner, Lead Instructor, Software Intern"
+                            value={wizardBadgeText}
+                            onChange={(e) => setWizardBadgeText(e.target.value)}
                           />
-                          {wizardImageUrl && (
-                            <button
-                              type="button"
-                              className="btn btn-secondary text-xs px-2.5 py-1.5 shrink-0"
-                              onClick={() => {
-                                setWizardImageData(wizardImageUrl.trim());
-                                showToast('Image URL applied', 'fa-check');
-                              }}
-                            >
-                              Preview
-                            </button>
-                          )}
+                        </div>
+                        <div>
+                          <label className="text-[11px] font-semibold text-slate-300 mb-1 block">
+                            Gold Badge Icon (FontAwesome)
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control text-xs font-mono"
+                            placeholder="fa-solid fa-trophy or fa-chalkboard-user"
+                            value={wizardBadgeIcon}
+                            onChange={(e) => setWizardBadgeIcon(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* 3 Impact Metrics */}
+                      <div>
+                        <label className="text-[11px] font-semibold text-slate-300 mb-1.5 block">
+                          3 Prominent Impact Metrics (Key Stats Bar)
+                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                          {[0, 1, 2].map((mIdx) => (
+                            <div key={mIdx} className="bg-[#050b16] border border-white/10 rounded-xl p-2.5 flex flex-col gap-1.5">
+                              <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase">Metric #{mIdx + 1}</span>
+                              <input
+                                type="text"
+                                className="form-control text-xs py-1"
+                                placeholder={mIdx === 0 ? 'Value (e.g. 150+)' : mIdx === 1 ? 'Value (e.g. 4.9/5)' : 'Value (e.g. 2 Days)'}
+                                value={wizardMetrics[mIdx]?.value || ''}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setWizardMetrics((prev) => {
+                                    const next = [...prev];
+                                    next[mIdx] = { ...(next[mIdx] || {}), value: val };
+                                    return next;
+                                  });
+                                }}
+                              />
+                              <input
+                                type="text"
+                                className="form-control text-xs py-1"
+                                placeholder={mIdx === 0 ? 'Label (e.g. Students Mentored)' : mIdx === 1 ? 'Label (e.g. Feedback Score)' : 'Label (e.g. Bootcamp Duration)'}
+                                value={wizardMetrics[mIdx]?.label || ''}
+                                onChange={(e) => {
+                                  const lbl = e.target.value;
+                                  setWizardMetrics((prev) => {
+                                    const next = [...prev];
+                                    next[mIdx] = { ...(next[mIdx] || {}), label: lbl };
+                                    return next;
+                                  });
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* 3 Narrative Pillars: Challenge, Solution/Architecture, Outcome */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                          <label className="text-[11px] font-semibold text-rose-300 mb-1 flex items-center gap-1">
+                            <i className="fa-solid fa-triangle-exclamation text-[10px]" /> The Problem / Challenge
+                          </label>
+                          <textarea
+                            rows={3}
+                            className="form-control text-xs leading-relaxed"
+                            placeholder="Scalability bottlenecks, domain challenges..."
+                            value={wizardChallenge}
+                            onChange={(e) => setWizardChallenge(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] font-semibold text-cyan-300 mb-1 flex items-center gap-1">
+                            <i className="fa-solid fa-cubes text-[10px]" /> My Architecture / Solution
+                          </label>
+                          <textarea
+                            rows={3}
+                            className="form-control text-xs leading-relaxed"
+                            placeholder="MERN architecture, state management, REST APIs..."
+                            value={wizardSolution}
+                            onChange={(e) => setWizardSolution(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] font-semibold text-emerald-300 mb-1 flex items-center gap-1">
+                            <i className="fa-solid fa-award text-[10px]" /> The Outcome / Key Impact
+                          </label>
+                          <textarea
+                            rows={3}
+                            className="form-control text-xs leading-relaxed"
+                            placeholder="Production deployment, awards won, measurable gains..."
+                            value={wizardOutcome}
+                            onChange={(e) => setWizardOutcome(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Demo Link and Repo Link */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[11px] font-semibold text-slate-300 mb-1 block">Live Demo URL (Spotlight Button)</label>
+                          <input
+                            type="url"
+                            className="form-control text-xs"
+                            placeholder="https://..."
+                            value={wizardDemoLink}
+                            onChange={(e) => setWizardDemoLink(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] font-semibold text-slate-300 mb-1 block">GitHub Repository URL (Spotlight Button)</label>
+                          <input
+                            type="url"
+                            className="form-control text-xs"
+                            placeholder="https://github.com/..."
+                            value={wizardRepoLink}
+                            onChange={(e) => setWizardRepoLink(e.target.value)}
+                          />
                         </div>
                       </div>
                     </div>
@@ -2999,8 +3392,32 @@ export function AdminMilestones({
                         <span className="review-row-value">{wizardLink || '—'}</span>
                       </div>
                       <div className="review-row">
-                        <span className="review-row-label">Cover Graphic</span>
+                        <span className="review-row-label">Cover / Primary Photo</span>
                         <span className="review-row-value">{wizardImageData ? '✓ Attached' : 'None'}</span>
+                      </div>
+                      <div className="review-row">
+                        <span className="review-row-label">Spotlight 4-Slot Gallery</span>
+                        <span className="review-row-value text-cyan-400 font-semibold">
+                          {wizardGalleryImages.filter(Boolean).length} / 4 Photos Attached
+                        </span>
+                      </div>
+                      <div className="review-row">
+                        <span className="review-row-label">Spotlight Victory Badge</span>
+                        <span className="review-row-value text-amber-400">
+                          {wizardBadgeText || 'Default (Auto)'}
+                        </span>
+                      </div>
+                      <div className="review-row">
+                        <span className="review-row-label">Spotlight Metrics</span>
+                        <span className="review-row-value">
+                          {wizardMetrics.filter((m) => m.value || m.label).length} Active Stats
+                        </span>
+                      </div>
+                      <div className="review-row">
+                        <span className="review-row-label">Spotlight Pillars</span>
+                        <span className="review-row-value text-emerald-400">
+                          {wizardChallenge || wizardSolution || wizardOutcome ? 'Configured' : 'Default'}
+                        </span>
                       </div>
                     </div>
                   </div>
