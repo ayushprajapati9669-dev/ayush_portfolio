@@ -1243,13 +1243,15 @@
 .premium-modal {
   position: fixed;
   inset: 0;
-  z-index: 100000;
-  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000000 !important;
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   display: flex;
-  align-items: center;
+  align-items: flex-start !important;
   justify-content: center;
+  padding: 100px 16px 24px 16px !important;
+  overflow-y: auto !important;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;
@@ -1372,13 +1374,15 @@
 .activity-detail-modal {
   position: fixed;
   inset: 0;
-  z-index: 100000;
-  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000000 !important;
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   display: flex;
-  align-items: center;
+  align-items: flex-start !important;
   justify-content: center;
+  padding: 100px 16px 24px 16px !important;
+  overflow-y: auto !important;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;

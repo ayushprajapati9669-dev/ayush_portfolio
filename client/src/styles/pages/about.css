@@ -119,6 +119,12 @@
   perspective: 1500px;
 }
 
+.spotlight-section {
+  margin-bottom: 30px;
+  perspective: 1500px;
+  width: 100%;
+}
+
 .bottom-section {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -99,6 +99,14 @@
 - **Top Section**:
   - **About & Academic Profile Card**: Dynamically maps narrative biography paragraphs from CMS state.
   - **Profile Card with Animated Avatar Ring**: Circular glowing ring displaying Ayush's portrait with monogram fallback, college degree (`B.Tech CSE`), institute (`SISTec, Bhopal`), CGPA (`8.42`), and magnetic social icons (GitHub, LinkedIn, Instagram).
+- **Middle Section — Flagship Milestone Spotlight Carousel (`MilestoneSpotlightSlider.jsx`)**:
+  - Interactive Pattern 1 Flagship Slider showcasing high-impact visual milestones (Hackathon wins, SDE internships, community tech talks, product launches) with large uncompressed photos.
+  - **Tactile Controls**: `< Prev` and `Next >` navigation buttons with haptic tick audio (`playTick()`), keyboard arrow navigation (`ArrowLeft` / `ArrowRight`), and slide index counter (`01 / 03`).
+  - **Slide Stage**: 2-column responsive layout:
+    - Left Column: Prominent 16:9 / 4:3 photo with hover scale, floating victory badge (`🏆 1st Place Winner`, `💼 SDE Internship`, `🎤 Tech Talk`), and quick zoom trigger.
+    - Right Column: Milestone category badge, academic year, bold title, quantitative metric pill (e.g. `₹1,00,000 Cash Prize`, `Top 1% of 150+ Teams`), rich description body, acquired skills tags, and direct CTA buttons (`Explore Connected Projects →`, `View Full Photo (HD)`).
+  - **Bottom Thumbnail Switcher**: Fast-jump pill tabs with live pulse indicators allowing 1-click jumps between wins.
+  - **Full-Screen HD Lightbox Modal**: Portaled into `document.body` with `z-[1000000]` and body scroll lock, allowing recruiters to inspect certificates, stage trophies, and winner cheques in full high-definition.
 - **Bottom Section**:
   - **Education Qualifications Card**:
     - College: Cumulative CGPA (`8.42`), Degree (`B.Tech in Computer Science and Engineering`), Institute (`SISTec`).

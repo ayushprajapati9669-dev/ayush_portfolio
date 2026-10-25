@@ -142,6 +142,7 @@ export function AdminPage() {
     projects: publishedCount,
     certificates: certCount,
     skills: skillsCount,
+    milestones: (appState.profile?.learningJourney || []).length,
     journey: (appState.profile?.learningJourney || []).length,
     unreadMessages: unreadMsgCount,
     trash: trashCount
@@ -250,13 +251,14 @@ export function AdminPage() {
             />
           )}
 
-          {activeTab === 'journey' && (
+          {(activeTab === 'milestones' || activeTab === 'journey') && (
             <AdminMilestones
               appState={appState}
               updateAppState={updateAppState}
               session={session}
               showToast={showToast}
               openConfirmModal={openConfirmModal}
+              onSelectTab={handleSelectTab}
             />
           )}
 

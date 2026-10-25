@@ -5,6 +5,8 @@ import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { personSchema } from '../../utils/seo';
+import { MilestoneSpotlightSlider } from '../../components/ui/MilestoneSpotlightSlider';
+import { TechLogo } from '../../components/common/TechLogos';
 
 export function AboutPage() {
   const { appState } = usePortfolio();
@@ -137,6 +139,14 @@ export function AboutPage() {
         duration: 0.9,
         stagger: 0.18,
         ease: 'back.out(1.2)'
+      });
+
+      gsap.from('.spotlight-section .about-card', {
+        y: 50,
+        opacity: 0,
+        duration: 0.9,
+        ease: 'back.out(1.2)',
+        delay: 0.1
       });
 
       gsap.from('.bottom-section .about-card', {
@@ -321,6 +331,17 @@ export function AboutPage() {
         </div>
       </div>
 
+      {/* Featured Milestone Spotlight Carousel (Hackathons, SDE Internships, High-Impact Wins) */}
+      <div className="spotlight-section">
+        <MilestoneSpotlightSlider
+          milestones={milestones}
+          onCardMouseMove={handleCardMouseMove}
+          onCardMouseLeave={handleCardMouseLeave}
+          onMagneticMouseMove={handleMagneticMouseMove}
+          onMagneticMouseLeave={handleMagneticMouseLeave}
+        />
+      </div>
+
       {/* Bottom Section: Education + Timeline */}
       <div className="bottom-section">
         {/* Education Qualifications */}
@@ -482,17 +503,19 @@ export function AboutPage() {
                     {item.skills.map((sk, skIdx) => (
                       <span
                         key={skIdx}
+                        className="inline-flex items-center gap-1.5"
                         style={{
-                          fontSize: '10px',
+                          fontSize: '11px',
                           fontFamily: 'JetBrains Mono, monospace',
-                          padding: '2px 8px',
+                          padding: '3px 8px',
                           borderRadius: '6px',
                           background: 'rgba(255, 255, 255, 0.05)',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
-                          color: '#cbd5e1'
+                          color: '#e2e8f0'
                         }}
                       >
-                        {sk}
+                        <TechLogo name={sk} className="w-3.5 h-3.5 shrink-0" />
+                        <span>{sk}</span>
                       </span>
                     ))}
                   </div>

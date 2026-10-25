@@ -148,6 +148,18 @@ export function AdminProfile({
     showToast('Paragraph removed.', 'fa-trash');
   };
 
+  const handleMoveBio = (idx, dir) => {
+    playTick();
+    const targetIdx = idx + dir;
+    if (targetIdx < 0 || targetIdx >= aboutBioList.length) return;
+    const copy = [...aboutBioList];
+    const item = copy[idx];
+    copy[idx] = copy[targetIdx];
+    copy[targetIdx] = item;
+    setAboutBioList(copy);
+    markDirty();
+  };
+
   const handleSaveProfile = (e) => {
     e?.preventDefault();
     playTick();
@@ -207,11 +219,11 @@ export function AdminProfile({
       <div className="admin-proj-top-banner">
         <div>
           <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
-            <i className="fa-solid fa-user-gear" /> IDENTITY & RESUME SETTINGS
+            <i className="fa-solid fa-user-pen" /> IDENTITY, ABOUT & RESUME SETTINGS
           </span>
-          <h2 className="text-xl font-bold text-white mt-1">Profile & Resume Management</h2>
+          <h2 className="text-xl font-bold text-white mt-1">Profile & About Management</h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Update personal identity, official resume PDF, credentials, and live bio.
+            Update personal identity, verified college education, multi-paragraph live bio, and official resume PDF.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -796,17 +808,34 @@ export function AdminProfile({
                     }}
                     className="w-full rounded-xl border border-white/15 bg-black/40 p-3.5 pr-12 pb-7 text-xs text-slate-200 outline-none focus:border-cyan-400 transition-all leading-relaxed resize-none"
                   />
-                  <span className="absolute bottom-2.5 right-12 text-[10px] font-mono text-slate-500">
-                    {para.length} / 300
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveBio(idx)}
-                    className="absolute right-3 top-3 w-7 h-7 rounded-lg bg-black/60 text-slate-400 hover:text-red-400 hover:bg-red-500/10 flex items-center justify-center transition-all"
-                    title="Delete paragraph"
-                  >
-                    <i className="fa-solid fa-trash-can text-xs" />
-                  </button>
+                  <div className="absolute right-3 top-3 flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleMoveBio(idx, -1)}
+                      disabled={idx === 0}
+                      className="w-7 h-7 rounded-lg bg-black/60 text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center transition-all"
+                      title="Move paragraph up"
+                    >
+                      <i className="fa-solid fa-chevron-up text-xs" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleMoveBio(idx, 1)}
+                      disabled={idx === aboutBioList.length - 1}
+                      className="w-7 h-7 rounded-lg bg-black/60 text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center transition-all"
+                      title="Move paragraph down"
+                    >
+                      <i className="fa-solid fa-chevron-down text-xs" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveBio(idx)}
+                      className="w-7 h-7 rounded-lg bg-black/60 text-slate-400 hover:text-red-400 hover:bg-red-500/10 flex items-center justify-center transition-all"
+                      title="Delete paragraph"
+                    >
+                      <i className="fa-solid fa-trash-can text-xs" />
+                    </button>
+                  </div>
                 </div>
               ))}
 

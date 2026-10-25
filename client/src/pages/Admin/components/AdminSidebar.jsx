@@ -27,13 +27,13 @@ export function AdminSidebar({
         { id: 'projects', label: 'Projects', icon: 'fa-folder', badge: counts.projects },
         { id: 'certificates', label: 'Certificates', icon: 'fa-certificate', badge: counts.certificates },
         { id: 'skills', label: 'Skills', icon: 'fa-code', badge: counts.skills },
-        { id: 'journey', label: 'About & Milestones', icon: 'fa-timeline', badge: counts.journey }
+        { id: 'milestones', label: 'Milestones', icon: 'fa-flag', badge: counts.milestones ?? counts.journey }
       ]
     },
     {
       title: 'Site Settings',
       items: [
-        { id: 'profile', label: 'Profile & Resume', icon: 'fa-user-gear', badge: null },
+        { id: 'profile', label: 'Profile & About', icon: 'fa-user-pen', badge: null },
         { id: 'media', label: 'Hero Portrait', icon: 'fa-image', badge: null },
         { id: 'security', label: 'Security', icon: 'fa-lock', badge: null }
       ]
@@ -204,7 +204,7 @@ export function AdminSidebar({
             <React.Fragment key={sec.title || 'sec-' + secIdx}>
               {sec.title && <div className="nav-section-title">{sec.title}</div>}
               {visibleItems.map((item) => {
-                const isActive = activeTab === item.id;
+                const isActive = activeTab === item.id || (item.id === 'milestones' && activeTab === 'journey');
                 return (
                   <button
                     key={item.id}
@@ -213,7 +213,7 @@ export function AdminSidebar({
                     onClick={(e) => {
                       playTick();
                       if (item.isAction) {
-                        onSelectTab('journey');
+                        onSelectTab('milestones');
                         setTimeout(() => {
                           window.dispatchEvent(new CustomEvent('ams-open-modal', { detail: { modal: item.modalType } }));
                         }, 120);

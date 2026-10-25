@@ -844,13 +844,14 @@ body.theme-light .nav-link.active {
 .modal-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(8px) !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
   display: flex !important;
-  align-items: center !important;
+  align-items: flex-start !important;
   justify-content: center !important;
-  z-index: 100000 !important;
-  padding: 16px !important;
+  z-index: 1000000 !important;
+  padding: 100px 16px 24px 16px !important;
+  overflow-y: auto !important;
 }
 .modal-content {
   background: var(--bg-modal) !important;
@@ -858,11 +859,12 @@ body.theme-light .nav-link.active {
   border-radius: var(--radius-lg) !important;
   width: 100% !important;
   max-width: 720px !important;
-  max-height: 92vh !important;
+  max-height: calc(100vh - 130px) !important;
   overflow: hidden !important;
-  box-shadow: var(--shadow-xl) !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9) !important;
   display: flex !important;
   flex-direction: column !important;
+  margin: 0 auto !important;
 }
 .modal-header {
   padding: 16px 20px !important;
@@ -1600,13 +1602,14 @@ body.theme-light .nav-link.active {
 .shortcuts-overlay {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(8px) !important;
-  z-index: 100000 !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  z-index: 1000000 !important;
   display: flex !important;
-  align-items: center !important;
+  align-items: flex-start !important;
   justify-content: center !important;
-  padding: 16px !important;
+  padding: 100px 16px 24px 16px !important;
+  overflow-y: auto !important;
 }
 .shortcuts-box {
   background: var(--bg-modal) !important;
@@ -1615,9 +1618,9 @@ body.theme-light .nav-link.active {
   padding: 20px !important;
   max-width: 520px !important;
   width: 100% !important;
-  max-height: 80vh !important;
+  max-height: calc(100vh - 140px) !important;
   overflow-y: auto !important;
-  box-shadow: var(--shadow-xl) !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9) !important;
 }
 .shortcuts-box h2 {
   font-family: var(--font-display) !important;
@@ -1653,13 +1656,13 @@ body.theme-light .nav-link.active {
 #commandPalette {
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(0, 0, 0, 0.75) !important;
-  backdrop-filter: blur(8px) !important;
-  z-index: 100000 !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  z-index: 1000000 !important;
   display: flex !important;
   align-items: flex-start !important;
   justify-content: center !important;
-  padding-top: 12vh !important;
+  padding-top: 100px !important;
 }
 .cp-box {
   width: 100% !important;

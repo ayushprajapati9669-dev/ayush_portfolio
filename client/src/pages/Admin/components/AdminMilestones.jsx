@@ -84,7 +84,8 @@ export function AdminMilestones({
   updateAppState,
   session,
   showToast,
-  openConfirmModal
+  openConfirmModal,
+  onSelectTab
 }) {
   const profile = appState.profile || {};
   
@@ -127,8 +128,6 @@ export function AdminMilestones({
     setMilestones(rawJourney);
   }, [rawJourney]);
 
-  // Sub-tabs: 'journey' | 'academic' | 'bio'
-  const [subTab, setSubTab] = useState('journey');
 
   // Persistence for trash, logs, templates, settings
   const [trash, setTrash] = useState(() => safeParse('admin_trash_v9', []));
@@ -186,10 +185,13 @@ export function AdminMilestones({
   const [wizardStatus, setWizardStatus] = useState('focus');
   const [wizardProgress, setWizardProgress] = useState(70);
   const [wizardRating, setWizardRating] = useState(4);
+  const [wizardMetric, setWizardMetric] = useState('');
+  const [wizardPinned, setWizardPinned] = useState(false);
   const [wizardTags, setWizardTags] = useState('');
   const [wizardLink, setWizardLink] = useState('');
   const [wizardIcon, setWizardIcon] = useState('fa-layer-group');
   const [wizardImageData, setWizardImageData] = useState(null);
+  const [wizardImageUrl, setWizardImageUrl] = useState('');
   const [wizardImageAlt, setWizardImageAlt] = useState('');
   const [duplicateWarning, setDuplicateWarning] = useState(null);
   const [duplicateOverride, setDuplicateOverride] = useState(false);
@@ -223,30 +225,6 @@ export function AdminMilestones({
   const scrollContainerRef = useRef(null);
   const canvasRef = useRef(null);
 
-  // Academic Qualifications Form State
-  const [academicForm, setAcademicForm] = useState({
-    degree: profile.education?.degree || 'B.Tech in Computer Science and Engineering (CSE)',
-    college: profile.education?.college || 'SISTec (Sagar Institute of Science and Technology), Bhopal',
-    cgpa: profile.education?.cgpa || '8.42',
-    schoolBoard: profile.education?.schoolBoard || 'MP Board (Class XII)',
-    schoolXII: profile.education?.schoolXII || 'Kasturba Vidhya Mandir, Jamani, Madhya Pradesh',
-    schoolScore: profile.education?.schoolScore || '83.5%',
-    location: profile.education?.location || 'Bhopal, Madhya Pradesh, India',
-    stage: profile.education?.stage || 'Batch of 2024–2028 (Currently in 4th Semester)'
-  });
-
-  // Bio & Story State
-  const [bioParagraphs, setBioParagraphs] = useState(() => {
-    if (Array.isArray(profile.aboutBio) && profile.aboutBio.length > 0) {
-      return [...profile.aboutBio];
-    }
-    return [
-      'I am Ayush Prajapati, a Computer Science & Engineering (CSE) undergraduate at SISTec, Bhopal maintaining an 8.42 CGPA with strong problem-solving fundamentals in C, Java, JavaScript, and Python.',
-      'My technical focus centers on architecting responsive, production-ready web applications using React.js, Node.js, Express.js, MongoDB, and Cloudinary, alongside deploying robust full-stack applications.',
-      'I enjoy building ambitious interactive experiences—such as a live Zerodha trading system clone and Gemini AI ChatGPT assistant—and continually pushing code quality, architecture scalability, and user empathy.'
-    ];
-  });
-  const [newBioParagraph, setNewBioParagraph] = useState('');
 
   // Save full state to backend and localStorage
   const persistMilestones = useCallback((updatedList, actionName, actionDetails) => {
@@ -587,7 +565,7 @@ export function AdminMilestones({
   const totalCount = milestones.length;
   const completedCount = milestones.filter((m) => m.status === 'completed').length;
   const focusCount = milestones.filter((m) => m.status === 'focus').length;
-  const cgpaDisplay = academicForm.cgpa.replace(/[^0-9.]/g, '') || '8.42';
+  const cgpaDisplay = String(profile.education?.cgpa || '8.42').replace(/[^0-9.]/g, '') || '8.42';
 
   // Card Multi-select
   const handleToggleSelect = (id, e) => {
@@ -941,10 +919,13 @@ export function AdminMilestones({
     setWizardStatus('focus');
     setWizardProgress(70);
     setWizardRating(4);
+    setWizardMetric('');
+    setWizardPinned(false);
     setWizardTags('');
     setWizardLink('');
     setWizardIcon('fa-layer-group');
     setWizardImageData(null);
+    setWizardImageUrl('');
     setWizardImageAlt('');
     setDuplicateWarning(null);
     setDuplicateOverride(false);
@@ -968,10 +949,13 @@ export function AdminMilestones({
     setWizardStatus(m.status || 'focus');
     setWizardProgress(m.progress || 0);
     setWizardRating(m.rating || 0);
+    setWizardMetric(m.metric || '');
+    setWizardPinned(Boolean(m.pinned));
     setWizardTags(m.tags ? m.tags.join(', ') : '');
     setWizardLink(m.link || '');
     setWizardIcon(m.icon || 'fa-layer-group');
     setWizardImageData(m.image || null);
+    setWizardImageUrl(typeof m.image === 'string' && (m.image.startsWith('http') || m.image.startsWith('/images/')) ? m.image : '');
     setWizardImageAlt(m.imageAlt || '');
     setDuplicateWarning(null);
     setDuplicateOverride(false);
@@ -1286,11 +1270,13 @@ export function AdminMilestones({
               status: wizardStatus,
               progress: Number(wizardProgress) || 0,
               rating: Number(wizardRating) || 0,
+              metric: wizardMetric.trim(),
+              pinned: wizardPinned,
               desc: sanitizedDesc,
               tags: parsedTags,
               link: wizardLink.trim(),
               icon: wizardIcon,
-              image: wizardImageData,
+              image: wizardImageData || wizardImageUrl.trim() || null,
               imageAlt: wizardImageAlt.trim(),
               updatedAt: new Date().toISOString()
             };
@@ -1309,14 +1295,15 @@ export function AdminMilestones({
           status: wizardStatus,
           progress: Number(wizardProgress) || 0,
           rating: Number(wizardRating) || 0,
+          metric: wizardMetric.trim(),
           desc: sanitizedDesc,
           tags: parsedTags,
           link: wizardLink.trim(),
           icon: wizardIcon,
-          image: wizardImageData,
+          image: wizardImageData || wizardImageUrl.trim() || null,
           imageAlt: wizardImageAlt.trim(),
           published: true,
-          pinned: false,
+          pinned: wizardPinned,
           views: 0,
           createdAt: new Date().toISOString()
         };
@@ -1506,60 +1493,6 @@ export function AdminMilestones({
     showToast('Milestone activity log cleared successfully!', 'fa-broom');
   };
 
-  // Save Academic Education
-  const handleSaveAcademic = (e) => {
-    e.preventDefault();
-    playTick();
-    updateAppState((prev) => ({
-      ...prev,
-      profile: {
-        ...prev.profile,
-        education: {
-          ...prev.profile.education,
-          ...academicForm
-        }
-      }
-    }), session?.token);
-    logActivity('Academic Update', 'Updated education qualifications and CGPA');
-    showToast('Academic credentials saved successfully!', 'fa-graduation-cap');
-  };
-
-  // Save Bio & Story
-  const handleSaveBio = () => {
-    playTick();
-    updateAppState((prev) => ({
-      ...prev,
-      profile: {
-        ...prev.profile,
-        aboutBio: bioParagraphs
-      }
-    }), session?.token);
-    logActivity('Bio Update', `Updated biography (${bioParagraphs.length} paragraphs)`);
-    showToast('Biography saved to public About section!', 'fa-user-check');
-  };
-
-  const handleAddBioParagraph = () => {
-    if (!newBioParagraph.trim()) return;
-    playTick();
-    setBioParagraphs([...bioParagraphs, newBioParagraph.trim()]);
-    setNewBioParagraph('');
-  };
-
-  const handleRemoveBioParagraph = (idx) => {
-    playTick();
-    setBioParagraphs(bioParagraphs.filter((_, i) => i !== idx));
-  };
-
-  const handleMoveBioParagraph = (idx, dir) => {
-    playTick();
-    const targetIdx = idx + dir;
-    if (targetIdx < 0 || targetIdx >= bioParagraphs.length) return;
-    const copy = [...bioParagraphs];
-    const item = copy[idx];
-    copy[idx] = copy[targetIdx];
-    copy[targetIdx] = item;
-    setBioParagraphs(copy);
-  };
 
   return (
     <div className={`admin-milestones-root ${theme} ${accent} ${density === 'compact' ? 'compact' : ''} ${isFocusMode ? 'focus-mode' : ''}`}>
@@ -1600,18 +1533,29 @@ export function AdminMilestones({
         </div>
       )}
 
-      {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
+      {/* 0. TOP ACTION BANNER — dedicated Milestones Studio matching Projects and Certificates */}
       <div className="admin-proj-top-banner">
         <div>
           <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
-            <i className="fa-solid fa-sitemap" /> ABOUT & MILESTONES STUDIO
+            <i className="fa-solid fa-flag" /> MILESTONES STUDIO
           </span>
-          <h2 className="text-xl font-bold text-white mt-1">Journey & Story</h2>
+          <h2 className="text-xl font-bold text-white mt-1">Milestones & Career Roadmap</h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Manage your academic credentials, chronological milestones roadmap, and live public biography.
+            Manage your chronological roadmap, workshop showcases, hackathons, and flagship spotlights.
           </p>
         </div>
         <div className="flex items-center gap-3">
+          {onSelectTab && (
+            <button
+              type="button"
+              onClick={() => { playTick(); onSelectTab('profile'); }}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 text-xs text-slate-300 hover:text-cyan-400 hover:border-cyan-500/30 transition-all font-mono"
+              title="Edit Profile, Bio narrative, and college credentials"
+            >
+              <i className="fa-solid fa-user-pen text-cyan-400" />
+              <span>Edit Bio & Credentials →</span>
+            </button>
+          )}
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold" style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981' }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
             Live in Portfolio
@@ -1624,33 +1568,6 @@ export function AdminMilestones({
           >
             <i className="fa-solid fa-plus" />
             <span>New Milestone</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Sub-Tabs: Journey | Academic | Bio */}
-      <div className="sub-tabs-sticky-header">
-        <div className="sub-tabs" role="tablist">
-          <button
-            type="button"
-            className={`sub-tab ${subTab === 'journey' ? 'active' : ''}`}
-            onClick={() => { playTick(); setSubTab('journey'); }}
-          >
-            <i className="fa-solid fa-route" /> Journey Roadmap
-          </button>
-          <button
-            type="button"
-            className={`sub-tab ${subTab === 'academic' ? 'active' : ''}`}
-            onClick={() => { playTick(); setSubTab('academic'); }}
-          >
-            <i className="fa-solid fa-graduation-cap" /> Academic Credentials
-          </button>
-          <button
-            type="button"
-            className={`sub-tab ${subTab === 'bio' ? 'active' : ''}`}
-            onClick={() => { playTick(); setSubTab('bio'); }}
-          >
-            <i className="fa-solid fa-user-pen" /> Bio & Story
           </button>
         </div>
       </div>
@@ -1699,9 +1616,8 @@ export function AdminMilestones({
         </div>
       </div>
 
-      {/* TAB 1: JOURNEY ROADMAP */}
-      {subTab === 'journey' && (
-        <div className="flex gap-4 items-start w-full relative">
+      {/* MILESTONES ROADMAP & TOOLBAR */}
+      <div className="flex gap-4 items-start w-full relative">
           {/* Main Left Content */}
           <div className="flex-1 min-w-0">
             {/* Sticky Controls Toolbar */}
@@ -2254,230 +2170,6 @@ export function AdminMilestones({
             </div>
           </div>
         </div>
-      )}
-
-      {/* TAB 2: ACADEMIC CREDENTIALS */}
-      {subTab === 'academic' && (
-        <div className="max-w-4xl bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl">
-          <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-800">
-            <div>
-              <h2 className="font-display font-bold text-xl text-white flex items-center gap-2">
-                <i className="fa-solid fa-graduation-cap text-cyan-400" />
-                Academic Qualifications
-              </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Configure your verified academic degree, CGPA, high school marks, and institution details.
-              </p>
-            </div>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleSaveAcademic}
-            >
-              <i className="fa-solid fa-floppy-disk" /> Save Academic Credentials
-            </button>
-          </div>
-
-          <form onSubmit={handleSaveAcademic} className="flex flex-col gap-5">
-            <div className="form-row">
-              <div className="form-group">
-                <label>Undergraduate Degree</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={academicForm.degree}
-                  onChange={(e) => setAcademicForm({ ...academicForm, degree: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <label>College / University</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={academicForm.college}
-                  onChange={(e) => setAcademicForm({ ...academicForm, college: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Undergraduate CGPA</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={academicForm.cgpa}
-                  onChange={(e) => setAcademicForm({ ...academicForm, cgpa: e.target.value })}
-                  placeholder="e.g. 8.42"
-                />
-              </div>
-              <div className="form-group">
-                <label>Academic Stage / Batch</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={academicForm.stage}
-                  onChange={(e) => setAcademicForm({ ...academicForm, stage: e.target.value })}
-                  placeholder="e.g. Batch of 2024–2028"
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>High School / Class XII School</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={academicForm.schoolXII}
-                  onChange={(e) => setAcademicForm({ ...academicForm, schoolXII: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <label>Class XII Score & Year</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={academicForm.schoolScore}
-                  onChange={(e) => setAcademicForm({ ...academicForm, schoolScore: e.target.value })}
-                  placeholder="e.g. 83.5% | 2022"
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>School Board</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={academicForm.schoolBoard}
-                  onChange={(e) => setAcademicForm({ ...academicForm, schoolBoard: e.target.value })}
-                  placeholder="e.g. MP Board (Class XII)"
-                />
-              </div>
-              <div className="form-group">
-                <label>Location</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={academicForm.location}
-                  onChange={(e) => setAcademicForm({ ...academicForm, location: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-end pt-4">
-              <button type="submit" className="btn btn-primary">
-                <i className="fa-solid fa-floppy-disk" /> Save Academic Credentials
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* TAB 3: BIO & STORY */}
-      {subTab === 'bio' && (
-        <div className="max-w-4xl bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl">
-          <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-800">
-            <div>
-              <h2 className="font-display font-bold text-xl text-white flex items-center gap-2">
-                <i className="fa-solid fa-user-pen text-violet-400" />
-                Live Public Biography & Narrative
-              </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Craft the multi-paragraph personal story shown in the public About page.
-              </p>
-            </div>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleSaveBio}
-            >
-              <i className="fa-solid fa-floppy-disk" /> Save Public Biography
-            </button>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            {bioParagraphs.map((para, idx) => (
-              <div
-                key={idx}
-                className="bg-slate-950/70 border border-slate-800 rounded-xl p-4 flex gap-3 items-start"
-              >
-                <div className="flex flex-col gap-1 items-center pt-1 text-slate-500">
-                  <span className="text-[10px] font-mono font-bold">#{idx + 1}</span>
-                  <button
-                    type="button"
-                    className="p-1 hover:text-white"
-                    onClick={() => handleMoveBioParagraph(idx, -1)}
-                    disabled={idx === 0}
-                    title="Move paragraph up"
-                  >
-                    <i className="fa-solid fa-chevron-up text-xs" />
-                  </button>
-                  <button
-                    type="button"
-                    className="p-1 hover:text-white"
-                    onClick={() => handleMoveBioParagraph(idx, 1)}
-                    disabled={idx === bioParagraphs.length - 1}
-                    title="Move paragraph down"
-                  >
-                    <i className="fa-solid fa-chevron-down text-xs" />
-                  </button>
-                </div>
-                <textarea
-                  className="form-control flex-1 text-sm leading-relaxed"
-                  rows={3}
-                  value={para}
-                  onChange={(e) => {
-                    const copy = [...bioParagraphs];
-                    copy[idx] = e.target.value;
-                    setBioParagraphs(copy);
-                  }}
-                />
-                <button
-                  type="button"
-                  className="text-slate-500 hover:text-rose-400 p-2"
-                  onClick={() => handleRemoveBioParagraph(idx)}
-                  title="Delete paragraph"
-                >
-                  <i className="fa-solid fa-trash-can text-sm" />
-                </button>
-              </div>
-            ))}
-
-            {/* Add New Paragraph */}
-            <div className="bg-slate-950/40 border border-dashed border-slate-800 rounded-xl p-4">
-              <label className="text-xs font-semibold text-slate-300 block mb-2">
-                + Add New Paragraph
-              </label>
-              <textarea
-                className="form-control text-sm"
-                rows={3}
-                placeholder="Write an additional paragraph for your portfolio story..."
-                value={newBioParagraph}
-                onChange={(e) => setNewBioParagraph(e.target.value)}
-              />
-              <div className="flex justify-end mt-2.5">
-                <button
-                  type="button"
-                  className="btn btn-secondary text-xs"
-                  onClick={handleAddBioParagraph}
-                  disabled={!newBioParagraph.trim()}
-                >
-                  <i className="fa-solid fa-plus" /> Append Paragraph
-                </button>
-              </div>
-            </div>
-
-            <div className="flex justify-end pt-3">
-              <button type="button" className="btn btn-primary" onClick={handleSaveBio}>
-                <i className="fa-solid fa-floppy-disk" /> Save Public Biography
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 4-STEP WIZARD MODAL */}
       {isWizardOpen && (
@@ -2688,6 +2380,42 @@ export function AdminMilestones({
                           {wizardRating}/5 ★
                         </span>
                       </div>
+                    </div>
+
+                    {/* Spotlight Metric Highlight */}
+                    <div className="form-group">
+                      <label className="flex items-center justify-between">
+                        <span>Spotlight Key Metric</span>
+                        <span className="text-[11px] text-slate-400">Shown in Flagship Badi Photo Carousel</span>
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="e.g. 120+ Attendees · Hands-on Coding Lab or 1st Place / 150+ Teams"
+                        value={wizardMetric}
+                        onChange={(e) => setWizardMetric(e.target.value)}
+                      />
+                    </div>
+
+                    {/* Feature in Spotlight Toggle */}
+                    <div className="form-group">
+                      <label className="flex items-center gap-3 p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/25 cursor-pointer hover:bg-cyan-500/15 transition-all">
+                        <input
+                          type="checkbox"
+                          checked={wizardPinned}
+                          onChange={(e) => setWizardPinned(e.target.checked)}
+                          className="w-4 h-4 rounded text-cyan-500 accent-cyan-500"
+                        />
+                        <div>
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <i className="fa-solid fa-star text-amber-400" />
+                            Feature in Flagship Spotlight Carousel (Badi Photo Showcase)
+                          </div>
+                          <div className="text-[11px] text-slate-400">
+                            Displays prominently in the flagship carousel on the About page with high-res photo, metrics, and lightbox zoom.
+                          </div>
+                        </div>
+                      </label>
                     </div>
                   </div>
                 )}
@@ -2967,6 +2695,38 @@ export function AdminMilestones({
                         >
                           <i className="fa-solid fa-shapes" /> Abstract
                         </button>
+                      </div>
+
+                      {/* Direct Image URL input */}
+                      <div className="mt-3">
+                        <label className="text-xs text-slate-300 font-semibold mb-1 block">
+                          Or Direct Image URL (High Performance):
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            className="form-control text-xs flex-1"
+                            placeholder="https://... or /images/ayush-workshop-lead.jpg"
+                            value={wizardImageUrl}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setWizardImageUrl(val);
+                              if (val.trim()) setWizardImageData(val.trim());
+                            }}
+                          />
+                          {wizardImageUrl && (
+                            <button
+                              type="button"
+                              className="btn btn-secondary text-xs px-2.5 py-1.5 shrink-0"
+                              onClick={() => {
+                                setWizardImageData(wizardImageUrl.trim());
+                                showToast('Image URL applied', 'fa-check');
+                              }}
+                            >
+                              Preview
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
 

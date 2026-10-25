@@ -52,7 +52,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
     { id: 'projects', label: '5. Projects (3-Step Wizard)', icon: 'fa-folder' },
     { id: 'certificates', label: '6. Certificates & Credentials', icon: 'fa-certificate' },
     { id: 'skills', label: '7. Technical Skills & Categories', icon: 'fa-code' },
-    { id: 'journey', label: '8. About & Milestones', icon: 'fa-timeline' },
+    { id: 'journey', label: '8. Milestones Roadmap Studio', icon: 'fa-flag' },
     { id: 'messages', label: '9. Recruiter Messages Inbox', icon: 'fa-envelope' },
     { id: 'security', label: '10. Security & Credentials', icon: 'fa-lock' }
   ];
@@ -543,16 +543,16 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
             </div>
           </section>
 
-          {/* SECTION 8: ABOUT & MILESTONES */}
+          {/* SECTION 8: MILESTONES ROADMAP */}
           <section id="journey" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
               <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
-                <i className="fa-solid fa-timeline" />
+                <i className="fa-solid fa-flag" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">8. About & Milestones Career Timeline</h3>
+                <h3 className="text-lg font-bold text-white">8. Milestones Roadmap Studio</h3>
                 <p className="text-xs text-slate-400">
-                  Document learning phases, academic milestones, and hackathon achievements.
+                  Document learning phases, workshop showcases, hackathons, and flagship spotlights.
                 </p>
               </div>
             </div>

@@ -230,6 +230,63 @@ async function connectMongoDB(mongoUri, store) {
           return copy;
         });
 
+        let needSync = false;
+        // Purge base64 strings from MongoDB projects
+        if (Array.isArray(store.state.projects)) {
+          store.state.projects.forEach(p => {
+            if (p.thumbnailUrl && p.thumbnailUrl.startsWith('data:image')) {
+              p.thumbnailUrl = '/images/airbnb-clone-preview.jpg';
+              needSync = true;
+            }
+          });
+        }
+        // Purge base64 strings from MongoDB certificates
+        if (Array.isArray(store.state.certificates)) {
+          store.state.certificates.forEach(c => {
+            if (c.imageUrl && c.imageUrl.startsWith('data:image')) {
+              c.imageUrl = '/images/apna-college-delta-certificate.jpg';
+              needSync = true;
+            }
+          });
+        }
+        // Ensure Workshop milestone is present in profile.learningJourney
+        if (store.state.profile && Array.isArray(store.state.profile.learningJourney)) {
+          const hasWorkshop = store.state.profile.learningJourney.some(m => m.id === 'm-workshop-mern-lead' || (m.title && m.title.includes('Workshop')));
+          if (!hasWorkshop) {
+            store.state.profile.learningJourney.unshift({
+              id: 'm-workshop-mern-lead',
+              title: '🎤 Lead Speaker & Instructor: MERN Stack & Cloud Architecture Workshop',
+              desc: '<h3>Hands-on Architecture Workshop</h3><p>Organized and conducted a flagship 2-day technical bootcamp on <strong>MERN Stack Engineering and Cloud Deployment</strong> at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.</p><h3>Live Demo & Lab Outcomes</h3><ul><li>Live-coded a full-stack real-time collaboration app with Socket.io on stage.</li><li>Guided students through Git branching workflows and live cloud deployment on Render and Vercel.</li><li>Rated 4.9/5 across attendee feedback surveys.</li></ul>',
+              year: 'Year 3',
+              status: 'completed',
+              metaLabel: 'Workshop · Technical Leadership',
+              progress: 100,
+              rating: 5,
+              metric: '120+ Attendees · 2-Day Live Coding Lab & Project Deployment',
+              tags: [
+                'React JS',
+                'Node.js',
+                'MongoDB',
+                'Socket.io',
+                'Express.js',
+                'Tailwind CSS'
+              ],
+              icon: 'fa-chalkboard-user',
+              image: '/images/ayush-workshop-lead.jpg',
+              imageAlt: 'Ayush Prajapati delivering MERN Stack Workshop on stage in front of students',
+              link: 'https://github.com/ayushprajapati9669-dev',
+              published: true,
+              pinned: true,
+              views: 320,
+              createdAt: '2026-10-24T19:30:00.000Z'
+            });
+            needSync = true;
+          }
+        }
+        if (needSync) {
+          await syncStoreToMongoCollections(store.state);
+        }
+
         // Save loaded state locally
         store._persist();
 

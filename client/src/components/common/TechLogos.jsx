@@ -303,6 +303,17 @@ export function TechLogo({ name, className = 'h-6 w-6' }) {
     );
   }
 
+  // Socket.io
+  if (k.includes('socket')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="11" fill="#0A0F1D" stroke="#00D4FF" strokeWidth="1.2" />
+        <path d="M14 5L7 13.5H11.5L9.5 19L17 10.5H12.5L14 5Z" fill="#00D4FF" />
+      </svg>
+    );
+  }
+
+
   // MySQL / SQL
   if (k.includes('mysql') || k.includes('sql')) {
     return (
