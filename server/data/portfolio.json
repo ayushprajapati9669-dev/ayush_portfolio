@@ -340,7 +340,53 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "Full-Stack MERN Developer & Systems Builder.",
-    "updatedAt": "2026-10-25T18:50:36.637Z"
+    "updatedAt": "2026-10-25T18:50:36.637Z",
+    "headerSubtitle": "Full-Stack Developer · CSE | SISTec, Bhopal",
+    "email": "ayushprajapati9669@gmail.com",
+    "phone": "(+91) 9669802554",
+    "footerTagline": "Ayush Prajapati · ayushprajapati9669@gmail.com · (+91) 9669802554 · SISTec, Bhopal",
+    "resumeUrl": "",
+    "resumePreviewUrl": "/images/ayush-resume-preview.jpg",
+    "resumeSummary": "Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42, 2028) with strong foundations in C, Java, JavaScript, and Python, and hands-on expertise in building full-stack web applications using HTML, CSS, Bootstrap, React.js, Node.js, Express.js, MySQL, MongoDB, and Cloudinary.",
+    "achievements": [
+      "Won a website-making competition at college.",
+      "Completed Apna College Delta Full Stack Web Development Certification."
+    ],
+    "academicProjects": [
+      {
+        "title": "Stock Trading Platform",
+        "stack": "React.js | Node.js | Express.js | MongoDB",
+        "points": [
+          "Developed a full-stack stock trading platform with modules for holdings, orders, positions, and funds.",
+          "Implemented Buy/Sell functionality with Market and Limit order handling and input validation.",
+          "Built REST APIs using Node.js and Express.js and integrated MongoDB for data management."
+        ]
+      },
+      {
+        "title": "ChatGPT Clone",
+        "stack": "React.js | Node.js | Express.js | MongoDB | Gemini API",
+        "points": [
+          "Developed a ChatGPT-like full-stack application using React.js, Node.js, and Express.js.",
+          "Implemented chat threads and message management with persistent data storage using MongoDB.",
+          "Integrated the Gemini API to generate AI-powered responses through a REST API."
+        ]
+      }
+    ],
+    "workbenchSnippets": [
+      {
+        "id": "profile",
+        "filename": "ayushResume.js",
+        "code": "const ayush = {\n  name: \"Ayush Prajapati\",\n  email: \"ayushprajapati9669@gmail.com\",\n  phone: \"(+91) 9669802554\",\n  education: \"CSE | SISTec, Bhopal (CGPA: 8.42)\",\n  skills: [\"C\", \"Java\", \"JS\", \"Python\", \"MERN\", \"MySQL\"]\n};",
+        "output": "✓ Verified Resume Profile: CGPA 8.42 | SISTec, Bhopal (2026)"
+      },
+      {
+        "id": "db",
+        "filename": "mongoCloudinary.js",
+        "code": "const project = await Project.create({\n  title: \"Airbnb Clone\",\n  liveDemoUrl: \"https://airbnbclone2-8519.onrender.com\",\n  image: cloudinaryUpload.secure_url,\n  db: \"MongoDB Atlas\"\n});",
+        "output": "✓ MongoDB Document Saved + Cloudinary Image Linked."
+      }
+    ],
+    "location": "Bhopal, Madhya Pradesh, India"
   },
   "projects": [
     {
@@ -425,34 +471,6 @@
       "updatedAt": "2026-10-26T04:41:30.303Z"
     },
     {
-      "id": "proj-1792669669594",
-      "approachArchitecture": "",
-      "category": "AI & Machine Learning",
-      "createdAt": "2026-10-23T09:25:21.843Z",
-      "disclaimer": "",
-      "displayOrder": 5,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://agentic-workspace.onrender.com",
-      "problemContext": "",
-      "shortDescription": "An advanced AI agentic workspace built with cutting-edge tools.",
-      "slug": "ai-agentic-workspace",
-      "status": "published",
-      "technologies": [
-        "React JS",
-        "Node.js",
-        "Express.js",
-        "MongoDB"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
-      "title": "AI Agentic Workspace",
-      "updatedAt": "2026-10-26T04:41:30.455Z"
-    },
-    {
       "id": "proj-1792781601076",
       "approachArchitecture": "",
       "category": "Full-Stack Web App",
@@ -479,6 +497,34 @@
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
       "updatedAt": "2026-10-26T04:41:30.374Z"
+    },
+    {
+      "id": "proj-1792669669594",
+      "approachArchitecture": "",
+      "category": "AI & Machine Learning",
+      "createdAt": "2026-10-23T09:25:21.843Z",
+      "disclaimer": "",
+      "displayOrder": 5,
+      "featured": true,
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "implementedFeatures": [],
+      "lessonsLearned": "",
+      "liveDemoUrl": "https://agentic-workspace.onrender.com",
+      "problemContext": "",
+      "shortDescription": "An advanced AI agentic workspace built with cutting-edge tools.",
+      "slug": "ai-agentic-workspace",
+      "status": "published",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
+      "title": "AI Agentic Workspace",
+      "updatedAt": "2026-10-26T04:41:30.455Z"
     }
   ],
   "skills": [
@@ -770,48 +816,7 @@
     }
   ],
   "media": [],
-  "messages": [
-    {
-      "id": "msg-1792813214696",
-      "createdAt": "2026-10-25T15:04:57.812Z",
-      "email": "ajit@gmail.com",
-      "message": "i need some help from you please support me",
-      "name": "ajit kumar",
-      "status": "read",
-      "subject": "help",
-      "updatedAt": "2026-10-26T04:41:31.594Z"
-    },
-    {
-      "id": "msg-1792776034240",
-      "createdAt": "2026-10-25T15:04:57.880Z",
-      "email": "ajay@gmail.com",
-      "message": "you can aaply for the tcs",
-      "name": "ajay prajapati",
-      "status": "read",
-      "subject": "personal",
-      "updatedAt": "2026-10-26T04:41:31.663Z"
-    },
-    {
-      "id": "msg-1792775992794",
-      "createdAt": "2026-10-25T15:04:57.942Z",
-      "email": "sonali@gmail.com",
-      "message": "i am connect to you",
-      "name": "sonali prajapati",
-      "status": "read",
-      "subject": "connect",
-      "updatedAt": "2026-10-26T04:41:31.742Z"
-    },
-    {
-      "id": "msg-1792775905527",
-      "createdAt": "2026-10-25T15:04:58.006Z",
-      "email": "rohti626861@gmail.com",
-      "message": "i hired you",
-      "name": "rohit prajapati",
-      "status": "read",
-      "subject": "hiring",
-      "updatedAt": "2026-10-26T04:41:31.822Z"
-    }
-  ],
+  "messages": [],
   "settings": {
     "siteTitle": "Ayush Prajapati — Developer Portfolio",
     "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",

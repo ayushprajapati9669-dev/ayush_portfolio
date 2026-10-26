@@ -1,0 +1,216 @@
+{
+  "totalPageViews": 1261,
+  "uniqueVisitors": 486,
+  "resumeDownloads": 89,
+  "cliLaunches": 142,
+  "apiSandboxExecutions": 67,
+  "chatQueries": 57,
+  "referrers": {
+    "LinkedIn": 342,
+    "GitHub": 285,
+    "Direct / URL": 198,
+    "Google / Search": 140,
+    "Twitter / X": 84,
+    "LeetCode": 76,
+    "Direct / External": 9
+  },
+  "topProjects": {
+    "wanderlust-airbnb-clone": {
+      "views": 324,
+      "title": "Wanderlust - Distributed Airbnb Architecture"
+    },
+    "agentic-workspace": {
+      "views": 289,
+      "title": "Autonomous Multi-Agent Workspace"
+    },
+    "ai-mock-interview-platform": {
+      "views": 245,
+      "title": "AI Mock Interview Platform"
+    },
+    "developer-portfolio-v9": {
+      "views": 198,
+      "title": "Dynamic Obsidian Portfolio v9"
+    },
+    "airbnb-clone-1": {
+      "views": 1,
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer"
+    }
+  },
+  "devices": {
+    "desktop": 780,
+    "mobile": 412,
+    "tablet": 56
+  },
+  "browsers": {
+    "Chrome": 620,
+    "Firefox": 240,
+    "Safari": 210,
+    "Edge": 130,
+    "Other": 48
+  },
+  "dailyViews": {
+    "2026-10-26": 61
+  },
+  "recentEvents": [
+    {
+      "id": "ev-1792994358744-16zl",
+      "type": "pageview",
+      "path": "/admin",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5174/admin",
+      "timestamp": "2026-10-26T05:59:18.744Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792994234714-uoyy",
+      "type": "project_view",
+      "path": "/projects/airbnb-clone-1",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5174/projects/airbnb-clone-1",
+      "timestamp": "2026-10-26T05:57:14.717Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792994209083-636z",
+      "type": "pageview",
+      "path": "/admin",
+      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/admin",
+      "timestamp": "2026-10-26T05:56:49.083Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792994144677-2i5t",
+      "type": "chat_query",
+      "path": "/ai-chat",
+      "title": "Query: leetcode page",
+      "referrer": "Direct",
+      "timestamp": "2026-10-26T05:55:44.677Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792994136437-no16",
+      "type": "chat_query",
+      "path": "/ai-chat",
+      "title": "Query: Show LeetCode badge details",
+      "referrer": "Direct",
+      "timestamp": "2026-10-26T05:55:36.437Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792994127838-12kg",
+      "type": "chat_query",
+      "path": "/ai-chat",
+      "title": "Query: give leetcode link",
+      "referrer": "Direct",
+      "timestamp": "2026-10-26T05:55:27.838Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792994090656-ksd9",
+      "type": "chat_query",
+      "path": "/ai-chat",
+      "title": "Query: Show me his hackathon winning project",
+      "referrer": "Direct",
+      "timestamp": "2026-10-26T05:54:50.656Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792993936448-nfkb",
+      "type": "pageview",
+      "path": "/projects",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5174/projects",
+      "timestamp": "2026-10-26T05:52:16.448Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792993869033-qj69",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/",
+      "timestamp": "2026-10-26T05:51:09.034Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792993716772-suav",
+      "type": "pageview",
+      "path": "/about",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5174/about",
+      "timestamp": "2026-10-26T05:48:36.772Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792993254875-xirr",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5174/",
+      "timestamp": "2026-10-26T05:40:54.875Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792993175182-uul6",
+      "type": "pageview",
+      "path": "/resume",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5174/resume",
+      "timestamp": "2026-10-26T05:39:35.182Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1792991545085-k9he",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5174/",
+      "timestamp": "2026-10-26T05:12:25.085Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1",
+      "type": "pageview",
+      "path": "/",
+      "title": "Home Page",
+      "referrer": "LinkedIn",
+      "timestamp": "2026-10-26T04:30:35.595Z",
+      "country": "United States",
+      "city": "San Francisco"
+    },
+    {
+      "id": "ev-2",
+      "type": "resume_download",
+      "path": "/resume",
+      "title": "Full-Stack MERN Resume Download",
+      "referrer": "Direct",
+      "timestamp": "2026-10-26T04:07:35.595Z",
+      "country": "India",
+      "city": "Bengaluru"
+    },
+    {
+      "id": "ev-3",
+      "type": "project_view",
+      "path": "/projects/wanderlust-airbnb-clone",
+      "title": "Wanderlust Airbnb Clone",
+      "referrer": "GitHub",
+      "timestamp": "2026-10-26T03:28:35.595Z",
+      "country": "Germany",
+      "city": "Berlin"
+    }
+  ]
+}
