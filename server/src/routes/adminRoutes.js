@@ -19,6 +19,14 @@ async function handleAdminRoutes(req, res, pathname, config, adminController) {
     adminController.getSummary(req, res);
     return true;
   }
+  if (req.method === 'GET' && pathname === '/api/admin/analytics') {
+    adminController.getAnalytics(req, res);
+    return true;
+  }
+  if (req.method === 'POST' && pathname === '/api/admin/generate-case-study') {
+    await adminController.generateAiCaseStudy(req, res);
+    return true;
+  }
   if (req.method === 'PUT' && pathname === '/api/admin/profile') {
     await adminController.updateProfile(req, res);
     return true;

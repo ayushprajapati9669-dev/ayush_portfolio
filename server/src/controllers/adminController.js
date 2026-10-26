@@ -6,11 +6,23 @@ const {
   validateMediaUpload
 } = require('../validators/portfolioValidators');
 const { persistMediaUpload } = require('../services/mediaService');
+const analyticsService = require('../services/analyticsService');
+const { generateCaseStudyDraft } = require('../services/aiAssistantService');
 
 function createAdminController({ store, config }) {
   return {
     getSummary(req, res) {
       return sendJson(res, 200, { summary: store.getAdminSummary() });
+    },
+
+    getAnalytics(req, res) {
+      return sendJson(res, 200, { analytics: analyticsService.getDashboardData() });
+    },
+
+    async generateAiCaseStudy(req, res) {
+      const body = await readJsonBody(req);
+      const draft = generateCaseStudyDraft(body || {});
+      return sendJson(res, 200, { success: true, draft });
     },
 
     async updateProfile(req, res) {

@@ -340,58 +340,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "Full-Stack MERN Developer & Systems Builder.",
-    "updatedAt": "2026-10-25T14:05:29.011Z",
-    "headerSubtitle": "Full-Stack Developer · CSE | SISTec, Bhopal",
-    "email": "ayushprajapati9669@gmail.com",
-    "phone": "(+91) 9669802554",
-    "footerTagline": "Ayush Prajapati · ayushprajapati9669@gmail.com · (+91) 9669802554 · SISTec, Bhopal",
-    "resumeUrl": "",
-    "resumePreviewUrl": "/images/ayush-resume-preview.jpg",
-    "resumeSummary": "Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42, 2028) with strong foundations in C, Java, JavaScript, and Python, and hands-on expertise in building full-stack web applications using HTML, CSS, Bootstrap, React.js, Node.js, Express.js, MySQL, MongoDB, and Cloudinary.",
-    "achievements": [
-      "Won a website-making competition at college.",
-      "Completed Apna College Delta Full Stack Web Development Certification."
-    ],
-    "academicProjects": [
-      {
-        "title": "Stock Trading Platform",
-        "stack": "React.js | Node.js | Express.js | MongoDB",
-        "points": [
-          "Developed a full-stack stock trading platform with modules for holdings, orders, positions, and funds.",
-          "Implemented Buy/Sell functionality with Market and Limit order handling and input validation.",
-          "Built REST APIs using Node.js and Express.js and integrated MongoDB for data management."
-        ]
-      },
-      {
-        "title": "ChatGPT Clone",
-        "stack": "React.js | Node.js | Express.js | MongoDB | Gemini API",
-        "points": [
-          "Developed a ChatGPT-like full-stack application using React.js, Node.js, and Express.js.",
-          "Implemented chat threads and message management with persistent data storage using MongoDB.",
-          "Integrated the Gemini API to generate AI-powered responses through a REST API."
-        ]
-      }
-    ],
-    "workbenchSnippets": [
-      {
-        "id": "profile",
-        "filename": "ayushResume.js",
-        "code": "const ayush = {\n  name: \"Ayush Prajapati\",\n  email: \"ayushprajapati9669@gmail.com\",\n  phone: \"(+91) 9669802554\",\n  education: \"CSE | SISTec, Bhopal (CGPA: 8.42)\",\n  skills: [\"C\", \"Java\", \"JS\", \"Python\", \"MERN\", \"MySQL\"]\n};",
-        "output": "✓ Verified Resume Profile: CGPA 8.42 | SISTec, Bhopal (2026)"
-      },
-      {
-        "id": "db",
-        "filename": "mongoCloudinary.js",
-        "code": "const project = await Project.create({\n  title: \"Airbnb Clone\",\n  liveDemoUrl: \"https://airbnbclone2-8519.onrender.com\",\n  image: cloudinaryUpload.secure_url,\n  db: \"MongoDB Atlas\"\n});",
-        "output": "✓ MongoDB Document Saved + Cloudinary Image Linked."
-      }
-    ],
-    "location": "Bhopal, Madhya Pradesh, India",
-    "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80",
-    "customDomain": "ayush.dev",
-    "portfolioSlug": "hero-section",
-    "themeColor": "#0ea5e9",
-    "fontFamily": "'Outfit', sans-serif"
+    "updatedAt": "2026-10-25T18:50:36.637Z"
   },
   "projects": [
     {
@@ -420,7 +369,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-10-25T14:05:24.954Z"
+      "updatedAt": "2026-10-26T04:41:30.152Z"
     },
     {
       "id": "proj-1792430599188",
@@ -448,7 +397,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
-      "updatedAt": "2026-10-25T14:05:25.074Z"
+      "updatedAt": "2026-10-26T04:41:30.236Z"
     },
     {
       "id": "proj-1792496192331",
@@ -473,35 +422,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80",
       "title": "ai chat boat",
-      "updatedAt": "2026-10-25T14:05:27.433Z"
-    },
-    {
-      "id": "proj-1792781601076",
-      "approachArchitecture": "",
-      "category": "Full-Stack Web App",
-      "createdAt": "2026-10-23T18:53:22.773Z",
-      "disclaimer": "",
-      "displayOrder": 4,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
-      "problemContext": "",
-      "shortDescription": "hi this is a testing project",
-      "slug": "airbnb-clone",
-      "status": "published",
-      "technologies": [
-        "React JS",
-        "Node.js",
-        "Express.js",
-        "MongoDB"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
-      "title": "airbnb clone",
-      "updatedAt": "2026-10-25T14:05:27.578Z"
+      "updatedAt": "2026-10-26T04:41:30.303Z"
     },
     {
       "id": "proj-1792669669594",
@@ -529,7 +450,35 @@
       "thumbnailType": "image",
       "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-10-25T14:05:27.731Z"
+      "updatedAt": "2026-10-26T04:41:30.455Z"
+    },
+    {
+      "id": "proj-1792781601076",
+      "approachArchitecture": "",
+      "category": "Full-Stack Web App",
+      "createdAt": "2026-10-23T18:53:22.773Z",
+      "disclaimer": "",
+      "displayOrder": 4,
+      "featured": true,
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "implementedFeatures": [],
+      "lessonsLearned": "",
+      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
+      "problemContext": "",
+      "shortDescription": "hi this is a testing project",
+      "slug": "airbnb-clone",
+      "status": "published",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
+      "title": "airbnb clone",
+      "updatedAt": "2026-10-26T04:41:30.374Z"
     }
   ],
   "skills": [
@@ -589,7 +538,7 @@
           "createdAt": 1792600863119
         }
       ],
-      "updatedAt": "2026-10-25T14:05:28.470Z"
+      "updatedAt": "2026-10-26T04:41:31.098Z"
     },
     {
       "id": "skill-cat-frontend",
@@ -631,7 +580,7 @@
           "createdAt": 1792600868119
         }
       ],
-      "updatedAt": "2026-10-25T14:05:28.538Z"
+      "updatedAt": "2026-10-26T04:41:31.167Z"
     },
     {
       "id": "skill-cat-backend",
@@ -665,7 +614,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-10-25T14:05:28.592Z"
+      "updatedAt": "2026-10-26T04:41:31.234Z"
     },
     {
       "id": "skill-cat-databases",
@@ -691,7 +640,7 @@
           "createdAt": 1792600878119
         }
       ],
-      "updatedAt": "2026-10-25T14:05:28.653Z"
+      "updatedAt": "2026-10-26T04:41:31.309Z"
     },
     {
       "id": "skill-cat-tools",
@@ -725,7 +674,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-10-25T14:05:28.771Z"
+      "updatedAt": "2026-10-26T04:41:31.381Z"
     },
     {
       "id": "skill-cat-dsa",
@@ -743,7 +692,7 @@
           "createdAt": 1792600883119
         }
       ],
-      "updatedAt": "2026-10-25T14:05:28.829Z"
+      "updatedAt": "2026-10-26T04:41:31.443Z"
     }
   ],
   "certificates": [
@@ -757,7 +706,7 @@
       "issuer": "apna college",
       "skillsCovered": "HTML,CSS,JAVASCRIPT,NODEJS,EXPRESS",
       "title": "mern stack certificate ",
-      "updatedAt": "2026-10-25T14:05:27.981Z"
+      "updatedAt": "2026-10-26T04:41:30.631Z"
     },
     {
       "id": "cert-1792434116249",
@@ -769,7 +718,7 @@
       "issuer": "code with harry",
       "skillsCovered": "",
       "title": "ai-ml certificate",
-      "updatedAt": "2026-10-25T14:05:28.057Z"
+      "updatedAt": "2026-10-26T04:41:30.697Z"
     },
     {
       "id": "cert-1792578230937",
@@ -781,7 +730,7 @@
       "issuer": "Apna college",
       "skillsCovered": "html, css, javasript, nodejs, react, mongodb, express",
       "title": "Full Stack Development (Copy)",
-      "updatedAt": "2026-10-25T14:05:28.128Z"
+      "updatedAt": "2026-10-26T04:41:30.761Z"
     },
     {
       "id": "cert-1792588849135",
@@ -793,7 +742,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, GraphQL",
       "title": "mern stack",
-      "updatedAt": "2026-10-25T14:05:28.222Z"
+      "updatedAt": "2026-10-26T04:41:30.833Z"
     },
     {
       "id": "cert-1792595305806",
@@ -805,7 +754,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "cyber security",
-      "updatedAt": "2026-10-25T14:05:28.278Z"
+      "updatedAt": "2026-10-26T04:41:30.908Z"
     },
     {
       "id": "cert-1792663342696",
@@ -817,46 +766,50 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "mern stack",
-      "updatedAt": "2026-10-25T14:05:28.337Z"
+      "updatedAt": "2026-10-26T04:41:30.977Z"
     }
   ],
   "media": [],
   "messages": [
     {
       "id": "msg-1792813214696",
-      "name": "ajit kumar",
+      "createdAt": "2026-10-25T15:04:57.812Z",
       "email": "ajit@gmail.com",
-      "subject": "help",
       "message": "i need some help from you please support me",
+      "name": "ajit kumar",
       "status": "read",
-      "createdAt": "2026-10-24T03:40:14.696Z"
+      "subject": "help",
+      "updatedAt": "2026-10-26T04:41:31.594Z"
     },
     {
       "id": "msg-1792776034240",
-      "name": "ajay prajapati",
+      "createdAt": "2026-10-25T15:04:57.880Z",
       "email": "ajay@gmail.com",
-      "subject": "personal",
       "message": "you can aaply for the tcs",
+      "name": "ajay prajapati",
       "status": "read",
-      "createdAt": "2026-10-23T17:20:34.240Z"
+      "subject": "personal",
+      "updatedAt": "2026-10-26T04:41:31.663Z"
     },
     {
       "id": "msg-1792775992794",
-      "name": "sonali prajapati",
+      "createdAt": "2026-10-25T15:04:57.942Z",
       "email": "sonali@gmail.com",
-      "subject": "connect",
       "message": "i am connect to you",
+      "name": "sonali prajapati",
       "status": "read",
-      "createdAt": "2026-10-23T17:19:52.794Z"
+      "subject": "connect",
+      "updatedAt": "2026-10-26T04:41:31.742Z"
     },
     {
       "id": "msg-1792775905527",
-      "name": "rohit prajapati",
+      "createdAt": "2026-10-25T15:04:58.006Z",
       "email": "rohti626861@gmail.com",
-      "subject": "hiring",
       "message": "i hired you",
+      "name": "rohit prajapati",
       "status": "read",
-      "createdAt": "2026-10-23T17:18:25.527Z"
+      "subject": "hiring",
+      "updatedAt": "2026-10-26T04:41:31.822Z"
     }
   ],
   "settings": {

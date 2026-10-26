@@ -8,6 +8,10 @@ import { Toast } from '../components/ui/Toast';
 import { ConfirmModal } from '../components/ui/ConfirmModal';
 import { CertificateLightboxModal } from '../components/ui/CertificateLightboxModal';
 import { ResumeModal } from '../components/ui/ResumeModal';
+import { DeveloperCliDrawer } from '../components/ui/DeveloperCliDrawer';
+import { SoundscapeStudio } from '../components/ui/SoundscapeStudio';
+import { AskAyushAiWidget } from '../components/ui/AskAyushAiWidget';
+import { TelemetryTracker } from '../components/common/TelemetryTracker';
 import { AppRouter } from './router';
 
 export default function App() {
@@ -16,6 +20,7 @@ export default function App() {
       <AuthProvider>
         <div className="min-h-screen text-alabaster selection:bg-cyan-500/30 selection:text-cyan-100 flex flex-col relative overflow-x-clip">
           <BackgroundLayers />
+          <TelemetryTracker />
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-cyan-400 focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:font-semibold text-black"
@@ -27,6 +32,9 @@ export default function App() {
           <ConfirmModal />
           <CertificateLightboxModal />
           <ResumeModal />
+          <DeveloperCliDrawer />
+          <SoundscapeStudio />
+          <AskAyushAiWidget />
           <main id="main-content" className="flex-1 relative z-10">
             <AppRouter />
           </main>

@@ -27,6 +27,23 @@ async function handlePublicRoutes(req, res, pathname, parsedUrl, publicControlle
     publicController.getProjectBySlug(req, res, pathname);
     return true;
   }
+  if (req.method === 'GET' && pathname === '/api/public/leetcode-stats') {
+    await publicController.getLeetCodeStats(req, res);
+    return true;
+  }
+  if (req.method === 'POST' && pathname === '/api/public/telemetry') {
+    await publicController.postTelemetry(req, res);
+    return true;
+  }
+  if (req.method === 'POST' && pathname === '/api/public/ask-ai') {
+    await publicController.postAskAi(req, res);
+    return true;
+  }
+  // Live API Sandbox queries
+  if (pathname.startsWith('/api/v1/')) {
+    await publicController.handleLiveApiSandbox(req, res, pathname, parsedUrl);
+    return true;
+  }
   if (req.method === 'POST' && pathname === '/api/public/contact') {
     await publicController.submitContact(req, res);
     return true;

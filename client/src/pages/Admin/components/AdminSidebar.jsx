@@ -18,7 +18,8 @@ export function AdminSidebar({
   const navSections = [
     {
       items: [
-        { id: 'dashboard', label: 'Overview', icon: 'fa-chart-pie', badge: null }
+        { id: 'dashboard', label: 'Overview', icon: 'fa-chart-pie', badge: null },
+        { id: 'analytics', label: 'Visitor Telemetry', icon: 'fa-chart-line', badge: 'Live', badgeColor: 'green' }
       ]
     },
     {

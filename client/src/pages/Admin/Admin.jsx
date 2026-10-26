@@ -23,6 +23,7 @@ import { AdminSecurity } from './components/AdminSecurity';
 import { AdminUserGuide } from './components/AdminUserGuide';
 import { AdminApiReference } from './components/AdminApiReference';
 import { AdminAuthModal } from './components/AdminAuthModal';
+import { AdminAnalytics } from './components/AdminAnalytics';
 
 // Modals
 import { QuickProjectModal } from './components/modals/QuickProjectModal';
@@ -229,6 +230,10 @@ export function AdminPage() {
               onOpenDetailModal={(act) => setSelectedActivity(act)}
               showToast={showToast}
             />
+          )}
+
+          {activeTab === 'analytics' && (
+            <AdminAnalytics />
           )}
 
           {activeTab === 'projects' && (

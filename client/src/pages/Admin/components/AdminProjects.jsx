@@ -131,6 +131,7 @@ export function AdminProjects({
   const [errors, setErrors] = useState({});
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   const [isPreviewCaseStudyModalOpen, setIsPreviewCaseStudyModalOpen] = useState(false);
+  const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [markdownPreviews, setMarkdownPreviews] = useState({
     problem: false,
     approach: false,
@@ -215,6 +216,49 @@ export function AdminProjects({
 
     setErrors((prev) => ({ ...prev, ...newErrors }));
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleGenerateAiBreakdown = async () => {
+    playTick();
+    setIsGeneratingAi(true);
+    try {
+      const res = await fetch('/api/admin/generate-case-study', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.token || ''}`
+        },
+        body: JSON.stringify({
+          title: form.title || 'Distributed Web Platform',
+          category: form.category || 'Full-Stack Web App',
+          tags: currentTechList
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.draft) {
+          const d = data.draft;
+          setForm((prev) => ({
+            ...prev,
+            caseStudy: {
+              ...(prev.caseStudy || DEFAULT_CASE_STUDY),
+              problem: d.problemStatement || prev.caseStudy?.problem,
+              approach: d.strategy || prev.caseStudy?.approach,
+              techDecisions: d.tradeoffs || prev.caseStudy?.techDecisions,
+              result: {
+                summary: d.problemStatement ? `Successfully deployed ${form.title || 'platform'} delivering sub-50ms query response times and 98+ Lighthouse scores.` : (prev.caseStudy?.result?.summary || ''),
+                metrics: d.keyMetrics?.length ? d.keyMetrics.map(m => ({ label: m.label, value: m.value })) : (prev.caseStudy?.result?.metrics || [])
+              }
+            }
+          }));
+          showToast(`Generated AI Architecture Breakdown for ${form.title || 'Project'}!`, 'fa-wand-magic-sparkles');
+        }
+      }
+    } catch (err) {
+      showToast('AI Generation failed: ' + err.message, 'fa-triangle-exclamation');
+    } finally {
+      setIsGeneratingAi(false);
+    }
   };
 
   const handleNextStep = () => {
@@ -1718,6 +1762,16 @@ export function AdminProjects({
                   <span>Engineering Case Study (Problem → Approach → Tech Decisions → Result → Learnings)</span>
                 </div>
                 <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleGenerateAiBreakdown}
+                    disabled={isGeneratingAi}
+                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-500/20 to-cyan-500/20 hover:from-purple-500/30 hover:to-cyan-500/30 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all active:scale-95 disabled:opacity-50"
+                    title="Automatically generate Problem Statement, Strategy, Trade-offs, and Metrics using AI"
+                  >
+                    <i className={`fa-solid ${isGeneratingAi ? 'fa-circle-notch animate-spin text-purple-400' : 'fa-wand-magic-sparkles text-cyan-400'}`}></i>
+                    <span>{isGeneratingAi ? 'Generating Architecture...' : '✨ Generate AI Architecture Breakdown'}</span>
+                  </button>
                   <span className="text-[11px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
                     Optional / Skip Available
                   </span>

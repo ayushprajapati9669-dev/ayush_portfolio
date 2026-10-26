@@ -624,6 +624,18 @@ export function Header() {
                           type="button"
                           className="popover-item"
                           onClick={() => {
+                            window.dispatchEvent(new CustomEvent('ams-open-terminal'));
+                            setToolsMenuOpen(false);
+                          }}
+                        >
+                          <i className="fa-solid fa-terminal text-xs text-cyan-400" />
+                          <span>Developer Terminal</span>
+                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">Ctrl+~</kbd>
+                        </button>
+                        <button
+                          type="button"
+                          className="popover-item"
+                          onClick={() => {
                             handleOpenShortcuts();
                             setToolsMenuOpen(false);
                           }}
@@ -658,6 +670,25 @@ export function Header() {
 
               {/* Subtle divider before CTA (matching reference image) */}
               {isAdmin && <span className="nav-v-divider" aria-hidden="true" />}
+
+              {/* Developer CLI Terminal Trigger (Retro Cyberpunk >_ Terminal) */}
+              {!isAdmin && (
+                <div className="magnetic">
+                  <button
+                    type="button"
+                    className="btn-outline font-mono"
+                    onClick={() => {
+                      playTick('click');
+                      window.dispatchEvent(new CustomEvent('ams-open-terminal'));
+                    }}
+                    title="Open Retro Developer Terminal (Ctrl + ~)"
+                  >
+                    <i className="fa-solid fa-terminal text-cyan-400" style={{ fontSize: '10px' }} />
+                    <span className="hidden sm:inline">&gt;_ Terminal</span>
+                    <span className="cmd-kbd hidden md:inline">Ctrl+~</span>
+                  </button>
+                </div>
+              )}
 
               {/* Resume Button (Only visible on Public pages per reference) */}
               {!isAdmin && (

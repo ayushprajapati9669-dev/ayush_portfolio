@@ -7,6 +7,8 @@ import { getEnrichedCaseStudy } from '../../utils/projectCaseStudyData';
 import { SEO } from '../../components/SEO';
 import { projectSchema } from '../../utils/seo';
 import { playTick } from '../../utils/audio';
+import { ApiSandbox } from '../../components/ui/ApiSandbox';
+import { InteractiveArchitectureDiagram } from '../../components/ui/InteractiveArchitectureDiagram';
 import '../../styles/pages/case-study.css';
 
 // Baseline fallback demonstration for offline or initial boot
@@ -849,6 +851,11 @@ await session.withTransaction(async () => {
                   <code>{sampleCodeSnippet}</code>
                 </pre>
               </div>
+
+              {/* Live Interactive API Sandbox / Endpoint Tester */}
+              <div className="mt-8">
+                <ApiSandbox />
+              </div>
             </div>
           </section>
 
@@ -909,28 +916,33 @@ await session.withTransaction(async () => {
               <span className="cs-section-badge">05 • System Blueprint</span>
               <h2 className="cs-section-title">
                 <i className="fa-solid fa-diagram-project text-cyan-400" />
-                <span>Architecture Diagram</span>
+                <span>Architecture Diagram &amp; Microservices</span>
               </h2>
             </div>
 
-            <div className="cs-visual-box">
-              <img
-                src={caseStudy.architectureDiagramUrl}
-                alt={`${project.title} Architecture Blueprint`}
-                className="cs-visual-img"
-                loading="lazy"
-              />
-              <button
-                type="button"
-                className="cs-overlay-btn"
-                onClick={() => {
-                  playTick();
-                  setBlueprintModalOpen(true);
-                }}
-              >
-                <i className="fa-solid fa-magnifying-glass-plus" />
-                <span>Inspect Blueprint</span>
-              </button>
+            <div className="space-y-6">
+              {/* Interactive Microservices Node Topology */}
+              <InteractiveArchitectureDiagram />
+
+              <div className="cs-visual-box">
+                <img
+                  src={caseStudy.architectureDiagramUrl}
+                  alt={`${project.title} Architecture Blueprint`}
+                  className="cs-visual-img"
+                  loading="lazy"
+                />
+                <button
+                  type="button"
+                  className="cs-overlay-btn"
+                  onClick={() => {
+                    playTick();
+                    setBlueprintModalOpen(true);
+                  }}
+                >
+                  <i className="fa-solid fa-magnifying-glass-plus" />
+                  <span>Inspect Blueprint (Full Resolution)</span>
+                </button>
+              </div>
             </div>
           </section>
 

@@ -7,6 +7,7 @@ import { SEO } from '../../components/SEO';
 import { personSchema } from '../../utils/seo';
 import { MilestoneSpotlightSlider } from '../../components/ui/MilestoneSpotlightSlider';
 import { TechLogo } from '../../components/common/TechLogos';
+import { LeetCodeMetricsBadge } from '../../components/ui/LeetCodeMetricsBadge';
 
 export function AboutPage() {
   const { appState } = usePortfolio();
@@ -357,6 +358,11 @@ export function AboutPage() {
           onMagneticMouseMove={handleMagneticMouseMove}
           onMagneticMouseLeave={handleMagneticMouseLeave}
         />
+      </div>
+
+      {/* LeetCode & Problem Solving Metrics */}
+      <div className="max-w-6xl mx-auto px-4 my-8">
+        <LeetCodeMetricsBadge />
       </div>
 
       {/* Bottom Section: Education + Timeline */}
