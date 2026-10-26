@@ -44,6 +44,20 @@ export function saveSoundSettings(settings) {
   } catch (e) {}
 }
 
+export function setSwitchPreset(preset) {
+  const current = getSoundSettings();
+  const next = { ...current, preset };
+  saveSoundSettings(next);
+  return next;
+}
+
+export function setSoundEnabled(enabled) {
+  const current = getSoundSettings();
+  const next = { ...current, enabled: Boolean(enabled) };
+  saveSoundSettings(next);
+  return next;
+}
+
 /**
  * Synthesizes a mechanical keyboard click or UI tick based on user's active preset.
  * Presets:
