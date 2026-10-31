@@ -5,8 +5,8 @@ const path = require('path');
 const ARTIFACTS_DIR = 'C:\\Users\\Lenovo\\.gemini\\antigravity\\brain\\a65f0578-4a47-4a84-8743-3af3312bebbb';
 
 async function verifyFullUI() {
-  const port = 9389;
-  const tempUserData = path.join(__dirname, '..', '.tmp-chrome-profile-verify');
+  const port = 9399;
+  const tempUserData = path.join(__dirname, '..', '.tmp-chrome-profile-editorial');
 
   console.log('[Verification] Launching headless Chrome...');
   const chrome = spawn('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', [
@@ -64,50 +64,52 @@ async function verifyFullUI() {
 
     await sendCmd('Page.enable');
     await sendCmd('DOM.enable');
+    await sendCmd('Runtime.enable');
 
-    async function capturePage(url, outFilename, waitMs = 2500) {
+    async function capturePage(url, outFilename, waitMs = 3000, scrollY = 0) {
       console.log(`[Verification] Navigating to ${url}...`);
       await sendCmd('Page.navigate', { url });
       await new Promise((r) => setTimeout(r, waitMs));
 
-      const screenshot = await sendCmd('Page.captureScreenshot', { format: 'png' });
-      const localPath = path.join(__dirname, '..', outFilename);
-      const artPath = path.join(ARTIFACTS_DIR, outFilename);
+      if (scrollY > 0) {
+        await sendCmd('Runtime.evaluate', { expression: `window.scrollTo({ top: ${scrollY}, behavior: 'instant' })` });
+        await new Promise((r) => setTimeout(r, 800));
+      }
 
-      fs.writeFileSync(localPath, Buffer.from(screenshot.result.data, 'base64'));
+      const screenshot = await sendCmd('Page.captureScreenshot', { format: 'png' });
+      const artPath = path.join(ARTIFACTS_DIR, outFilename);
       fs.writeFileSync(artPath, Buffer.from(screenshot.result.data, 'base64'));
       console.log(`[Verification] Saved: ${outFilename}`);
     }
 
-    // 1. Home Page
-    await capturePage('http://localhost:5174/', 'screenshot_home_refined.png', 3000);
+    // 1. Home Page Hero & Proof Strip
+    await capturePage('http://localhost:5174/', 'screenshot_home_editorial_hero.png', 3500);
 
-    // 2. Projects Page
-    await capturePage('http://localhost:5174/projects', 'screenshot_projects_refined.png', 3000);
+    // 2. Home Page Proof Strip & Perspective Switcher (Scroll 700px)
+    await capturePage('http://localhost:5174/', 'screenshot_home_editorial_perspective.png', 1500, 850);
 
-    // 3. Resume Modal: Click the Resume button on the navbar
-    console.log('[Verification] Triggering Resume modal...');
-    await sendCmd('Runtime.evaluate', {
-      expression: `
-        (() => {
-          const btn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Resume'));
-          if (btn) { btn.click(); return 'clicked'; }
-          return 'not found';
-        })()
-      `
+    // 3. Home Page Flagship Browser Chrome & Process Pipeline (Scroll 1600px)
+    await capturePage('http://localhost:5174/', 'screenshot_home_editorial_flagship.png', 1500, 1750);
+
+    // 4. Projects Page
+    await capturePage('http://localhost:5174/projects', 'screenshot_projects_editorial.png', 3000);
+
+    // 5. About Page
+    await capturePage('http://localhost:5174/about', 'screenshot_about_editorial.png', 3000);
+
+    // 6. Mobile Emulation (390x844)
+    console.log('[Verification] Capturing mobile viewport...');
+    await sendCmd('Emulation.setDeviceMetricsOverride', {
+      width: 390,
+      height: 844,
+      deviceScaleFactor: 2,
+      mobile: true
     });
-    await new Promise((r) => setTimeout(r, 2000));
-    const modalShot = await sendCmd('Page.captureScreenshot', { format: 'png' });
-    fs.writeFileSync(path.join(__dirname, '..', 'screenshot_resume_modal_verified.png'), Buffer.from(modalShot.result.data, 'base64'));
-    fs.writeFileSync(path.join(ARTIFACTS_DIR, 'screenshot_resume_modal_verified.png'), Buffer.from(modalShot.result.data, 'base64'));
-    console.log('[Verification] Saved: screenshot_resume_modal_verified.png');
-
-    // 4. About Page
-    await capturePage('http://localhost:5174/about', 'screenshot_about_refined.png', 3000);
+    await capturePage('http://localhost:5174/', 'screenshot_mobile_editorial.png', 2500);
 
     ws.close();
     chrome.kill();
-    console.log('[Verification] All screenshots successfully captured!');
+    console.log('[Verification] All editorial verification screenshots saved!');
   } catch (err) {
     console.error('[Verification] Error:', err);
     chrome.kill();

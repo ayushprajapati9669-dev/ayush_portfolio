@@ -270,11 +270,19 @@ export function ProjectsPage({ viewMode = 'projects' }) {
         />
       )}
       {/* Page Header */}
-      <div className="page-header">
-        <div className="page-tagline">02 · Featured Work</div>
-        <h1 className="page-title">Live Deployed Projects</h1>
-        <p className="page-desc">
-          A collection of full-stack web applications, interactive dashboards, and AI-powered tools I've designed, built, and deployed.
+      <div className="page-header space-y-3">
+        <div className="meta-coordinate">
+          <span className="meta-square" />
+          <span>02 / SELECTED WORK</span>
+          <span className="text-white/20">|</span>
+          <span>BUILT. ARCHITECTED. PUT INTO PRODUCTION.</span>
+        </div>
+        <h1 className="page-title font-editorial text-4xl sm:text-6xl font-semibold text-white tracking-tight">
+          <span>Live Deployed </span>
+          <span className="font-editorial-italic font-normal text-cyanglow">Projects</span>
+        </h1>
+        <p className="page-desc font-sans text-slate-300 max-w-2xl">
+          From full-stack web applications to AI-powered interfaces. A collection of production systems I've designed, architected, and deployed.
         </p>
       </div>
 

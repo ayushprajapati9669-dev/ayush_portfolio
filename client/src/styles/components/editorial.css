@@ -1,0 +1,327 @@
+/* ==========================================================================
+   Editorial Architecture & High-Fashion Design System
+   Inspired by Reference (Sarthak Sharma Portfolio)
+   - Playfair Display editorial serif with flowing italic accents
+   - Precision coordinate stamps (■ 01 / PRESENCE)
+   - 4-column hairline Proof Strip (Impact Metrics)
+   - Perspective Switcher (Build / Architect / Solve) with cream tab states
+   - Realistic Browser Chrome Mockup with window controls & domain bar
+   - 3-Step Process Pipeline (Deconstruct -> Architect -> Engineer)
+   ========================================================================== */
+
+/* Editorial Typography */
+.font-editorial {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
+  font-feature-settings: 'liga', 'dlig';
+}
+
+.font-editorial-italic {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
+  font-style: italic !important;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+}
+
+.editorial-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.4rem, 5.5vw, 4.8rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: #f8fafc;
+}
+
+/* Navbar Logo Wordmark (Editorial Serif Inspired by Reference) */
+.nav-logo-text {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.4px !important;
+}
+
+/* Precision Coordinate Stamps */
+.meta-coordinate {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent-vermilion, #ff5c28);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meta-square {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-vermilion, #ff5c28);
+  border-radius: 1px;
+  box-shadow: 0 0 10px rgba(255, 92, 40, 0.5);
+  flex-shrink: 0;
+}
+
+.meta-divider-line {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  width: 100%;
+}
+
+/* Proof Strip (Impact Metrics) */
+.proof-strip {
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(4, 7, 13, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 36px 0;
+  position: relative;
+  z-index: 5;
+}
+
+.proof-strip-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+@media (max-width: 900px) {
+  .proof-strip-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 28px;
+  }
+}
+
+@media (max-width: 500px) {
+  .proof-strip-grid {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+}
+
+.proof-metric-col {
+  padding: 0 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.proof-metric-col:last-child {
+  border-right: none;
+}
+
+.proof-metric-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: #ffffff;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.proof-metric-accent {
+  color: var(--accent-vermilion, #ff5c28);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75em;
+  font-weight: 600;
+}
+
+.proof-metric-label {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.45;
+  margin-top: 8px;
+  font-weight: 400;
+}
+
+/* Perspective Switcher (Build / Architect / Solve) */
+.perspective-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.perspective-tab {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.perspective-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.perspective-tab.active {
+  background: #e8e2d8 !important;
+  color: #030712 !important;
+  border-color: #e8e2d8 !important;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(232, 226, 216, 0.2);
+}
+
+/* Browser Chrome Mockup (Flagship Presentation) */
+.browser-chrome {
+  background: rgba(12, 18, 28, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.9),
+    0 0 50px -10px var(--accent-glow, rgba(6, 182, 212, 0.25));
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.browser-chrome:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 40px 100px -25px rgba(0, 0, 0, 0.95),
+    0 0 70px -5px var(--accent-glow, rgba(6, 182, 212, 0.35));
+}
+
+.browser-chrome-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: rgba(6, 10, 18, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 12px;
+}
+
+.browser-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browser-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.browser-dot-red { background: #ff5f56; }
+.browser-dot-yellow { background: #ffbd2e; }
+.browser-dot-green { background: #27c93f; }
+
+.browser-url-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 14px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browser-circle-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.25s ease;
+  text-decoration: none;
+}
+
+.browser-circle-btn:hover {
+  background: var(--accent-vermilion, #ff5c28);
+  border-color: var(--accent-vermilion, #ff5c28);
+  color: #ffffff;
+  transform: scale(1.1) rotate(15deg);
+}
+
+.browser-viewport {
+  position: relative;
+  overflow: hidden;
+  background: #090e17;
+  aspect-ratio: 16 / 10;
+}
+
+.browser-viewport img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.browser-chrome:hover .browser-viewport img {
+  transform: scale(1.03);
+}
+
+/* 3-Step Process Pipeline (01 -> 02 -> 03) */
+.process-pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.process-step-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+.process-step-node {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--accent-vermilion, #ff5c28);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.process-step-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.process-focus-card {
+  background: rgba(14, 22, 34, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 3px solid var(--accent-vermilion, #ff5c28);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7);
+}

@@ -193,11 +193,17 @@ export function AboutPage() {
         schema={personSchema(p)}
       />
       {/* Header */}
-      <div className="page-header">
-        <div className="page-tagline">
-          {p.aboutEyebrow || p.eyebrow || 'Computer Science Student · Developer · Builder'}
+      <div className="page-header space-y-3">
+        <div className="meta-coordinate">
+          <span className="meta-square" />
+          <span>01 / THE PERSON BEHIND THE WORK</span>
+          <span className="text-white/20">|</span>
+          <span>A CONNECTED PERSPECTIVE</span>
         </div>
-        <h1 className="page-title">{p.name || 'Ayush Prajapati'}</h1>
+        <h1 className="page-title font-editorial text-4xl sm:text-6xl font-semibold text-white tracking-tight">
+          <span>Ayush </span>
+          <span className="font-editorial-italic font-normal text-cyanglow">Prajapati</span>
+        </h1>
         <div className="page-contact-info">
           <a
             href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}
