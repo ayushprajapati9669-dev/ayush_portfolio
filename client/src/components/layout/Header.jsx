@@ -435,12 +435,16 @@ export function Header() {
           </div>
           <nav className="navbar" id="navbar" ref={navbarRef}>
             {/* Left: Brand / Monogram */}
-            <Link to="/" className="nav-left" onClick={() => playTick()}>
+            <Link to="/" className="nav-left flex items-center gap-2.5" onClick={() => playTick()}>
               <div className="nav-logo-box">
                 {p.monogram || 'AP'}
               </div>
               <div className="nav-logo-text">
-                {p.displayName || p.name || 'Ayush Prajapati'}
+                Ayush<span className="serif text-white">.</span>
+              </div>
+              <div className="nav-status hidden sm:inline-flex ml-1.5">
+                <span className="status-dot" />
+                <span>Available for work</span>
               </div>
             </Link>
 
@@ -543,7 +547,11 @@ export function Header() {
                         }}
                       >
                         <i className="fa-solid fa-arrow-right" /> View all in Admin CMS
-                      </Link>
+                        <div className="nav-status hidden sm:inline-flex ml-1.5">
+                <span className="status-dot" />
+                <span>Available for work</span>
+              </div>
+            </Link>
                     </div>
                   </div>
                 </div>
@@ -739,7 +747,11 @@ export function Header() {
                   >
                     <i className="fa-solid fa-paper-plane" style={{ fontSize: '11px' }} />
                     <span>Hire / Connect</span>
-                  </Link>
+                    <div className="nav-status hidden sm:inline-flex ml-1.5">
+                <span className="status-dot" />
+                <span>Available for work</span>
+              </div>
+            </Link>
                 </div>
               )}
 
@@ -753,7 +765,11 @@ export function Header() {
                   >
                     <i className="fa-solid fa-shield-halved text-black" />
                     <span>Admin CMS</span>
-                  </Link>
+                    <div className="nav-status hidden sm:inline-flex ml-1.5">
+                <span className="status-dot" />
+                <span>Available for work</span>
+              </div>
+            </Link>
                 </div>
               )}
 
