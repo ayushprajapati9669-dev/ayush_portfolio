@@ -47,6 +47,19 @@ export function Header() {
   const ACCENT_CLASSES = ['accent-cyan', 'accent-violet', 'accent-rose', 'accent-emerald', 'accent-amber', 'accent-pink', 'accent-lime', 'accent-blue'];
 
   const [toolsMenuOpen, setToolsMenuOpen] = useState(false);
+  const [liveTime, setLiveTime] = useState('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      setLiveTime(`${hours}:${minutes} IST`);
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
   const toolsMenuRef = useRef(null);
   const accentPickerRef = useRef(null);
 
@@ -534,7 +547,12 @@ export function Header() {
                     </div>
                   </div>
                 </div>
-              )}                {/* Theme & Accent Controls (Available across ALL pages: Public & Admin) */}
+              )}                {/* Live IST Clock */}
+              <div className="nav-time-stamp hidden lg:inline-flex items-center text-xs text-slate-400 font-mono mr-1">
+                {liveTime}
+              </div>
+
+              {/* Theme & Accent Controls (Available across ALL pages: Public & Admin) */}
               <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
                 {/* Theme Selector Dropdown (10 Curated Dark Themes - No Light) */}
                 <select

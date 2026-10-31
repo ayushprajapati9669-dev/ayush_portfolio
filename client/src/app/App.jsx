@@ -4,6 +4,7 @@ import { AuthProvider } from './providers/AuthProvider';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { BackgroundLayers } from '../components/layout/BackgroundLayers';
+import { ReferenceInteractiveFX } from '../components/ui/ReferenceInteractiveFX';
 import { Toast } from '../components/ui/Toast';
 import { ConfirmModal } from '../components/ui/ConfirmModal';
 import { CertificateLightboxModal } from '../components/ui/CertificateLightboxModal';
@@ -20,6 +21,7 @@ export default function App() {
       <AuthProvider>
         <div className="min-h-screen text-alabaster selection:bg-cyan-500/30 selection:text-cyan-100 flex flex-col relative overflow-x-clip">
           <BackgroundLayers />
+          <ReferenceInteractiveFX />
           <TelemetryTracker />
           <a
             href="#main-content"
