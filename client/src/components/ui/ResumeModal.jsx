@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
@@ -6,6 +6,7 @@ import { playTick } from '../../utils/audio';
 export function ResumeModal() {
   const { appState, resumeModalOpen, closeResumeModal } = usePortfolio();
   const cardRef = useRef(null);
+  const [iframeError, setIframeError] = useState(false);
 
   const p = appState.profile || {};
   const activeResume = (appState.resumes || []).find((r) => r.isActive) || (appState.resumes || [])[0];
@@ -15,6 +16,7 @@ export function ResumeModal() {
   // Entrance animation
   useEffect(() => {
     if (!resumeModalOpen) return;
+    setIframeError(false);
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduceMotion && cardRef.current) {
       gsap.fromTo(
@@ -47,7 +49,6 @@ export function ResumeModal() {
 
   const handleDownload = () => {
     playTick('click');
-    // Telemetry tracking
     fetch('/api/public/telemetry', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -70,11 +71,11 @@ export function ResumeModal() {
     >
       <div
         ref={cardRef}
-        className="w-full max-w-[920px] h-[90vh] flex flex-col rounded-[20px] border border-cyan-500/30 bg-[#0b1120] shadow-[0_40px_120px_-20px_rgba(0,0,0,1),0_0_80px_rgba(6,182,212,0.15)] overflow-hidden"
+        className="w-full max-w-[960px] h-[90vh] flex flex-col rounded-[20px] border border-cyan-500/30 bg-[#0b1120] shadow-[0_40px_120px_-20px_rgba(0,0,0,1),0_0_80px_rgba(6,182,212,0.15)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/30 z-10 flex-wrap gap-3">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/40 z-10 flex-wrap gap-3">
           <div className="flex flex-col gap-1">
             <span className="text-[#06b6d4] font-mono text-[11px] font-bold tracking-[1px] uppercase">
               Curriculum Vitae
@@ -102,7 +103,7 @@ export function ResumeModal() {
             <button
               type="button"
               onClick={handleClose}
-              className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-lg hover:bg-white/15 transition-all active:scale-95 outline-none"
+              className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-lg hover:bg-white/15 transition-all active:scale-95 outline-none cursor-pointer"
             >
               <i className="fa-solid fa-xmark text-xs" />
               <span>Close</span>
@@ -111,32 +112,64 @@ export function ResumeModal() {
         </div>
 
         {/* Modal Body */}
-        <div className="flex-1 bg-[#1e1e24] relative flex flex-col min-h-0">
-          {/* Desktop Iframe Viewer */}
-          <iframe
-            src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-            className="w-full h-full border-none hidden md:block bg-white"
-            title="Resume PDF"
-          />
+        <div className="flex-1 bg-[#121824] relative flex flex-col min-h-0">
+          {!iframeError ? (
+            <iframe
+              src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+              className="w-full h-full border-none hidden md:block bg-white"
+              title="Resume PDF"
+              onError={() => setIframeError(true)}
+            />
+          ) : (
+            <div className="hidden md:flex flex-1 flex-col items-center justify-center p-8 text-center bg-[#0b1120]">
+              <img
+                src="/images/ayush-resume-preview.jpg"
+                alt="Resume Preview"
+                className="max-h-[60vh] rounded-lg shadow-2xl border border-white/10 mb-4 object-contain"
+              />
+              <a
+                href={pdfUrl}
+                download="Ayush_Prajapati_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleDownload}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#06b6d4] to-[#10b981] text-black font-bold text-sm px-6 py-2.5 rounded-lg shadow-lg hover:-translate-y-0.5 transition-all no-underline"
+              >
+                <i className="fa-solid fa-download text-sm" />
+                <span>Download Full PDF</span>
+              </a>
+            </div>
+          )}
 
           {/* Mobile Fallback */}
-          <div className="md:hidden absolute inset-0 flex flex-col items-center justify-center bg-[#0b1120] text-center p-8 z-5">
-            <i className="fa-regular fa-file-pdf text-5xl text-[#06b6d4] mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">Resume Preview</h3>
-            <p className="text-slate-400 text-sm max-w-sm mb-6 leading-relaxed">
-              Mobile browsers do not support direct PDF embedding. Please click the button below to download or view the full resume.
+          <div className="md:hidden absolute inset-0 flex flex-col items-center justify-center bg-[#0b1120] text-center p-6 z-5 overflow-y-auto">
+            <i className="fa-regular fa-file-pdf text-5xl text-[#06b6d4] mb-3" />
+            <h3 className="text-lg font-bold text-white mb-2">Resume Preview</h3>
+            <p className="text-slate-400 text-xs max-w-sm mb-4 leading-relaxed">
+              For optimal viewing on mobile devices, please open or download the PDF document directly.
             </p>
-            <a
-              href={pdfUrl}
-              download="Ayush_Prajapati_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleDownload}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#06b6d4] to-[#10b981] text-black font-bold text-sm px-6 py-3 rounded-lg shadow-[0_4px_15px_rgba(6,182,212,0.4)] hover:-translate-y-0.5 transition-all no-underline"
-            >
-              <i className="fa-solid fa-download text-sm" />
-              <span>Download Resume</span>
-            </a>
+            <div className="flex flex-col gap-3 w-full max-w-xs">
+              <a
+                href={pdfUrl}
+                download="Ayush_Prajapati_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleDownload}
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#06b6d4] to-[#10b981] text-black font-bold text-sm px-5 py-2.5 rounded-lg shadow-[0_4px_15px_rgba(6,182,212,0.4)] hover:-translate-y-0.5 transition-all no-underline"
+              >
+                <i className="fa-solid fa-download text-sm" />
+                <span>Download Resume PDF</span>
+              </a>
+              <a
+                href={pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 bg-white/5 border border-white/10 text-white font-semibold text-xs px-4 py-2 rounded-lg hover:bg-white/10 transition-all no-underline"
+              >
+                <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
+                <span>Open in Browser Tab</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

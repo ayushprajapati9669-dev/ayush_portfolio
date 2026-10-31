@@ -1,9 +1,12 @@
 /* ==========================================================================
-   Realistic 3D Liquid Droplets Theme Background Layers:
-   - Deep oceanic gradient background
-   - 6 Floating 3D realistic liquid droplets / spheres with refraction
+   Realistic 3D Studio-Lit Spheres & Oceanic Ambient Background Layers
+   - Deep oceanic gradient background with reactive theme liquid gradient
+   - Photorealistic studio-lit 3D spheres with pinpoint specular glints,
+     spherical diffuse falloff, and dynamic theme Fresnel rim glow
+   - Multi-plane depth of field (background bokeh, midground atmospheric,
+     foreground crisp) with hardware-accelerated 60/120fps GPU rendering
    - SVG fractal noise texture overlay at opacity: 0.04
-   - Interactive mouse light with vibrant water blue glow (#38bdf8)
+   - Interactive mouse light with vibrant water blue glow
    ========================================================================== */
 
 /* Deep Oceanic Liquid Background */
@@ -85,7 +88,7 @@
   }
 }
 
-/* 3D Liquid Droplets / Spheres Container */
+/* 3D Spheres & Droplets Container */
 .spheres-container {
   contain: paint layout;
   position: fixed;
@@ -93,92 +96,123 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  perspective: 1000px;
+  perspective: 1200px;
 }
 
-/* 6 Realistic 3D Liquid Droplets with Inset Highlights & Depth Shadows */
+/* ==========================================================================
+   Photorealistic Studio-Lit 3D Spheres (Awwwards / Agency Caliber)
+   - Overhead Softbox Key-Light Pinpoint Glint (26% 24%)
+   - Smooth Diffuse Sphere Falloff Tinted with Current Theme Accent
+   - Deep Obsidian Chrome Spherical Core
+   - Dual Inset Specular Edge Bevels + Theme Fresnel Rim Glow
+   - Deep Layered Ambient Shadow with ZERO backdrop-filter compositing stall
+   ========================================================================== */
+.studio-sphere,
 .droplet,
 .sphere {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(56, 189, 248, 0.2) 40%, rgba(0, 0, 0, 0.6) 80%);
-  box-shadow: inset 0 10px 20px rgba(255, 255, 255, 0.4), inset 0 -10px 20px rgba(0, 0, 0, 0.6), 0 20px 40px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  animation: floatDroplet 20s infinite linear;
+  pointer-events: none;
+  user-select: none;
   will-change: transform;
+  transform-style: preserve-3d;
+  background-repeat: no-repeat;
+
+  /* Multi-stop studio lighting shader */
+  background:
+    /* 1. Pin-point key light specular glint */
+    radial-gradient(circle at 26% 24%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 6%, rgba(255, 255, 255, 0) 18%),
+    /* 2. Soft specular halo */
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 28%),
+    /* 3. Diffuse spherical core tinted with active theme accent */
+    radial-gradient(circle at 38% 34%, var(--accent-1, #06b6d4) 0%, rgba(56, 189, 248, 0.28) 26%, transparent 60%),
+    /* 4. Ambient spherical falloff into dark chrome obsidian */
+    radial-gradient(circle at 50% 50%, #0d1e2e 0%, #08131d 52%, #02060b 86%, #010306 100%);
+
+  /* Dual Inset Bevels + Theme-Reactive Fresnel Rim Lighting + Deep Ambient Drop Shadow */
+  box-shadow:
+    inset 2px 2px 5px rgba(255, 255, 255, 0.45),
+    inset -8px -12px 28px rgba(0, 0, 0, 0.9),
+    inset -2px -4px 16px var(--accent-glow, rgba(6, 182, 212, 0.45)),
+    0 25px 60px -15px rgba(0, 0, 0, 0.85),
+    0 0 35px -8px var(--accent-glow, rgba(6, 182, 212, 0.25));
+
+  transition: opacity 0.5s ease;
 }
 
-.droplet:nth-child(1),
-.sphere:nth-child(1) {
-  width: 350px;
-  height: 350px;
-  left: -10%;
-  top: 10%;
-  animation-duration: 25s;
+/* Depth of Field (DoF) Layers */
+.sphere-depth-bg {
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  opacity: 0.55;
 }
 
-.droplet:nth-child(2),
-.sphere:nth-child(2) {
-  width: 180px;
-  height: 180px;
-  right: 10%;
-  top: 20%;
-  animation-duration: 18s;
-  animation-delay: -5s;
+.sphere-depth-mid {
+  filter: blur(1.5px);
+  -webkit-filter: blur(1.5px);
+  opacity: 0.75;
 }
 
-.droplet:nth-child(3),
-.sphere:nth-child(3) {
-  width: 250px;
-  height: 250px;
-  left: 25%;
-  bottom: -10%;
-  animation-duration: 30s;
-  animation-delay: -10s;
+.sphere-depth-fg {
+  filter: none;
+  -webkit-filter: none;
+  opacity: 0.92;
 }
 
-.droplet:nth-child(4),
-.sphere:nth-child(4) {
-  width: 100px;
-  height: 100px;
-  right: 30%;
-  bottom: 20%;
-  animation-duration: 15s;
-  animation-delay: -2s;
+/* Organic Floating Animations */
+.float-slow-1 {
+  animation: floatStudioSphere1 18s ease-in-out infinite alternate;
 }
 
-.droplet:nth-child(5),
-.sphere:nth-child(5) {
-  width: 150px;
-  height: 150px;
-  left: 60%;
-  top: 50%;
-  animation-duration: 22s;
-  animation-delay: -8s;
+.float-slow-2 {
+  animation: floatStudioSphere2 24s ease-in-out infinite alternate;
 }
 
-.droplet:nth-child(6),
-.sphere:nth-child(6) {
-  width: 80px;
-  height: 80px;
-  left: 15%;
-  top: 60%;
-  animation-duration: 12s;
-  animation-delay: -4s;
+.float-slow-3 {
+  animation: floatStudioSphere3 14s ease-in-out infinite alternate;
 }
 
-@keyframes floatDroplet {
+@keyframes floatStudioSphere1 {
   0% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
   50% {
-    transform: translate3d(0, -45px, 0);
+    transform: translate3d(12px, -32px, 0) rotate(8deg);
   }
   100% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(-8px, -18px, 0) rotate(-6deg);
   }
 }
+
+@keyframes floatStudioSphere2 {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-15px, -40px, 0) rotate(-10deg);
+  }
+  100% {
+    transform: translate3d(10px, -20px, 0) rotate(5deg);
+  }
+}
+
+@keyframes floatStudioSphere3 {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(10px, -22px, 0) rotate(6deg);
+  }
+  100% {
+    transform: translate3d(-10px, -12px, 0) rotate(-5deg);
+  }
+}
+
+/* Legacy fallback droplet positions (if used without route config) */
+.droplet:nth-child(1) { width: 320px; height: 320px; left: -8%; top: 8%; animation: floatStudioSphere1 22s infinite alternate; }
+.droplet:nth-child(2) { width: 220px; height: 220px; right: -5%; top: 18%; animation: floatStudioSphere2 18s infinite alternate; }
+.droplet:nth-child(3) { width: 140px; height: 140px; left: 8%; bottom: 12%; animation: floatStudioSphere3 20s infinite alternate; }
+.droplet:nth-child(4) { width: 90px; height: 90px; right: 12%; bottom: 15%; animation: floatStudioSphere1 14s infinite alternate; }
 
 /* Background Noise Texture Overlay at opacity: 0.04 */
 .bg-noise {
@@ -192,8 +226,8 @@
 /* Dynamic Interactive Mouse Light Follower with Vibrant Water Blue Glow */
 .mouse-light {
   position: fixed;
-  width: 1000px;
-  height: 1000px;
+  width: 900px;
+  height: 900px;
   background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
@@ -204,3 +238,12 @@
   transition: opacity 0.3s;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .studio-sphere,
+  .droplet,
+  .sphere,
+  .aurora-blob {
+    animation: none !important;
+    transition: none !important;
+  }
+}

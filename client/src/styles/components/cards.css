@@ -1,44 +1,94 @@
 /* ==========================================================================
-   Glassmorphism UI (Realistic 3D Liquid Droplets Theme):
-   - Background: rgba(15, 30, 40, 0.4)
-   - Backdrop Filter: blur(20px) saturate(150%)
-   - Border: 1px solid rgba(255, 255, 255, 0.12)
-   - Subtle inner glow: box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06)
-   - Hover: translateY(-2px), blue glow box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4)
+   Elevated Glassmorphism & Visual Depth System (Agency-Caliber UI)
+   - Dual-tone specular bevel borders (highlighted top edge, subtle sides)
+   - Dynamic radial cursor spotlight follower (--mouse-x, --mouse-y)
+   - Deep layered ambient drop shadows with theme-reactive Fresnel rim glow
+   - Distinct surface treatments: Frosted Glass, Obsidian Solid, & Flagship 3D
    ========================================================================== */
 
 .glass-card,
 .glass-panel,
 .glass-card-admin {
-  background: rgba(15, 30, 40, 0.4) !important;
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  background: rgba(14, 22, 34, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
+/* Dynamic Radial Cursor Spotlight for Glass & Project Cards */
+.glass-card::before,
+.glass-panel::before,
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    550px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(255, 255, 255, 0.08),
+    transparent 45%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.glass-card:hover::before,
+.glass-panel:hover::before,
+.project-card:hover::before {
+  opacity: 1;
+}
+
+/* Interactive Card Hover State */
 .glass-card-hover,
 .glass-card:hover,
 .glass-card-hover:hover {
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.glass-card:hover,
-.glass-card-hover:hover {
-  transform: translateY(-2px);
-  border-color: rgba(56, 189, 248, 0.4) !important;
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-3px);
+  border-top-color: rgba(255, 255, 255, 0.35) !important;
+  border-color: var(--accent-1, #06b6d4) !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.8),
+    0 0 30px -5px var(--accent-glow, rgba(6, 182, 212, 0.35)),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
 }
 
 /* Modals & Dialogs Glassmorphism */
 .modal-box,
 .modal-content,
 .cmd-modal {
-  background: rgba(15, 30, 40, 0.75) !important;
-  backdrop-filter: blur(25px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(25px) saturate(150%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  background: rgba(11, 17, 32, 0.88) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow:
+    0 40px 100px -20px rgba(0, 0, 0, 0.95),
+    0 0 60px -10px var(--accent-glow, rgba(6, 182, 212, 0.3)),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
+/* High-Density Solid Obsidian Surface (Used for dense data widgets & metrics) */
+.surface-solid {
+  background: #090e17;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+}
+
+.surface-solid:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.85);
+}
