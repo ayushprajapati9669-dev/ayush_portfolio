@@ -159,7 +159,7 @@ export function AboutPage() {
         ease: 'back.out(1.2)'
       });
 
-      gsap.from('.spotlight-section .about-card', {
+      gsap.from('.spotlight-section .spotlight-card', {
         y: 50,
         opacity: 0,
         duration: 0.9,
@@ -423,12 +423,15 @@ export function AboutPage() {
           </h3>
 
           <div className="timeline-list">
-            {timelineMilestones.map((item, idx) => (
-              <div key={idx} className="timeline-item">
-                <div className="timeline-dot" />
-                <div className="timeline-year">
-                  <span>{item.phase}</span>
-                  <span>· {item.yearBadge}</span>
+            {timelineMilestones.map((item, idx) => {
+              const cleanPhase = (item.phase || '').replace(/\s*·\s*Year\s*[\d–-]+/i, '').trim();
+              const showYear = item.yearBadge && !cleanPhase.toLowerCase().includes(item.yearBadge.toLowerCase());
+              return (
+                <div key={idx} className="timeline-item">
+                  <div className="timeline-dot" />
+                  <div className="timeline-year">
+                    <span>{cleanPhase || item.phase}</span>
+                    {showYear && <span> · {item.yearBadge}</span>}
                   {item.status && (
                     <span
                       style={{
@@ -544,7 +547,8 @@ export function AboutPage() {
                   </div>
                 )}
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

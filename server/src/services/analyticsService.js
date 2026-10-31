@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { Analytics } = require('../models');
 
 const ANALYTICS_FILE = path.resolve(__dirname, '../../data/analytics.json');
 
@@ -7,6 +8,20 @@ class AnalyticsService {
   constructor() {
     this.data = this.loadData();
     this.saveTimeout = null;
+    this.initMongoSync();
+  }
+
+  async initMongoSync() {
+    try {
+      if (Analytics) {
+        const doc = await Analytics.findOne({ key: 'main_analytics' }).lean();
+        if (doc && doc.data && typeof doc.data === 'object') {
+          this.data = { ...this.data, ...doc.data };
+        }
+      }
+    } catch (_err) {
+      // Graceful fallback to local cache
+    }
   }
 
   loadData() {
@@ -48,10 +63,9 @@ class AnalyticsService {
       },
       browsers: {
         Chrome: 620,
-        Firefox: 240,
-        Safari: 210,
-        Edge: 130,
-        Other: 48
+        Edge: 210,
+        Safari: 180,
+        Firefox: 95
       },
       dailyViews: {
         [today]: 48
@@ -59,23 +73,23 @@ class AnalyticsService {
       recentEvents: [
         {
           id: 'ev-1',
-          type: 'pageview',
+          type: 'page_view',
           path: '/',
-          title: 'Home Page',
+          title: 'Home / Terminal',
           referrer: 'LinkedIn',
           timestamp: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
-          country: 'United States',
-          city: 'San Francisco'
+          country: 'India',
+          city: 'Bhopal'
         },
         {
           id: 'ev-2',
           type: 'resume_download',
           path: '/resume',
-          title: 'Full-Stack MERN Resume Download',
+          title: 'Official Resume ATS',
           referrer: 'Direct',
           timestamp: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
-          country: 'India',
-          city: 'Bengaluru'
+          country: 'United States',
+          city: 'San Francisco'
         },
         {
           id: 'ev-3',
@@ -93,11 +107,24 @@ class AnalyticsService {
 
   scheduleSave() {
     if (this.saveTimeout) clearTimeout(this.saveTimeout);
-    this.saveTimeout = setTimeout(() => {
+    this.saveTimeout = setTimeout(async () => {
+      // 1. File backup
       try {
         fs.writeFileSync(ANALYTICS_FILE, JSON.stringify(this.data, null, 2), 'utf8');
       } catch (err) {
         console.error('[AnalyticsService] Failed to persist analytics.json:', err.message);
+      }
+      // 2. Primary MongoDB Atlas persistence
+      try {
+        if (Analytics) {
+          await Analytics.findOneAndUpdate(
+            { key: 'main_analytics' },
+            { $set: { key: 'main_analytics', data: this.data } },
+            { upsert: true, new: true }
+          );
+        }
+      } catch (mongoErr) {
+        // Warning logged cleanly
       }
     }, 1500);
   }
@@ -138,24 +165,20 @@ class AnalyticsService {
       this.data.referrers[cleanRef] = (this.data.referrers[cleanRef] || 0) + 1;
     }
 
-    // Top projects tracking
-    if (path.startsWith('/projects/') && path.length > 10) {
-      const slug = path.replace('/projects/', '').split('?')[0].split('#')[0];
-      if (slug) {
-        if (!this.data.topProjects) this.data.topProjects = {};
-        if (!this.data.topProjects[slug]) {
-          this.data.topProjects[slug] = { views: 1, title: title || slug };
-        } else {
-          this.data.topProjects[slug].views = (this.data.topProjects[slug].views || 0) + 1;
-          if (title) this.data.topProjects[slug].title = title;
-        }
+    // Top Projects
+    if (type === 'project_view' && path.startsWith('/projects/')) {
+      const slug = path.replace('/projects/', '').split('/')[0];
+      if (!this.data.topProjects) this.data.topProjects = {};
+      if (!this.data.topProjects[slug]) {
+        this.data.topProjects[slug] = { views: 0, title: title || slug };
       }
+      this.data.topProjects[slug].views = (this.data.topProjects[slug].views || 0) + 1;
     }
 
-    // Push recent event
-    const eventRecord = {
-      id: 'ev-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
-      type,
+    // Log Event
+    const event = {
+      id: `ev-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      type: type || 'page_view',
       path,
       title: title || path,
       referrer: referrer || 'Direct',
@@ -164,30 +187,22 @@ class AnalyticsService {
       city
     };
 
-    if (!Array.isArray(this.data.recentEvents)) this.data.recentEvents = [];
-    this.data.recentEvents.unshift(eventRecord);
+    if (!Array.isArray(this.data.recentEvents)) {
+      this.data.recentEvents = [];
+    }
+    this.data.recentEvents.unshift(event);
     if (this.data.recentEvents.length > 50) {
       this.data.recentEvents = this.data.recentEvents.slice(0, 50);
     }
 
     this.scheduleSave();
-    return eventRecord;
+    return event;
   }
 
-  getDashboardData() {
+  getSummary() {
     return {
-      totalPageViews: this.data.totalPageViews || 1248,
-      uniqueVisitors: this.data.uniqueVisitors || 486,
-      resumeDownloads: this.data.resumeDownloads || 89,
-      cliLaunches: this.data.cliLaunches || 142,
-      apiSandboxExecutions: this.data.apiSandboxExecutions || 67,
-      chatQueries: this.data.chatQueries || 53,
-      referrers: this.data.referrers || {},
-      topProjects: this.data.topProjects || {},
-      devices: this.data.devices || { desktop: 780, mobile: 412, tablet: 56 },
-      browsers: this.data.browsers || { Chrome: 620, Firefox: 240, Safari: 210, Edge: 130, Other: 48 },
-      dailyViews: this.data.dailyViews || {},
-      recentEvents: this.data.recentEvents || []
+      ...this.data,
+      serverTime: new Date().toISOString()
     };
   }
 }

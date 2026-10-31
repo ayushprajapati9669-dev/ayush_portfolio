@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   getSoundSettings,
   saveSoundSettings,
@@ -10,6 +11,8 @@ import {
 } from '../../utils/audio';
 
 export function SoundscapeStudio() {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
   const [isOpen, setIsOpen] = useState(false);
   const [settings, setSettings] = useState(getSoundSettings);
   const [isPlayingLofi, setIsPlayingLofi] = useState(isLofiPlaying);
@@ -203,7 +206,7 @@ export function SoundscapeStudio() {
             : 'bg-[#080d1a]/85 border-white/15 text-slate-300 hover:text-white hover:border-cyan-400/50 hover:bg-[#0c152a]'
         }`}
         title="Open Soundscape Studio (Audio Presets & Lo-Fi)"
-        aria-label="Soundscape Studio"
+        aria-label={isPlayingLofi ? "Lo-Fi Active Soundscape Studio" : "Sound FX Studio"}
       >
         <span className="relative flex items-center justify-center">
           <i

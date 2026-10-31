@@ -1,12 +1,12 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HomePage } from '../pages/Home/Home';
+import { ProjectsPage } from '../pages/Projects/Projects';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 // Route-level code splitting for top-tier Lighthouse performance
 const AboutPage = React.lazy(() => import('../pages/About/About').then(m => ({ default: m.AboutPage })));
 const SkillsPage = React.lazy(() => import('../pages/Skills/Skills').then(m => ({ default: m.SkillsPage })));
-const ProjectsPage = React.lazy(() => import('../pages/Projects/Projects').then(m => ({ default: m.ProjectsPage })));
 const ProjectDetail = React.lazy(() => import('../pages/Projects/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
 const CertificatesPage = React.lazy(() => import('../pages/Certificates/Certificates').then(m => ({ default: m.CertificatesPage })));
 const ContactPage = React.lazy(() => import('../pages/Contact/Contact').then(m => ({ default: m.ContactPage })));

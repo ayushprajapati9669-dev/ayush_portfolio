@@ -202,13 +202,12 @@ export function ProjectsPage({ viewMode = 'projects' }) {
         ease: 'power3.out'
       });
 
-      gsap.from('.project-card', {
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'back.out(1.2)',
-        delay: 0.2,
+      gsap.from(".project-card:not(:first-child)", {
+        y: 20,
+        opacity: 0.3,
+        duration: 0.35,
+        stagger: 0.05,
+        ease: "power2.out",
         onComplete: () => {
           document.querySelectorAll('.project-card').forEach((c) => {
             c.style.transform = '';
@@ -254,7 +253,8 @@ export function ProjectsPage({ viewMode = 'projects' }) {
   }, [activeFilter, searchQuery]);
 
   return (
-    <main className="projects-page" ref={containerRef}>
+    <main className="projects-page min-h-[1400px]" ref={containerRef}>
+      <link rel="preload" as="image" href="/images/airbnb-clone-preview.webp" type="image/webp" fetchPriority="high" />
       {currentProject ? (
         <SEO
           title={`${currentProject.title} | Case Study`}
@@ -331,7 +331,7 @@ export function ProjectsPage({ viewMode = 'projects' }) {
           </div>
         </div>
       ) : (
-        <div className="project-grid" id="projectGrid" ref={gridRef}>
+        <div className="project-grid min-h-[500px]" id="projectGrid" ref={gridRef}>
           {filteredProjects.map((proj, idx) => (
             <ProjectCard
               key={proj.id || `proj-${idx}`}

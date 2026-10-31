@@ -5,9 +5,11 @@ const {
   Message,
   Profile,
   Setting,
-  Resume
-} = require('../models/mongoModels');
-const PortfolioState = require('../models/PortfolioState');
+  Resume,
+  User,
+  Analytics,
+  PortfolioState
+} = require('../models');
 
 let mongoose = null;
 try {
@@ -18,7 +20,7 @@ try {
 
 /**
  * Persist store state changes to MongoDB Atlas collections.
- * Only called when actual user mutations (create/update/delete) occur.
+ * Guaranteed atomic writes directly to MongoDB database.
  */
 async function syncStoreToMongoCollections(state) {
   if (!mongoose || mongoose.connection.readyState !== 1) return;
@@ -100,11 +102,14 @@ async function syncStoreToMongoCollections(state) {
       );
     }
 
-    // 6. Settings collection
+    // 6. Settings collection (includes theme, trash, mediaLibrary, templates, logs)
     if (state.settings) {
+      const copy = { ...state.settings };
+      delete copy._id;
+      delete copy.__v;
       await Setting.findOneAndUpdate(
         {},
-        { $set: state.settings },
+        { $set: copy },
         { upsert: true, new: true }
       );
     }
@@ -125,7 +130,21 @@ async function syncStoreToMongoCollections(state) {
       await Resume.deleteMany({ id: { $nin: resumeIds } });
     }
 
-    // Legacy singleton update
+    // 8. Admin Users collection
+    if (Array.isArray(state.users) && state.users.length > 0) {
+      for (const u of state.users) {
+        const copy = { ...u };
+        delete copy._id;
+        delete copy.__v;
+        await User.findOneAndUpdate(
+          { username: u.username },
+          { $set: copy },
+          { upsert: true, new: true }
+        );
+      }
+    }
+
+    // 9. Legacy singleton update (for backward compatibility)
     if (PortfolioState) {
       await PortfolioState.findOneAndUpdate(
         { singletonKey: 'main_portfolio' },
@@ -154,8 +173,7 @@ async function syncStoreToMongoCollections(state) {
 
 /**
  * Connect to MongoDB Atlas.
- * Loads existing data FROM database collections into the store.
- * NEVER pushes demo/dummy projects or certificates on startup.
+ * Loads existing live data FROM database collections into the store.
  */
 async function connectMongoDB(mongoUri, store) {
   if (!mongoose) {
@@ -171,7 +189,7 @@ async function connectMongoDB(mongoUri, store) {
 
   try {
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 6000
+      serverSelectionTimeoutMS: 8000
     });
 
     console.log('[Argon Portfolio Server] [MongoDB] Successfully connected to database.');
@@ -179,30 +197,36 @@ async function connectMongoDB(mongoUri, store) {
       store.mode = 'mongodb-connected';
 
       try {
-        // Load ONLY what is in MongoDB collections
+        // Load live collections from MongoDB
         const existingProjects = await Project.find({}).lean();
-        store.state.projects = (existingProjects || []).map(p => {
-          const copy = { ...p };
-          delete copy._id;
-          delete copy.__v;
-          return copy;
-        });
+        if (existingProjects && existingProjects.length > 0) {
+          store.state.projects = existingProjects.map(p => {
+            const copy = { ...p };
+            delete copy._id;
+            delete copy.__v;
+            return copy;
+          });
+        }
 
         const existingCerts = await Certificate.find({}).lean();
-        store.state.certificates = (existingCerts || []).map(c => {
-          const copy = { ...c };
-          delete copy._id;
-          delete copy.__v;
-          return copy;
-        });
+        if (existingCerts && existingCerts.length > 0) {
+          store.state.certificates = existingCerts.map(c => {
+            const copy = { ...c };
+            delete copy._id;
+            delete copy.__v;
+            return copy;
+          });
+        }
 
         const existingMessages = await Message.find({}).lean();
-        store.state.messages = (existingMessages || []).map(m => {
-          const copy = { ...m };
-          delete copy._id;
-          delete copy.__v;
-          return copy;
-        });
+        if (existingMessages && existingMessages.length > 0) {
+          store.state.messages = existingMessages.map(m => {
+            const copy = { ...m };
+            delete copy._id;
+            delete copy.__v;
+            return copy;
+          });
+        }
 
         const existingProfile = await Profile.findOne({}).lean();
         if (existingProfile) {
@@ -223,12 +247,32 @@ async function connectMongoDB(mongoUri, store) {
         }
 
         const existingResumes = await Resume.find({}).lean();
-        store.state.resumes = (existingResumes || []).map(r => {
-          const copy = { ...r };
+        if (existingResumes && existingResumes.length > 0) {
+          store.state.resumes = existingResumes.map(r => {
+            const copy = { ...r };
+            delete copy._id;
+            delete copy.__v;
+            return copy;
+          });
+        }
+
+        const existingSettings = await Setting.findOne({}).lean();
+        if (existingSettings) {
+          const copy = { ...existingSettings };
           delete copy._id;
           delete copy.__v;
-          return copy;
-        });
+          store.state.settings = { ...(store.state.settings || {}), ...copy };
+        }
+
+        const existingUsers = await User.find({}).lean();
+        if (existingUsers && existingUsers.length > 0) {
+          store.state.users = existingUsers.map(u => {
+            const copy = { ...u };
+            delete copy._id;
+            delete copy.__v;
+            return copy;
+          });
+        }
 
         let needSync = false;
         // Purge base64 strings from MongoDB projects
@@ -290,7 +334,7 @@ async function connectMongoDB(mongoUri, store) {
         // Save loaded state locally
         store._persist();
 
-        // Register persistence hook: ONLY writes to MongoDB when user creates/updates/deletes
+        // Register persistence hook: Writes to MongoDB whenever user creates/updates/deletes
         store.onPersistMongo = async (state) => {
           await syncStoreToMongoCollections(state);
         };

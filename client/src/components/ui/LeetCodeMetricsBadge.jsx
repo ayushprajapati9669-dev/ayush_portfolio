@@ -5,20 +5,28 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
   const [stats, setStats] = useState({
     username: 'ayush7162',
     profileUrl: 'https://leetcode.com/u/ayush7162/',
-    totalSolved: 356,
-    totalQuestions: 3300,
-    easySolved: 142,
-    mediumSolved: 182,
-    hardSolved: 32,
-    acceptanceRate: 71.4,
-    ranking: 114820,
-    contestRating: 1742,
-    topPercentage: 11.8,
-    streak: 48,
+    totalSolved: 65,
+    totalQuestions: 4096,
+    easySolved: 15,
+    totalEasy: 974,
+    mediumSolved: 41,
+    totalMedium: 2136,
+    hardSolved: 9,
+    totalHard: 986,
+    acceptanceRate: 59.6,
+    ranking: 2350736,
+    avatar: 'https://assets.leetcode.com/users/ayush7162/avatar_1761722187.png',
     badges: [
-      { title: '100 Days Badge 2024', icon: 'fa-solid fa-fire', color: '#ff7b00' },
-      { title: '50 Days Streak', icon: 'fa-solid fa-bolt', color: '#00f0ff' },
-      { title: 'SQL & DB Mastery', icon: 'fa-solid fa-database', color: '#a855f7' }
+      { title: 'LeetCode Problem Solver', icon: 'fa-solid fa-code', color: '#00f0ff' },
+      { title: 'Java Algorithmic Foundations', icon: 'fa-brands fa-java', color: '#ff7b00' },
+      { title: 'Linked List & Recursion', icon: 'fa-solid fa-network-wired', color: '#10b981' }
+    ],
+    recentSubmissions: [
+      { title: 'Reverse Nodes in k-Group', status: 'Accepted', lang: 'Java', difficulty: 'Hard', time: 'Recently' },
+      { title: 'Decode String', status: 'Accepted', lang: 'Java', difficulty: 'Medium', time: 'Recently' },
+      { title: 'Odd Even Linked List', status: 'Accepted', lang: 'Java', difficulty: 'Medium', time: 'Recently' },
+      { title: 'Palindrome Linked List', status: 'Accepted', lang: 'Java', difficulty: 'Easy', time: 'Recently' },
+      { title: 'Rotate List', status: 'Accepted', lang: 'Java', difficulty: 'Medium', time: 'Recently' }
     ]
   });
   const [loading, setLoading] = useState(true);
@@ -35,7 +43,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
           }
         }
       } catch (_e) {
-        // Fallback to verified initial stats
+        // Fallback to verified real baseline
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -46,20 +54,21 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
     };
   }, []);
 
-  const total = stats.totalSolved || 356;
-  const easy = stats.easySolved || 142;
-  const medium = stats.mediumSolved || 182;
-  const hard = stats.hardSolved || 32;
+  const total = stats.totalSolved || 65;
+  const easy = stats.easySolved || 15;
+  const medium = stats.mediumSolved || 41;
+  const hard = stats.hardSolved || 9;
 
   // Percentage calculations
   const easyPct = Math.round((easy / total) * 100);
   const medPct = Math.round((medium / total) * 100);
   const hardPct = Math.round((hard / total) * 100);
 
-  // SVG Circle calculations
+  // SVG Circle calculations (milestone 100 problems)
   const radius = 42;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (Math.min(total / 500, 1) * circumference);
+  const targetMilestone = 100;
+  const strokeDashoffset = circumference - (Math.min(total / targetMilestone, 1) * circumference);
 
   return (
     <div
@@ -79,11 +88,11 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
             <div className="flex items-center gap-2">
               <h4 className="text-white font-semibold text-sm tracking-wide">LeetCode & Problem-Solving</h4>
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
-                Verified
+                Live Sync
               </span>
             </div>
             <p className="text-white/40 text-xs font-mono">
-              @ayush7162 • Top {stats.topPercentage || '11.8'}% Globally
+              @ayush7162 • Global Rank #{Number(stats.ranking || 2350736).toLocaleString()}
             </p>
           </div>
         </div>
@@ -94,9 +103,9 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
           rel="noopener noreferrer"
           onClick={() => playTick('click')}
           className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/40 text-white/80 hover:text-cyan-300 text-xs font-mono transition-all flex items-center gap-1.5"
-          title="Inspect verified LeetCode profile"
+          title="Inspect verified live LeetCode profile"
         >
-          <span>Inspect</span>
+          <span>Live Profile</span>
           <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
         </a>
       </div>
@@ -131,19 +140,19 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               <span className="text-2xl font-bold font-mono text-white tracking-tight">
-                {total}+
+                {total}
               </span>
               <span className="text-[10px] text-white/40 uppercase tracking-widest font-mono">
-                Solved
+                Solved / {stats.totalQuestions || 4096}
               </span>
             </div>
           </div>
           <span className="text-[11px] text-cyan-400/90 font-mono mt-2 font-medium">
-            {stats.acceptanceRate}% Acceptance
+            {stats.acceptanceRate || 59.6}% Acceptance Rate
           </span>
         </div>
 
-        {/* Right: Breakdown bars & Contest rank */}
+        {/* Right: Breakdown bars & Submissions */}
         <div className="sm:col-span-7 space-y-3">
           {/* Easy Bar */}
           <div>
@@ -154,7 +163,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
               </span>
               <span className="text-white/70">
                 <strong className="text-white font-semibold">{easy}</strong>
-                <span className="text-white/40 text-[10px] ml-1">({easyPct}%)</span>
+                <span className="text-white/40 text-[10px] ml-1">/ {stats.totalEasy || 974} ({easyPct}%)</span>
               </span>
             </div>
             <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
@@ -174,7 +183,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
               </span>
               <span className="text-white/70">
                 <strong className="text-white font-semibold">{medium}</strong>
-                <span className="text-white/40 text-[10px] ml-1">({medPct}%)</span>
+                <span className="text-white/40 text-[10px] ml-1">/ {stats.totalMedium || 2136} ({medPct}%)</span>
               </span>
             </div>
             <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
@@ -194,7 +203,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
               </span>
               <span className="text-white/70">
                 <strong className="text-white font-semibold">{hard}</strong>
-                <span className="text-white/40 text-[10px] ml-1">({hardPct}%)</span>
+                <span className="text-white/40 text-[10px] ml-1">/ {stats.totalHard || 986} ({hardPct}%)</span>
               </span>
             </div>
             <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
@@ -205,20 +214,22 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
             </div>
           </div>
 
-          {/* Contest Rating & Badges */}
-          <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px] font-mono">
-            <span className="px-2 py-1 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
-              <i className="fa-solid fa-trophy mr-1 text-amber-400" />
-              Rating: {stats.contestRating || '1,742'}
+          {/* Recent Real Submissions from Ayush's Profile */}
+          <div className="pt-2 border-t border-white/5">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block mb-1.5 font-semibold">
+              Recent Java Submissions:
             </span>
-            <span className="px-2 py-1 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">
-              <i className="fa-solid fa-fire mr-1 text-purple-400" />
-              {stats.streak || '48'}-Day Streak
-            </span>
-            <span className="px-2 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
-              <i className="fa-solid fa-award mr-1 text-cyan-400" />
-              100-Days Badge
-            </span>
+            <div className="flex flex-wrap items-center gap-1.5 text-[10.5px] font-mono">
+              {(stats.recentSubmissions || []).slice(0, 3).map((sub, idx) => (
+                <span
+                  key={idx}
+                  className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/80 flex items-center gap-1"
+                >
+                  <i className="fa-brands fa-java text-amber-400 text-[10px]" />
+                  <span>{sub.title}</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

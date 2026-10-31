@@ -268,6 +268,13 @@ function createAdminController({ store, config }) {
     async syncPortfolio(req, res) {
       const body = await readJsonBody(req);
       const synced = store.syncPortfolioState(body || {});
+      if (typeof store.onPersistMongo === 'function') {
+        try {
+          await store.onPersistMongo(store.state);
+        } catch (syncErr) {
+          console.warn('[AdminController] Mongo persistence warning:', syncErr.message);
+        }
+      }
       return sendJson(res, 200, { synced: true, state: synced });
     }
   };

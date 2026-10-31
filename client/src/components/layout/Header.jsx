@@ -685,7 +685,7 @@ export function Header() {
                   >
                     <i className="fa-solid fa-terminal text-cyan-400" style={{ fontSize: '10px' }} />
                     <span className="hidden sm:inline">&gt;_ Terminal</span>
-                    <span className="cmd-kbd hidden md:inline">Ctrl+~</span>
+                    <span className="cmd-kbd hidden xl:inline">Ctrl+~</span>
                   </button>
                 </div>
               )}
@@ -766,6 +766,7 @@ export function Header() {
           <button
             type="button"
             className="text-slate-400 hover:text-white text-xl p-2"
+            aria-label="Close navigation menu"
             onClick={() => {
               playTick();
               setMobileMenuOpen(false);
@@ -776,6 +777,26 @@ export function Header() {
         </div>
 
         <div className="mobile-drawer-links">
+          <div className="mobile-drawer-theme-box mb-3 pb-3 border-b border-white/10 flex items-center justify-between">
+            <span className="text-xs text-slate-400 font-mono">Theme Palette:</span>
+            <select
+              className="theme-selector-mobile text-xs py-1.5 px-3 rounded-lg bg-black/60 border border-white/20 text-white outline-none"
+              value={currentTheme}
+              onChange={(e) => handleThemeChange(e.target.value)}
+              aria-label="Mobile Theme Selector"
+            >
+              <option value="theme-midnight">🌙 Midnight</option>
+              <option value="theme-ocean">🌊 Ocean</option>
+              <option value="theme-forest">🌲 Forest</option>
+              <option value="theme-sunset">🌅 Sunset</option>
+              <option value="theme-cyberpunk">⚡ Cyberpunk</option>
+              <option value="theme-gold">👑 Luxury Gold</option>
+              <option value="theme-dracula">🧛 Dracula</option>
+              <option value="theme-nord">❄️ Nord Frost</option>
+              <option value="theme-synthwave">👾 Synthwave 84</option>
+              <option value="theme-tokyo">🌌 Tokyo Night</option>
+            </select>
+          </div>
           {navItems.map((item) => (
             <NavLink
               key={item.path}

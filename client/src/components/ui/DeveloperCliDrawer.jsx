@@ -86,7 +86,7 @@ export function DeveloperCliDrawer() {
     setLogs((prev) => [...prev, entry]);
   };
 
-  const handleCommand = (rawCmd) => {
+  const handleCommand = async (rawCmd) => {
     const trimmed = rawCmd.trim();
     if (!trimmed) return;
 
@@ -112,7 +112,7 @@ export function DeveloperCliDrawer() {
             '  cat bio.txt               → View Ayush\'s engineering bio & mission statement',
             '  projects [--tag=NAME]     → List featured full-stack & systems projects',
             '  skills                    → Interactive matrix of technical proficiencies',
-            '  leetcode                  → Pull problem-solving metrics (350+ solved, contest rating)',
+            '  leetcode                  → Pull live verified problem-solving metrics from LeetCode (@ayush7162)',
             '  architecture              → High-level microservices & portfolio blueprint',
             '  api                       → Explore interactive API sandbox endpoints',
             '  sudo hire                 → Instant trigger: Hire & Direct Engagement modal',
@@ -232,19 +232,35 @@ export function DeveloperCliDrawer() {
       }
 
       case 'leetcode': {
-        addLog({
-          type: 'output',
-          content: [
-            'LEETCODE PROBLEM SOLVING METRICS (Profile: ayush7162):',
-            '  • Problems Solved:     350+ Algorithmic Challenges',
-            '  • Easy:                140+  [===================>         ]',
-            '  • Medium:              180+  [========================>     ]',
-            '  • Hard:                30+   [========>                     ]',
-            '  • Contest Rating:      1,740+ (Top 12% Globally)',
-            '  • Acceptance Rate:     71.4% Efficiency Benchmark',
-            '  • Verified URL:        https://leetcode.com/u/ayush7162/'
-          ].join('\n')
-        });
+        addLog({ type: 'output', content: 'Fetching live LeetCode stats for @ayush7162...' });
+        try {
+          const res = await fetch('/api/public/leetcode-stats');
+          const data = await res.json();
+          const s = data.stats || {};
+          addLog({
+            type: 'output',
+            content: [
+              `LEETCODE PROBLEM SOLVING METRICS (Live Profile: ${s.username || 'ayush7162'}):`,
+              `  • Problems Solved:     ${s.totalSolved || 65} / ${s.totalQuestions || 4096} Problems`,
+              `  • Easy Solved:         ${s.easySolved || 15}  [===================>         ]`,
+              `  • Medium Solved:       ${s.mediumSolved || 41}  [========================>     ]`,
+              `  • Hard Solved:         ${s.hardSolved || 9}   [========>                     ]`,
+              `  • Global Ranking:      #${Number(s.ranking || 2350736).toLocaleString()}`,
+              `  • Acceptance Rate:     ${s.acceptanceRate || 59.6}%`,
+              `  • Primary Language:    Java (Data Structures & Algorithmic Foundations)`,
+              `  • Verified Live URL:   ${s.profileUrl || 'https://leetcode.com/u/ayush7162/'}`
+            ].join('\n')
+          });
+        } catch (_e) {
+          addLog({
+            type: 'output',
+            content: [
+              'LEETCODE PROBLEM SOLVING METRICS (Profile: ayush7162):',
+              '  • Problems Solved:     65 Algorithmic Challenges (15 Easy, 41 Medium, 9 Hard)',
+              '  • Verified Live URL:   https://leetcode.com/u/ayush7162/'
+            ].join('\n')
+          });
+        }
         break;
       }
 
@@ -480,6 +496,7 @@ export function DeveloperCliDrawer() {
               onClick={() => setIsOpen(false)}
               className="w-3 h-3 rounded-full bg-rose-500/80 hover:bg-rose-400 transition-colors flex items-center justify-center group"
               title="Close terminal (Esc)"
+              aria-label="Close terminal"
             >
               <i className="fa-solid fa-xmark text-[8px] text-black opacity-0 group-hover:opacity-100" />
             </button>
@@ -487,6 +504,7 @@ export function DeveloperCliDrawer() {
               onClick={() => setIsMaximized((prev) => !prev)}
               className="w-3 h-3 rounded-full bg-amber-500/80 hover:bg-amber-400 transition-colors flex items-center justify-center group"
               title="Toggle maximize"
+              aria-label="Toggle maximize terminal"
             >
               <i className="fa-solid fa-up-right-and-down-left-from-center text-[7px] text-black opacity-0 group-hover:opacity-100" />
             </button>
@@ -494,6 +512,7 @@ export function DeveloperCliDrawer() {
               onClick={() => setLogs([])}
               className="w-3 h-3 rounded-full bg-emerald-500/80 hover:bg-emerald-400 transition-colors flex items-center justify-center group"
               title="Clear terminal buffer"
+              aria-label="Clear terminal buffer"
             >
               <i className="fa-solid fa-broom text-[7px] text-black opacity-0 group-hover:opacity-100" />
             </button>
@@ -512,6 +531,7 @@ export function DeveloperCliDrawer() {
             <button
               onClick={() => setIsOpen(false)}
               className="text-white/40 hover:text-white px-1.5 py-0.5 rounded hover:bg-white/10 transition"
+            aria-label="Close terminal"
             >
               <i className="fa-solid fa-xmark" />
             </button>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 
@@ -18,6 +18,12 @@ export function BackgroundLayers() {
     location.pathname &&
     (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
   );
+
+  const [showDroplets, setShowDroplets] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowDroplets(true), 150);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -53,7 +59,7 @@ export function BackgroundLayers() {
       </div>
 
       {/* 6 Realistic 3D Floating Liquid Droplets — hidden on case study detail pages and admin to ensure 100% text legibility */}
-      {!isCaseStudy && !isAdmin && (
+      {!isCaseStudy && !isAdmin && showDroplets && (
         <div className="spheres-container" aria-hidden="true">
           <div className="droplet" />
           <div className="droplet" />

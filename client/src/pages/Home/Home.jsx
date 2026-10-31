@@ -107,7 +107,8 @@ export function HomePage() {
           opacity: 0,
           scale: 0.9,
           duration: 0.6,
-          delay: 0.1
+          delay: 0.1,
+          clearProps: 'all'
         })
         .from(
           '.hero-eyebrow',
@@ -146,17 +147,23 @@ export function HomePage() {
           },
           '-=0.4'
         )
-        .from(
+        .fromTo(
           '.hero-cta-btn',
           {
-            y: 25,
+            y: 20,
             opacity: 0,
-            scale: 0.95,
-            stagger: 0.12,
-            duration: 0.6,
-            ease: 'back.out(1.2)'
+            scale: 0.95
           },
-          '-=0.4'
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            stagger: 0.1,
+            duration: 0.6,
+            ease: 'back.out(1.2)',
+            clearProps: 'all'
+          },
+          '-=0.35'
         )
         .from(
           '.hero-social-wrap',
@@ -223,19 +230,22 @@ export function HomePage() {
         ease: 'power3.out'
       });
 
-      gsap.from('.bento-focus-card', {
-        scrollTrigger: {
-          trigger: '.bento-focus-grid',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
-        y: 40,
-        opacity: 0,
-        scale: 0.95,
-        stagger: 0.12,
-        duration: 0.75,
-        ease: 'back.out(1.2)'
-      });
+      const bentoCards = containerRef.current.querySelectorAll('.bento-focus-card');
+      if (bentoCards.length > 0) {
+        gsap.from(bentoCards, {
+          scrollTrigger: {
+            trigger: '.bento-focus-grid',
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          },
+          y: 40,
+          opacity: 0,
+          scale: 0.95,
+          stagger: 0.12,
+          duration: 0.75,
+          ease: 'back.out(1.2)'
+        });
+      }
 
       // 3. Section 03: Projects Showcase ScrollTrigger
       gsap.from('.projects-home-section .section-header > *', {
@@ -251,19 +261,22 @@ export function HomePage() {
         ease: 'power3.out'
       });
 
-      gsap.from('.projects-home-grid .project-card', {
-        scrollTrigger: {
-          trigger: '.projects-home-grid',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
-        y: 50,
-        opacity: 0,
-        scale: 0.96,
-        stagger: 0.15,
-        duration: 0.85,
-        ease: 'back.out(1.2)'
-      });
+      const projCards = containerRef.current.querySelectorAll('.projects-home-grid .project-card');
+      if (projCards.length > 0) {
+        gsap.from(projCards, {
+          scrollTrigger: {
+            trigger: '.projects-home-grid',
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          },
+          y: 50,
+          opacity: 0,
+          scale: 0.96,
+          stagger: 0.15,
+          duration: 0.85,
+          ease: 'back.out(1.2)'
+        });
+      }
 
       // 4. Section 04: Certificates Showcase ScrollTrigger
       gsap.from('.certs-home-section .section-header > *', {
@@ -279,19 +292,22 @@ export function HomePage() {
         ease: 'power3.out'
       });
 
-      gsap.from('.certs-home-grid .cert-card', {
-        scrollTrigger: {
-          trigger: '.certs-home-grid',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
-        y: 45,
-        opacity: 0,
-        scale: 0.96,
-        stagger: 0.15,
-        duration: 0.8,
-        ease: 'back.out(1.2)'
-      });
+      const certCards = containerRef.current.querySelectorAll('.certs-home-grid .cert-card');
+      if (certCards.length > 0) {
+        gsap.from(certCards, {
+          scrollTrigger: {
+            trigger: '.certs-home-grid',
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          },
+          y: 45,
+          opacity: 0,
+          scale: 0.96,
+          stagger: 0.15,
+          duration: 0.8,
+          ease: 'back.out(1.2)'
+        });
+      }
 
       // 5. Section 05: Academic Journey ScrollTrigger
       gsap.from('.journey-home-section .section-header > *', {
@@ -307,19 +323,22 @@ export function HomePage() {
         ease: 'power3.out'
       });
 
-      gsap.from('.journey-card', {
-        scrollTrigger: {
-          trigger: '.journey-grid',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
-        y: 40,
-        opacity: 0,
-        scale: 0.96,
-        stagger: 0.14,
-        duration: 0.8,
-        ease: 'back.out(1.2)'
-      });
+      const journeyCards = containerRef.current.querySelectorAll('.journey-card');
+      if (journeyCards.length > 0) {
+        gsap.from(journeyCards, {
+          scrollTrigger: {
+            trigger: '.journey-grid',
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          },
+          y: 40,
+          opacity: 0,
+          scale: 0.96,
+          stagger: 0.14,
+          duration: 0.8,
+          ease: 'back.out(1.2)'
+        });
+      }
 
       // 6. Section 06: CTA Banner ScrollTrigger
       gsap.from('.home-cta-banner', {
@@ -349,10 +368,10 @@ export function HomePage() {
         schema={[personSchema(p), websiteSchema(p)]}
       />
       {/* Hero & Bento Stage */}
-      <section ref={heroRef} className="mx-auto max-w-7xl px-4 pt-28 pb-16 sm:px-6 lg:px-8 sm:pt-32 lg:pt-36">
+      <section ref={heroRef} className="mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 lg:px-8 sm:pt-28 lg:pt-28 lg:pb-14">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
           {/* Left Column (5 Cols) */}
-          <div className="lg:col-span-5 space-y-6">
+          <div className="lg:col-span-5 space-y-4">
             <div className="hero-badge inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-charcoal/90 px-3.5 py-1.5 shadow-sm">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sage opacity-75" />
@@ -363,7 +382,7 @@ export function HomePage() {
 
             <div className="space-y-3.5">
               <p className="hero-eyebrow font-mono text-xs font-semibold uppercase tracking-[0.16em] text-vermilion">{p.eyebrow}</p>
-              <h1 className="hero-headline font-display text-4xl font-extrabold tracking-tight text-alabaster sm:text-5xl lg:text-[3.35rem] leading-[1.08]">
+              <h1 className="hero-headline font-display text-4xl font-extrabold tracking-tight text-alabaster sm:text-5xl lg:text-[2.85rem] xl:text-[3.25rem] leading-[1.1]">
                 {p.headline}
               </h1>
 

@@ -139,7 +139,21 @@ export function ProjectCard({
           if (!liveHref || liveHref === '#') e.preventDefault();
         }}
       >
-        <img src={imgSrc} alt={proj.title} loading="lazy" />
+        <picture>
+          {imgSrc && imgSrc.includes('airbnb-clone-preview') && (
+            <source srcSet="/images/airbnb-clone-preview.webp" type="image/webp" />
+          )}
+          <img
+            src={imgSrc}
+            alt={proj.title}
+            loading={indexNum === 1 ? "eager" : "lazy"}
+            fetchPriority={indexNum === 1 ? "high" : "auto"}
+            decoding={indexNum === 1 ? "sync" : "async"}
+            width="600"
+            height="340"
+            style={{ aspectRatio: "16/9", objectFit: "cover" }}
+          />
+        </picture>
         <div className="project-badges">
           <div className="p-badge">{badgeText}</div>
           {hasCaseStudy && (
@@ -159,7 +173,7 @@ export function ProjectCard({
           </span>
         </div>
 
-        <h3 className="project-title">{proj.title}</h3>
+        <h2 className="project-title">{proj.title}</h2>
         <p className="project-desc">{proj.shortDescription}</p>
 
         <div className="tech-stack">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { playTick } from '../../utils/audio';
 
 const SUGGESTIONS = [
@@ -10,6 +10,8 @@ const SUGGESTIONS = [
 ];
 
 export function AskAyushAiWidget() {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -90,6 +92,8 @@ export function AskAyushAiWidget() {
     }
   };
 
+  if (isAdmin) return null;
+
   return (
     <>
       {/* Floating Trigger Button (Bottom-Right) */}
@@ -145,6 +149,7 @@ export function AskAyushAiWidget() {
                 }}
                 className="w-7 h-7 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition flex items-center justify-center"
                 title="Close AI Assistant"
+                aria-label="Close AI Assistant"
               >
                 <i className="fa-solid fa-xmark text-xs" />
               </button>
@@ -242,6 +247,7 @@ export function AskAyushAiWidget() {
                 type="submit"
                 disabled={!inputVal.trim() || loading}
                 className="w-9 h-9 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-40 text-black flex items-center justify-center transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)] shrink-0"
+              aria-label="Send message"
               >
                 <i className="fa-solid fa-paper-plane text-xs" />
               </button>
