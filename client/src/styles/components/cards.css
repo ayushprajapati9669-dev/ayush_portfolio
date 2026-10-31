@@ -1,44 +1,134 @@
 /* ==========================================================================
-   Glassmorphism UI (Realistic 3D Liquid Droplets Theme):
-   - Background: rgba(15, 30, 40, 0.4)
-   - Backdrop Filter: blur(20px) saturate(150%)
-   - Border: 1px solid rgba(255, 255, 255, 0.12)
-   - Subtle inner glow: box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06)
-   - Hover: translateY(-2px), blue glow box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4)
+   Obsidian Dark Editorial Component & Card Architecture (Reference Standard)
+   - Cards: var(--bg-card), border-color: var(--border-color), backdrop-filter: blur(12px)
+   - Hover: var(--border-medium), var(--bg-card-hover)
+   - Primary Buttons: Pill-shaped, background: var(--text-primary), color: #030303, font-weight: 600
+   - Secondary Buttons: Transparent with 1px solid var(--border-color), color: var(--text-primary)
+   - Editorial Portrait Treatment: Monochrome dithered halftone blending into #030303
    ========================================================================== */
 
 .glass-card,
 .glass-panel,
-.glass-card-admin {
-  background: rgba(15, 30, 40, 0.4) !important;
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+.glass-card-admin,
+.card-editorial,
+.project-card,
+.about-card,
+.profile-card {
+  background: var(--bg-card, rgba(10, 10, 10, 0.78)) !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08)) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, background 0.3s ease !important;
 }
 
 .glass-card-hover,
 .glass-card:hover,
-.glass-card-hover:hover {
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+.glass-card-hover:hover,
+.project-card:hover,
+.about-card:hover,
+.profile-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--border-medium, rgba(255, 255, 255, 0.16)) !important;
+  background: var(--bg-card-hover, rgba(18, 18, 18, 0.9)) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
-.glass-card:hover,
-.glass-card-hover:hover {
-  transform: translateY(-2px);
-  border-color: rgba(56, 189, 248, 0.4) !important;
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-}
-
-/* Modals & Dialogs Glassmorphism */
+/* Modals & Dialogs */
 .modal-box,
 .modal-content,
 .cmd-modal {
-  background: rgba(15, 30, 40, 0.75) !important;
-  backdrop-filter: blur(25px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(25px) saturate(150%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  background: #0d0d0d !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border: 1px solid var(--border-medium, rgba(255, 255, 255, 0.16)) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 35px 80px -15px rgba(0, 0, 0, 0.95) !important;
 }
 
+/* Primary Pill Button (Reference: Let's talk / Explore my work) */
+.btn-primary,
+.hero-btn-primary,
+button.btn-primary {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border-radius: 9999px !important;
+  background: var(--text-primary, #f4f1ec) !important;
+  color: #030303 !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  padding: 10px 22px !important;
+  border: none !important;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.12) !important;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+.btn-primary:hover,
+.hero-btn-primary:hover,
+button.btn-primary:hover {
+  background: #ffffff !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Secondary Button (Reference: Start a conversation / Code) */
+.btn-secondary,
+.btn-outline,
+button.btn-outline {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border-radius: 9999px !important;
+  background: transparent !important;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12)) !important;
+  color: var(--text-primary, #f4f1ec) !important;
+  font-weight: 500 !important;
+  font-size: 13.5px !important;
+  padding: 10px 22px !important;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+.btn-secondary:hover,
+.btn-outline:hover,
+button.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: var(--border-medium, rgba(255, 255, 255, 0.25)) !important;
+  color: #ffffff !important;
+  transform: translateY(-1.5px) !important;
+}
+
+/* Editorial Monochrome Portrait Treatment (Matching Image 2 Sarthak Reference) */
+.group img[src*="ayush-hero-portrait"],
+.group img[alt*="Ayush"],
+.portrait-container img {
+  filter: grayscale(100%) contrast(1.15) brightness(0.92) !important;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  -webkit-mask-image: radial-gradient(circle at 50% 48%, black 48%, transparent 92%);
+  mask-image: radial-gradient(circle at 50% 48%, black 48%, transparent 92%);
+}
+
+.group:hover img[src*="ayush-hero-portrait"],
+.group:hover img[alt*="Ayush"],
+.portrait-container:hover img {
+  filter: grayscale(0%) contrast(1.05) brightness(1) !important;
+  transform: scale(1.02);
+}
+
+/* Project Image Grayscale to Color Reveal */
+.project-card .project-img-wrap img {
+  filter: grayscale(100%) contrast(1.1) brightness(0.88);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-card:hover .project-img-wrap img {
+  filter: grayscale(0%) contrast(1.05) brightness(1);
+  transform: scale(1.02);
+}

@@ -8,8 +8,8 @@
    ========================================================================== */
 
 :root {
-  --accent-1: #38bdf8;
-  --accent-2: #0ea5e9;
+  --accent-1: #f4f1ec;
+  --accent-2: #d0c8be;
   --accent-3: #a259ff;
   --accent-glow: rgba(56, 189, 248, 0.4);
   --border: rgba(255, 255, 255, 0.08);
@@ -63,12 +63,12 @@
 }
 
 .certificates-page .page-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Instrument Serif', sans-serif;
   font-size: clamp(2.8rem, 6vw, 4.5rem);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -2px;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #06b6d4 100%);
+  background: none;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;
@@ -312,7 +312,7 @@
 }
 
 .cert-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Instrument Serif', sans-serif;
   font-size: 22px;
   font-weight: 600;
   color: white;
@@ -341,7 +341,7 @@
 }
 .btn-view {
   position: relative;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+  background: linear-gradient(135deg, #f4f1ec, #d0c8be) !important;
   color: #000 !important;
   padding: 10px 22px;
   border-radius: 50px;
@@ -460,7 +460,7 @@
 }
 .modal-title {
   color: white;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Instrument Serif', sans-serif;
   font-size: 22px;
   font-weight: 600;
   text-transform: capitalize;
@@ -676,4 +676,15 @@
   .modal-hint {
     display: none;
   }
+}
+
+
+/* ==========================================================================
+   Editorial Certificates Overrides
+   ========================================================================== */
+.certificates-page .page-title {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  color: #f4f1ec !important;
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
 }

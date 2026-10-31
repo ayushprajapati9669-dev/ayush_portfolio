@@ -1,12 +1,26 @@
 /* ==========================================================================
-   Realistic 3D Liquid Droplets Theme Background Layers:
-   - Deep oceanic gradient background
-   - 6 Floating 3D realistic liquid droplets / spheres with refraction
-   - SVG fractal noise texture overlay at opacity: 0.04
-   - Interactive mouse light with vibrant water blue glow (#38bdf8)
+   Obsidian Dark Editorial Atmosphere & Background Effects (Reference Style)
+   - Deep pure pitch obsidian background (#030303)
+   - Waving subtle dot mesh / particle matrix (Matching Image 1)
+   - 4-column architectural hairline guides
+   - Subtle film grain noise overlay
+   - COMPLETE REMOVAL OF 3D SPHERES (as explicitly requested)
    ========================================================================== */
 
-/* Deep Oceanic Liquid Background */
+/* 1. Complete Removal of 3D Spheres & Droplets */
+.spheres-container,
+.droplet,
+.studio-sphere,
+.sphere {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* 2. Deep Obsidian Pitch Black Canvas */
 .liquid-bg,
 .aurora-bg {
   position: fixed;
@@ -14,187 +28,82 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: var(--liquid-gradient, linear-gradient(135deg, #0a1118 0%, #1e3a4d 50%, #0d2c3d 100%)) !important;
-  transition: background 0.4s ease;
+  background: #030303 !important;
 }
 
-.liquid-bg-case-study {
-  background: #070B14 !important;
-}
-
-.liquid-bg-case-study .aurora-blob {
-  opacity: 0.12 !important;
-  filter: blur(160px) !important;
-}
-
-.liquid-bg::after,
-.aurora-bg::after {
+/* Subtle Waving Dot Matrix / Grid Mesh (Matching Reference Image 1) */
+.liquid-bg::before,
+.aurora-bg::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
-  opacity: 0.8;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.18;
+  mask-image: radial-gradient(ellipse at 30% 45%, black 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at 30% 45%, black 20%, transparent 75%);
+  animation: dotWaveShift 24s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
-/* Subtle Aurora Blobs tuned to oceanic water hues */
+@keyframes dotWaveShift {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(-20px) scale(1.04);
+  }
+}
+
+/* 3. Sarthak Sharma Architectural 4-Column Guide Grid */
+.editorial-grid-guides {
+  position: fixed;
+  inset: 0 clamp(24px, 5vw, 88px);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 25% 100%;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+}
+
+/* 4. Subtle Ambient Depth Radial Blobs (Emerald & Amber / 0.08 Opacity) */
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(140px);
-  opacity: 0.35;
-  mix-blend-mode: screen;
-  animation: auroraFloat 22s infinite alternate ease-in-out;
+  pointer-events: none;
 }
 
 .aurora-1 {
-  width: 70vw;
-  height: 70vw;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, transparent 60%);
-  top: -20%;
-  left: -20%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.08) 0%, transparent 65%);
+  top: -15%;
+  right: -10%;
+  opacity: 0.6;
 }
 
 .aurora-2 {
-  width: 60vw;
-  height: 60vw;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.35) 0%, transparent 60%);
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(255, 140, 89, 0.07) 0%, transparent 65%);
   bottom: -10%;
-  right: -10%;
-  animation-duration: 25s;
-  animation-delay: -5s;
+  left: -10%;
+  opacity: 0.5;
 }
 
 .aurora-3 {
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(162, 89, 255, 0.25) 0%, transparent 60%);
-  top: 30%;
-  left: 40%;
-  animation-duration: 30s;
-  animation-delay: -10s;
+  display: none !important;
 }
 
-@keyframes auroraFloat {
-  0% {
-    transform: translate(0, 0) scale(1) rotate(0deg);
-  }
-  100% {
-    transform: translate(12%, 8%) scale(1.15) rotate(35deg);
-  }
-}
-
-/* 3D Liquid Droplets / Spheres Container */
-.spheres-container {
-  contain: paint layout;
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  perspective: 1000px;
-}
-
-/* 6 Realistic 3D Liquid Droplets with Inset Highlights & Depth Shadows */
-.droplet,
-.sphere {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(56, 189, 248, 0.2) 40%, rgba(0, 0, 0, 0.6) 80%);
-  box-shadow: inset 0 10px 20px rgba(255, 255, 255, 0.4), inset 0 -10px 20px rgba(0, 0, 0, 0.6), 0 20px 40px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  animation: floatDroplet 20s infinite linear;
-  will-change: transform;
-}
-
-.droplet:nth-child(1),
-.sphere:nth-child(1) {
-  width: 350px;
-  height: 350px;
-  left: -10%;
-  top: 10%;
-  animation-duration: 25s;
-}
-
-.droplet:nth-child(2),
-.sphere:nth-child(2) {
-  width: 180px;
-  height: 180px;
-  right: 10%;
-  top: 20%;
-  animation-duration: 18s;
-  animation-delay: -5s;
-}
-
-.droplet:nth-child(3),
-.sphere:nth-child(3) {
-  width: 250px;
-  height: 250px;
-  left: 25%;
-  bottom: -10%;
-  animation-duration: 30s;
-  animation-delay: -10s;
-}
-
-.droplet:nth-child(4),
-.sphere:nth-child(4) {
-  width: 100px;
-  height: 100px;
-  right: 30%;
-  bottom: 20%;
-  animation-duration: 15s;
-  animation-delay: -2s;
-}
-
-.droplet:nth-child(5),
-.sphere:nth-child(5) {
-  width: 150px;
-  height: 150px;
-  left: 60%;
-  top: 50%;
-  animation-duration: 22s;
-  animation-delay: -8s;
-}
-
-.droplet:nth-child(6),
-.sphere:nth-child(6) {
-  width: 80px;
-  height: 80px;
-  left: 15%;
-  top: 60%;
-  animation-duration: 12s;
-  animation-delay: -4s;
-}
-
-@keyframes floatDroplet {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -45px, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-/* Background Noise Texture Overlay at opacity: 0.04 */
-.bg-noise {
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Dynamic Interactive Mouse Light Follower with Vibrant Water Blue Glow */
+/* 5. Minimal Ambient Cursor Spotlight Follower */
 .mouse-light {
   position: fixed;
-  width: 1000px;
-  height: 1000px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.025) 0%, transparent 65%);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
@@ -204,3 +113,18 @@
   transition: opacity 0.3s;
 }
 
+/* Noise overlay */
+.bg-noise {
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  z-index: 1;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-bg::before,
+  .aurora-blob {
+    animation: none !important;
+  }
+}

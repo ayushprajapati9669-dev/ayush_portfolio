@@ -1,3 +1,16 @@
+/* =========================================================================
+   Obsidian Dark Editorial Navbar & Minimal Chrome
+   ========================================================================= */
+.theme-selector,
+.accent-picker-wrapper,
+.accent-picker-btn,
+.accent-palette,
+.theme-selector-hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 /* Floating Beam Fixed Navbar */
 .nav-wrapper {
   position: fixed;
@@ -51,9 +64,15 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
     gap: 4px;
   }
   body.has-admin-sidebar .btn-primary {
-    padding: 7px 14px;
-    font-size: 11.5px;
-  }
+  background: #f4f1ec !important;
+  color: #030303 !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.12) !important;
+  transition: all 0.25s ease !important;
+}
   body.has-admin-sidebar .btn-outline {
     padding: 7px 12px;
     font-size: 11.5px;
@@ -144,7 +163,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(15, 30, 40, 0.6);
+  background: rgba(10, 10, 10, 0.8) !important;
   backdrop-filter: blur(30px) saturate(200%);
   -webkit-backdrop-filter: blur(30px) saturate(200%);
   border-radius: 58px;
@@ -162,7 +181,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   position: absolute;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
@@ -191,7 +210,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 .nav-logo-box {
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -210,7 +229,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .nav-logo-text {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -235,11 +254,11 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   top: 5px;
   left: 5px;
   height: calc(100% - 10px);
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
   border-radius: 50px;
   transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   z-index: 1;
-  box-shadow: 0 0 25px rgba(56, 189, 248, 0.4) !important;
+  box-shadow: none !important;
   pointer-events: none;
 }
 
@@ -266,7 +285,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .nav-link.active {
-  color: #000000 !important;
+  color: #f4f1ec !important;
   font-weight: 700;
 }
 
@@ -276,7 +295,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .nav-link.active i {
-  color: #000000 !important;
+  color: #f4f1ec !important;
 }
 
 .nav-active-dot {
@@ -319,14 +338,14 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 .btn-admin-cms.active {
   background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-  color: #000000 !important;
+  color: #f4f1ec !important;
   border-color: transparent;
   box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
   transform: translateY(-1px);
 }
 
 .btn-admin-cms.active i {
-  color: #000000 !important;
+  color: #f4f1ec !important;
 }
 
 .nav-v-divider {
@@ -440,7 +459,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .notif-head h4 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
   font-size: 13.5px;
   font-weight: 700;
   color: white;
@@ -613,25 +632,14 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .btn-primary {
-  position: relative;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-  border: none;
-  color: #000;
-  padding: 7px 17px;
-  flex-shrink: 0;
-  border-radius: 50px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  outline: none;
-  text-decoration: none;
-  white-space: nowrap;
-  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
+  background: #f4f1ec !important;
+  color: #030303 !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.12) !important;
+  transition: all 0.25s ease !important;
 }
 
 .btn-primary:hover {
@@ -708,9 +716,15 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
     font-size: 11.5px !important;
   }
   .btn-primary {
-    padding: 7px 13px !important;
-    font-size: 12px !important;
-  }
+  background: #f4f1ec !important;
+  color: #030303 !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.12) !important;
+  transition: all 0.25s ease !important;
+}
 }
 
 @media (max-width: 992px) {
@@ -736,8 +750,15 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
     display: none !important;
   }
   .btn-primary {
-    display: none !important;
-  }
+  background: #f4f1ec !important;
+  color: #030303 !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.12) !important;
+  transition: all 0.25s ease !important;
+}
   .navbar {
     padding: 6px 12px 6px 14px !important;
   }
@@ -973,3 +994,37 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   transform: translateX(2px);
 }
 
+
+
+/* ==========================================================================
+   Editorial Clean Navbar Logo (Matching Image 6 & 7)
+   ========================================================================== */
+.nav-logo-box {
+  display: none !important;
+}
+
+.nav-logo-text {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-size: 24px !important;
+  font-weight: 500 !important;
+  color: #f4f1ec !important;
+  letter-spacing: -0.4px !important;
+  text-decoration: none !important;
+}
+
+.btn-primary {
+  background: #f4f1ec !important;
+  color: #030303 !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.25s ease !important;
+}
+
+.btn-primary:hover {
+  background: #e2ded7 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.18) !important;
+}

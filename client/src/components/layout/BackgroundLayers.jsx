@@ -51,31 +51,20 @@ export function BackgroundLayers() {
 
   return (
     <>
-      {/* Realistic 3D Deep Oceanic Liquid Background */}
+      {/* Obsidian Pitch Black Liquid Canvas with Subtle Waving Dot Matrix */}
       <div className={`liquid-bg ${isCaseStudy ? 'liquid-bg-case-study' : ''}`} aria-hidden="true">
         <div className="aurora-blob aurora-1" />
         <div className="aurora-blob aurora-2" />
-        <div className="aurora-blob aurora-3" />
       </div>
 
-      {/* 6 Realistic 3D Floating Liquid Droplets — hidden on case study detail pages and admin to ensure 100% text legibility */}
-      {!isCaseStudy && !isAdmin && showDroplets && (
-        <div className="spheres-container" aria-hidden="true">
-          <div className="droplet" />
-          <div className="droplet" />
-          <div className="droplet" />
-          <div className="droplet" />
-          <div className="droplet" />
-          <div className="droplet" />
-        </div>
-      )}
+      {/* Sarthak Sharma 4-Column Architectural Hairline Guides */}
+      <div className="editorial-grid-guides" aria-hidden="true" />
 
-      {/* Noise Texture Overlay at opacity: 0.04 */}
+      {/* Film Grain Noise Texture Overlay */}
       <div className="bg-noise" aria-hidden="true" />
 
-      {/* Vibrant Water Blue Mouse Light Follower */}
+      {/* Minimal Ambient Cursor Spotlight Follower */}
       <div className="mouse-light" id="mouseLight" ref={mouseLightRef} aria-hidden="true" />
     </>
   );
 }
-
