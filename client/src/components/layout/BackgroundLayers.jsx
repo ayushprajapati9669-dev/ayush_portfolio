@@ -336,6 +336,10 @@ export function BackgroundLayers() {
       )}
 
       {/* Subtle Noise Texture Overlay */}
+            {/* Sarthak Sharma 4-Column Architectural Guides */}
+      <div className="editorial-grid-guides" aria-hidden="true" />
+
+      {/* Subtle Noise Texture Overlay */}
       <div className="bg-noise" aria-hidden="true" />
 
       {/* Interactive Water Blue Mouse Light Follower */}

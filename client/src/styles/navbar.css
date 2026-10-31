@@ -122,7 +122,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   left: 50%;
   width: 200%;
   height: 200%;
-  background: conic-gradient(from 0deg, transparent 0%, transparent 70%, var(--accent-1, #38bdf8) 85%, var(--accent-2, #0ea5e9) 100%);
+  background: conic-gradient(from 0deg, transparent 0%, transparent 70%, var(--accent-1, #ff8c59) 85%, var(--accent-2, #e7dcc9) 100%);
   transform-origin: center;
   animation: rotateBeam 4s linear infinite;
   opacity: 0;
@@ -144,7 +144,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(15, 30, 40, 0.6);
+  background: rgba(14, 13, 12, 0.78);
   backdrop-filter: blur(30px) saturate(200%);
   -webkit-backdrop-filter: blur(30px) saturate(200%);
   border-radius: 58px;
@@ -162,7 +162,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   position: absolute;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(255, 140, 89, 0.12) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
@@ -191,7 +191,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 .nav-logo-box {
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+  background: linear-gradient(135deg, #ff8c59, #e7dcc9) !important;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -200,7 +200,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   font-size: 17px;
   color: #000 !important;
   position: relative;
-  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 8px 20px rgba(255, 140, 89, 0.35) !important;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
 }
@@ -235,11 +235,11 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   top: 5px;
   left: 5px;
   height: calc(100% - 10px);
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+  background: linear-gradient(135deg, #ff8c59, #e7dcc9) !important;
   border-radius: 50px;
   transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   z-index: 1;
-  box-shadow: 0 0 25px rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 0 25px rgba(255, 140, 89, 0.35) !important;
   pointer-events: none;
 }
 
@@ -311,14 +311,14 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .btn-admin-cms:hover {
-  border-color: rgba(56, 189, 248, 0.4);
+  border-color: rgba(255, 140, 89, 0.35);
   background: rgba(56, 189, 248, 0.08);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 25px rgba(255, 140, 89, 0.35);
 }
 
 .btn-admin-cms.active {
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  background: linear-gradient(135deg, #ff8c59, #e7dcc9);
   color: #000000 !important;
   border-color: transparent;
   box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
@@ -371,9 +371,9 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 .notif-btn:hover,
 .notif-btn.open {
-  color: var(--accent-1, #38bdf8);
-  border-color: rgba(56, 189, 248, 0.4);
-  background: rgba(56, 189, 248, 0.1);
+  color: var(--accent-1, #ff8c59);
+  border-color: rgba(255, 140, 89, 0.35);
+  background: rgba(255, 140, 89, 0.12);
   box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
 }
 
@@ -398,7 +398,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 .notif-btn:hover .fa-bell {
   transform: scale(1.1);
-  color: var(--accent-1, #38bdf8);
+  color: var(--accent-1, #ff8c59);
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
@@ -598,9 +598,9 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 .btn-outline:hover {
   background: rgba(56, 189, 248, 0.1);
-  border-color: #38bdf8;
+  border-color: #ff8c59;
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 25px rgba(255, 140, 89, 0.35);
 }
 
 .cmd-kbd {
@@ -614,7 +614,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 .btn-primary {
   position: relative;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  background: linear-gradient(135deg, #ff8c59, #e7dcc9);
   border: none;
   color: #000;
   padding: 7px 17px;
@@ -631,12 +631,12 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   outline: none;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 8px 20px rgba(255, 140, 89, 0.35);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 25px rgba(255, 140, 89, 0.35);
 }
 
 .btn-primary::after {
@@ -969,7 +969,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 .admin-tools-popover .popover-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: var(--brand-color, #06b6d4);
+  color: var(--brand-color, #ff8c59);
   transform: translateX(2px);
 }
 

@@ -135,3 +135,16 @@ h1, h2, h3, .font-display {
   background: var(--brand-color, var(--accent-1, #06b6d4));
 }
 
+
+/* Reference Signature Emphasis & Sarthak Warm Vermilion Overrides */
+.text-cyanglow {
+  color: var(--accent-1, #ff8c59) !important;
+}
+
+.projects-page .filter-btn.active {
+  background: linear-gradient(135deg, var(--accent-1, #ff8c59), var(--accent-2, #e7dcc9)) !important;
+  color: #030303 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 25px rgba(255, 140, 89, 0.4) !important;
+  border-color: transparent !important;
+}

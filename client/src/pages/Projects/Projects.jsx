@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { ProjectCard } from '../../components/projects/ProjectCard';
-import { CertificatesPage } from '../Certificates/Certificates';
+
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { itemListSchema, projectSchema } from '../../utils/seo';

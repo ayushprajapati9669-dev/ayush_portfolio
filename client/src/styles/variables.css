@@ -1,63 +1,73 @@
 :root {
   color-scheme: dark;
 
-  /* BASE DEFAULTS */
-  --bg-base: #030712;
-  --bg-obsidian: #030712;
-  --bg-dark: #030712;
-  --bg-mid: #0f172a;
-  --bg-surface: rgba(15, 23, 42, 0.65);
-  --bg-panel: rgba(13, 20, 35, 0.75);
-  --bg-card: rgba(18, 27, 45, 0.65);
-  --card-bg: rgba(18, 27, 45, 0.75);
-  --bg-card-hover: rgba(26, 38, 60, 0.85);
-  --bg-input: rgba(0, 0, 0, 0.4);
-  --bg-modal: #0d1526;
-  --bg-elevated: rgba(30, 41, 59, 0.95);
+  /* SARTHAK SHARMA REFERENCE EXACT COLOR TOKENS */
+  --bg: #030303;
+  --surface: #0b0b0b;
+  --ink: #f1eee8;
+  --muted: #aaa9a4;
+  --blue: #ff8c59;
+  --line: #ccdcf524;
+  --gutter: clamp(24px, 5vw, 88px);
 
-  --text-primary: #f8fafc;
-  --text-alabaster: #f8fafc;
-  --text-main: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-stone: #8caab9;
-  --text-dim: #94a3b8;
-  --text-inverse: #020617;
+  /* BASE DEFAULTS: OBSIDIAN PITCH BLACK & WARM ALABASTER */
+  --bg-base: #030303;
+  --bg-obsidian: #030303;
+  --bg-dark: #030303;
+  --bg-mid: #0b0b0b;
+  --bg-surface: rgba(16, 15, 14, 0.72);
+  --bg-panel: rgba(14, 14, 13, 0.82);
+  --bg-card: rgba(16, 15, 14, 0.72);
+  --card-bg: rgba(16, 15, 14, 0.78);
+  --bg-card-hover: rgba(24, 22, 20, 0.88);
+  --bg-input: rgba(8, 8, 8, 0.6);
+  --bg-modal: #0c0b0a;
+  --bg-elevated: rgba(20, 19, 18, 0.95);
 
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-medium: rgba(255, 255, 255, 0.16);
-  --border: rgba(255, 255, 255, 0.1);
-  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-primary: #f1eee8;
+  --text-alabaster: #f1eee8;
+  --text-main: #f1eee8;
+  --text-secondary: #aaa9a4;
+  --text-muted: #888680;
+  --text-stone: #999790;
+  --text-dim: #aaa9a4;
+  --text-inverse: #030303;
 
-  /* BRAND ACCENT DEFAULTS (Cyan Default) */
-  --brand-color: #06b6d4;
-  --brand-hover: #0891b2;
-  --brand-glow: rgba(6, 182, 212, 0.45);
-  --brand-light: rgba(6, 182, 212, 0.12);
+  --border-color: #ccdcf524;
+  --border-subtle: #ccdcf518;
+  --border-medium: #ccdcf530;
+  --border: #ccdcf524;
+  --border-glass: rgba(255, 255, 255, 0.1);
 
-  --accent-primary: #06b6d4;
-  --accent-secondary: #3b82f6;
-  --accent-1: #06b6d4;
-  --accent-2: #3b82f6;
-  --accent-3: #a855f7;
-  --accent-cyan: #06b6d4;
-  --accent-glow: rgba(6, 182, 212, 0.45);
-  --gradient-primary: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  /* BRAND ACCENT: REFERENCE WARM VERMILION & CREAM */
+  --brand-color: #ff8c59;
+  --brand-hover: #ff7538;
+  --brand-glow: rgba(255, 140, 89, 0.35);
+  --brand-light: rgba(255, 140, 89, 0.12);
 
-  --nav-bg: rgba(9, 9, 11, 0.9);
-  --sidebar-bg: rgba(15, 23, 42, 0.7);
-  --liquid-gradient: linear-gradient(135deg, #030712 0%, #0d1526 50%, #060a14 100%);
+  --accent-primary: #ff8c59;
+  --accent-secondary: #e7dcc9;
+  --accent-1: #ff8c59;
+  --accent-2: #e7dcc9;
+  --accent-3: #ff5c28;
+  --accent-cyan: #ff8c59;
+  --accent-glow: rgba(255, 140, 89, 0.35);
+  --gradient-primary: linear-gradient(135deg, #ff8c59, #e7dcc9);
+
+  --nav-bg: rgba(14, 13, 12, 0.85);
+  --sidebar-bg: #0b0b0b;
+  --liquid-gradient: #030303;
 
   /* EDITORIAL TYPOGRAPHY & REFERENCE PALETTE */
-  --font-editorial: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-editorial: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+  --font-display: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+  --font-sans: 'DM Sans', 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'DM Mono', monospace;
 
-  --accent-vermilion: #ff5c28;
-  --accent-vermilion-glow: rgba(255, 92, 40, 0.4);
-  --accent-cream: #e8e2d8;
-  --hairline: rgba(255, 255, 255, 0.08);
+  --accent-vermilion: #ff8c59;
+  --accent-vermilion-glow: rgba(255, 140, 89, 0.35);
+  --accent-cream: #e7dcc9;
+  --hairline: #ccdcf524;
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -74,257 +84,278 @@
 
 /* 1. Midnight Theme */
 body.theme-midnight {
-  --bg-base: #030712 !important;
-  --bg-obsidian: #030712 !important;
-  --bg-dark: #030712 !important;
-  --bg-surface: rgba(13, 20, 35, 0.75) !important;
-  --bg-panel: rgba(13, 20, 35, 0.82) !important;
-  --bg-card: rgba(18, 27, 45, 0.7) !important;
-  --card-bg: rgba(18, 27, 45, 0.8) !important;
-  --sidebar-bg: rgba(10, 16, 28, 0.85) !important;
-  --nav-bg: rgba(7, 11, 20, 0.92) !important;
-  --bg-card-hover: rgba(26, 38, 60, 0.9) !important;
-  --bg-modal: #0d1526 !important;
-  --bg-elevated: rgba(30, 41, 59, 0.95) !important;
-  --border-color: rgba(255, 255, 255, 0.08) !important;
-  --border-subtle: rgba(255, 255, 255, 0.08) !important;
-  --border-medium: rgba(255, 255, 255, 0.16) !important;
-  --border: rgba(255, 255, 255, 0.1) !important;
-  --text-primary: #f8fafc !important;
-  --text-alabaster: #f8fafc !important;
-  --text-secondary: #94a3b8 !important;
-  --text-muted: #64748b !important;
-  --liquid-gradient: linear-gradient(135deg, #030712 0%, #0b1120 50%, #030712 100%) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
+  --bg-card-hover: rgba(25, 23, 21, 0.9) !important;
+  --bg-modal: #0c0b0a !important;
+  --bg-elevated: rgba(22, 20, 18, 0.95) !important;
+  --border-color: #ccdcf524 !important;
+  --border-subtle: #ccdcf518 !important;
+  --border-medium: #ccdcf530 !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
+  --text-secondary: #aaa9a4 !important;
+  --text-muted: #888680 !important;
+  --brand-color: #ff8c59 !important;
+  --brand-glow: rgba(255, 140, 89, 0.35) !important;
+  --brand-light: rgba(255, 140, 89, 0.12) !important;
+  --accent-1: #ff8c59 !important;
+  --accent-2: #e7dcc9 !important;
+  --accent-cyan: #ff8c59 !important;
+  --accent-glow: rgba(255, 140, 89, 0.35) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 2. Ocean Theme */
 body.theme-ocean {
-  --bg-base: #020a14 !important;
-  --bg-obsidian: #020a14 !important;
-  --bg-dark: #020a14 !important;
-  --bg-surface: rgba(7, 22, 41, 0.8) !important;
-  --bg-panel: rgba(7, 22, 41, 0.85) !important;
-  --bg-card: rgba(10, 30, 55, 0.7) !important;
-  --card-bg: rgba(10, 30, 55, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(5, 17, 33, 0.88) !important;
   --nav-bg: rgba(4, 14, 27, 0.92) !important;
   --bg-card-hover: rgba(15, 42, 75, 0.9) !important;
   --bg-modal: #071629 !important;
   --bg-elevated: rgba(12, 38, 68, 0.95) !important;
-  --border-color: rgba(56, 189, 248, 0.14) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(56, 189, 248, 0.1) !important;
   --border-medium: rgba(56, 189, 248, 0.22) !important;
-  --border: rgba(56, 189, 248, 0.15) !important;
-  --text-primary: #e0f2fe !important;
-  --text-alabaster: #e0f2fe !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #7dd3fc !important;
   --text-muted: #38bdf8 !important;
-  --liquid-gradient: linear-gradient(135deg, #020a14 0%, #071c33 50%, #031020 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 3. Forest Theme */
 body.theme-forest {
-  --bg-base: #041008 !important;
-  --bg-obsidian: #041008 !important;
-  --bg-dark: #041008 !important;
-  --bg-surface: rgba(8, 28, 16, 0.8) !important;
-  --bg-panel: rgba(8, 28, 16, 0.85) !important;
-  --bg-card: rgba(12, 38, 22, 0.7) !important;
-  --card-bg: rgba(12, 38, 22, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(6, 21, 12, 0.88) !important;
   --nav-bg: rgba(4, 16, 9, 0.92) !important;
   --bg-card-hover: rgba(18, 54, 32, 0.9) !important;
   --bg-modal: #082213 !important;
   --bg-elevated: rgba(14, 46, 26, 0.95) !important;
-  --border-color: rgba(52, 211, 153, 0.14) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(52, 211, 153, 0.1) !important;
   --border-medium: rgba(52, 211, 153, 0.22) !important;
-  --border: rgba(52, 211, 153, 0.15) !important;
-  --text-primary: #f0fdf4 !important;
-  --text-alabaster: #f0fdf4 !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #86efac !important;
   --text-muted: #4ade80 !important;
-  --liquid-gradient: linear-gradient(135deg, #041008 0%, #082615 50%, #031207 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 4. Sunset Theme */
 body.theme-sunset {
-  --bg-base: #14060c !important;
-  --bg-obsidian: #14060c !important;
-  --bg-dark: #14060c !important;
-  --bg-surface: rgba(35, 12, 22, 0.8) !important;
-  --bg-panel: rgba(35, 12, 22, 0.85) !important;
-  --bg-card: rgba(45, 16, 28, 0.7) !important;
-  --card-bg: rgba(45, 16, 28, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(26, 8, 16, 0.88) !important;
   --nav-bg: rgba(18, 5, 11, 0.92) !important;
   --bg-card-hover: rgba(62, 22, 38, 0.9) !important;
   --bg-modal: #250b17 !important;
   --bg-elevated: rgba(48, 16, 30, 0.95) !important;
-  --border-color: rgba(251, 113, 133, 0.14) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(251, 113, 133, 0.1) !important;
   --border-medium: rgba(251, 113, 133, 0.22) !important;
-  --border: rgba(251, 113, 133, 0.15) !important;
-  --text-primary: #fff7ed !important;
-  --text-alabaster: #fff7ed !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #fdba74 !important;
   --text-muted: #fb923c !important;
-  --liquid-gradient: linear-gradient(135deg, #14060c 0%, #290a18 50%, #11040a 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 5. Cyberpunk Theme */
 body.theme-cyberpunk {
-  --bg-base: #090014 !important;
-  --bg-obsidian: #090014 !important;
-  --bg-dark: #090014 !important;
-  --bg-surface: rgba(26, 6, 42, 0.82) !important;
-  --bg-panel: rgba(26, 6, 42, 0.88) !important;
-  --bg-card: rgba(35, 8, 56, 0.7) !important;
-  --card-bg: rgba(35, 8, 56, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(19, 4, 31, 0.9) !important;
   --nav-bg: rgba(14, 2, 23, 0.93) !important;
   --bg-card-hover: rgba(52, 12, 82, 0.9) !important;
   --bg-modal: #180326 !important;
   --bg-elevated: rgba(44, 10, 70, 0.95) !important;
-  --border-color: rgba(168, 85, 247, 0.18) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(168, 85, 247, 0.14) !important;
   --border-medium: rgba(168, 85, 247, 0.28) !important;
-  --border: rgba(168, 85, 247, 0.18) !important;
-  --text-primary: #f5f3ff !important;
-  --text-alabaster: #f5f3ff !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #c4b5fd !important;
   --text-muted: #a78bfa !important;
-  --liquid-gradient: linear-gradient(135deg, #090014 0%, #200533 50%, #0b0117 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 6. Luxury Gold Theme */
 body.theme-gold {
-  --bg-base: #0a0804 !important;
-  --bg-obsidian: #0a0804 !important;
-  --bg-dark: #0a0804 !important;
-  --bg-surface: rgba(28, 20, 10, 0.82) !important;
-  --bg-panel: rgba(28, 20, 10, 0.88) !important;
-  --bg-card: rgba(38, 28, 14, 0.7) !important;
-  --card-bg: rgba(38, 28, 14, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(20, 14, 7, 0.9) !important;
   --nav-bg: rgba(15, 10, 5, 0.93) !important;
   --bg-card-hover: rgba(55, 40, 20, 0.9) !important;
   --bg-modal: #1e1509 !important;
   --bg-elevated: rgba(46, 34, 16, 0.95) !important;
-  --border-color: rgba(245, 158, 11, 0.18) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(245, 158, 11, 0.14) !important;
   --border-medium: rgba(245, 158, 11, 0.28) !important;
-  --border: rgba(245, 158, 11, 0.18) !important;
-  --text-primary: #fffbeb !important;
-  --text-alabaster: #fffbeb !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #fde68a !important;
   --text-muted: #f59e0b !important;
-  --liquid-gradient: linear-gradient(135deg, #0a0804 0%, #221808 50%, #0d0a04 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 7. Dracula Theme */
 body.theme-dracula {
-  --bg-base: #0b0914 !important;
-  --bg-obsidian: #0b0914 !important;
-  --bg-dark: #0b0914 !important;
-  --bg-surface: rgba(24, 18, 41, 0.82) !important;
-  --bg-panel: rgba(24, 18, 41, 0.88) !important;
-  --bg-card: rgba(34, 25, 56, 0.7) !important;
-  --card-bg: rgba(34, 25, 56, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(18, 13, 31, 0.9) !important;
   --nav-bg: rgba(13, 9, 22, 0.93) !important;
   --bg-card-hover: rgba(48, 35, 78, 0.9) !important;
   --bg-modal: #171128 !important;
   --bg-elevated: rgba(42, 31, 68, 0.95) !important;
-  --border-color: rgba(189, 147, 249, 0.18) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(189, 147, 249, 0.12) !important;
   --border-medium: rgba(189, 147, 249, 0.25) !important;
-  --border: rgba(189, 147, 249, 0.16) !important;
-  --text-primary: #f8f8f2 !important;
-  --text-alabaster: #f8f8f2 !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #ff79c6 !important;
   --text-muted: #bd93f9 !important;
-  --liquid-gradient: linear-gradient(135deg, #0b0914 0%, #1d1430 50%, #0d0a17 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 8. Nord Frost Theme */
 body.theme-nord {
-  --bg-base: #0a0f18 !important;
-  --bg-obsidian: #0a0f18 !important;
-  --bg-dark: #0a0f18 !important;
-  --bg-surface: rgba(18, 27, 43, 0.8) !important;
-  --bg-panel: rgba(18, 27, 43, 0.85) !important;
-  --bg-card: rgba(26, 38, 59, 0.7) !important;
-  --card-bg: rgba(26, 38, 59, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(14, 20, 32, 0.88) !important;
   --nav-bg: rgba(10, 15, 24, 0.92) !important;
   --bg-card-hover: rgba(36, 52, 80, 0.9) !important;
   --bg-modal: #141c2c !important;
   --bg-elevated: rgba(32, 46, 72, 0.95) !important;
-  --border-color: rgba(136, 192, 208, 0.16) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(136, 192, 208, 0.12) !important;
   --border-medium: rgba(136, 192, 208, 0.24) !important;
-  --border: rgba(136, 192, 208, 0.16) !important;
-  --text-primary: #eceff4 !important;
-  --text-alabaster: #eceff4 !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #88c0d0 !important;
   --text-muted: #81a1c1 !important;
-  --liquid-gradient: linear-gradient(135deg, #0a0f18 0%, #152236 50%, #0a0f18 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 9. Synthwave 84 Theme */
 body.theme-synthwave {
-  --bg-base: #12071f !important;
-  --bg-obsidian: #12071f !important;
-  --bg-dark: #12071f !important;
-  --bg-surface: rgba(33, 14, 56, 0.82) !important;
-  --bg-panel: rgba(33, 14, 56, 0.88) !important;
-  --bg-card: rgba(45, 19, 76, 0.7) !important;
-  --card-bg: rgba(45, 19, 76, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(24, 10, 42, 0.9) !important;
   --nav-bg: rgba(16, 7, 28, 0.93) !important;
   --bg-card-hover: rgba(62, 26, 102, 0.9) !important;
   --bg-modal: #220e3a !important;
   --bg-elevated: rgba(52, 22, 88, 0.95) !important;
-  --border-color: rgba(255, 126, 219, 0.18) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(255, 126, 219, 0.12) !important;
   --border-medium: rgba(255, 126, 219, 0.26) !important;
-  --border: rgba(255, 126, 219, 0.16) !important;
-  --text-primary: #fff0f5 !important;
-  --text-alabaster: #fff0f5 !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #ff7edb !important;
   --text-muted: #fe4450 !important;
-  --liquid-gradient: linear-gradient(135deg, #12071f 0%, #2b0b46 50%, #10061c 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* 10. Tokyo Night Theme */
 body.theme-tokyo {
-  --bg-base: #080c18 !important;
-  --bg-obsidian: #080c18 !important;
-  --bg-dark: #080c18 !important;
-  --bg-surface: rgba(16, 23, 44, 0.82) !important;
-  --bg-panel: rgba(16, 23, 44, 0.88) !important;
-  --bg-card: rgba(23, 33, 62, 0.7) !important;
-  --card-bg: rgba(23, 33, 62, 0.8) !important;
+  --bg-base: #030303 !important;
+  --bg-obsidian: #030303 !important;
+  --bg-dark: #030303 !important;
+  --bg-surface: rgba(16, 15, 14, 0.75) !important;
+  --bg-panel: rgba(14, 14, 13, 0.85) !important;
+  --bg-card: rgba(16, 15, 14, 0.75) !important;
+  --card-bg: rgba(16, 15, 14, 0.8) !important;
   --sidebar-bg: rgba(12, 17, 33, 0.9) !important;
   --nav-bg: rgba(8, 12, 24, 0.93) !important;
   --bg-card-hover: rgba(32, 46, 86, 0.9) !important;
   --bg-modal: #131b34 !important;
   --bg-elevated: rgba(28, 40, 75, 0.95) !important;
-  --border-color: rgba(122, 162, 247, 0.18) !important;
+  --border-color: #ccdcf524 !important;
   --border-subtle: rgba(122, 162, 247, 0.12) !important;
   --border-medium: rgba(122, 162, 247, 0.26) !important;
-  --border: rgba(122, 162, 247, 0.16) !important;
-  --text-primary: #c0caf5 !important;
-  --text-alabaster: #c0caf5 !important;
+  --border: #ccdcf524 !important;
+  --text-primary: #f1eee8 !important;
+  --text-alabaster: #f1eee8 !important;
   --text-secondary: #7aa2f7 !important;
   --text-muted: #bb9af7 !important;
-  --liquid-gradient: linear-gradient(135deg, #080c18 0%, #151e3c 50%, #070a14 100%) !important;
+  --liquid-gradient: #030303 !important;
 }
 
 /* =========================================================================
    8 VIBRANT ACCENT COLORS (100% GLOBAL APPLICATION)
    ========================================================================= */
+
+
+/* 0. Signature Vermilion (Sarthak Sharma Reference) */
+body.accent-vermilion {
+  --brand-color: #ff8c59 !important;
+  --brand-hover: #ff7538 !important;
+  --brand-glow: rgba(255, 140, 89, 0.45) !important;
+  --brand-light: rgba(255, 140, 89, 0.12) !important;
+  --accent-primary: #ff8c59 !important;
+  --accent-secondary: #e7dcc9 !important;
+  --accent-1: #ff8c59 !important;
+  --accent-2: #e7dcc9 !important;
+  --accent-cyan: #ff8c59 !important;
+  --accent-glow: rgba(255, 140, 89, 0.45) !important;
+  --gradient-primary: linear-gradient(135deg, #ff8c59, #e7dcc9) !important;
+}
 
 /* 1. Electric Cyan */
 body.accent-cyan {

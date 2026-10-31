@@ -1,31 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
+import { PortraitParticles } from '../../components/particles/PortraitParticles';
 import { DeveloperWorkbench } from '../../components/ui/DeveloperWorkbench';
+import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
+import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificateCard } from '../../components/projects/CertificateCard';
+import { SocialIconButtons, TechLogo } from '../../components/common/TechLogos';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { personSchema, websiteSchema } from '../../utils/seo';
 
 export function HomePage() {
-  const { appState, openResumeModal, showToast } = usePortfolio();
+  const { appState } = usePortfolio();
   const navigate = useNavigate();
+  const [highlightedProjectId, setHighlightedProjectId] = useState(null);
+  const [activePerspective, setActivePerspective] = useState('build');
 
   const containerRef = useRef(null);
   const heroRef = useRef(null);
-  const cgpaStatRef = useRef(null);
-  const leetcodeStatRef = useRef(null);
 
   const p = appState.profile || {};
-
+  const ui = appState.uiLabels || {};
   const publishedProjects = (appState.projects || [])
     .filter((proj) => proj.status === 'published')
     .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+  const featuredProjects = publishedProjects.filter((proj) => proj.featured);
+  const displayProjects = featuredProjects.length > 0 ? featuredProjects : publishedProjects;
+  const flagshipProject = displayProjects[0] || null;
+  const secondaryProjects = displayProjects.slice(1);
 
-  const flagshipProject = publishedProjects[0] || null;
-  const secondProject = publishedProjects[1] || null;
+  const allSkillItems = (appState.skills || []).flatMap((g) => g.items || []);
+  const doubledSkills = [...allSkillItems, ...allSkillItems];
   const certificates = appState.certificates || [];
 
   const goTo = (route) => {
@@ -34,60 +42,82 @@ export function HomePage() {
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
-  // Animated CGPA and Stat Counters using IntersectionObserver
-  useEffect(() => {
-    const statElements = [
-      { ref: cgpaStatRef, target: 8.42, decimals: 2 },
-      { ref: leetcodeStatRef, target: 500, decimals: 0, suffix: '+' }
-    ];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const item = statElements.find((s) => s.ref.current === entry.target);
-            if (item && item.ref.current) {
-              animateCounter(item.ref.current, item.target, item.decimals, item.suffix || '');
-              observer.unobserve(entry.target);
-            }
-          }
-        });
-      },
-      { threshold: 0.4 }
-    );
-
-    statElements.forEach((s) => {
-      if (s.ref.current) observer.observe(s.ref.current);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const animateCounter = (element, target, decimals = 2, suffix = '') => {
-    const duration = 2000;
-    const startTime = performance.now();
-
-    const update = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const current = target * easeOut;
-
-      if (element) {
-        element.textContent = `${current.toFixed(decimals)}${suffix}`;
-      }
-
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else if (element) {
-        element.textContent = `${target.toFixed(decimals)}${suffix}`;
-      }
-    };
-
-    requestAnimationFrame(update);
+  // Perspective statements for interactive discipline switcher
+  const PERSPECTIVES = {
+    build: {
+      title: 'Give an idea structure.',
+      subtitle: 'Products and interfaces that connect real needs to working software.',
+      desc: 'Developing full-stack web applications featuring secure authentication, dynamic data filtering, responsive design, and intuitive interaction architecture with the MERN stack.',
+      actionText: 'Explore the projects',
+      actionRoute: '/projects'
+    },
+    architect: {
+      title: 'Design for resilience & scale.',
+      subtitle: 'Clean schemas, defensive APIs, and honest state persistence.',
+      desc: 'Architecting modular backend services with Node.js and Express, normalizing MongoDB collections, implementing rate limiting, CSRF protection, and Scrypt password security.',
+      actionText: 'View architecture & APIs',
+      actionRoute: '/projects'
+    },
+    solve: {
+      title: 'Deconstruct complexity with algorithms.',
+      subtitle: 'Rigorous problem solving in C, Java, and Python.',
+      desc: 'Actively solving Data Structures & Algorithms challenges on LeetCode and HackerRank, optimizing time complexity, memory allocation, and algorithmic decomposition.',
+      actionText: 'Inspect LeetCode stats',
+      actionRoute: '/skills'
+    }
   };
 
-  // GSAP Entrance Transitions (animations only where needed, per user directive)
+  // 3D Card tilt physics
+  const handleCardMouseMove = (e) => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+
+    gsap.to(card, {
+      rotateX: ((y - rect.height / 2) / rect.height) * -4,
+      rotateY: ((x - rect.width / 2) / rect.width) * 4,
+      transformPerspective: 1200,
+      duration: 0.35,
+      ease: 'power2.out'
+    });
+  };
+
+  const handleCardMouseLeave = (e) => {
+    const card = e.currentTarget;
+    gsap.to(card, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 0.8,
+      ease: 'elastic.out(1, 0.3)'
+    });
+  };
+
+  // Magnetic Button Physics
+  const handleMagneticMouseMove = (e) => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) * 0.28;
+    const y = (e.clientY - rect.top - rect.height / 2) * 0.28;
+
+    gsap.to(el, { x, y, duration: 0.35, ease: 'power2.out' });
+  };
+
+  const handleMagneticMouseLeave = (e) => {
+    const el = e.currentTarget;
+    gsap.to(el, { x: 0, y: 0, duration: 0.75, ease: 'elastic.out(1, 0.3)' });
+  };
+
+  // GSAP Entrance Timeline & ScrollTrigger Animations
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !containerRef.current) return;
@@ -97,574 +127,795 @@ export function HomePage() {
     } catch (_e) {}
 
     const ctx = gsap.context(() => {
-      // 1. Hero Entrance
-      gsap.from('.hero-bento-eyebrow', {
-        y: 20,
-        opacity: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-        delay: 0.1
-      });
+      // 1. Hero Entrance Timeline
+      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      gsap.from('.hero-bento-title', {
-        y: 30,
-        opacity: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        delay: 0.2
-      });
+      heroTl
+        .from('.hero-meta-stamp', {
+          y: -15,
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.1
+        })
+        .from(
+          '.hero-eyebrow',
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.5
+          },
+          '-=0.3'
+        )
+        .from(
+          '.hero-headline',
+          {
+            y: 35,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'back.out(1.1)'
+          },
+          '-=0.35'
+        )
+        .from(
+          '.hero-marquee-badge',
+          {
+            scale: 0.94,
+            opacity: 0,
+            duration: 0.6
+          },
+          '-=0.45'
+        )
+        .from(
+          '.hero-desc',
+          {
+            y: 25,
+            opacity: 0,
+            duration: 0.7
+          },
+          '-=0.4'
+        )
+        .fromTo(
+          '.hero-cta-btn',
+          {
+            y: 20,
+            opacity: 0,
+            scale: 0.95
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            stagger: 0.1,
+            duration: 0.6,
+            ease: 'back.out(1.2)',
+            clearProps: 'all'
+          },
+          '-=0.35'
+        )
+        .from(
+          '.hero-social-wrap',
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.5
+          },
+          '-=0.3'
+        )
+        .from(
+          '.hero-portrait-col',
+          {
+            scale: 0.92,
+            opacity: 0,
+            duration: 0.9,
+            ease: 'power2.out'
+          },
+          0.2
+        )
+        .from(
+          '.hero-workbench-col',
+          {
+            x: 35,
+            opacity: 0,
+            duration: 0.9,
+            ease: 'power3.out'
+          },
+          0.35
+        )
+        .from(
+          '.hero-marquee-bar',
+          {
+            y: 30,
+            opacity: 0,
+            duration: 0.75
+          },
+          0.6
+        );
 
-      gsap.from('.hero-bento-footer', {
+      // Proof Strip ScrollTrigger
+      gsap.from('.proof-metric-col', {
+        scrollTrigger: {
+          trigger: '.proof-strip',
+          start: 'top 88%',
+          toggleActions: 'play none none none'
+        },
         y: 25,
         opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        delay: 0.35
+        stagger: 0.1,
+        duration: 0.7,
+        ease: 'power3.out'
       });
 
-      // 2. Scroll Reveals for Bento Cards
-      const bentoCards = containerRef.current.querySelectorAll('.bento-card');
-      bentoCards.forEach((card) => {
-        gsap.from(card, {
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 88%',
-            toggleActions: 'play none none none'
-          },
-          y: 28,
-          opacity: 0,
-          duration: 0.75,
-          ease: 'power3.out'
-        });
-      });
-
-      // 3. CTA Section ScrollTrigger
-      gsap.from('.cta-ref-section', {
+      // Section 01: About & Perspective ScrollTrigger
+      gsap.from('.about-editorial-section .section-header > *', {
         scrollTrigger: {
-          trigger: '.cta-ref-section',
+          trigger: '.about-editorial-section',
           start: 'top 85%',
           toggleActions: 'play none none none'
         },
-        scale: 0.96,
-        opacity: 0,
         y: 30,
-        duration: 0.8,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.7,
         ease: 'power3.out'
       });
+
+      // Section 02: Projects Showcase ScrollTrigger
+      gsap.from('.projects-home-section .section-header > *', {
+        scrollTrigger: {
+          trigger: '.projects-home-section',
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        },
+        y: 30,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.7,
+        ease: 'power3.out'
+      });
+
+      // Section 03: Process Pipeline ScrollTrigger
+      gsap.from('.process-home-section .section-header > *', {
+        scrollTrigger: {
+          trigger: '.process-home-section',
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        },
+        y: 30,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.7,
+        ease: 'power3.out'
+      });
+
+      // Section 04: Certificates Showcase ScrollTrigger
+      gsap.from('.certs-home-section .section-header > *', {
+        scrollTrigger: {
+          trigger: '.certs-home-section',
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        },
+        y: 30,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.7,
+        ease: 'power3.out'
+      });
+
+      // Section 05: Academic Journey ScrollTrigger
+      gsap.from('.journey-home-section .section-header > *', {
+        scrollTrigger: {
+          trigger: '.journey-home-section',
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        },
+        y: 30,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.7,
+        ease: 'power3.out'
+      });
+
+      // Section 06: CTA Banner ScrollTrigger
+      gsap.from('.home-cta-banner', {
+        scrollTrigger: {
+          trigger: '.home-cta-banner',
+          start: 'top 88%',
+          toggleActions: 'play none none none'
+        },
+        scale: 0.94,
+        opacity: 0,
+        y: 35,
+        duration: 0.85,
+        ease: 'power3.out'
+      });
+
+      ScrollTrigger.refresh();
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="container max-w-[1120px] mx-auto px-6 pt-24 pb-20 sm:pt-28">
+    <div ref={containerRef}>
       <SEO
-        title="Ayush Prajapati — Software Engineer"
-        description={
-          p.headline ||
-          p.heroDescription ||
-          'Ayush Prajapati - Software Engineer specializing in full-stack development, building scalable and performant web applications.'
-        }
+        title="Ayush Prajapati | Full-Stack Developer & Systems Builder"
+        description={p.headline || p.heroDescription || 'Full-Stack Developer crafting high-performance web products, scalable backend systems, and interactive architectures.'}
         schema={[personSchema(p), websiteSchema(p)]}
       />
 
-      {/* --- HERO SECTION --- */}
-      <header className="hero-bento-stage" ref={heroRef}>
-        <div className="hero-bento-eyebrow">
-          <span className="serif">01</span> — Software Engineer &amp; Full-Stack Developer
-        </div>
-        <h1 className="hero-bento-title">
-          Building digital<br />
-          experiences with <span className="serif">code</span><br />
-          &amp; <span className="serif">precision</span>.
-        </h1>
-        <div className="hero-bento-footer">
-          <p className="hero-bento-description">
-            {p.heroDescription ||
-              "I'm Ayush Prajapati, a Software Engineer specializing in full-stack development. I focus on building scalable, performance-driven web applications with clean architecture and thoughtful design."}
-          </p>
-          <div className="hero-bento-cta">
-            <Link to="/contact" className="btn-ref btn-ref-primary" onClick={() => playTick()}>
-              <span>Let's Talk</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
-            <a href="#work" className="btn-ref btn-ref-outline" onClick={() => playTick()}>
-              View Work
-            </a>
-          </div>
-        </div>
-      </header>
-
-      {/* --- WORK SECTION (BENTO GRID) --- */}
-      <section id="work" className="mb-28">
-        <div className="section-title">Selected Work</div>
-
-        <div className="bento-grid">
-          {/* Card 1: Large Flagship Full-Stack Platform */}
-          <div className="bento-card large">
-            <div>
-              <div className="card-label">01 — Full-Stack Development</div>
-              <div className="card-image-wrapper">
-                <img
-                  src={
-                    flagshipProject?.thumbnailUrl ||
-                    'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'
-                  }
-                  alt={flagshipProject?.title || 'StayFinder Platform'}
-                  loading="lazy"
-                />
+      {/* Hero Stage with Editorial Architecture & Studio Spheres */}
+      <section ref={heroRef} className="mx-auto max-w-7xl px-4 pt-24 pb-8 sm:px-6 lg:px-8 sm:pt-28 lg:pt-28 lg:pb-10">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
+          {/* Left Column: Editorial Headline & Identity (5 Cols) */}
+          <div className="lg:col-span-5 space-y-4">
+            {/* Top Coordinate Stamp */}
+            <div className="hero-meta-stamp flex items-center justify-between flex-wrap gap-2">
+              <div className="meta-coordinate">
+                <span className="meta-square" />
+                <span>01 / PRESENCE</span>
               </div>
-              <h3 className="card-title">
-                {flagshipProject?.title || 'StayFinder — Accommodation Platform'}
-              </h3>
-              <p className="card-text">
-                {flagshipProject?.shortDescription ||
-                  "A full-stack booking platform replicating Airbnb's core functionality. Implemented secure JWT authentication, dynamic pricing engine, and a custom admin dashboard. Optimized MongoDB queries for a 20% faster load time."}
-              </p>
-            </div>
-            <div>
-              <div className="tag-row">
-                {(flagshipProject?.technologies || ['React.js', 'Node.js', 'MongoDB', 'Express', 'Tailwind']).map(
-                  (tech, idx) => (
-                    <span key={idx} className="tag">
-                      {tech}
-                    </span>
-                  )
-                )}
-              </div>
-              <div className="flex items-center gap-6 mt-4">
-                {flagshipProject ? (
-                  <Link
-                    to={`/projects/${flagshipProject.slug || flagshipProject.id}`}
-                    className="arrow-link"
-                    onClick={() => playTick()}
-                  >
-                    <span>View Case Study</span>
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                ) : (
-                  <Link to="/projects" className="arrow-link">
-                    <span>View Case Study</span>
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                )}
-                {flagshipProject?.liveDemoUrl && (
-                  <a
-                    href={flagshipProject.liveDemoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="arrow-link text-slate-400 hover:text-white"
-                  >
-                    <span>Live App ↗</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: Real-time Systems */}
-          <div className="bento-card">
-            <div>
-              <div className="card-label">02 — Real-time Systems</div>
-              <h3 className="card-title">
-                {secondProject?.title || 'Zerodha Trading Dashboard'}
-              </h3>
-              <p className="card-text">
-                {secondProject?.shortDescription ||
-                  'A real-time stock market dashboard featuring WebSocket integration for live price updates and interactive charts.'}
-              </p>
-            </div>
-            <div>
-              <div className="tag-row">
-                {(secondProject?.technologies || ['React', 'Socket.io', 'Chart.js']).map((tech, idx) => (
-                  <span key={idx} className="tag">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              <div className="flex items-center gap-4 mt-4">
-                {secondProject ? (
-                  <Link
-                    to={`/projects/${secondProject.slug || secondProject.id}`}
-                    className="arrow-link"
-                    onClick={() => playTick()}
-                  >
-                    <span>Case Study</span>
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                ) : (
-                  <Link to="/projects" className="arrow-link">
-                    <span>Live Demo</span>
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                )}
-                {secondProject?.liveDemoUrl && (
-                  <a
-                    href={secondProject.liveDemoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="arrow-link text-slate-400 hover:text-white"
-                  >
-                    <span>Demo ↗</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3: Education & Academic Merit */}
-          <div className="bento-card">
-            <div>
-              <div className="card-label">Education</div>
-              <div className="card-stat" ref={cgpaStatRef}>
-                0.00
-              </div>
-              <p className="card-text">
-                CGPA out of 10.0<br />
-                B.Tech in Computer Science &amp; Engineering<br />
-                SISTec, Bhopal
-              </p>
-            </div>
-            <div className="pt-4 border-t border-[#26262a]">
-              <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                Batch of 2026 · 6th Semester
+              <span className="font-mono text-[11px] font-semibold text-slate-400 tracking-wider uppercase">
+                BASED IN BHOPAL · THINKING BEYOND
               </span>
             </div>
-          </div>
 
-          {/* Card 4: Featured Milestone (Wide 2-col) */}
-          <div className="bento-card wide">
-            <div>
-              <div className="card-label">Featured Milestone</div>
-              <h3 className="card-title serif">
-                Lead Speaker — MERN Stack Workshop
-              </h3>
-              <p className="card-text">
-                Conducted a hands-on technical workshop for 50+ computer science students covering REST API design,
-                React component lifecycle, database normalization, and deploying scalable Node applications.
-              </p>
+            {/* Availability Pill */}
+            <div className="hero-badge inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-[#0c121e]/80 px-3.5 py-1 shadow-sm backdrop-blur-md">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+              </span>
+              <span className="font-mono text-xs font-medium text-slate-200">{p.availabilityLabel || 'Open to Full-Time & Remote Roles'}</span>
             </div>
-            <div>
-              <div className="tag-row">
-                <span className="tag">Public Speaking</span>
-                <span className="tag">Mentorship</span>
-                <span className="tag">MERN Stack</span>
-                <span className="tag">Architecture</span>
+
+            <div className="space-y-3">
+              <p className="hero-eyebrow font-mono text-[11px] font-bold uppercase tracking-[2px] text-vermilion">
+                {p.eyebrow || 'COMPUTER SCIENCE STUDENT · DEVELOPER · BUILDER'}
+              </p>
+
+              {/* Grand Editorial Headline with Upright Serif + Flowing Cursive Italic */}
+              <h1 className="hero-headline font-editorial text-4xl sm:text-5xl lg:text-[3.2rem] xl:text-[3.6rem] font-semibold tracking-tight text-white leading-[1.05]">
+                <span>Ayush </span>
+                <span className="font-editorial-italic font-normal text-cyanglow">Prajapati</span>
+              </h1>
+
+              {/* Ticker Subtitle */}
+              <div className="hero-marquee-badge overflow-hidden rounded-xl border border-cyan-500/30 bg-gradient-to-r from-black/60 via-slate-900/60 to-black/60 py-2 px-3 shadow-inner">
+                <div className="animate-hero-text-scroll flex items-center gap-8 whitespace-nowrap">
+                  <span className="font-sans text-sm sm:text-base font-bold text-cyanglow">Full-Stack MERN Developer &amp; Systems Builder</span>
+                  <span className="text-vermilion font-mono text-xs">✦</span>
+                  <span className="font-sans text-sm sm:text-base font-bold text-slate-200">B.Tech CSE (CGPA: 8.42) · Batch of 2026</span>
+                  <span className="text-vermilion font-mono text-xs">✦</span>
+                  <span className="font-sans text-sm sm:text-base font-bold text-cyanglow">Problem Solver &amp; Systems Builder</span>
+                  <span className="text-vermilion font-mono text-xs">✦</span>
+                </div>
               </div>
             </div>
+
+            <p className="hero-desc text-sm sm:text-base leading-relaxed text-slate-300 max-w-xl font-sans">
+              {p.heroDescription || "I build resilient web platforms, design intuitive interfaces, and engineer scalable full-stack applications. Third-year Computer Science student exploring modern software engineering."}
+            </p>
+
+            {/* Editorial Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => goTo('/projects')}
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+                className="hero-cta-btn inline-flex items-center gap-2 rounded-full bg-vermilion px-6 py-3 text-sm font-bold text-obsidian shadow-lg shadow-vermilion/25 transition-all hover:scale-[1.02] active:scale-95"
+              >
+                <span>Explore my work</span>
+                <span aria-hidden="true">↓</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => goTo('/contact')}
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+                className="hero-cta-btn inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10 hover:border-cyanglow active:scale-95 backdrop-blur-md"
+              >
+                <span>Start a conversation</span>
+                <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+
+            <div className="hero-social-wrap pt-4 border-t hairline-border flex items-center gap-3.5">
+              <SocialIconButtons socialLinks={p.socialLinks} />
+            </div>
+          </div>
+
+          {/* Center Column: Portrait & Particle FX (4 Cols) */}
+          <div className="hero-portrait-col lg:col-span-4 flex flex-col items-center">
+            <PortraitParticles
+              imageUrl={p.portrait?.url || '/images/ayush-hero-portrait.jpg'}
+              alt={p.portrait?.alt || p.name}
+              name={p.name}
+              roleLabel={`${p.education?.stage || 'CGPA: 8.42 · Batch of 2026'} · SISTec, Bhopal`}
+              offsetX={p.portrait?.offsetX || 0}
+              offsetY={p.portrait?.offsetY || 0}
+              sampleGap={p.portrait?.particleDensity || 4}
+              toggleOffLabel={ui.particleToggleOff}
+              toggleOnLabel={ui.particleToggleOn}
+            />
+          </div>
+
+          {/* Right Column: Developer Workbench (3 Cols) */}
+          <div className="hero-workbench-col lg:col-span-3">
+            <DeveloperWorkbench />
           </div>
         </div>
 
-        {/* View All Projects Pill */}
-        {publishedProjects.length > 2 && (
-          <div className="text-center -mt-16 mb-24">
-            <Link
-              to="/projects"
-              className="btn-ref btn-ref-outline"
-              onClick={() => playTick()}
-            >
-              <span>Explore All {publishedProjects.length} Projects</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
+        {/* Infinite Tech Stack Marquee */}
+        {doubledSkills.length > 0 && (
+          <div className="hero-marquee-bar mt-12 overflow-hidden rounded-2xl border hairline-border bg-black/40 py-3.5 backdrop-blur-md">
+            <div className="animate-marquee flex items-center gap-6 px-4">
+              {doubledSkills.map((item, idx) => (
+                <div
+                  key={`${item.name}-${idx}`}
+                  className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-obsidian/90 px-4 py-1.5 text-xs font-semibold text-slate-200 shadow-sm"
+                >
+                  <TechLogo name={item.logoKey || item.name} className="h-4 w-4" />
+                  <span>{item.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </section>
 
-      {/* --- SKILLS & ABOUT SECTION (2-COL BENTO) --- */}
-      <section id="skills" className="mb-28">
-        <div className="section-title">Expertise &amp; Background</div>
+      {/* 4-Column Proof Strip (Impact Metrics Inspired by Reference) */}
+      <div className="proof-strip">
+        <div className="proof-strip-grid">
+          <div className="proof-metric-col">
+            <div className="proof-metric-num">15<span className="proof-metric-accent">+</span></div>
+            <div className="proof-metric-label">Production &amp; full-stack web applications built</div>
+          </div>
+          <div className="proof-metric-col">
+            <div className="proof-metric-num">8.42<span className="proof-metric-accent">/10</span></div>
+            <div className="proof-metric-label">CGPA in Computer Science &amp; Engineering (SISTec, Bhopal)</div>
+          </div>
+          <div className="proof-metric-col">
+            <div className="proof-metric-num">500<span className="proof-metric-accent">+</span></div>
+            <div className="proof-metric-label">Algorithmic problems solved across LeetCode &amp; HackerRank</div>
+          </div>
+          <div className="proof-metric-col flex flex-col justify-between">
+            <div className="font-mono text-[11px] uppercase tracking-wider text-slate-400">
+              <div>THE CRAFT.</div>
+              <div className="text-white font-bold">THE REAL-WORLD IMPACT.</div>
+            </div>
+            <button
+              type="button"
+              onClick={() => goTo('/projects')}
+              className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-cyanglow hover:text-white transition-colors mt-2"
+            >
+              <span>EXPLORE ALL WORK</span>
+              <span>↗</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
-        <div className="bento-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))' }}>
-          {/* Card 1: Technical Stack */}
-          <div className="bento-card">
-            <div>
-              <div className="card-label">Technical Stack</div>
-              <div className="skills-list">
-                <div className="skill-item">
-                  <span className="skill-name">JavaScript / TypeScript</span>
-                  <span className="skill-level">Advanced</span>
-                </div>
-                <div className="skill-item">
-                  <span className="skill-name">React.js &amp; Next.js</span>
-                  <span className="skill-level">Advanced</span>
-                </div>
-                <div className="skill-item">
-                  <span className="skill-name">Node.js &amp; Express</span>
-                  <span className="skill-level">Advanced</span>
-                </div>
-                <div className="skill-item">
-                  <span className="skill-name">MongoDB &amp; SQL</span>
-                  <span className="skill-level">Intermediate</span>
-                </div>
-                <div className="skill-item">
-                  <span className="skill-name">Python / Java</span>
-                  <span className="skill-level">Intermediate</span>
-                </div>
-                <div className="skill-item">
-                  <span className="skill-name">Git &amp; CI/CD</span>
-                  <span className="skill-level">Intermediate</span>
-                </div>
-              </div>
+      {/* Main Page Content */}
+      <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24 pt-12">
+        {/* Section 01: The Person Behind The Work (About & Perspective Switcher) */}
+        <section className="about-editorial-section space-y-10 border-t hairline-border pt-16">
+          <div className="section-header max-w-4xl space-y-3">
+            <div className="meta-coordinate">
+              <span className="meta-square" />
+              <span>01 / THE PERSON BEHIND THE WORK</span>
+              <span className="text-white/20">|</span>
+              <span>A CONNECTED PERSPECTIVE</span>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#26262a]">
-              <Link to="/skills" className="arrow-link" onClick={() => playTick()}>
-                <span>View Full Skills Matrix</span>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
+            <h2 className="editorial-headline text-white">
+              Technology is the foundation. <span className="font-editorial-italic font-normal text-cyanglow">Experience is the point.</span>
+            </h2>
+            <p className="font-mono text-xs uppercase tracking-widest text-slate-400 pt-1">
+              THREE DISCIPLINES. ONE PERSPECTIVE.
+            </p>
           </div>
 
-          {/* Card 2: About Me */}
-          <div className="bento-card" id="about">
-            <div>
-              <div className="card-label">About Me</div>
-              <h3 className="card-title serif">
-                Designing with logic, building with empathy.
-              </h3>
-              <p className="card-text">
-                I believe great software is born at the intersection of clean code and thoughtful design. When I'm not
-                building web apps, I'm exploring AI/ML models, contributing to open-source, or mentoring junior developers.
-              </p>
-              <p className="card-text mt-4">
-                Currently pursuing B.Tech in Computer Science and Engineering at SISTec, Bhopal (CGPA: 8.42). Passionate
-                about building distributed systems, real-time architectures, and high-performance user experiences.
-              </p>
-            </div>
-            <div className="mt-8 flex flex-wrap items-center gap-6">
-              <button
-                type="button"
-                className="arrow-link"
-                onClick={() => {
-                  playTick();
-                  if (openResumeModal) openResumeModal();
-                  else showToast('Opening Resume...');
-                }}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
+            {/* Left: Perspective Switcher & Focus Statement (6 Cols) */}
+            <div className="lg:col-span-6 space-y-6">
+              {/* Perspective Tabs: Build / Architect / Solve */}
+              <div className="perspective-tabs">
+                <button
+                  type="button"
+                  onClick={() => { playTick(); setActivePerspective('build'); }}
+                  className={`perspective-tab ${activePerspective === 'build' ? 'active' : ''}`}
+                >
+                  <span>Build</span>
+                  <span>↗</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { playTick(); setActivePerspective('architect'); }}
+                  className={`perspective-tab ${activePerspective === 'architect' ? 'active' : ''}`}
+                >
+                  <span>Architect</span>
+                  <span>↗</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { playTick(); setActivePerspective('solve'); }}
+                  className={`perspective-tab ${activePerspective === 'solve' ? 'active' : ''}`}
+                >
+                  <span>Solve</span>
+                  <span>↗</span>
+                </button>
+              </div>
+
+              {/* Dynamic Perspective Content Box */}
+              <div
+                className="glass-card rounded-2xl p-7 space-y-4 border-l-4 border-l-cyan-500 transition-all duration-300"
+                onMouseMove={handleCardMouseMove}
+                onMouseLeave={handleCardMouseLeave}
               >
-                <span>Download Resume</span>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <h3 className="font-editorial text-2xl font-semibold text-white">
+                  {PERSPECTIVES[activePerspective].title}
+                </h3>
+                <p className="text-sm font-medium text-cyanglow">
+                  {PERSPECTIVES[activePerspective].subtitle}
+                </p>
+                <p className="text-sm leading-relaxed text-slate-300">
+                  {PERSPECTIVES[activePerspective].desc}
+                </p>
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => goTo(PERSPECTIVES[activePerspective].actionRoute)}
+                    className="inline-flex items-center gap-2 text-xs font-mono font-bold text-vermilion hover:underline"
+                  >
+                    <span>{PERSPECTIVES[activePerspective].actionText}</span>
+                    <span>↗</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Personal Narrative & SISTec Academic Bio (6 Cols) */}
+            <div
+              className="lg:col-span-6 glass-card rounded-3xl p-7 sm:p-8 space-y-4 text-slate-300 leading-relaxed cursor-default"
+              onMouseMove={handleCardMouseMove}
+              onMouseLeave={handleCardMouseLeave}
+            >
+              <div className="flex items-center gap-2 font-mono text-xs text-cyanglow font-bold uppercase tracking-wider">
+                <i className="fa-solid fa-graduation-cap" />
+                <span>B.Tech Computer Science &amp; Engineering · SISTec, Bhopal</span>
+              </div>
+              {(p.aboutBio || []).map((para, i) => (
+                <p key={i} className="text-sm sm:text-base leading-relaxed">{para}</p>
+              ))}
+              <div className="pt-3 border-t hairline-border flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-slate-400">
+                <span>✉ {p.email || 'ayushprajapati9669@gmail.com'}</span>
+                <button
+                  type="button"
+                  onClick={() => goTo('/about')}
+                  className="text-cyanglow hover:text-white font-bold transition-colors"
                 >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                </svg>
-              </button>
-              <Link to="/about" className="arrow-link text-slate-400 hover:text-white" onClick={() => playTick()}>
-                <span>Read Full Story ↗</span>
-              </Link>
+                  Read full story ↗
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* --- LIVE INTERACTIVE SYSTEMS & BENCHMARK (PRESERVED FUNCTIONALITY) --- */}
-      <section className="mb-28">
-        <div className="section-title">Developer Workbench &amp; Algorithmic Foundation</div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Left: Developer Workbench Interactive Terminal (8 cols) */}
-          <div className="lg:col-span-8">
-            <DeveloperWorkbench />
-          </div>
-
-          {/* Right: Problem Solving & LeetCode Proof (4 cols) */}
-          <div className="lg:col-span-4 bento-card flex flex-col justify-between">
-            <div>
-              <div className="card-label">Algorithmic Decomposition</div>
-              <div className="card-stat text-cyan-400" ref={leetcodeStatRef}>
-                0
+        {/* Section 02: Selected Work (Flagship 60/40 Browser Chrome Presentation) */}
+        <section className="projects-home-section border-t hairline-border pt-16 space-y-10">
+          <div className="section-header flex flex-wrap items-end justify-between gap-4">
+            <div className="space-y-3 max-w-3xl">
+              <div className="meta-coordinate">
+                <span className="meta-square" />
+                <span>02 / SELECTED WORK</span>
+                <span className="text-white/20">|</span>
+                <span>BUILT. ARCHITECTED. PUT INTO PRODUCTION.</span>
               </div>
-              <h3 className="card-title text-xl mt-2">Problems Solved Across Platforms</h3>
-              <p className="card-text mt-2">
-                Active problem solving on LeetCode &amp; HackerRank focusing on Data Structures, Algorithms, Dynamic
-                Programming, and Tree/Graph traversal with optimal time-space complexity.
+              <h2 className="editorial-headline text-white">
+                Ideas are a start. <span className="font-editorial-italic font-normal text-cyanglow">This is the work.</span>
+              </h2>
+              <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+                From full-stack web applications to AI-powered interfaces. Featured systems I've designed, architected, and deployed.
               </p>
             </div>
-            <div className="pt-6 border-t border-[#26262a] mt-6">
-              <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Language: C++ / Java / Python</span>
-                <span className="text-emerald-400 font-bold">Top 15% Rank</span>
+            <button
+              type="button"
+              onClick={() => goTo('/projects')}
+              onMouseMove={handleMagneticMouseMove}
+              onMouseLeave={handleMagneticMouseLeave}
+              className="focus-ring rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-mono text-xs font-semibold text-white transition-all hover:border-cyanglow hover:bg-white/10"
+            >
+              All work ({publishedProjects.length}) ↗
+            </button>
+          </div>
+
+          {/* Flagship Hero Browser Chrome Mockup (Inspired by Reference LMS Presentation) */}
+          {flagshipProject && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-black/30 rounded-3xl p-6 sm:p-8 border border-white/10">
+              {/* Left Column: Browser Mockup Viewport (7 Cols) */}
+              <div className="lg:col-span-7">
+                <div className="browser-chrome">
+                  <div className="browser-chrome-header">
+                    <div className="browser-dots">
+                      <span className="browser-dot browser-dot-red" />
+                      <span className="browser-dot-yellow browser-dot" />
+                      <span className="browser-dot-green browser-dot" />
+                    </div>
+                    <div className="browser-url-pill">
+                      <i className="fa-solid fa-lock text-[9px] text-emerald-400" />
+                      <span>{flagshipProject.liveDemoUrl ? new URL(flagshipProject.liveDemoUrl).hostname : 'airbnb-clone.dev'}</span>
+                    </div>
+                    <a
+                      href={flagshipProject.liveDemoUrl || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="browser-circle-btn"
+                      aria-label="Open live demo"
+                    >
+                      <i className="fa-solid fa-arrow-up-right-from-square" />
+                    </a>
+                  </div>
+                  <div className="browser-viewport">
+                    <img
+                      src={flagshipProject.thumbnailUrl || '/images/airbnb-clone-preview.webp'}
+                      alt={flagshipProject.title}
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Editorial Narrative & Tech Meta (5 Cols) */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="font-mono text-xs font-bold text-vermilion uppercase tracking-widest">
+                  01 / Flagship Full-Stack Platform
+                </div>
+                <h3 className="font-editorial text-2xl sm:text-3xl font-semibold text-white leading-tight">
+                  {flagshipProject.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-slate-300">
+                  {flagshipProject.shortDescription || "A comprehensive property rental platform featuring secure JWT authentication, dynamic search filters, booking management, and a custom cloud image upload system."}
+                </p>
+
+                {/* Tech Pills */}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {(flagshipProject.technologies || ['React JS', 'Node.js', 'Express.js', 'MongoDB']).map((t, idx) => (
+                    <span
+                      key={idx}
+                      className="font-mono text-xs px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-200"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-4 pt-4 border-t hairline-border">
+                  <button
+                    type="button"
+                    onClick={() => goTo(`/projects/${flagshipProject.slug || flagshipProject.id}`)}
+                    className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-cyanglow hover:text-white transition-colors"
+                  >
+                    <span>Explore Case Study</span>
+                    <span>↗</span>
+                  </button>
+                  {flagshipProject.liveDemoUrl && (
+                    <a
+                      href={flagshipProject.liveDemoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-slate-400 hover:text-white transition-colors"
+                    >
+                      <span>Live Site</span>
+                      <span>↗</span>
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          )}
 
-      {/* --- VERIFIED CREDENTIALS (IF AVAILABLE) --- */}
-      {certificates.length > 0 && (
-        <section className="mb-28">
-          <div className="section-title">Verified Certifications</div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {certificates.slice(0, 3).map((cert, idx) => (
-              <CertificateCard key={cert.id} cert={cert} indexNum={idx + 1} />
-            ))}
-          </div>
-          {certificates.length > 3 && (
-            <div className="text-center mt-8">
-              <Link to="/certificates" className="btn-ref btn-ref-outline" onClick={() => playTick()}>
-                View All {certificates.length} Certificates ↗
-              </Link>
+          {/* Secondary Projects: Asymmetric 2-Column Grid */}
+          {secondaryProjects.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {secondaryProjects.slice(0, 2).map((proj, idx) => (
+                <ProjectCard
+                  key={proj.id}
+                  proj={proj}
+                  indexNum={idx + 2}
+                  isSelected={highlightedProjectId === proj.id}
+                  onSelect={setHighlightedProjectId}
+                  onCardMouseMove={handleCardMouseMove}
+                  onCardMouseLeave={handleCardMouseLeave}
+                />
+              ))}
             </div>
           )}
         </section>
-      )}
 
-      {/* --- CTA SECTION --- */}
-      <section className="cta-ref-section" id="contact">
-        <h2>
-          Let's build something<br />
-          <span className="serif">extraordinary</span> together.
-        </h2>
-        <p>
-          I'm currently open to new opportunities, software engineering roles, and collaborations. Let's talk about how
-          we can work together.
-        </p>
-        <div className="cta-ref-buttons">
-          <Link to="/contact" className="btn-ref btn-ref-primary" onClick={() => playTick()}>
-            <span>Get in Touch</span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </Link>
-          <button
-            type="button"
-            className="btn-ref btn-ref-outline"
-            onClick={() => {
-              playTick();
-              if (openResumeModal) openResumeModal();
-              else showToast('Opening Resume...');
-            }}
-          >
-            <span>View Resume</span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-          </button>
-        </div>
-      </section>
+        {/* Section 03: How I Think & Work (3-Step Engineering Pipeline Inspired by Reference) */}
+        <section className="process-home-section border-t hairline-border pt-16 space-y-10">
+          <div className="section-header max-w-4xl space-y-3">
+            <div className="meta-coordinate">
+              <span className="meta-square" />
+              <span>03 / HOW I THINK &amp; WORK</span>
+              <span className="text-white/20">|</span>
+              <span>DEPTH MEETS PERSPECTIVE</span>
+            </div>
+            <h2 className="editorial-headline text-white">
+              How I build. <span className="font-editorial-italic font-normal text-cyanglow">From idea to production.</span>
+            </h2>
+            <p className="font-mono text-xs uppercase tracking-widest text-slate-400">
+              CHOOSE A DISCIPLINE. FOLLOW THE ARCHITECTURE.
+            </p>
+          </div>
 
-      {/* --- SOCIAL PROOF FOOTER BAR --- */}
-      <div className="flex flex-wrap items-center justify-between gap-4 py-8 border-t border-[#26262a] text-xs font-mono text-slate-500">
-        <div>© {new Date().getFullYear()} Ayush Prajapati. Crafted with care &amp; precision.</div>
-        <div className="flex items-center gap-5">
-          <a
-            href={p.socialLinks?.github || 'https://github.com/ayushprajapati9669-dev'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors"
-          >
-            GitHub
-          </a>
-          <a
-            href={p.socialLinks?.linkedin || 'https://linkedin.com/in/ayushprajapati'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors"
-          >
-            LinkedIn
-          </a>
-          <a
-            href={p.socialLinks?.twitter || 'https://twitter.com'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors"
-          >
-            Twitter
-          </a>
-          <a
-            href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}
-            className="hover:text-white transition-colors"
-          >
-            Email
-          </a>
-        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Left: 3-Step Connected Pipeline (6 Cols) */}
+            <div className="lg:col-span-6 process-pipeline">
+              <div className="process-step-item">
+                <div className="process-step-node">01</div>
+                <div>
+                  <h3 className="process-step-title">Deconstruct the Problem</h3>
+                  <p className="text-xs text-slate-400 mt-1">Understanding business constraints, edge cases, and algorithmic complexity before writing code.</p>
+                </div>
+              </div>
+
+              <div className="process-step-item">
+                <div className="process-step-node">02</div>
+                <div>
+                  <h3 className="process-step-title">Architect the Data &amp; APIs</h3>
+                  <p className="text-xs text-slate-400 mt-1">Designing normalized MongoDB schemas, indexing query paths, and securing REST endpoints with CSRF &amp; rate limiting.</p>
+                </div>
+              </div>
+
+              <div className="process-step-item">
+                <div className="process-step-node">03</div>
+                <div>
+                  <h3 className="process-step-title">Engineer the Full-Stack Solution</h3>
+                  <p className="text-xs text-slate-400 mt-1">Building responsive React interfaces with GSAP motion, resilient error boundaries, and production-tested state management.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Technical Focus Card with Vermilion Accent (6 Cols) */}
+            <div className="lg:col-span-6 process-focus-card space-y-4">
+              <div className="font-mono text-xs font-bold text-vermilion uppercase tracking-widest">
+                PRODUCT &amp; FULL-STACK ARCHITECTURE
+              </div>
+              <h3 className="font-editorial text-2xl font-semibold text-white">
+                Build with perspective.
+              </h3>
+              <p className="text-sm leading-relaxed text-slate-300">
+                I connect what users experience with what backend systems must sustain. From the first schema requirement to the smooth, animated interaction people touch.
+              </p>
+              <div className="pt-2 flex flex-wrap gap-2 text-xs font-mono text-slate-300">
+                <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-md">JavaScript (ES6+)</span>
+                <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-md">React.js</span>
+                <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-md">Node.js</span>
+                <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-md">Express.js</span>
+                <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-md">MongoDB</span>
+                <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-md">RESTful APIs</span>
+              </div>
+              <div className="pt-3 border-t hairline-border">
+                <button
+                  type="button"
+                  onClick={() => goTo('/skills')}
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-cyanglow hover:text-white transition-colors"
+                >
+                  <span>Explore full technical matrix</span>
+                  <span>↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 04: Technical Capabilities & Interactive Skills Matrix */}
+        <InteractiveSkillsWidget showCta={true} onCtaClick={() => goTo('/skills')} />
+
+        {/* Section 05: Verified Credentials & Certificates */}
+        <section className="certs-home-section border-t hairline-border pt-16 space-y-10">
+          <div className="section-header flex flex-wrap items-end justify-between gap-4">
+            <div className="space-y-3 max-w-3xl">
+              <div className="meta-coordinate">
+                <span className="meta-square" />
+                <span>04 / VERIFIED CREDENTIALS</span>
+                <span className="text-white/20">|</span>
+                <span>AUTHENTICATED MERIT</span>
+              </div>
+              <h2 className="editorial-headline text-white">
+                Certifications &amp; <span className="font-editorial-italic font-normal text-cyanglow">Achievements.</span>
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => goTo('/certificates')}
+              onMouseMove={handleMagneticMouseMove}
+              onMouseLeave={handleMagneticMouseLeave}
+              className="focus-ring rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-mono text-xs font-semibold text-white transition-all hover:border-cyanglow hover:bg-white/10"
+            >
+              All certificates ({certificates.length}) ↗
+            </button>
+          </div>
+
+          {certificates.length === 0 ? (
+            <div className="glass-card rounded-2xl p-8 text-center text-slate-400 font-mono text-sm border border-white/5">
+              No certificates added yet. Upload your credentials in the Admin CMS to showcase them here.
+            </div>
+          ) : (
+            <div className={`certs-home-grid grid grid-cols-1 gap-8 ${certificates.length === 1 ? 'max-w-2xl' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
+              {certificates.slice(0, 3).map((cert, idx) => (
+                <CertificateCard
+                  key={cert.id}
+                  cert={cert}
+                  indexNum={idx + 1}
+                  onCardMouseMove={handleCardMouseMove}
+                  onCardMouseLeave={handleCardMouseLeave}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Section 06: Academic Journey */}
+        <section className="journey-home-section border-t hairline-border pt-16 space-y-10">
+          <div className="section-header space-y-3 max-w-3xl">
+            <div className="meta-coordinate">
+              <span className="meta-square" />
+              <span>INTERLUDE / STILL BECOMING</span>
+              <span className="text-white/20">|</span>
+              <span>A JOURNEY IN MOTION</span>
+            </div>
+            <h2 className="editorial-headline text-white">
+              Started with code. <span className="font-editorial-italic font-normal text-cyanglow">Kept building forward.</span>
+            </h2>
+          </div>
+          <div className="journey-grid grid grid-cols-1 gap-6 md:grid-cols-3">
+            {(p.learningJourney || []).map((step, i) => (
+              <div
+                key={i}
+                className="journey-card glass-card glass-card-hover rounded-3xl p-7 space-y-3 cursor-default"
+                onMouseMove={handleCardMouseMove}
+                onMouseLeave={handleCardMouseLeave}
+              >
+                <span className="inline-block rounded-full bg-vermilion/15 px-3 py-1 font-mono text-xs font-semibold text-vermilion">
+                  {step.phase}
+                </span>
+                <h3 className="font-editorial text-xl font-bold text-white">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-300">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Section 07: The Next Chapter / Direct Contact CTA */}
+        <section className="home-cta-banner rounded-3xl border border-white/10 bg-gradient-to-r from-black/80 via-slate-900/80 to-black/80 p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl backdrop-blur-xl">
+          <div className="space-y-3 max-w-2xl">
+            <div className="meta-coordinate">
+              <span className="meta-square" />
+              <span>06 / THE NEXT CHAPTER</span>
+              <span className="text-white/20">|</span>
+              <span>LET'S MAKE IT MATTER</span>
+            </div>
+            <h2 className="font-editorial text-3xl sm:text-5xl font-semibold text-white leading-tight">
+              Something great starts with a hello. <span className="font-editorial-italic font-normal text-cyanglow">Let's connect.</span>
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300">
+              Open to full-stack engineering roles, software internships, and high-impact web products. If our worlds overlap, let's build something lasting.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => goTo('/contact')}
+              onMouseMove={handleMagneticMouseMove}
+              onMouseLeave={handleMagneticMouseLeave}
+              className="focus-ring rounded-full bg-vermilion px-7 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-vermilion/25 transition-transform hover:-translate-y-0.5 active:scale-95"
+            >
+              Start a conversation →
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   );

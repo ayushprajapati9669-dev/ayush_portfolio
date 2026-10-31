@@ -27,7 +27,7 @@ export function Header() {
 
   // Theme & Accent controls for Admin Top Navbar
   const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem('admin_theme_v9') || 'theme-midnight');
-  const [currentAccent, setCurrentAccent] = useState(() => localStorage.getItem('admin_accent_v9') || 'accent-cyan');
+  const [currentAccent, setCurrentAccent] = useState(() => { const s = localStorage.getItem('portfolio_accent') || localStorage.getItem('admin_accent_v9'); return (!s || s === 'accent-cyan') ? 'accent-vermilion' : s; });
   const [currentDensity, setCurrentDensity] = useState(() => localStorage.getItem('admin_density_v9') || 'comfortable');
   const [accentPaletteOpen, setAccentPaletteOpen] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
@@ -44,29 +44,17 @@ export function Header() {
     'theme-synthwave',
     'theme-tokyo'
   ];
-  const ACCENT_CLASSES = ['accent-cyan', 'accent-violet', 'accent-rose', 'accent-emerald', 'accent-amber', 'accent-pink', 'accent-lime', 'accent-blue'];
+  const ACCENT_CLASSES = ['accent-vermilion', 'accent-cyan', 'accent-violet', 'accent-rose', 'accent-emerald', 'accent-amber', 'accent-pink', 'accent-lime', 'accent-blue'];
 
   const [toolsMenuOpen, setToolsMenuOpen] = useState(false);
-  const [liveTime, setLiveTime] = useState('');
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      setLiveTime(`${hours}:${minutes} IST`);
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
   const toolsMenuRef = useRef(null);
   const accentPickerRef = useRef(null);
 
   useEffect(() => {
     let savedTheme = localStorage.getItem('portfolio_theme') || localStorage.getItem('admin_theme_v9') || 'theme-midnight';
     if (savedTheme === 'theme-light') savedTheme = 'theme-midnight';
-    const savedAccent = localStorage.getItem('portfolio_accent') || localStorage.getItem('admin_accent_v9') || 'accent-cyan';
+    let savedAccent = localStorage.getItem('portfolio_accent') || localStorage.getItem('admin_accent_v9') || 'accent-vermilion';
+    if (savedAccent === 'accent-cyan') savedAccent = 'accent-vermilion';
 
     document.body.classList.remove('theme-light', ...THEME_CLASSES);
     document.body.classList.add(savedTheme);
@@ -274,8 +262,8 @@ export function Header() {
       pill.style.background = 'rgba(255, 255, 255, 0.2)';
       pill.style.boxShadow = 'none';
     } else {
-      pill.style.background = 'linear-gradient(135deg, #38bdf8, #0ea5e9)';
-      pill.style.boxShadow = '0 0 25px rgba(56, 189, 248, 0.4)';
+      pill.style.background = 'linear-gradient(135deg, #ff8c59, #e7dcc9)';
+      pill.style.boxShadow = '0 0 25px rgba(255, 140, 89, 0.35)';
     }
   };
 
@@ -435,16 +423,12 @@ export function Header() {
           </div>
           <nav className="navbar" id="navbar" ref={navbarRef}>
             {/* Left: Brand / Monogram */}
-            <Link to="/" className="nav-left flex items-center gap-2.5" onClick={() => playTick()}>
+            <Link to="/" className="nav-left" onClick={() => playTick()}>
               <div className="nav-logo-box">
                 {p.monogram || 'AP'}
               </div>
               <div className="nav-logo-text">
-                Ayush<span className="serif text-white">.</span>
-              </div>
-              <div className="nav-status hidden sm:inline-flex ml-1.5">
-                <span className="status-dot" />
-                <span>Available for work</span>
+                {p.displayName || p.name || 'Ayush Prajapati'}
               </div>
             </Link>
 
@@ -547,20 +531,11 @@ export function Header() {
                         }}
                       >
                         <i className="fa-solid fa-arrow-right" /> View all in Admin CMS
-                        <div className="nav-status hidden sm:inline-flex ml-1.5">
-                <span className="status-dot" />
-                <span>Available for work</span>
-              </div>
-            </Link>
+                      </Link>
                     </div>
                   </div>
                 </div>
-              )}                {/* Live IST Clock */}
-              <div className="nav-time-stamp hidden lg:inline-flex items-center text-xs text-slate-400 font-mono mr-1">
-                {liveTime}
-              </div>
-
-              {/* Theme & Accent Controls (Available across ALL pages: Public & Admin) */}
+              )}                {/* Theme & Accent Controls (Available across ALL pages: Public & Admin) */}
               <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
                 {/* Theme Selector Dropdown (10 Curated Dark Themes - No Light) */}
                 <select
@@ -747,11 +722,7 @@ export function Header() {
                   >
                     <i className="fa-solid fa-paper-plane" style={{ fontSize: '11px' }} />
                     <span>Hire / Connect</span>
-                    <div className="nav-status hidden sm:inline-flex ml-1.5">
-                <span className="status-dot" />
-                <span>Available for work</span>
-              </div>
-            </Link>
+                  </Link>
                 </div>
               )}
 
@@ -765,11 +736,7 @@ export function Header() {
                   >
                     <i className="fa-solid fa-shield-halved text-black" />
                     <span>Admin CMS</span>
-                    <div className="nav-status hidden sm:inline-flex ml-1.5">
-                <span className="status-dot" />
-                <span>Available for work</span>
-              </div>
-            </Link>
+                  </Link>
                 </div>
               )}
 

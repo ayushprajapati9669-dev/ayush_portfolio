@@ -33,7 +33,7 @@
 }
 
 .skills-subtitle {
-  color: var(--accent-1, #38bdf8);
+  color: var(--accent-1, #ff8c59);
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   letter-spacing: 5px;
@@ -42,7 +42,7 @@
   margin-bottom: 12px;
   display: block;
   text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
-  background: linear-gradient(90deg, #38bdf8, #0ea5e9, #38bdf8);
+  background: linear-gradient(90deg, #ff8c59, #e7dcc9, #ff8c59);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -61,7 +61,7 @@
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -1.5px;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #38bdf8 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #e7dcc9 50%, #ff8c59 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;
@@ -139,7 +139,7 @@
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  background: linear-gradient(135deg, #ff8c59, #e7dcc9);
   color: #000;
   border-color: transparent;
   box-shadow: 0 0 35px rgba(56, 189, 248, 0.5);

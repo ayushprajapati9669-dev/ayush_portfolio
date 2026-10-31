@@ -34,7 +34,7 @@ export function ProjectCard({
   const imgSrc =
     proj.thumbnailUrl ||
     (indexNum === 1
-      ? 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop'
+      ? '/images/airbnb-clone-preview.webp'
       : indexNum === 2
       ? 'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1000&auto=format&fit=crop'
       : indexNum === 3

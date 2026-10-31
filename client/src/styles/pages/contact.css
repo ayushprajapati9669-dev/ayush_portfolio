@@ -90,7 +90,7 @@
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -2px;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #06b6d4 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #e7dcc9 50%, #ff8c59 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;
@@ -245,12 +245,12 @@
 }
 
 .contact-form .form-label .label-req {
-  color: var(--brand-color, var(--accent-1, #06b6d4));
+  color: var(--brand-color, var(--accent-1, #ff8c59));
   font-weight: 700;
 }
 
 .contact-form .form-group:focus-within .form-label {
-  color: var(--brand-color, var(--accent-1, #06b6d4));
+  color: var(--brand-color, var(--accent-1, #ff8c59));
 }
 
 .contact-form .form-control {
@@ -273,7 +273,7 @@
 }
 
 .contact-form .form-control:focus {
-  border-color: var(--brand-color, var(--accent-1, #06b6d4));
+  border-color: var(--brand-color, var(--accent-1, #ff8c59));
   background: rgba(255, 255, 255, 0.06);
   box-shadow: 0 0 0 3px var(--brand-glow, var(--accent-glow, rgba(6, 182, 212, 0.2))), inset 0 2px 5px rgba(0, 0, 0, 0.4);
 }
@@ -298,7 +298,7 @@
 /* Submit Button with Dynamic Theme Colors */
 .btn-send {
   position: relative;
-  background: linear-gradient(135deg, var(--brand-color, var(--accent-1, #06b6d4)), var(--accent-2, #3b82f6));
+  background: linear-gradient(135deg, var(--brand-color, var(--accent-1, #ff8c59)), var(--accent-2, #3b82f6));
   color: #ffffff;
   padding: 15px 32px;
   border-radius: 12px;

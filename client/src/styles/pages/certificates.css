@@ -8,8 +8,8 @@
    ========================================================================== */
 
 :root {
-  --accent-1: #38bdf8;
-  --accent-2: #0ea5e9;
+  --accent-1: #ff8c59;
+  --accent-2: #e7dcc9;
   --accent-3: #a259ff;
   --accent-glow: rgba(56, 189, 248, 0.4);
   --border: rgba(255, 255, 255, 0.08);
@@ -68,7 +68,7 @@
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -2px;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #06b6d4 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #e7dcc9 50%, #ff8c59 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;
@@ -306,7 +306,7 @@
   border-radius: 20px;
   font-size: 10px;
   font-family: 'JetBrains Mono', monospace;
-  color: #a5b4fc;
+  color: #e7dcc9;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -341,7 +341,7 @@
 }
 .btn-view {
   position: relative;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+  background: linear-gradient(135deg, #ff8c59, #e7dcc9) !important;
   color: #000 !important;
   padding: 10px 22px;
   border-radius: 50px;

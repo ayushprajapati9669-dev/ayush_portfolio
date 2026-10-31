@@ -54,7 +54,7 @@
 .aurora-1 {
   width: 70vw;
   height: 70vw;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(255, 140, 89, 0.08) 0%, transparent 60%);
   top: -20%;
   left: -20%;
 }
@@ -62,7 +62,7 @@
 .aurora-2 {
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.35) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(46, 46, 46, 0.35) 0%, transparent 60%);
   bottom: -10%;
   right: -10%;
   animation-duration: 25s;
@@ -72,7 +72,7 @@
 .aurora-3 {
   width: 50vw;
   height: 50vw;
-  background: radial-gradient(circle, rgba(162, 89, 255, 0.25) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(30, 30, 30, 0.25) 0%, transparent 60%);
   top: 30%;
   left: 40%;
   animation-duration: 30s;
@@ -118,24 +118,24 @@
   transform-style: preserve-3d;
   background-repeat: no-repeat;
 
-  /* Multi-stop studio lighting shader */
+  /* Multi-stop studio lighting shader: Smoked Obsidian Chrome */
   background:
     /* 1. Pin-point key light specular glint */
     radial-gradient(circle at 26% 24%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 6%, rgba(255, 255, 255, 0) 18%),
     /* 2. Soft specular halo */
     radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 28%),
-    /* 3. Diffuse spherical core tinted with active theme accent */
-    radial-gradient(circle at 38% 34%, var(--accent-1, #06b6d4) 0%, rgba(56, 189, 248, 0.28) 26%, transparent 60%),
+    /* 3. Diffuse spherical core tinted with active warm vermilion */
+    radial-gradient(circle at 38% 34%, var(--accent-1, #ff8c59) 0%, rgba(255, 140, 89, 0.16) 24%, transparent 58%),
     /* 4. Ambient spherical falloff into dark chrome obsidian */
-    radial-gradient(circle at 50% 50%, #0d1e2e 0%, #08131d 52%, #02060b 86%, #010306 100%);
+    radial-gradient(circle at 50% 50%, #161616 0%, #0c0c0c 52%, #040404 86%, #010101 100%);
 
   /* Dual Inset Bevels + Theme-Reactive Fresnel Rim Lighting + Deep Ambient Drop Shadow */
   box-shadow:
-    inset 2px 2px 5px rgba(255, 255, 255, 0.45),
-    inset -8px -12px 28px rgba(0, 0, 0, 0.9),
-    inset -2px -4px 16px var(--accent-glow, rgba(6, 182, 212, 0.45)),
-    0 25px 60px -15px rgba(0, 0, 0, 0.85),
-    0 0 35px -8px var(--accent-glow, rgba(6, 182, 212, 0.25));
+    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
+    inset -8px -12px 28px rgba(0, 0, 0, 0.95),
+    inset -2px -4px 16px var(--accent-glow, rgba(255, 140, 89, 0.3)),
+    0 25px 60px -15px rgba(0, 0, 0, 0.9),
+    0 0 35px -8px var(--accent-glow, rgba(255, 140, 89, 0.15));
 
   transition: opacity 0.5s ease;
 }
@@ -246,4 +246,18 @@
     animation: none !important;
     transition: none !important;
   }
+}
+
+
+/* Sarthak Sharma Architectural 4-Column Guide Grid */
+.editorial-grid-guides {
+  position: fixed;
+  inset: 0 var(--gutter, clamp(24px, 5vw, 88px));
+  background: linear-gradient(90deg, rgba(204, 220, 245, 0.08) 1px, transparent 1px);
+  background-size: 25% 100%;
+  opacity: 0.28;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(#000, #0000 95%);
+  mask-image: linear-gradient(#000, #0000 95%);
 }

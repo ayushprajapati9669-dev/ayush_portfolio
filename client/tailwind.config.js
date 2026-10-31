@@ -5,16 +5,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        obsidian: '#080B14',
-        charcoal: '#0E1322',
-        graphite: '#141B2D',
-        alabaster: '#F8FAFC',
-        stonewarm: '#94A3B8',
-        vermilion: '#FF6B4A',
-        amberwarm: '#F59E0B',
-        sage: '#10B981',
-        indigoaccent: '#6366F1',
-        cyanglow: '#00D4FF'
+        obsidian: '#030303',
+        charcoal: '#0b0b0b',
+        graphite: '#141414',
+        alabaster: '#f1eee8',
+        stonewarm: '#aaa9a4',
+        vermilion: '#ff8c59',
+        amberwarm: '#f59e0b',
+        sage: '#10b981',
+        indigoaccent: '#818cf8',
+        cyanglow: '#ff8c59',
+        cream: '#e7dcc9'
       },
       fontFamily: {
         display: ['Outfit', 'Space Grotesk', 'Plus Jakarta Sans', 'sans-serif'],
