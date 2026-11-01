@@ -469,7 +469,7 @@ export function HomePage() {
     return () => ctx.revert();
   }, []);
 
-  const heroPhotoSrc = '/images/ayush-portrait-new.jpg';
+  const heroPhotoSrc = '/images/ayush-editorial-portrait.png';
 
   return (
     <div ref={containerRef} className="relative overflow-hidden">
@@ -523,6 +523,18 @@ export function HomePage() {
             onMouseMove={handlePortraitMouseMove}
             onMouseLeave={handlePortraitMouseLeave}
           >
+            {/* Theatrical Overhead Spotlight Beam */}
+            <div className="hero-spotlight-beam" aria-hidden="true" />
+
+            {/* Live Status Eyebrow Badge */}
+            <div className="hero-portrait-badge">
+              <span className="portrait-badge-dot" />
+              <span>OPEN FOR COLLABORATION</span>
+            </div>
+
+            {/* Warm Ambient Aura Halo */}
+            <div className="hero-portrait-halo" aria-hidden="true" />
+
             <img
               src={heroPhotoSrc}
               alt={p.name || 'Ayush Prajapati'}
