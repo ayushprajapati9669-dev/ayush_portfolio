@@ -56,7 +56,7 @@
 }
 
 .skills-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: clamp(2.2rem, 5vw, 3.8rem);
@@ -291,7 +291,7 @@
 }
 
 .skill-name {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 13.5px;
@@ -355,7 +355,7 @@
    Editorial Skills Overrides
    ========================================================================== */
 .skills-page .page-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   color: #f4f1ec !important;

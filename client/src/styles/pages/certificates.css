@@ -63,7 +63,7 @@
 }
 
 .certificates-page .page-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: clamp(2.8rem, 6vw, 4.5rem);
@@ -314,7 +314,7 @@
 }
 
 .cert-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 22px;
@@ -464,7 +464,7 @@
 }
 .modal-title {
   color: white;
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 22px;
@@ -689,7 +689,7 @@
    Editorial Certificates Overrides
    ========================================================================== */
 .certificates-page .page-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   color: #f8fafc !important;

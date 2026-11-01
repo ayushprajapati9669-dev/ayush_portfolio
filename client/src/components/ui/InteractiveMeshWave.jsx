@@ -264,3 +264,4 @@ export function InteractiveMeshWave({ className = '' }) {
     />
   );
 }
+

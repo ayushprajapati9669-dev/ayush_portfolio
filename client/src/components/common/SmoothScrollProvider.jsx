@@ -83,3 +83,4 @@ export function SmoothScrollProvider({ children }) {
     </SmoothScrollContext.Provider>
   );
 }
+

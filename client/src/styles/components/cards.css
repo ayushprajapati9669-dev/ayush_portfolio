@@ -52,17 +52,15 @@ button.btn-primary {
   justify-content: center !important;
   gap: 8px !important;
   border-radius: 9999px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: #f4f1ec !important;
-  font-family: 'Inter', sans-serif !important;
-  font-weight: 500 !important;
+  background: #ffffff !important;
+  color: #050507 !important;
+  font-family: var(--font-sans, 'Inter', sans-serif) !important;
+  font-weight: 600 !important;
   font-size: 13.5px !important;
   padding: 9px 22px !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: 1px solid #ffffff !important;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
   cursor: pointer !important;
   white-space: nowrap !important;
@@ -71,10 +69,10 @@ button.btn-primary {
 .btn-primary:hover,
 .hero-btn-primary:hover,
 button.btn-primary:hover {
-  background: #f4f1ec !important;
-  color: #030303 !important;
-  border-color: #f4f1ec !important;
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2) !important;
+  background: #f4f4f5 !important;
+  color: #050507 !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.28) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -103,15 +101,15 @@ button.btn-outline {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  border-radius: var(--radius-md, 12px) !important;
-  background: var(--bg-surface, #0f0f11) !important;
-  border: 1px solid var(--border-subtle, #222225) !important;
-  color: var(--text-primary, #f8fafc) !important;
-  font-family: 'Inter', sans-serif !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #e4e4e7 !important;
+  font-family: var(--font-sans, 'Inter', sans-serif) !important;
   font-weight: 500 !important;
-  font-size: 14px !important;
-  padding: 11px 20px !important;
-  transition: all 0.2s ease !important;
+  font-size: 13.5px !important;
+  padding: 9px 20px !important;
+  transition: all 0.22s ease !important;
   text-decoration: none !important;
   cursor: pointer !important;
   white-space: nowrap !important;
@@ -120,8 +118,8 @@ button.btn-outline {
 .btn-secondary:hover,
 .btn-outline:hover,
 button.btn-outline:hover {
-  background: var(--bg-surface-elevated, #17171a) !important;
-  border-color: var(--border-focus, #3f3f46) !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
   color: #ffffff !important;
   transform: translateY(-1px) !important;
 }

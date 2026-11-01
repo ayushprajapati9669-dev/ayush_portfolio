@@ -51,6 +51,15 @@ export function BackgroundLayers() {
 
   return (
     <>
+      {/* Powder & Colt Gibson Top Overhead Ambient Lamp Spotlight Cone */}
+      <div
+        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[1100px] max-w-[95vw] h-[520px] z-0"
+        style={{
+          background: 'radial-gradient(ellipse 65% 42% at 50% 0%, rgba(245, 158, 11, 0.14), rgba(245, 158, 11, 0.03) 55%, transparent 75%)'
+        }}
+        aria-hidden="true"
+      />
+
       {/* Obsidian Pitch Black Liquid Canvas with Subtle Waving Dot Matrix */}
       <div className={`liquid-bg ${isCaseStudy ? 'liquid-bg-case-study' : ''}`} aria-hidden="true">
         <div className="aurora-blob aurora-1" />

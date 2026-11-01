@@ -837,7 +837,44 @@
     }
   ],
   "media": [],
-  "messages": [],
+  "messages": [
+    {
+      "id": "msg-1792813214696",
+      "name": "ajit kumar",
+      "email": "ajit@gmail.com",
+      "subject": "help",
+      "message": "i need some help from you please support me",
+      "status": "read",
+      "createdAt": "2026-10-24T03:40:14.696Z"
+    },
+    {
+      "id": "msg-1792776034240",
+      "name": "ajay prajapati",
+      "email": "ajay@gmail.com",
+      "subject": "personal",
+      "message": "you can aaply for the tcs",
+      "status": "read",
+      "createdAt": "2026-10-23T17:20:34.240Z"
+    },
+    {
+      "id": "msg-1792775992794",
+      "name": "sonali prajapati",
+      "email": "sonali@gmail.com",
+      "subject": "connect",
+      "message": "i am connect to you",
+      "status": "read",
+      "createdAt": "2026-10-23T17:19:52.794Z"
+    },
+    {
+      "id": "msg-1792775905527",
+      "name": "rohit prajapati",
+      "email": "rohti626861@gmail.com",
+      "subject": "hiring",
+      "message": "i hired you",
+      "status": "read",
+      "createdAt": "2026-10-23T17:18:25.527Z"
+    }
+  ],
   "settings": {
     "siteTitle": "Ayush Prajapati — Developer Portfolio",
     "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",

@@ -229,7 +229,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .nav-logo-text {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-size: 21px !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
@@ -1098,7 +1098,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .nav-logo-text {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-size: 21px !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;

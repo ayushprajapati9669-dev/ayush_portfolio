@@ -48,7 +48,7 @@
 }
 
 .page-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: clamp(2.8rem, 6vw, 4.8rem) !important;
@@ -197,7 +197,7 @@
 }
 
 .about-card h3 {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 22px;
@@ -337,7 +337,7 @@
 }
 
 .profile-details h2 {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 28px;
@@ -419,7 +419,7 @@
 }
 
 .edu-score {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 28px;
@@ -562,7 +562,7 @@
 }
 
 .timeline-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 17px;
@@ -630,7 +630,7 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 0.92rem;
@@ -928,7 +928,7 @@
 }
 
 .spotlight-card .content-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: clamp(1.8rem, 3.2vw, 2.4rem) !important;
@@ -975,7 +975,7 @@
 }
 
 .spotlight-card .metric-value {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 1.35rem;
@@ -1001,7 +1001,7 @@
 }
 
 .spotlight-card .text-block h4 {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 0.9rem;
@@ -1456,7 +1456,7 @@
 }
 
 .spotlight-lightbox .lightbox-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 1.1rem;
@@ -1659,7 +1659,7 @@
 }
 
 .about-card h3 {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 1.8rem !important;
@@ -1669,7 +1669,7 @@
 }
 
 .profile-details h2 {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-weight: 400 !important;
   letter-spacing: -0.015em !important;
   font-size: 2.2rem !important;
