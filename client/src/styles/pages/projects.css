@@ -64,7 +64,7 @@
 }
 
 .projects-page .page-title {
-  font-family: 'Instrument Serif', 'Playfair Display', Georgia, serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: clamp(2.8rem, 6vw, 4.8rem) !important;
   font-weight: 500 !important;
   line-height: 1.05 !important;
@@ -422,7 +422,7 @@
   animation: projectPulse 2s infinite;
 }
 .p-badge.case-study {
-  color: #f4f1ec;
+  color: #f8fafc;
   border-color: rgba(56, 189, 248, 0.4);
   background: rgba(56, 189, 248, 0.15);
   box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
@@ -472,7 +472,7 @@
 }
 
 .project-title {
-  font-family: 'Instrument Serif', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 22px;
   font-weight: 600;
   color: white;
@@ -588,7 +588,7 @@
 .btn-case-study {
   position: relative;
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(59, 130, 246, 0.22));
-  color: #f4f1ec !important;
+  color: #f8fafc !important;
   border: 1px solid rgba(56, 189, 248, 0.45);
   padding: 10px 18px;
   border-radius: 50px;
@@ -607,7 +607,7 @@
 }
 .btn-case-study:hover {
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.35), rgba(59, 130, 246, 0.35));
-  border-color: #f4f1ec;
+  border-color: #f8fafc;
   color: #ffffff !important;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(56, 189, 248, 0.35);
@@ -734,7 +734,7 @@
   letter-spacing: 1px;
   background: rgba(6, 182, 212, 0.15);
   border: 1px solid rgba(6, 182, 212, 0.4);
-  color: #f4f1ec;
+  color: #f8fafc;
   box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
 }
 
@@ -751,7 +751,7 @@
 }
 
 .metric-card:hover {
-  border-color: #f4f1ec;
+  border-color: #f8fafc;
   box-shadow: 0 15px 35px -5px rgba(56, 189, 248, 0.25);
 }
 
@@ -788,7 +788,7 @@
 
 .markdown-content strong,
 .markdown-content b {
-  color: #f4f1ec !important;
+  color: #f8fafc !important;
   font-weight: 700;
 }
 
@@ -800,13 +800,13 @@
   font-weight: 800;
   margin-top: 1.6em;
   margin-bottom: 0.6em;
-  font-family: 'Instrument Serif', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   letter-spacing: -0.02em;
 }
 
 .markdown-content h2 {
   font-size: 1.45rem;
-  color: #f4f1ec !important;
+  color: #f8fafc !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.4em;
 }
@@ -832,7 +832,7 @@
 .markdown-content code {
   background: #070B14 !important;
   border: 1px solid rgba(0, 212, 255, 0.25) !important;
-  color: #f4f1ec !important;
+  color: #f8fafc !important;
   padding: 3px 8px;
   border-radius: 6px;
   font-family: 'JetBrains Mono', monospace;
@@ -875,8 +875,8 @@
    Editorial Projects Overrides
    ========================================================================== */
 .projects-page .page-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
-  color: #f4f1ec !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  color: #f8fafc !important;
   background: none !important;
   -webkit-text-fill-color: initial !important;
 }
@@ -986,10 +986,10 @@
 }
 
 .project-card .project-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 19px !important;
   font-weight: 500 !important;
-  color: #f4f1ec !important;
+  color: #f8fafc !important;
   margin-bottom: 6px !important;
   line-height: 1.25 !important;
   letter-spacing: -0.01em !important;

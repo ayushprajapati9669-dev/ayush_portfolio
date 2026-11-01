@@ -523,7 +523,7 @@ export function HomePage() {
             A HUMAN PERSPECTIVE ON SOFTWARE
           </div>
 
-          {/* Large Name Typography (Instrument Serif Upright + Italic) */}
+          {/* Large Name Typography (Inter Sans-Serif) */}
           <h1 className="hero-name-editorial">
             <span className="name-first">Ayush</span>
             <span className="name-last">Prajapati</span>

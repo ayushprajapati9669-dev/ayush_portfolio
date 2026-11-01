@@ -229,7 +229,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .nav-logo-text {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -459,7 +459,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .notif-head h4 {
-  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 13.5px;
   font-weight: 700;
   color: white;
@@ -997,34 +997,72 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 
 /* ==========================================================================
-   Editorial Clean Navbar Logo (Matching Image 6 & 7)
+   Modern Navbar Styling (Cyan Accent + Inter Typography)
    ========================================================================== */
 .nav-logo-box {
-  display: none !important;
+  display: flex !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6) !important;
+  border-radius: 8px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25) !important;
 }
 
 .nav-logo-text {
-  font-family: 'Instrument Serif', Georgia, serif !important;
-  font-size: 24px !important;
-  font-weight: 500 !important;
-  color: #f4f1ec !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: #f8fafc !important;
   letter-spacing: -0.4px !important;
   text-decoration: none !important;
 }
 
+.navbar {
+  background: rgba(15, 15, 17, 0.85) !important;
+  border: 1px solid #222225 !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7) !important;
+}
+
+.active-pill {
+  background: rgba(6, 182, 212, 0.15) !important;
+  border: 1px solid rgba(6, 182, 212, 0.25) !important;
+}
+
+.nav-link {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 13.5px !important;
+  color: #94a3b8 !important;
+}
+
+.nav-link:hover {
+  color: #f8fafc !important;
+}
+
+.nav-link.active {
+  color: #06b6d4 !important;
+}
+
 .btn-primary {
-  background: #f4f1ec !important;
-  color: #030303 !important;
+  background: #06b6d4 !important;
+  color: #000 !important;
+  font-family: 'Inter', sans-serif !important;
   font-weight: 600 !important;
   border-radius: 9999px !important;
   border: none !important;
   padding: 8px 18px !important;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25) !important;
   transition: all 0.25s ease !important;
 }
 
 .btn-primary:hover {
-  background: #e2ded7 !important;
+  background: #0891b2 !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35) !important;
+  color: #000 !important;
 }

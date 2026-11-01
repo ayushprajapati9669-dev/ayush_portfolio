@@ -111,7 +111,7 @@ body.has-admin-sidebar.sidebar-collapsed .dashboard-footer {
 }
 
 .footer-brand-name {
-  font-family: 'Instrument Serif', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 20px;
   font-weight: 700;
   color: white;

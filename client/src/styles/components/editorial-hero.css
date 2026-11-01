@@ -1,10 +1,11 @@
 /* ==========================================================================
-   Editorial Hero & Horizontal Showcase System
-   - Sarthak Sharma Hero Stage (Matching Image 1 with Ayush Photo from Image 4)
-   - Right-to-Left Horizontal Scroll Carousel for Projects & Certificates
+   Modern Editorial Hero & Horizontal Showcase System
+   - Clean Inter Typography (Bold, Modern, Realistic SaaS aesthetic)
+   - Brand Cyan Accents (#06b6d4) with #050505 Pitch Dark Atmosphere
+   - Compact Horizontal Scroll Carousels for Projects & Certificates
    ========================================================================== */
 
-/* --- HERO STAGE (Image 1 Sarthak Sharma Composition) --- */
+/* --- HERO STAGE --- */
 .hero-editorial-stage {
   position: relative;
   min-height: 94vh;
@@ -21,8 +22,8 @@
 @media (max-width: 768px) {
   .hero-editorial-stage {
     min-height: auto;
-    padding: 110px 18px 30px;
-    gap: 36px;
+    padding: 100px 18px 24px;
+    gap: 32px;
   }
 }
 
@@ -33,13 +34,13 @@
   pointer-events: none;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-left: 1px solid rgba(255, 255, 255, 0.035);
-  border-right: 1px solid rgba(255, 255, 255, 0.035);
+  border-left: 1px solid rgba(34, 34, 37, 0.45);
+  border-right: 1px solid rgba(34, 34, 37, 0.45);
   z-index: 0;
 }
 
 .hero-editorial-guides div {
-  border-right: 1px solid rgba(255, 255, 255, 0.035);
+  border-right: 1px solid rgba(34, 34, 37, 0.45);
 }
 
 @media (max-width: 768px) {
@@ -55,11 +56,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #9a968f;
+  color: var(--text-secondary, #94a3b8);
+  font-weight: 500;
 }
 
 .hero-meta-left {
@@ -69,12 +71,13 @@
 }
 
 .hero-meta-dot {
-  color: var(--brand-color, #ff8c59);
+  color: var(--brand-cyan, #06b6d4);
   font-size: 0.8rem;
 }
 
 .hero-meta-right {
-  color: #858079;
+  color: var(--text-muted, #475569);
+  font-weight: 500;
 }
 
 @media (max-width: 640px) {
@@ -82,7 +85,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
   }
 }
 
@@ -109,28 +112,29 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
-  color: #65625c;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted, #475569);
   text-transform: uppercase;
   z-index: 3;
 }
 
 .presence-num {
-  color: var(--brand-color, #ff8c59);
+  color: var(--brand-cyan, #06b6d4);
   font-weight: 600;
 }
 
 .presence-plus {
   font-size: 0.85rem;
-  color: #9a968f;
+  color: var(--text-secondary, #94a3b8);
   margin: 2px 0;
 }
 
 .presence-word {
-  color: #858079;
+  color: var(--text-secondary, #94a3b8);
   line-height: 1.4;
+  font-weight: 500;
 }
 
 @media (max-width: 1024px) {
@@ -139,12 +143,12 @@
   }
 }
 
-/* Portrait Stage (Seamless vignette emerging from #030303 black, matching Image 4) */
+/* Portrait Stage (Seamless vignette emerging from #050505 black) */
 .hero-portrait-stage {
   position: relative;
   width: min(440px, 86vw);
   height: min(430px, 45vh);
-  margin: 0 auto -18px;
+  margin: 0 auto -20px;
   border-radius: 0 !important;
   border: none !important;
   box-shadow: none !important;
@@ -164,13 +168,13 @@
   transform: translateX(-50%);
   width: 440px;
   height: 440px;
-  background: radial-gradient(circle, rgba(255, 140, 89, 0.18) 0%, rgba(255, 255, 255, 0.03) 45%, transparent 72%);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.16) 0%, rgba(59, 130, 246, 0.04) 45%, transparent 72%);
   filter: blur(52px);
   pointer-events: none;
   z-index: -1;
 }
 
-/* Masked Editorial Portrait (Ayush Image 5 with feather vignette dissolving into pitch black) */
+/* Masked Portrait (Feather vignette dissolving into pitch black #050505) */
 .hero-portrait-img {
   width: 100%;
   height: 100%;
@@ -179,10 +183,10 @@
   border-radius: 0 !important;
   border: none !important;
   box-shadow: none !important;
-  filter: grayscale(35%) contrast(1.15) brightness(0.94) !important;
-  mask-image: radial-gradient(ellipse 46% 56% at 50% 38%, black 22%, rgba(0, 0, 0, 0.7) 38%, rgba(0, 0, 0, 0.2) 52%, transparent 66%),
+  filter: contrast(1.12) brightness(0.96) !important;
+  mask-image: radial-gradient(ellipse 48% 58% at 50% 38%, black 24%, rgba(0, 0, 0, 0.72) 40%, rgba(0, 0, 0, 0.2) 54%, transparent 68%),
               linear-gradient(to bottom, transparent 6%, black 20%, black 74%, transparent 96%) !important;
-  -webkit-mask-image: radial-gradient(ellipse 46% 56% at 50% 38%, black 22%, rgba(0, 0, 0, 0.7) 38%, rgba(0, 0, 0, 0.2) 52%, transparent 66%),
+  -webkit-mask-image: radial-gradient(ellipse 48% 58% at 50% 38%, black 24%, rgba(0, 0, 0, 0.72) 40%, rgba(0, 0, 0, 0.2) 54%, transparent 68%),
                       linear-gradient(to bottom, transparent 6%, black 20%, black 74%, transparent 96%) !important;
   -webkit-mask-composite: destination-in;
   mask-composite: intersect;
@@ -191,55 +195,59 @@
 }
 
 .hero-portrait-stage:hover .hero-portrait-img {
-  filter: grayscale(10%) contrast(1.12) brightness(1.02) !important;
+  filter: contrast(1.16) brightness(1.02) !important;
   transform: scale(1.02);
 }
 
 /* Sub-eyebrow right above huge name */
 .hero-sub-eyebrow {
   position: relative;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #858079;
+  color: var(--brand-cyan, #06b6d4);
   margin-top: 4px;
   margin-bottom: 8px;
   z-index: 3;
 }
 
-/* Large Editorial Name Typography */
+/* Large Clean Modern Name Typography (Inter Sans-Serif) */
 .hero-name-editorial {
   position: relative;
-  font-family: 'Instrument Serif', 'Playfair Display', Georgia, serif !important;
-  font-size: clamp(3.6rem, 9vw, 6.8rem) !important;
-  font-weight: 400 !important;
-  line-height: 0.92 !important;
-  letter-spacing: -0.025em !important;
-  color: #f4f1ec !important;
-  margin: 0 0 10px !important;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: clamp(3rem, 7.5vw, 5.4rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.035em !important;
+  color: #f8fafc !important;
+  margin: 0 0 12px !important;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.85);
   z-index: 3;
 }
 
 .hero-name-editorial .name-first {
   font-style: normal;
-  color: #ffffff;
+  color: #f8fafc;
+  font-weight: 700;
 }
 
 .hero-name-editorial .name-last {
-  font-style: italic;
-  color: #f4f1ec;
-  margin-left: 0.18em;
-  font-weight: 400;
+  font-style: normal;
+  font-weight: 700;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 0.15em;
 }
 
 /* Subtitle Narrative */
 .hero-narrative-editorial {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-size: clamp(0.92rem, 1.3vw, 1.08rem);
   line-height: 1.6;
-  color: #9a968f;
+  color: var(--text-secondary, #94a3b8);
   max-width: 580px;
   margin: 0 auto 18px;
   z-index: 2;
@@ -250,7 +258,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: nowrap;
   z-index: 2;
 }
@@ -259,41 +267,47 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 11px 26px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #f4f1ec;
-  font-size: 0.88rem;
-  font-weight: 500;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 12px 26px;
+  border-radius: var(--radius-md, 12px);
+  background: var(--brand-cyan, #06b6d4);
+  border: none;
+  color: #000;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .hero-btn-work:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: var(--brand-cyan-hover, #0891b2);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
 }
 
 .hero-btn-talk {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #9a968f;
-  font-size: 0.88rem;
+  color: var(--text-primary, #f8fafc);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
   font-weight: 500;
-  padding: 11px 20px;
-  transition: color 0.25s, transform 0.25s;
+  padding: 12px 22px;
+  border-radius: var(--radius-md, 12px);
+  background: var(--bg-surface, #0f0f11);
+  border: 1px solid var(--border-subtle, #222225);
+  transition: all 0.25s ease;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .hero-btn-talk:hover {
-  color: #f4f1ec;
+  background: var(--bg-surface-elevated, #17171a);
+  border-color: var(--border-focus, #3f3f46);
   transform: translateY(-1px);
 }
 
@@ -304,13 +318,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.16em;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #65625c;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted, #475569);
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle, #222225);
+  font-weight: 500;
 }
 
 .hero-footer-left {
@@ -328,7 +343,6 @@
   }
 }
 
-
 /* --- HORIZONTAL SHOWCASE CAROUSEL (Projects & Certificates) --- */
 .horizontal-showcase-section {
   position: relative;
@@ -340,61 +354,62 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   gap: 20px;
   flex-wrap: wrap;
 }
 
 .showcase-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--brand-color, #ff8c59);
+  color: var(--brand-cyan, #06b6d4);
   margin-bottom: 6px;
 }
 
 .showcase-title {
-  font-family: 'Instrument Serif', Georgia, serif !important;
-  font-size: clamp(2.2rem, 4vw, 3.2rem) !important;
-  font-weight: 500 !important;
-  color: #f4f1ec !important;
-  line-height: 1.1 !important;
-  letter-spacing: -0.02em !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem) !important;
+  font-weight: 600 !important;
+  color: #f8fafc !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.025em !important;
 }
 
 .showcase-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .showcase-counter {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
-  color: #858079;
-  letter-spacing: 0.1em;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-muted, #475569);
+  font-weight: 500;
   padding-right: 4px;
 }
 
 .showcase-arrow-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f4f1ec;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--bg-surface, #0f0f11);
+  border: 1px solid var(--border-subtle, #222225);
+  color: var(--text-primary, #f8fafc);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
   font-size: 0.85rem;
 }
 
 .showcase-arrow-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.28);
+  background: var(--bg-surface-elevated, #17171a);
+  border-color: var(--border-focus, #3f3f46);
   transform: translateY(-1px);
 }
 
@@ -404,36 +419,37 @@
 }
 
 .showcase-view-all {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #9a968f;
+  color: var(--text-secondary, #94a3b8);
   padding: 8px 16px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.25s ease;
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid var(--border-subtle, #222225);
+  background: var(--bg-surface, #0f0f11);
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .showcase-view-all:hover {
-  color: #f4f1ec;
-  border-color: rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary, #f8fafc);
+  border-color: var(--border-focus, #3f3f46);
+  background: var(--bg-surface-elevated, #17171a);
 }
 
 /* The Horizontal Track */
 .horizontal-scroll-track {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding: 8px 4px 28px;
+  padding: 6px 4px 24px;
   cursor: grab;
   user-select: none;
   will-change: scroll-position;
@@ -488,16 +504,16 @@
 .showcase-progress-bar {
   width: 100%;
   height: 2px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--border-subtle, #222225);
   border-radius: 9999px;
   overflow: hidden;
-  margin-top: -12px;
-  margin-bottom: 24px;
+  margin-top: -8px;
+  margin-bottom: 20px;
 }
 
 .showcase-progress-thumb {
   height: 100%;
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--brand-cyan, #06b6d4);
   border-radius: 9999px;
   transition: width 0.25s ease-out;
 }
