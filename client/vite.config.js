@@ -9,6 +9,9 @@ export default defineConfig({
       'react-dom',
       'react-router-dom',
       'gsap',
+      'three',
+      'framer-motion',
+      'lenis',
       'dompurify',
       'marked'
     ]
@@ -21,7 +24,7 @@ export default defineConfig({
     minify: 'esbuild',
     cssCodeSplit: true,
     sourcemap: false,
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1200,
     reportCompressedSize: false,
     assetsInlineLimit: 4096,
     rollupOptions: {
@@ -31,8 +34,17 @@ export default defineConfig({
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom') || id.includes('node_modules/scheduler')) {
             return 'vendor-react';
           }
+          if (id.includes('node_modules/three')) {
+            return 'vendor-three';
+          }
+          if (id.includes('node_modules/framer-motion')) {
+            return 'vendor-motion';
+          }
           if (id.includes('node_modules/gsap')) {
             return 'vendor-gsap';
+          }
+          if (id.includes('node_modules/lenis')) {
+            return 'vendor-lenis';
           }
           if (id.includes('node_modules/marked') || id.includes('node_modules/dompurify')) {
             return 'vendor-markdown';

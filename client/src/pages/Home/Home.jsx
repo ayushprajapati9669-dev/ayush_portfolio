@@ -4,6 +4,11 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
+import { HeroCosmosCanvas } from '../../components/ui/HeroCosmosCanvas';
+import { InteractiveMeshWave } from '../../components/ui/InteractiveMeshWave';
+import { MagneticButton } from '../../components/ui/MagneticButton';
+import { TiltCard } from '../../components/ui/TiltCard';
+
 import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificateCard } from '../../components/projects/CertificateCard';
 import { TechLogo } from '../../components/common/TechLogos';
@@ -478,6 +483,9 @@ export function HomePage() {
           HERO SECTION (Image 1 Sarthak Sharma Composition + Image 4 Photo)
           ========================================================================= */}
       <section ref={heroRef} className="hero-editorial-stage">
+        {/* Interactive 3D WebGL Particle Cosmos Canvas */}
+        <HeroCosmosCanvas />
+
         {/* Architectural 4-column guide lines */}
         <div className="hero-editorial-guides" aria-hidden="true">
           <div />
@@ -539,29 +547,23 @@ export function HomePage() {
             {p.heroDescription || 'I build scalable full-stack products, solve algorithmic challenges, and engineer intelligent web applications.'}
           </p>
 
-          {/* Interactive CTAs */}
+          {/* Interactive CTAs with Framer Motion Spring Magnetic Physics */}
           <div className="hero-actions-editorial">
-            <button
-              type="button"
+            <MagneticButton
               onClick={() => scrollToSection('featured-projects')}
-              onMouseMove={handleMagneticMouseMove}
-              onMouseLeave={handleMagneticMouseLeave}
               className="hero-btn-work"
             >
               <span>Explore my work</span>
               <span aria-hidden="true">↓</span>
-            </button>
+            </MagneticButton>
 
-            <button
-              type="button"
+            <MagneticButton
               onClick={() => goTo('/contact')}
-              onMouseMove={handleMagneticMouseMove}
-              onMouseLeave={handleMagneticMouseLeave}
               className="hero-btn-talk"
             >
               <span>Start a conversation</span>
               <span aria-hidden="true">↗</span>
-            </button>
+            </MagneticButton>
           </div>
         </div>
 
@@ -605,16 +607,39 @@ export function HomePage() {
             SECTION 01: Bento Introduction & Focus Areas
             ========================================================================= */}
         <section className="bento-section space-y-10 border-t hairline-border pt-16">
-          <div className="bento-header max-w-3xl space-y-3">
-            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeIntroEyebrow || '01 · ABOUT & MISSION'}</p>
-            <h2 className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal">
-              Technology is the starting point.{' '}
-              <span className="font-editorial-italic italic">People are the point.</span>
-            </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="bento-header lg:col-span-6 space-y-4">
+              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
+                {ui.homeIntroEyebrow || '01 · THE PERSON BEHIND THE WORK'}
+              </p>
+              <h2 className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal">
+                Technology is the starting point.{' '}
+                <span className="font-editorial-italic italic">People are the point.</span>
+              </h2>
+              <p className="text-stonewarm text-sm sm:text-base leading-relaxed">
+                Engineering intelligent web applications, scalable cloud backends, and responsive interactive products with clean craft.
+              </p>
+            </div>
+
+            {/* Interactive 3D Three.js GLSL Undulating Wave Mesh */}
+            <div className="lg:col-span-6 h-[320px] sm:h-[380px] rounded-3xl border hairline-border bg-[#070709]/80 backdrop-blur-md p-4 relative overflow-hidden flex flex-col justify-between group shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]">
+              <div className="flex items-center justify-between text-[11px] font-mono text-stone-500 uppercase tracking-widest z-10 px-2 pt-1 pointer-events-none">
+                <span>01 / 03 · WAVE DISPLACEMENT</span>
+                <span className="text-emerald-400/80 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  GLSL LIVE
+                </span>
+              </div>
+              <InteractiveMeshWave className="absolute inset-0" />
+              <div className="flex items-center justify-between text-[10px] font-mono text-stone-500 uppercase tracking-wider z-10 px-2 pb-1 pointer-events-none">
+                <span>THREE.JS SHADER</span>
+                <span>INTERACTIVE · HOVER TO RIPPLE</span>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <div
+            <TiltCard
               className="bento-bio-card lg:col-span-6 glass-card rounded-3xl p-7 sm:p-8 space-y-4 text-stonewarm leading-relaxed cursor-default transition-shadow hover:shadow-cyan-500/10"
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}
@@ -626,11 +651,11 @@ export function HomePage() {
                 <span>✉ {p.email || 'ayushprajapati9669@gmail.com'}</span>
                 <span>☎ {p.phone || '(+91) 9669802554'}</span>
               </div>
-            </div>
+            </TiltCard>
 
             <div className="bento-focus-grid lg:col-span-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {(p.focusAreas || []).map((area, idx) => (
-                <div
+                <TiltCard
                   key={idx}
                   className="bento-focus-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between space-y-3 cursor-default"
                   onMouseMove={handleCardMouseMove}
@@ -643,7 +668,7 @@ export function HomePage() {
                     <h3 className="font-display text-lg font-bold text-alabaster">{area.title}</h3>
                     <p className="mt-1.5 text-xs leading-relaxed text-stonewarm">{area.detail}</p>
                   </div>
-                </div>
+                </TiltCard>
               ))}
             </div>
           </div>
