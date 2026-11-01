@@ -617,8 +617,11 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
                 <div
                   className="deep-dive-content"
                   style={{
-                    maxHeight: isDeepDiveOpen ? '400px' : '0px',
-                    transition: 'max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+                    maxHeight: isDeepDiveOpen ? '500px' : '0px',
+                    opacity: isDeepDiveOpen ? 1 : 0,
+                    overflow: 'hidden',
+                    pointerEvents: isDeepDiveOpen ? 'auto' : 'none',
+                    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 >
                   <div
@@ -678,7 +681,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               {currentSlide.showExploreBtn && (
                 <button
                   type="button"
-                  className="btn-explore"
+                  className="spotlight-btn-primary"
                   onClick={() => {
                     playTick();
                     navigate('/projects');
@@ -690,7 +693,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               )}
               <button
                 type="button"
-                className="btn-view"
+                className="spotlight-btn-secondary"
                 onClick={() => openLightbox('main')}
               >
                 <i className="fa-solid fa-expand" />
@@ -702,7 +705,10 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
 
         {/* Timeline Footer (ALL WINS) */}
         <div className="timeline-footer">
-          <span className="timeline-label">ALL WINS:</span>
+          <div className="timeline-label">
+            <i className="fa-solid fa-trophy" />
+            <span>ALL WINS:</span>
+          </div>
           <div className="timeline-track">
             {spotlightSlides.map((slide, sIdx) => {
               const cleanTitle = slide.title.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
@@ -714,7 +720,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
                   className={`tab-btn ${isActive ? 'active' : ''}`}
                   onClick={() => jumpToSlide(sIdx)}
                 >
-                  <div className="dot" />
+                  <span className="dot" />
                   <span>{cleanTitle}</span>
                 </button>
               );

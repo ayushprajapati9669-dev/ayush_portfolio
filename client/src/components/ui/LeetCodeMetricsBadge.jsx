@@ -17,8 +17,8 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
     ranking: 2350736,
     avatar: 'https://assets.leetcode.com/users/ayush7162/avatar_1761722187.png',
     badges: [
-      { title: 'LeetCode Problem Solver', icon: 'fa-solid fa-code', color: '#00f0ff' },
-      { title: 'Java Algorithmic Foundations', icon: 'fa-brands fa-java', color: '#ff7b00' },
+      { title: 'LeetCode Problem Solver', icon: 'fa-solid fa-code', color: '#d4af37' },
+      { title: 'Java Algorithmic Foundations', icon: 'fa-brands fa-java', color: '#f59e0b' },
       { title: 'Linked List & Recursion', icon: 'fa-solid fa-network-wired', color: '#10b981' }
     ],
     recentSubmissions: [
@@ -65,34 +65,41 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
   const hardPct = Math.round((hard / total) * 100);
 
   // SVG Circle calculations (milestone 100 problems)
-  const radius = 42;
+  const radius = 44;
   const circumference = 2 * Math.PI * radius;
   const targetMilestone = 100;
   const strokeDashoffset = circumference - (Math.min(total / targetMilestone, 1) * circumference);
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-[#090f19]/90 border border-yellow-500/20 p-5 sm:p-6 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.5)] transition-all hover:border-yellow-500/40 group ${className}`}
+      className={`relative overflow-hidden rounded-[20px] bg-[#0a0a0c]/90 border border-[#d4af37]/25 p-6 sm:p-8 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 hover:border-[#d4af37]/45 hover:shadow-[0_24px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(212,175,55,0.12)] group ${className}`}
     >
-      {/* Background glow & mesh */}
-      <div className="absolute -top-16 -right-16 w-36 h-36 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-yellow-500/15 transition-all" />
-      <div className="absolute -bottom-16 -left-16 w-36 h-36 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Background ambient lighting */}
+      <div className="absolute -top-20 -right-20 w-48 h-48 bg-[#d4af37]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#d4af37]/15 transition-all" />
+      <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-white/5 relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-inner">
-            <i className="fa-solid fa-code text-base" />
+      {/* Header Bar */}
+      <div className="flex items-center justify-between pb-5 border-b border-white/10 relative z-10 flex-wrap gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/30 flex items-center justify-center text-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.15)] flex-shrink-0">
+            <i className="fa-solid fa-code text-lg" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h4 className="text-white font-semibold text-sm tracking-wide">LeetCode & Problem-Solving</h4>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h3 className="text-white font-['Jost',sans-serif] font-medium text-base sm:text-lg tracking-tight">
+                LeetCode &amp; Algorithmic Mastery
+              </h3>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-mono text-[11px] font-medium uppercase tracking-wider">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Live Sync
               </span>
             </div>
-            <p className="text-white/40 text-xs font-mono">
-              @ayush7162 • Global Rank #{Number(stats.ranking || 2350736).toLocaleString()}
+            <p className="text-slate-400 text-xs sm:text-[13px] font-mono mt-0.5 flex items-center gap-2 flex-wrap">
+              <span className="text-[#d4af37]">@{stats.username || 'ayush7162'}</span>
+              <span className="text-white/20">•</span>
+              <span>Global Rank #{Number(stats.ranking || 2350736).toLocaleString()}</span>
+              <span className="text-white/20">•</span>
+              <span className="text-slate-300">Java &amp; C++ DSA Focus</span>
             </p>
           </div>
         </div>
@@ -102,133 +109,168 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => playTick('click')}
-          className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-yellow-500/20 border border-white/10 hover:border-yellow-500/40 text-white/80 hover:text-yellow-300 text-xs font-mono transition-all flex items-center gap-1.5"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-[#d4af37]/15 border border-white/10 hover:border-[#d4af37]/40 text-slate-300 hover:text-[#d4af37] text-xs font-['Jost',sans-serif] font-medium tracking-wide transition-all shadow-sm no-underline flex-shrink-0"
           title="Inspect verified live LeetCode profile"
         >
-          <span>Live Profile</span>
+          <span>Inspect Live Profile</span>
           <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
         </a>
       </div>
 
       {/* Main Metrics Body */}
-      <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center mt-5 relative z-10">
-        {/* Left: Circular progress gauge */}
-        <div className="sm:col-span-5 flex flex-col items-center justify-center py-2">
-          <div className="relative w-28 h-28 flex items-center justify-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-6 relative z-10">
+        {/* Left: Theatrical Circular Progress Gauge */}
+        <div className="lg:col-span-4 flex flex-col items-center justify-center p-4 rounded-2xl bg-black/40 border border-white/5">
+          <div className="relative w-36 h-36 flex items-center justify-center">
             <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#d4af37" />
+                  <stop offset="100%" stopColor="#f59e0b" />
+                </linearGradient>
+              </defs>
               {/* Background track */}
               <circle
                 cx="50"
                 cy="50"
                 r={radius}
-                className="stroke-white/5"
-                strokeWidth="8"
+                className="stroke-white/10"
+                strokeWidth="7"
                 fill="transparent"
               />
-              {/* Animated Progress ring */}
+              {/* Animated Gold Ring */}
               <circle
                 cx="50"
                 cy="50"
                 r={radius}
-                className="stroke-cyan-400 transition-all duration-1000 ease-out"
-                strokeWidth="8"
+                stroke="url(#goldGradient)"
+                strokeWidth="7"
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
                 fill="transparent"
+                style={{
+                  filter: 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))',
+                  transition: 'stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-2xl font-bold font-mono text-white tracking-tight">
+              <span className="text-3xl font-['Cormorant_Garamond',Georgia,serif] font-medium text-white tracking-tight">
                 {total}
               </span>
-              <span className="text-[10px] text-white/40 uppercase tracking-widest font-mono">
-                Solved / {stats.totalQuestions || 4096}
+              <span className="text-[10px] text-[#d4af37] uppercase tracking-widest font-mono font-semibold">
+                SOLVED
+              </span>
+              <span className="text-[9.5px] text-slate-400 font-mono mt-0.5">
+                Target: {targetMilestone}
               </span>
             </div>
           </div>
-          <span className="text-[11px] text-yellow-400/90 font-mono mt-2 font-medium">
-            {stats.acceptanceRate || 59.6}% Acceptance Rate
-          </span>
+          <div className="mt-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#d4af37] font-mono text-xs font-medium">
+            <i className="fa-solid fa-chart-pie text-[11px]" />
+            <span>{stats.acceptanceRate || 59.6}% Acceptance Rate</span>
+          </div>
         </div>
 
-        {/* Right: Breakdown bars & Submissions */}
-        <div className="sm:col-span-7 space-y-3">
-          {/* Easy Bar */}
-          <div>
-            <div className="flex justify-between text-xs font-mono mb-1">
-              <span className="text-emerald-400 font-medium flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                Easy
-              </span>
-              <span className="text-white/70">
-                <strong className="text-white font-semibold">{easy}</strong>
-                <span className="text-white/40 text-[10px] ml-1">/ {stats.totalEasy || 974} ({easyPct}%)</span>
-              </span>
-            </div>
-            <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
-              <div
-                className="h-full rounded-full bg-emerald-400/80 transition-all duration-700"
-                style={{ width: `${easyPct}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Medium Bar */}
-          <div>
-            <div className="flex justify-between text-xs font-mono mb-1">
-              <span className="text-amber-400 font-medium flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-amber-400" />
-                Medium
-              </span>
-              <span className="text-white/70">
-                <strong className="text-white font-semibold">{medium}</strong>
-                <span className="text-white/40 text-[10px] ml-1">/ {stats.totalMedium || 2136} ({medPct}%)</span>
-              </span>
-            </div>
-            <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
-              <div
-                className="h-full rounded-full bg-amber-400/80 transition-all duration-700"
-                style={{ width: `${medPct}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Hard Bar */}
-          <div>
-            <div className="flex justify-between text-xs font-mono mb-1">
-              <span className="text-rose-400 font-medium flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-rose-400" />
-                Hard
-              </span>
-              <span className="text-white/70">
-                <strong className="text-white font-semibold">{hard}</strong>
-                <span className="text-white/40 text-[10px] ml-1">/ {stats.totalHard || 986} ({hardPct}%)</span>
-              </span>
-            </div>
-            <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
-              <div
-                className="h-full rounded-full bg-rose-400/80 transition-all duration-700"
-                style={{ width: `${hardPct}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Recent Real Submissions from Ayush's Profile */}
-          <div className="pt-2 border-t border-white/5">
-            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block mb-1.5 font-semibold">
-              Recent Java Submissions:
-            </span>
-            <div className="flex flex-wrap items-center gap-1.5 text-[10.5px] font-mono">
-              {(stats.recentSubmissions || []).slice(0, 3).map((sub, idx) => (
-                <span
-                  key={idx}
-                  className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/80 flex items-center gap-1"
-                >
-                  <i className="fa-brands fa-java text-amber-400 text-[10px]" />
-                  <span>{sub.title}</span>
+        {/* Right: Difficulty Tier Progress Cards & Recent Submissions */}
+        <div className="lg:col-span-8 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Easy Tier Card */}
+            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/8 hover:border-emerald-500/40 transition-all">
+              <div className="flex items-center justify-between text-xs font-mono mb-2">
+                <span className="text-emerald-400 font-medium flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]" />
+                  Easy
                 </span>
-              ))}
+                <span className="text-white/60 text-[11px] font-semibold">{easyPct}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden mb-2">
+                <div
+                  className="h-full rounded-full bg-emerald-400 transition-all duration-1000 shadow-[0_0_10px_#10b981]"
+                  style={{ width: `${easyPct}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[11.5px] font-mono text-slate-400">
+                <span className="text-white font-semibold">{easy}</span>
+                <span>/ {stats.totalEasy || 974}</span>
+              </div>
+            </div>
+
+            {/* Medium Tier Card */}
+            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/8 hover:border-[#d4af37]/40 transition-all">
+              <div className="flex items-center justify-between text-xs font-mono mb-2">
+                <span className="text-[#d4af37] font-medium flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#d4af37] shadow-[0_0_8px_#d4af37]" />
+                  Medium
+                </span>
+                <span className="text-white/60 text-[11px] font-semibold">{medPct}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden mb-2">
+                <div
+                  className="h-full rounded-full bg-[#d4af37] transition-all duration-1000 shadow-[0_0_10px_#d4af37]"
+                  style={{ width: `${medPct}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[11.5px] font-mono text-slate-400">
+                <span className="text-white font-semibold">{medium}</span>
+                <span>/ {stats.totalMedium || 2136}</span>
+              </div>
+            </div>
+
+            {/* Hard Tier Card */}
+            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/8 hover:border-rose-400/40 transition-all">
+              <div className="flex items-center justify-between text-xs font-mono mb-2">
+                <span className="text-rose-400 font-medium flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_8px_#f43f5e]" />
+                  Hard
+                </span>
+                <span className="text-white/60 text-[11px] font-semibold">{hardPct}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden mb-2">
+                <div
+                  className="h-full rounded-full bg-rose-400 transition-all duration-1000 shadow-[0_0_10px_#f43f5e]"
+                  style={{ width: `${hardPct}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[11.5px] font-mono text-slate-400">
+                <span className="text-white font-semibold">{hard}</span>
+                <span>/ {stats.totalHard || 986}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Real Java Submissions */}
+          <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-mono font-medium tracking-wider text-slate-300 uppercase flex items-center gap-2">
+                <i className="fa-brands fa-java text-amber-400 text-sm" />
+                Recent Verified Submissions:
+              </span>
+              <span className="text-[11px] font-mono text-slate-500">Automated Sync</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+              {(stats.recentSubmissions || []).slice(0, 4).map((sub, idx) => {
+                const diffColor =
+                  sub.difficulty === 'Hard'
+                    ? 'text-rose-400 border-rose-500/25 bg-rose-500/5'
+                    : sub.difficulty === 'Medium'
+                    ? 'text-[#d4af37] border-[#d4af37]/25 bg-[#d4af37]/5'
+                    : 'text-emerald-400 border-emerald-500/25 bg-emerald-500/5';
+
+                return (
+                  <div
+                    key={idx}
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all text-slate-300"
+                  >
+                    <i className="fa-solid fa-circle-check text-emerald-400 text-[11px]" />
+                    <span className="font-['Jost',sans-serif] text-xs font-medium text-white">{sub.title}</span>
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded border font-mono ${diffColor}`}>
+                      {sub.difficulty}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

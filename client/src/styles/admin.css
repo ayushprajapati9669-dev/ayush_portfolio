@@ -143,7 +143,7 @@
 }
 
 .logo-sub {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--accent-1);
   font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
@@ -288,7 +288,7 @@
 }
 
 .nav-section-title {
-  font-size: 10px;
+  font-size: 12px;
   font-family: 'JetBrains Mono', monospace;
   color: #5a6a7a;
   text-transform: uppercase;
@@ -391,7 +391,7 @@
 .nav-badge {
   margin-left: auto;
   background: rgba(255, 255, 255, 0.1);
-  font-size: 10px;
+  font-size: 12px;
   font-family: 'JetBrains Mono', monospace;
   padding: 2px 6px;
   border-radius: 4px;
@@ -953,7 +953,7 @@
 .badge {
   padding: 4px 10px;
   border-radius: 8px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
   display: inline-flex;
@@ -1460,7 +1460,7 @@
 }
 
 .meta-label {
-  font-size: 10px;
+  font-size: 12px;
   font-family: 'JetBrains Mono', monospace;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -2378,7 +2378,7 @@
 }
 
 .skill-custom-checkbox i {
-  font-size: 9px;
+  font-size: 11px;
   color: #030712;
   opacity: 0;
   transition: opacity 0.2s;
@@ -3126,7 +3126,7 @@
 .hero-mockup-url-bar {
   background: #090e17;
   color: #64748b;
-  font-size: 10px;
+  font-size: 12px;
   font-family: 'JetBrains Mono', monospace;
   padding: 4px 10px;
   border-radius: 6px;
@@ -3192,7 +3192,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 4px 12px;
   border-radius: 20px;
-  font-size: 10px;
+  font-size: 12px;
   color: #e2e8f0;
   margin-bottom: 14px;
   font-family: 'JetBrains Mono', monospace;
@@ -3631,7 +3631,7 @@
 
 .logo-sub {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 9px !important;
+  font-size: 11.5px !important;
   color: #d4af37 !important;
   letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
@@ -3694,7 +3694,7 @@
 /* Admin tables */
 .admin-table th {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10px !important;
+  font-size: 12px !important;
   letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
   color: #555555 !important;
@@ -3718,7 +3718,7 @@
   color: #d4af37 !important;
   border: 1px solid rgba(212, 175, 55, 0.2) !important;
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 9px !important;
+  font-size: 11.5px !important;
 }
 
 /* Admin auth modal */
@@ -3733,13 +3733,13 @@
   color: #d4af37 !important;
   border: 1px solid rgba(212, 175, 55, 0.2) !important;
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 9px !important;
+  font-size: 11.5px !important;
 }
 
 /* Admin nav-section-title */
 .nav-section-title {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 9px !important;
+  font-size: 11.5px !important;
   color: #444444 !important;
   letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
@@ -3782,7 +3782,7 @@
 
 .admin-info .user-role {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 9px !important;
+  font-size: 11.5px !important;
   color: #d4af37 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
