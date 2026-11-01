@@ -9,16 +9,15 @@
 /* --- HERO STAGE --- */
 .hero-editorial-stage {
   position: relative;
-  height: 100vh;
-  min-height: 680px;
-  max-height: 1000px;
+  min-height: 100vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 104px clamp(24px, 5vw, 64px) 24px;
+  padding: 108px clamp(24px, 5vw, 64px) 36px;
   max-width: 1440px;
   margin: 0 auto;
-  overflow: hidden;
+  overflow: visible !important;
   box-sizing: border-box;
   background: #000000;
 }
@@ -152,9 +151,9 @@
 /* Portrait Stage — seamless from black void */
 .hero-portrait-stage {
   position: relative;
-  width: min(480px, 80vw);
-  height: min(340px, 38vh);
-  margin: 0 auto -32px;
+  width: min(360px, 70vw);
+  height: min(240px, 26vh);
+  margin: 0 auto -16px;
   border-radius: 0 !important;
   border: none !important;
   box-shadow: none !important;
@@ -204,10 +203,10 @@
 /* THE BIG NAME — Cormorant Garamond editorial display */
 .hero-name-editorial {
   font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-size: clamp(4.5rem, 11vw, 10rem) !important;
+  font-size: clamp(3.8rem, 8.5vw, 7.5rem) !important;
   font-weight: 400 !important;
   letter-spacing: -0.03em !important;
-  line-height: 0.88 !important;
+  line-height: 0.9 !important;
   color: #ffffff !important;
   margin: 0 !important;
   position: relative;
@@ -265,9 +264,10 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 32px;
+  margin-top: 24px;
+  margin-bottom: 24px;
   position: relative;
-  z-index: 2;
+  z-index: 10;
   flex-wrap: wrap;
 }
 

@@ -586,7 +586,7 @@ export function HomePage() {
 
 
       {/* Main Home Content Sections */}
-      <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24">
+      <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24 mt-12 sm:mt-16">
         {/* =========================================================================
             SECTION 01: Bento Introduction & Focus Areas
             ========================================================================= */}
