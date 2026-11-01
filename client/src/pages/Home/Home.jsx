@@ -583,24 +583,7 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Tech Stack Marquee Bar */}
-      {doubledSkills.length > 0 && (
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-16">
-          <div className="hero-marquee-bar overflow-hidden rounded-2xl border hairline-border bg-charcoal/60 py-3.5 backdrop-blur-md">
-            <div className="animate-marquee flex items-center gap-6 px-4">
-              {doubledSkills.map((item, idx) => (
-                <div
-                  key={`${item.name}-${idx}`}
-                  className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-obsidian/90 px-4 py-1.5 text-xs font-semibold text-alabaster shadow-sm"
-                >
-                  <TechLogo name={item.logoKey || item.name} className="h-3.5 w-3.5" />
-                  <span>{item.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Main Home Content Sections */}
       <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24">
