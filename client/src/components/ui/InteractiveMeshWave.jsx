@@ -112,12 +112,18 @@ export function InteractiveMeshWave({ className = '' }) {
     camera.position.set(0, 9.5, 20.5);
     camera.lookAt(0, 0, 0);
 
-    // 2. High-Performance WebGL Renderer
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance'
-    });
+    // 2. High-Performance WebGL Renderer with graceful fallback
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+    } catch (e) {
+      console.warn('InteractiveMeshWave: WebGL unavailable, falling back cleanly:', e);
+      return;
+    }
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);

@@ -5,6 +5,7 @@ import { validateContactForm } from '../../utils/validation';
 import { apiRequest } from '../../services/api';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
+import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { contactPageSchema } from '../../utils/seo';
 
 export function ContactPage() {
@@ -186,8 +187,12 @@ export function ContactPage() {
       {/* Page Header */}
       <div className="page-header">
         <div className="header-orb" />
-        <div className="page-tagline">CONNECT</div>
-        <h1 className="page-title">Get In Touch</h1>
+        <ScrollWriteText as="div" className="page-tagline" mode="scramble" scrambleDuration={20}>
+          05 · CONNECT
+        </ScrollWriteText>
+        <ScrollWriteText as="h1" className="page-title" mode="mask" stagger={0.04} highlightWords={['Touch']}>
+          Get In Touch
+        </ScrollWriteText>
         <p className="page-desc">
           Reach out directly at <strong>{p.email || 'ayushprajapati9669@gmail.com'}</strong> or{' '}
           <strong>{p.phone || '(+91) 9669802554'}</strong> or send a message below.

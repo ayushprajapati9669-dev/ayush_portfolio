@@ -275,15 +275,15 @@ export function ProjectsPage({ viewMode = 'projects' }) {
         <ScrollWriteText
           as="div"
           className="page-tagline"
-          mode="typewriter"
-          typewriterSpeed={24}
+          mode="scramble"
+          scrambleDuration={20}
         >
           02 · Featured Work
         </ScrollWriteText>
         <ScrollWriteText
           as="h1"
           className="page-title"
-          mode="words"
+          mode="mask"
           stagger={0.05}
           highlightWords={['Live', 'Projects']}
         >

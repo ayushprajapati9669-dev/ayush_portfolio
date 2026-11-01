@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -6,35 +6,40 @@ try {
   gsap.registerPlugin(ScrollTrigger);
 } catch (_e) {}
 
+const SCRAMBLE_GLYPHS = '✦01XΔ§#░▓※⟡<>{}[]';
+
 /**
- * ScrollWriteText
- * Award-winning scroll-driven and scroll-triggered text reveal animations.
+ * ScrollWriteText — Top 1% Kinetic Text & Decoder Animation Engine
  *
  * Modes:
- * - 'words': Staggered ink-reveal word by word (default)
- * - 'chars': Fine-grained character reveal
- * - 'typewriter': Real typewriter character typing with blinking gold caret
- * - 'scrub': GSAP ScrollTrigger opacity scrubber tied directly to scroll progress
+ * - 'mask' (Default): Kinetic masked split-text reveal with 3D perspective slide-up (Apple / Stripe standard)
+ * - 'words': Staggered fluid ink-blur reveal
+ * - 'scramble': Cyberpunk / Linear terminal decoder character shuffle
+ * - 'typewriter': Natural cadence character typing with 2px gold laser caret
+ * - 'scrub': GSAP ScrollTrigger opacity and keyword scrub tied to scroll velocity
  */
 export function ScrollWriteText({
   children,
   text = '',
   as: Tag = 'p',
-  mode = 'words',
+  inline = false,
+  mode = 'mask',
   className = '',
-  stagger = 0.028,
+  stagger = 0.032,
   delay = 0.08,
   threshold = 0.15,
   once = true,
   highlightWords = [],
   cursor = true,
-  typewriterSpeed = 38
+  typewriterSpeed = 32,
+  scrambleDuration = 24
 }) {
   const content = (typeof children === 'string' ? children : text || '').trim();
   const cleanAria = useMemo(() => content.replace(/\*/g, ''), [content]);
   const containerRef = useRef(null);
   const [isRevealed, setIsRevealed] = useState(false);
   const [typedLength, setTypedLength] = useState(mode === 'typewriter' ? 0 : cleanAria.length);
+  const [scrambledText, setScrambledText] = useState(cleanAria);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   // Check reduced motion preference
@@ -96,7 +101,7 @@ export function ScrollWriteText({
       if (words.length > 0) {
         const tween = gsap.fromTo(
           words,
-          { opacity: 0.18, y: 4, filter: 'blur(3px)' },
+          { opacity: 0.18, y: 6, filter: 'blur(3px)' },
           {
             opacity: 1,
             y: 0,
@@ -120,7 +125,6 @@ export function ScrollWriteText({
       return;
     }
 
-    // IntersectionObserver for 'words', 'chars', or 'typewriter'
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -139,7 +143,7 @@ export function ScrollWriteText({
     return () => observer.disconnect();
   }, [once, threshold, mode, prefersReducedMotion, cleanAria.length]);
 
-  // Typewriter effect interval
+  // Mode: Typewriter Effect
   useEffect(() => {
     if (mode !== 'typewriter' || !isRevealed || prefersReducedMotion) {
       if (prefersReducedMotion) setTypedLength(cleanAria.length);
@@ -148,18 +152,70 @@ export function ScrollWriteText({
 
     setTypedLength(0);
     let currentIdx = 0;
-    const interval = setInterval(() => {
+    let timerId;
+
+    const typeNext = () => {
       currentIdx += 1;
       setTypedLength(currentIdx);
-      if (currentIdx >= cleanAria.length) {
-        clearInterval(interval);
+      if (currentIdx < cleanAria.length) {
+        // Natural human velocity variance (20ms - 45ms)
+        const jitter = Math.floor(Math.random() * 18) - 9;
+        const nextDelay = Math.max(16, typewriterSpeed + jitter);
+        timerId = setTimeout(typeNext, nextDelay);
       }
-    }, typewriterSpeed);
+    };
 
-    return () => clearInterval(interval);
-  }, [mode, isRevealed, cleanAria, typewriterSpeed, prefersReducedMotion]);
+    timerId = setTimeout(typeNext, delay * 1000);
+    return () => clearTimeout(timerId);
+  }, [mode, isRevealed, cleanAria, typewriterSpeed, prefersReducedMotion, delay]);
 
-  // If reduced motion is requested, render plain text immediately
+  // Mode: Scramble Decoder Effect
+  useEffect(() => {
+    if (mode !== 'scramble' || !isRevealed || prefersReducedMotion) {
+      setScrambledText(cleanAria);
+      return;
+    }
+
+    let frame = 0;
+    const totalFrames = scrambleDuration;
+    const len = cleanAria.length;
+    let animId;
+
+    const updateScramble = () => {
+      frame++;
+      const progress = frame / totalFrames;
+      let output = '';
+
+      for (let i = 0; i < len; i++) {
+        const charThreshold = (i + 1) / len;
+        if (cleanAria[i] === ' ' || cleanAria[i] === '·' || cleanAria[i] === '•') {
+          output += cleanAria[i];
+        } else if (progress >= charThreshold) {
+          output += cleanAria[i];
+        } else {
+          output += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+        }
+      }
+
+      setScrambledText(output);
+
+      if (frame < totalFrames) {
+        animId = requestAnimationFrame(updateScramble);
+      } else {
+        setScrambledText(cleanAria);
+      }
+    };
+
+    const startTimer = setTimeout(() => {
+      animId = requestAnimationFrame(updateScramble);
+    }, delay * 1000);
+
+    return () => {
+      clearTimeout(startTimer);
+      cancelAnimationFrame(animId);
+    };
+  }, [mode, isRevealed, cleanAria, scrambleDuration, delay, prefersReducedMotion]);
+
   if (prefersReducedMotion) {
     return <Tag className={className}>{cleanAria}</Tag>;
   }
@@ -172,7 +228,7 @@ export function ScrollWriteText({
     return (
       <Tag
         ref={containerRef}
-        className={`scroll-write-container scroll-write-typewriter ${className}`}
+        className={`scroll-write-container scroll-write-typewriter ${inline ? 'scroll-write-inline' : ''} ${className}`}
         aria-label={cleanAria}
       >
         <span aria-hidden="true">
@@ -180,20 +236,34 @@ export function ScrollWriteText({
           {cursor && (
             <span
               className={`scroll-typewriter-cursor ${isDone ? 'cursor-blink-slow' : 'cursor-blink-fast'}`}
-            >
-              |
-            </span>
+              aria-hidden="true"
+            />
           )}
         </span>
       </Tag>
     );
   }
 
-  // Words or Chars Stagger Mode Output
+  // Scramble Decoder Mode Output
+  if (mode === 'scramble') {
+    return (
+      <Tag
+        ref={containerRef}
+        className={`scroll-write-container scroll-write-decoder ${inline ? 'scroll-write-inline' : ''} ${className}`}
+        aria-label={cleanAria}
+      >
+        <span aria-hidden="true" className="scroll-decoder-inner font-mono">
+          {scrambledText}
+        </span>
+      </Tag>
+    );
+  }
+
+  // Kinetic Mask (Default) or Words Ink Reveal
   return (
     <Tag
       ref={containerRef}
-      className={`scroll-write-container ${isRevealed ? 'is-revealed' : ''} ${className}`}
+      className={`scroll-write-container ${inline ? 'scroll-write-inline' : ''} ${isRevealed ? 'is-revealed' : ''} ${className}`}
       aria-label={cleanAria}
     >
       <span aria-hidden="true" className="scroll-write-inner">
@@ -206,17 +276,18 @@ export function ScrollWriteText({
           const isItalic = tokenObj.isItalic;
 
           return (
-            <span
-              key={index}
-              className={`scroll-write-token ${mode === 'chars' ? 'token-char' : 'token-word'} ${
-                isHighlighted ? 'token-highlight' : ''
-              } ${isItalic ? 'token-italic' : ''}`}
-              style={{
-                transitionDelay: isRevealed ? `${delay + index * stagger}s` : '0s'
-              }}
-            >
-              {tokenText}
-              {mode === 'words' && index < parsedTokens.length - 1 ? '\u00A0' : ''}
+            <span key={index} className="scroll-token-mask">
+              <span
+                className={`scroll-write-token ${mode === 'chars' ? 'token-char' : 'token-word'} ${
+                  isHighlighted ? 'token-highlight' : ''
+                } ${isItalic ? 'token-italic' : ''}`}
+                style={{
+                  transitionDelay: isRevealed ? `${delay + index * stagger}s` : '0s'
+                }}
+              >
+                {tokenText}
+                {index < parsedTokens.length - 1 ? '\u00A0' : ''}
+              </span>
             </span>
           );
         })}

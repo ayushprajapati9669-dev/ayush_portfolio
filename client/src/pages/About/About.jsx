@@ -185,15 +185,15 @@ export function AboutPage() {
         <ScrollWriteText
           as="div"
           className="page-tagline"
-          mode="typewriter"
-          typewriterSpeed={24}
+          mode="scramble"
+          scrambleDuration={20}
         >
           {p.aboutEyebrow || p.eyebrow || 'Computer Science Student · Developer · Builder'}
         </ScrollWriteText>
         <ScrollWriteText
           as="h1"
           className="page-title"
-          mode="words"
+          mode="mask"
           stagger={0.05}
           highlightWords={['Prajapati']}
         >
@@ -252,7 +252,7 @@ export function AboutPage() {
             <span className="realistic-icon">
               <i className="fa-solid fa-user-astronaut" />
             </span>{' '}
-            <ScrollWriteText as="span" mode="words" stagger={0.04}>
+            <ScrollWriteText as="span" mode="mask" stagger={0.035}>
               About & Academic Profile
             </ScrollWriteText>
           </h3>
@@ -380,7 +380,7 @@ export function AboutPage() {
             <span className="realistic-icon">
               <i className="fa-solid fa-graduation-cap" />
             </span>{' '}
-            <ScrollWriteText as="span" mode="words" stagger={0.04}>
+            <ScrollWriteText as="span" mode="mask" stagger={0.035}>
               Education Qualifications
             </ScrollWriteText>
           </h3>
@@ -424,7 +424,7 @@ export function AboutPage() {
             <span className="realistic-icon">
               <i className="fa-solid fa-trophy" />
             </span>{' '}
-            <ScrollWriteText as="span" mode="words" stagger={0.04}>
+            <ScrollWriteText as="span" mode="mask" stagger={0.035}>
               Achievements & Journey
             </ScrollWriteText>
           </h3>

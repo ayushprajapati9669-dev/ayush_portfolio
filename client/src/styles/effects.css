@@ -212,10 +212,15 @@
 }
 
 /* ==========================================================================
-   Scroll-Triggered Dynamic Writing / Ink Reveal Text Architecture
+   Top 1% Kinetic Masked Split-Text & Decoder Animation Architecture
    ========================================================================== */
 .scroll-write-container {
-  display: inline;
+  display: block;
+}
+
+.scroll-write-container.scroll-write-inline,
+span.scroll-write-container {
+  display: inline-block;
   vertical-align: baseline;
 }
 
@@ -223,56 +228,86 @@
   display: inline;
 }
 
+/* Kinetic Mask wrapper: provides physical architectural clipping */
+.scroll-token-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+/* Kinetic Word Token: 3D perspective slide-up + optical ink de-blur */
 .scroll-write-token {
   display: inline-block;
   opacity: 0;
-  transform: translateY(14px) translateZ(0);
-  filter: blur(4px);
-  transition: opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.52s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(115%) rotateX(-16deg);
+  transform-origin: center bottom;
+  filter: blur(5px);
+  transition: opacity 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.68s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.52s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform, filter;
 }
 
 .scroll-write-container.is-revealed .scroll-write-token {
   opacity: 1;
-  transform: translateY(0) translateZ(0);
-  filter: blur(0);
+  transform: translateY(0%) rotateX(0deg);
+  filter: blur(0px);
 }
 
+/* Interactive Levitation on Hover */
+.scroll-write-container.is-revealed .scroll-write-token:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Radiant Gold Highlight Keywords */
 .scroll-write-token.token-highlight {
-  color: #f5d77f;
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  color: #f7e096 !important;
+  font-weight: 500;
+  text-shadow: 0 0 24px rgba(223, 183, 64, 0.5), 0 0 8px rgba(223, 183, 64, 0.3);
 }
 
 .scroll-write-token.token-italic {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-style: italic;
   font-weight: 300;
-  color: #f5d77f;
-  text-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+  color: #dfb740;
+  text-shadow: 0 0 18px rgba(223, 183, 64, 0.4);
 }
 
-/* Typewriter Caret Cursor */
+/* Decoder Scramble Styling */
+.scroll-write-decoder {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  color: #dfb740;
+  text-shadow: 0 0 10px rgba(223, 183, 64, 0.4);
+}
+
+/* Typewriter Caret Cursor — 2px Gold Laser Bar */
 .scroll-typewriter-cursor {
   display: inline-block;
-  color: #d4af37;
-  font-weight: 300;
-  margin-left: 2px;
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+  vertical-align: -0.12em;
+  width: 2px;
+  height: 1.18em;
+  background-color: #dfb740;
+  margin-left: 3px;
+  box-shadow: 0 0 10px rgba(223, 183, 64, 0.9), 0 0 20px rgba(223, 183, 64, 0.5);
+  border-radius: 1px;
 }
 
-@keyframes cursorBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+@keyframes laserPulse {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.2; transform: scaleY(0.92); }
 }
 
 .cursor-blink-fast {
-  animation: cursorBlink 0.7s steps(2, start) infinite;
+  animation: laserPulse 0.75s ease-in-out infinite;
 }
 
 .cursor-blink-slow {
-  animation: cursorBlink 1.2s steps(2, start) infinite;
+  animation: laserPulse 1.25s ease-in-out infinite;
 }
 
 /* Top Hairline Scroll Progress Bar */

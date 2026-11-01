@@ -275,15 +275,15 @@ export function CertificatesPage() {
         <ScrollWriteText
           as="div"
           className="page-tagline"
-          mode="typewriter"
-          typewriterSpeed={24}
+          mode="scramble"
+          scrambleDuration={20}
         >
           {ui.homeCertsEyebrow || '04 · Verified Credentials'}
         </ScrollWriteText>
         <ScrollWriteText
           as="h1"
           className="page-title"
-          mode="words"
+          mode="mask"
           stagger={0.05}
           highlightWords={['Certifications', 'Achievements']}
         >

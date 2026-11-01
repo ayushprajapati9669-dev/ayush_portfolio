@@ -511,12 +511,14 @@ export function HomePage() {
           {/* Top Announcement Capsule Pill */}
           <div
             className="hero-announcement-capsule"
-            onClick={() => scrollToSection('featured-projects')}
+            onClick={() => scrollToSection('contact-preview')}
             role="button"
             tabIndex={0}
           >
             <span className="capsule-icon">✦</span>
-            <span>Available for Full-Stack & Engineering Roles</span>
+            <ScrollWriteText as="span" inline mode="scramble" scrambleDuration={22} delay={0.05}>
+              Available for Full-Stack & Engineering Roles
+            </ScrollWriteText>
             <span className="capsule-arrow">→</span>
           </div>
 
@@ -524,9 +526,10 @@ export function HomePage() {
           <ScrollWriteText
             as="h1"
             className="hero-modern-title"
-            mode="words"
-            stagger={0.035}
-            delay={0.15}
+            mode="mask"
+            stagger={0.038}
+            delay={0.12}
+            highlightWords={['engineering', 'software']}
           >
             Solid full-stack engineering that turns ideas into software
           </ScrollWriteText>
@@ -535,9 +538,9 @@ export function HomePage() {
           <ScrollWriteText
             as="p"
             className="hero-modern-desc"
-            mode="words"
-            stagger={0.02}
-            delay={0.25}
+            mode="mask"
+            stagger={0.018}
+            delay={0.24}
           >
             {p.heroDescription || 'Engineering scalable web applications, robust cloud backends, and intelligent interactive products with clean craft.'}
           </ScrollWriteText>
@@ -585,10 +588,12 @@ export function HomePage() {
               </div>
 
               <div className="hero-stage-content">
-                <h3 className="hero-stage-title">Welcome to the Portfolio Architecture</h3>
-                <p className="hero-stage-subtitle">
+                <ScrollWriteText as="h3" className="hero-stage-title" mode="mask" stagger={0.03} delay={0.32}>
+                  Welcome to the Portfolio Architecture
+                </ScrollWriteText>
+                <ScrollWriteText as="p" className="hero-stage-subtitle" mode="words" stagger={0.018} delay={0.42}>
                   Interactive Three.js 3D Wave Displacement · Full-Stack MERN Architecture · Verified Milestones
-                </p>
+                </ScrollWriteText>
               </div>
 
               {/* The 3D Mesh Wave inside the stage card */}
@@ -627,15 +632,15 @@ export function HomePage() {
               <ScrollWriteText
                 as="p"
                 className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion"
-                mode="typewriter"
-                typewriterSpeed={24}
+                mode="scramble"
+                scrambleDuration={20}
               >
                 {ui.homeIntroEyebrow || '01 · THE PERSON BEHIND THE WORK'}
               </ScrollWriteText>
               <ScrollWriteText
                 as="h2"
                 className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal"
-                mode="words"
+                mode="mask"
                 stagger={0.035}
                 highlightWords={['Technology', 'People']}
               >
@@ -721,16 +726,16 @@ export function HomePage() {
               <ScrollWriteText
                 as="p"
                 className="showcase-eyebrow"
-                mode="typewriter"
-                typewriterSpeed={24}
+                mode="scramble"
+                scrambleDuration={20}
               >
                 {ui.homeProjectsEyebrow || '02 · LIVE DEPLOYED PROJECTS'}
               </ScrollWriteText>
               <ScrollWriteText
                 as="h2"
                 className="showcase-title"
-                mode="words"
-                stagger={0.035}
+                mode="mask"
+                stagger={0.038}
                 highlightWords={['Full-Stack', 'Applications']}
               >
                 {ui.homeProjectsHeading || 'Featured Full-Stack Applications'}
@@ -817,16 +822,16 @@ export function HomePage() {
               <ScrollWriteText
                 as="p"
                 className="showcase-eyebrow"
-                mode="typewriter"
-                typewriterSpeed={24}
+                mode="scramble"
+                scrambleDuration={20}
               >
                 {ui.homeCertsEyebrow || '03 · VERIFIED CREDENTIALS'}
               </ScrollWriteText>
               <ScrollWriteText
                 as="h2"
                 className="showcase-title"
-                mode="words"
-                stagger={0.035}
+                mode="mask"
+                stagger={0.038}
                 highlightWords={['Certifications', 'Achievements']}
               >
                 {ui.homeCertsHeading || 'Certifications & Achievements'}
@@ -912,15 +917,15 @@ export function HomePage() {
             <ScrollWriteText
               as="p"
               className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion"
-              mode="typewriter"
-              typewriterSpeed={24}
+              mode="scramble"
+              scrambleDuration={20}
             >
               {ui.homeBannerEyebrow || 'GET IN TOUCH'}
             </ScrollWriteText>
             <ScrollWriteText
               as="h2"
               className="font-display text-2xl sm:text-4xl font-extrabold text-alabaster leading-tight"
-              mode="words"
+              mode="mask"
               stagger={0.035}
               highlightWords={['extraordinary', 'together']}
             >

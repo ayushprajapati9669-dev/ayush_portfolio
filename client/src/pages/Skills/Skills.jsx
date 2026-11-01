@@ -42,15 +42,15 @@ export function SkillsPage() {
           <ScrollWriteText
             as="p"
             className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cyanglow"
-            mode="typewriter"
-            typewriterSpeed={24}
+            mode="scramble"
+            scrambleDuration={20}
           >
             {ui.homeSkillsEyebrow || '03 · Technical Capabilities'}
           </ScrollWriteText>
           <ScrollWriteText
             as="h1"
             className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal"
-            mode="words"
+            mode="mask"
             stagger={0.05}
             highlightWords={['Skills', 'Tech', 'Stack']}
           >
