@@ -85,7 +85,9 @@
 }
 
 .contact-page .page-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: clamp(2.8rem, 6vw, 4.5rem);
   font-weight: 700;
   line-height: 1.05;
@@ -187,7 +189,9 @@
 }
 
 .contact-page .card-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 24px;
@@ -726,7 +730,9 @@
    Editorial Contact Overrides
    ========================================================================== */
 .contact-page .page-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   color: #f4f1ec !important;
   background: none !important;
   -webkit-text-fill-color: initial !important;

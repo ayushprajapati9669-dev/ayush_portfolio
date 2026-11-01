@@ -48,7 +48,9 @@
 }
 
 .page-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: clamp(2.8rem, 6vw, 4.8rem) !important;
   font-weight: 500 !important;
   line-height: 1.05 !important;
@@ -195,7 +197,9 @@
 }
 
 .about-card h3 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 24px;
@@ -333,7 +337,9 @@
 }
 
 .profile-details h2 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 28px;
   font-weight: 700;
   color: white;
@@ -413,7 +419,9 @@
 }
 
 .edu-score {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 28px;
   font-weight: 700;
   color: var(--accent-2, #10b981);
@@ -554,7 +562,9 @@
 }
 
 .timeline-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 17px;
   font-weight: 600;
   color: white;
@@ -620,7 +630,9 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 0.92rem;
   font-weight: 700;
   color: #ffffff;
@@ -916,7 +928,9 @@
 }
 
 .spotlight-card .content-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: clamp(1.8rem, 3.2vw, 2.4rem) !important;
   font-weight: 500 !important;
   font-style: italic !important;
@@ -961,7 +975,9 @@
 }
 
 .spotlight-card .metric-value {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 1.35rem;
   font-weight: 700;
   color: #ffffff;
@@ -985,7 +1001,9 @@
 }
 
 .spotlight-card .text-block h4 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 0.9rem;
   font-weight: 700;
   color: #ffffff;
@@ -1438,7 +1456,9 @@
 }
 
 .spotlight-lightbox .lightbox-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 1.1rem;
   font-weight: 700;
   display: flex;
@@ -1639,7 +1659,9 @@
 }
 
 .about-card h3 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 1.8rem !important;
   font-weight: 500 !important;
   color: #f4f1ec !important;
@@ -1647,7 +1669,9 @@
 }
 
 .profile-details h2 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 2.2rem !important;
   font-weight: 500 !important;
   color: #f4f1ec !important;

@@ -63,7 +63,9 @@
 }
 
 .certificates-page .page-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: clamp(2.8rem, 6vw, 4.5rem);
   font-weight: 700;
   line-height: 1.05;
@@ -312,7 +314,9 @@
 }
 
 .cert-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 22px;
   font-weight: 600;
   color: white;
@@ -460,7 +464,9 @@
 }
 .modal-title {
   color: white;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 22px;
   font-weight: 600;
   text-transform: capitalize;
@@ -683,7 +689,9 @@
    Editorial Certificates Overrides
    ========================================================================== */
 .certificates-page .page-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   color: #f8fafc !important;
   background: none !important;
   -webkit-text-fill-color: initial !important;

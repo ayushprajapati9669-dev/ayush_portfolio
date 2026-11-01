@@ -607,8 +607,9 @@ export function HomePage() {
         <section className="bento-section space-y-10 border-t hairline-border pt-16">
           <div className="bento-header max-w-3xl space-y-3">
             <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeIntroEyebrow || '01 · ABOUT & MISSION'}</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster leading-tight">
-              {ui.homeIntroHeading || 'Clean code is the start. Thoughtful design is the point.'}
+            <h2 className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal">
+              Technology is the starting point.{' '}
+              <span className="font-editorial-italic italic">People are the point.</span>
             </h2>
           </div>
 

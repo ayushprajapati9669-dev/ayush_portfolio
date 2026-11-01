@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 80px clamp(24px, 5vw, 64px) 16px;
+  padding: 104px clamp(24px, 5vw, 64px) 20px;
   max-width: 1400px;
   margin: 0 auto;
   overflow: hidden;
@@ -504,4 +504,97 @@
   background: var(--brand-cyan, #06b6d4);
   border-radius: 9999px;
   transition: width 0.25s ease-out;
+}
+
+
+/* Authoritative Editorial Buttons & Typography (Sarthak 1:1) */
+.hero-editorial-stage {
+  padding-top: 104px !important;
+}
+
+.hero-btn-work {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f4f1ec !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  padding: 11px 26px !important;
+  border-radius: 9999px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hero-btn-work:hover {
+  background: #f4f1ec !important;
+  color: #030303 !important;
+  border-color: #f4f1ec !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.18) !important;
+}
+
+.hero-btn-talk {
+  background: transparent !important;
+  color: #f4f1ec !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 11px 24px !important;
+  border-radius: 9999px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  transition: all 0.25s ease !important;
+}
+
+.hero-btn-talk:hover {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  transform: translateY(-1px) !important;
+}
+
+.showcase-title {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-size: clamp(2.2rem, 4vw, 3rem) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
+  color: #f4f1ec !important;
+}
+
+
+/* Proportional fold containment for 100vh Sarthak aesthetic */
+.hero-editorial-stage {
+  padding: 88px clamp(24px, 5vw, 64px) 16px !important;
+  min-height: 640px !important;
+}
+
+.hero-top-meta {
+  margin-bottom: 2px !important;
+}
+
+.hero-portrait-stage {
+  width: min(400px, 72vw) !important;
+  height: min(270px, 30vh) !important;
+  margin: 0 auto -38px !important;
+}
+
+.hero-center-showcase {
+  padding: 0 !important;
+  margin: auto 0 !important;
+}
+
+.hero-name-editorial {
+  font-size: clamp(3.2rem, 7.5vw, 6.4rem) !important;
+  line-height: 0.95 !important;
+  margin-bottom: 4px !important;
+}
+
+.hero-bio-para {
+  font-size: 14.5px !important;
+  line-height: 1.55 !important;
+  margin-top: 10px !important;
+  max-width: 580px !important;
+}
+
+.hero-action-buttons {
+  margin-top: 18px !important;
+  gap: 14px !important;
 }

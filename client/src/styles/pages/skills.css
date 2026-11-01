@@ -56,7 +56,9 @@
 }
 
 .skills-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: clamp(2.2rem, 5vw, 3.8rem);
   font-weight: 700;
   line-height: 1.15;
@@ -289,7 +291,9 @@
 }
 
 .skill-name {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   font-size: 13.5px;
   font-weight: 600;
   color: #FFFFFF;
@@ -351,7 +355,9 @@
    Editorial Skills Overrides
    ========================================================================== */
 .skills-page .page-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
   color: #f4f1ec !important;
   background: none !important;
   -webkit-text-fill-color: initial !important;

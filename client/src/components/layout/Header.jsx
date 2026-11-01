@@ -176,7 +176,7 @@ export function Header() {
     };
   }, []);
 
-  const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+  const isAdmin = Boolean(session) && (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'));
 
   const navItems = [
     { name: ui.navHome || 'Home', path: '/', icon: 'fa-solid fa-house' },
@@ -423,9 +423,11 @@ export function Header() {
           <nav className="navbar" id="navbar" ref={navbarRef}>
             {/* Left: Brand / Monogram */}
             <Link to="/" className="nav-left" onClick={() => playTick()}>
-              <div className="nav-logo-box">
-                {p.monogram || 'AP'}
-              </div>
+              {isAdmin && (
+                <div className="nav-logo-box">
+                  {p.monogram || 'AP'}
+                </div>
+              )}
               <div className="nav-logo-text">
                 {p.displayName || p.name || 'Ayush Prajapati'}
               </div>
@@ -719,8 +721,8 @@ export function Header() {
                     className="btn-primary"
                     onClick={() => playTick()}
                   >
-                    <i className="fa-solid fa-paper-plane" style={{ fontSize: '11px' }} />
-                    <span>Hire / Connect</span>
+                    <span>{ui.hireConnect || "Let's talk"}</span>
+                    <span style={{ fontSize: '12px', marginLeft: '4px' }} aria-hidden="true">↗</span>
                   </Link>
                 </div>
               )}
