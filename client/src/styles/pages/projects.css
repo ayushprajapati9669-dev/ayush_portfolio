@@ -889,3 +889,166 @@
   background: var(--bg-card-hover, rgba(22, 22, 26, 0.9)) !important;
   border-color: rgba(255, 255, 255, 0.18) !important;
 }
+
+
+/* ==========================================================================
+   Compact Project Card & Uniform Grid (Matching Certificate Proportions)
+   ========================================================================== */
+.project-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)) !important;
+  gap: 24px !important;
+  perspective: 1500px !important;
+}
+
+/* Ensure no 2-column span so all cards are uniformly compact like certificate cards */
+@media (min-width: 1024px) {
+  .project-grid > .project-card:nth-child(1) {
+    grid-column: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .project-grid > .project-card:nth-child(1) .project-img-wrap {
+    width: 100% !important;
+    aspect-ratio: 16/10 !important;
+    border-radius: 12px !important;
+  }
+  .project-grid > .project-card:nth-child(1) .project-content {
+    width: 100% !important;
+    padding: 14px 0 0 !important;
+  }
+  .project-grid > .project-card:nth-child(1) .project-title {
+    font-size: 19px !important;
+    margin-bottom: 6px !important;
+  }
+  .project-grid > .project-card:nth-child(1) .project-desc {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 12px !important;
+  }
+  .project-grid > .project-card:nth-child(1) .project-actions {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 0 !important;
+  }
+}
+
+/* Compact Proportions for .project-card across both Grid & Horizontal Carousel */
+.project-card {
+  padding: 16px !important;
+  border-radius: 16px !important;
+  background: var(--bg-card, rgba(14, 14, 16, 0.78)) !important;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.project-card .project-img-wrap {
+  aspect-ratio: 16/10 !important;
+  max-height: 185px !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.project-card .project-badges {
+  top: 10px !important;
+  left: 10px !important;
+  right: 10px !important;
+}
+
+.project-card .p-badge {
+  padding: 4px 10px !important;
+  font-size: 10px !important;
+  border-radius: 12px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.project-card .project-content {
+  padding-top: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+}
+
+.project-card .project-meta {
+  margin-bottom: 6px !important;
+}
+
+.project-card .project-num {
+  font-size: 11px !important;
+  letter-spacing: 0.1em !important;
+}
+
+.project-card .project-link-hint {
+  font-size: 10px !important;
+}
+
+.project-card .project-title {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-size: 19px !important;
+  font-weight: 500 !important;
+  color: #f4f1ec !important;
+  margin-bottom: 6px !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.project-card .project-desc {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: #9a968f !important;
+  margin-bottom: 12px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.project-card .tech-stack {
+  gap: 6px !important;
+  margin-bottom: 14px !important;
+}
+
+.project-card .tech-tag {
+  padding: 3px 8px !important;
+  font-size: 10px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  color: #c7c3bc !important;
+}
+
+.project-card .project-actions {
+  padding-top: 12px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  gap: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.project-card .btn-case-study {
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  border-radius: 9999px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: 0.04em !important;
+}
+
+.project-card .btn-demo {
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  border-radius: 9999px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: 0.04em !important;
+}
+
+.project-card .btn-code {
+  padding: 6px 10px !important;
+  font-size: 11px !important;
+  border-radius: 9999px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: 0.04em !important;
+}

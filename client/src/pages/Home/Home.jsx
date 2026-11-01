@@ -437,19 +437,7 @@ export function HomePage() {
         });
       }
 
-      // 5. Section 04: Academic Journey ScrollTrigger
-      gsap.from('.journey-home-section .section-header > *', {
-        scrollTrigger: {
-          trigger: '.journey-home-section',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
-        y: 30,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.7,
-        ease: 'power3.out'
-      });
+      
 
       // 6. Section 05: CTA Banner ScrollTrigger
       gsap.from('.home-cta-banner', {
@@ -471,7 +459,7 @@ export function HomePage() {
     return () => ctx.revert();
   }, []);
 
-  const heroPhotoSrc = p.portrait?.url || '/images/ayush-hero-event.jpg';
+  const heroPhotoSrc = '/images/ayush-portrait-new.jpg';
 
   return (
     <div ref={containerRef} className="relative overflow-hidden">
@@ -826,35 +814,7 @@ export function HomePage() {
           )}
         </section>
 
-        {/* =========================================================================
-            SECTION 04: Education & Academic Journey
-            ========================================================================= */}
-        <section className="journey-home-section border-t hairline-border pt-16 space-y-10">
-          <div className="section-header space-y-2">
-            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
-              {ui.homeJourneyEyebrow || '04 · ACADEMIC MILESTONES'}
-            </p>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">
-              {ui.homeJourneyHeading || 'Academic Journey & Technical Milestones'}
-            </h2>
-          </div>
-          <div className="journey-grid grid grid-cols-1 gap-6 md:grid-cols-3">
-            {(p.learningJourney || []).map((step, i) => (
-              <div
-                key={i}
-                className="journey-card glass-card glass-card-hover rounded-3xl p-7 space-y-3 cursor-default"
-                onMouseMove={handleCardMouseMove}
-                onMouseLeave={handleCardMouseLeave}
-              >
-                <span className="inline-block rounded-full bg-amberwarm/15 px-3 py-1 font-mono text-xs font-semibold text-amberwarm">
-                  {step.phase}
-                </span>
-                <h3 className="font-display text-xl font-bold text-alabaster">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-stonewarm">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        
 
         {/* =========================================================================
             SECTION 05: Direct Contact CTA Banner
