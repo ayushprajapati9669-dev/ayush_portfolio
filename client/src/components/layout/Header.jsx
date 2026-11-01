@@ -651,7 +651,8 @@ export function Header() {
                 <div className="magnetic mr-1 shrink-0">
                   <button
                     type="button"
-                    className="btn-outline"
+                    className="btn-outline nav-resume-btn"
+                    data-action="open-resume"
                     onClick={() => {
                       playTick();
                       setCmdOpen(true);
@@ -691,7 +692,8 @@ export function Header() {
                 <div className="magnetic hidden md:inline-block">
                   <button
                     type="button"
-                    className="btn-outline"
+                    className="btn-outline nav-resume-btn"
+                    data-action="open-resume"
                     onClick={() => {
                       playTick();
                       if (openResumeModal) {

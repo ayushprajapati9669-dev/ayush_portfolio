@@ -147,7 +147,7 @@ export function ProjectCard({
             src={imgSrc}
             alt={proj.title}
             loading={indexNum === 1 ? "eager" : "lazy"}
-            fetchPriority={indexNum === 1 ? "high" : "auto"}
+            fetchpriority={indexNum === 1 ? "high" : "auto"}
             decoding={indexNum === 1 ? "sync" : "async"}
             width="600"
             height="340"

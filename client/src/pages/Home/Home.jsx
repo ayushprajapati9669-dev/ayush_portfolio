@@ -552,7 +552,7 @@ export function HomePage() {
           <h1 className="hero-name-editorial">
             <span className="name-first">Ayush</span>
             <span className="name-last">Prajapati</span>
-            <span className="name-dot text-amber-400 font-bold">.</span>
+            <span className="name-dot text-amber-400 font-bold hero-dot-pulse">.</span>
           </h1>
 
           {/* Narrative / Tagline */}

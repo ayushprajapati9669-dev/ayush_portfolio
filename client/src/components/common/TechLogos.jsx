@@ -394,6 +394,85 @@ export function TechLogo({ name, className = 'h-6 w-6' }) {
     );
   }
 
+  // TypeScript / TS
+  if (k.includes('typescript') || k === 'ts') {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <rect width="24" height="24" rx="4" fill="#3178C6" />
+        <path d="M11.5 12.3H8.8v6.7H7.1v-6.7H4.4V11h7.1v1.3zm6.6 2.4c0-1.7-1.1-2.4-2.8-2.9-.9-.3-1.4-.6-1.4-1.1 0-.5.5-.8 1.2-.8.8 0 1.5.4 1.8 1l1.1-.9c-.6-.9-1.6-1.5-2.9-1.5-1.9 0-3 1.1-3 2.5 0 1.6 1 2.3 2.6 2.8 1 .3 1.5.6 1.5 1.2 0 .6-.6.9-1.4.9-1 0-1.8-.5-2.2-1.2l-1.1.9c.7 1.1 1.8 1.8 3.3 1.8 2.1 0 3.3-1.2 3.3-2.7z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  // Docker
+  if (k.includes('docker')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#2496ED" aria-hidden="true">
+        <path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.186.185.186zm0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.186.185.186zm-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.186.185.186zm-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.186.186.186zm5.893 2.715h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186H8.1a.185.185 0 00-.185.186v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H5.136a.186.186 0 00-.186.186v1.888c0 .102.084.185.186.185m-2.928 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H2.208a.186.186 0 00-.186.186v1.888c0 .102.084.185.186.185m21.75 1.543c-.482-.372-1.397-.502-2.174-.407-.217.027-.433.08-.636.16-.144-.897-.568-1.579-1.282-2.03-.497-.314-1.09-.48-1.745-.48h-.274c-.062-.258-.168-.504-.316-.732a3.864 3.864 0 00-1.127-1.122c-.628-.39-1.36-.6-2.138-.6H.272a.272.272 0 00-.272.272v7.195c.01.556.126 1.106.345 1.62.775 1.815 2.302 3.238 4.195 3.908 2.213.784 4.887.828 7.32.12a14.28 14.28 0 004.81-2.656 12.3 12.3 0 002.56-2.684c.328-.517.587-1.077.77-1.664.922-.128 1.968-.53 2.193-1.08a.86.86 0 00-.236-.88z" />
+      </svg>
+    );
+  }
+
+  // AWS / Cloud
+  if (k.includes('aws') || k.includes('amazon')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="#232F3E" />
+        <path d="M6.5 14.8c3.2 2.2 7.8 2.2 11 0 .3-.2.6.1.4.4-3.5 2.6-8.3 2.6-11.8 0-.2-.3.1-.6.4-.4z" fill="#FF9900" />
+        <path d="M18.2 13.5l-.2 1.6-1.5-.7c-.3-.1-.2-.4.1-.4l1.3-.1.3-.4z" fill="#FF9900" />
+      </svg>
+    );
+  }
+
+  // Render
+  if (k.includes('render')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <rect width="24" height="24" rx="5" fill="#14171A" stroke="#46E3B7" strokeWidth="1.2" />
+        <path d="M7 16V8h4.5c2 0 3.5 1.2 3.5 3s-1.5 3-3.5 3H9v2H7zm2-4h2.5c1 0 1.5-.5 1.5-1s-.5-1-1.5-1H9v2zm5 4l2.5-3.5L14 9h2l2 2.8L20 9h2l-2.5 3.5L22 16h-2l-2-3-2 3h-2z" fill="#46E3B7" />
+      </svg>
+    );
+  }
+
+  // Vercel
+  if (k.includes('vercel')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <rect width="24" height="24" rx="4" fill="#000000" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+        <path d="M12 5l7 12H5z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  // Redis
+  if (k.includes('redis')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#DC382D" aria-hidden="true">
+        <path d="M1.5 13.5L12 19.5l10.5-6-10.5-6L1.5 13.5zM12 21.5l-9-5.14v-2.36L12 19.14l9-5.14v2.36l-9 5.14zM12 7.86L3 2.72v2.36L12 10.22l9-5.14V2.72L12 7.86z" />
+      </svg>
+    );
+  }
+
+  // AI / ML / PyTorch / Gemini
+  if (k.includes('ai') || k.includes('ml') || k.includes('machine') || k.includes('gemini') || k.includes('gpt') || k.includes('torch')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} aria-hidden="true">
+        <defs>
+          <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#A855F7" />
+            <stop offset="100%" stopColor="#00D4FF" />
+          </linearGradient>
+        </defs>
+        <circle cx="12" cy="12" r="3.2" fill="url(#aiGrad)" />
+        <circle cx="5" cy="7" r="2" fill="#A855F7" />
+        <circle cx="19" cy="7" r="2" fill="#00D4FF" />
+        <circle cx="5" cy="17" r="2" fill="#00D4FF" />
+        <circle cx="19" cy="17" r="2" fill="#A855F7" />
+        <path d="M6.8 8.2l3.4 2.6M17.2 8.2l-3.4 2.6M6.8 15.8l3.4-2.6M17.2 15.8l-3.4-2.6" stroke="url(#aiGrad)" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
   // Responsive UI
   if (k.includes('responsive') || k.includes('interface')) {
     return (

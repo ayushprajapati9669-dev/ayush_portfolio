@@ -254,7 +254,7 @@ export function ProjectsPage({ viewMode = 'projects' }) {
 
   return (
     <main className="projects-page min-h-[1400px]" ref={containerRef}>
-      <link rel="preload" as="image" href="/images/airbnb-clone-preview.webp" type="image/webp" fetchPriority="high" />
+      <link rel="preload" as="image" href="/images/airbnb-clone-preview.webp" type="image/webp" fetchpriority="high" />
       {currentProject ? (
         <SEO
           title={`${currentProject.title} | Case Study`}
