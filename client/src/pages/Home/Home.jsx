@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
-import { PortraitParticles } from '../../components/particles/PortraitParticles';
-import { DeveloperWorkbench } from '../../components/ui/DeveloperWorkbench';
 import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
 import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificateCard } from '../../components/projects/CertificateCard';
-import { SocialIconButtons, TechLogo } from '../../components/common/TechLogos';
+import { TechLogo } from '../../components/common/TechLogos';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { personSchema, websiteSchema } from '../../utils/seo';
@@ -20,12 +18,31 @@ export function HomePage() {
 
   const containerRef = useRef(null);
   const heroRef = useRef(null);
+  const portraitStageRef = useRef(null);
+
+  // Horizontal scroll refs & states for Projects
+  const projectsTrackRef = useRef(null);
+  const [projectsIndex, setProjectsIndex] = useState(1);
+  const [projectsProgress, setProjectsProgress] = useState(25);
+  const isDraggingProjectsRef = useRef(false);
+  const startXProjectsRef = useRef(0);
+  const scrollLeftProjectsRef = useRef(0);
+
+  // Horizontal scroll refs & states for Certificates
+  const certsTrackRef = useRef(null);
+  const [certsIndex, setCertsIndex] = useState(1);
+  const [certsProgress, setCertsProgress] = useState(33);
+  const isDraggingCertsRef = useRef(false);
+  const startXCertsRef = useRef(0);
+  const scrollLeftCertsRef = useRef(0);
 
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
+
   const publishedProjects = (appState.projects || [])
     .filter((proj) => proj.status === 'published')
     .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
   const featuredProjects = publishedProjects.filter((proj) => proj.featured);
   const displayProjects = featuredProjects.length > 0 ? featuredProjects : publishedProjects;
   const allSkillItems = (appState.skills || []).flatMap((g) => g.items || []);
@@ -36,6 +53,16 @@ export function HomePage() {
     playTick();
     navigate(route);
     window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
+  const scrollToSection = (id) => {
+    playTick();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      goTo('/projects');
+    }
   };
 
   // 3D Card tilt physics
@@ -52,8 +79,8 @@ export function HomePage() {
     card.style.setProperty('--mouse-y', `${y}px`);
 
     gsap.to(card, {
-      rotateX: ((y - rect.height / 2) / rect.height) * -5,
-      rotateY: ((x - rect.width / 2) / rect.width) * 5,
+      rotateX: ((y - rect.height / 2) / rect.height) * -4,
+      rotateY: ((x - rect.width / 2) / rect.width) * 4,
       transformPerspective: 1200,
       duration: 0.35,
       ease: 'power2.out'
@@ -67,6 +94,38 @@ export function HomePage() {
       rotateY: 0,
       duration: 0.8,
       ease: 'elastic.out(1, 0.3)'
+    });
+  };
+
+  // Portrait Micro-Parallax
+  const handlePortraitMouseMove = (e) => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const stage = portraitStageRef.current;
+    if (!stage) return;
+    const rect = stage.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) * 0.05;
+    const y = (e.clientY - rect.top - rect.height / 2) * 0.05;
+
+    gsap.to('.hero-portrait-img', {
+      x,
+      y,
+      rotateY: x * 0.6,
+      rotateX: -y * 0.6,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
+  };
+
+  const handlePortraitMouseLeave = () => {
+    gsap.to('.hero-portrait-img', {
+      x: 0,
+      y: 0,
+      rotateY: 0,
+      rotateX: 0,
+      duration: 0.8,
+      ease: 'power3.out'
     });
   };
 
@@ -88,6 +147,102 @@ export function HomePage() {
     gsap.to(el, { x: 0, y: 0, duration: 0.75, ease: 'elastic.out(1, 0.3)' });
   };
 
+  // Projects Horizontal Track Scrolling
+  const handleProjectsScroll = useCallback(() => {
+    const track = projectsTrackRef.current;
+    if (!track) return;
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    const progress = maxScroll > 0 ? (track.scrollLeft / maxScroll) * 100 : 0;
+    setProjectsProgress(Math.max(10, Math.min(100, progress)));
+
+    const slideWidth = track.clientWidth * 0.45 || 400;
+    const currentIdx = Math.min(
+      displayProjects.length,
+      Math.max(1, Math.round(track.scrollLeft / slideWidth) + 1)
+    );
+    setProjectsIndex(currentIdx);
+  }, [displayProjects.length]);
+
+  const scrollProjects = (direction) => {
+    playTick();
+    const track = projectsTrackRef.current;
+    if (!track) return;
+    const firstSlide = track.querySelector('.project-card-slide');
+    const slideWidth = firstSlide ? firstSlide.getBoundingClientRect().width + 24 : track.clientWidth * 0.5;
+    track.scrollBy({ left: slideWidth * (direction === 'left' ? -1 : 1), behavior: 'smooth' });
+  };
+
+  // Drag to scroll for Projects Track
+  const handleProjectsMouseDown = (e) => {
+    const track = projectsTrackRef.current;
+    if (!track) return;
+    isDraggingProjectsRef.current = true;
+    startXProjectsRef.current = e.pageX - track.offsetLeft;
+    scrollLeftProjectsRef.current = track.scrollLeft;
+  };
+
+  const handleProjectsMouseMove = (e) => {
+    if (!isDraggingProjectsRef.current) return;
+    e.preventDefault();
+    const track = projectsTrackRef.current;
+    if (!track) return;
+    const x = e.pageX - track.offsetLeft;
+    const walk = (x - startXProjectsRef.current) * 1.5;
+    track.scrollLeft = scrollLeftProjectsRef.current - walk;
+  };
+
+  const handleProjectsMouseUp = () => {
+    isDraggingProjectsRef.current = false;
+  };
+
+  // Certificates Horizontal Track Scrolling
+  const handleCertsScroll = useCallback(() => {
+    const track = certsTrackRef.current;
+    if (!track) return;
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    const progress = maxScroll > 0 ? (track.scrollLeft / maxScroll) * 100 : 0;
+    setCertsProgress(Math.max(10, Math.min(100, progress)));
+
+    const slideWidth = track.clientWidth * 0.35 || 320;
+    const currentIdx = Math.min(
+      certificates.length,
+      Math.max(1, Math.round(track.scrollLeft / slideWidth) + 1)
+    );
+    setCertsIndex(currentIdx);
+  }, [certificates.length]);
+
+  const scrollCerts = (direction) => {
+    playTick();
+    const track = certsTrackRef.current;
+    if (!track) return;
+    const firstSlide = track.querySelector('.cert-card-slide');
+    const slideWidth = firstSlide ? firstSlide.getBoundingClientRect().width + 24 : track.clientWidth * 0.35;
+    track.scrollBy({ left: slideWidth * (direction === 'left' ? -1 : 1), behavior: 'smooth' });
+  };
+
+  // Drag to scroll for Certs Track
+  const handleCertsMouseDown = (e) => {
+    const track = certsTrackRef.current;
+    if (!track) return;
+    isDraggingCertsRef.current = true;
+    startXCertsRef.current = e.pageX - track.offsetLeft;
+    scrollLeftCertsRef.current = track.scrollLeft;
+  };
+
+  const handleCertsMouseMove = (e) => {
+    if (!isDraggingCertsRef.current) return;
+    e.preventDefault();
+    const track = certsTrackRef.current;
+    if (!track) return;
+    const x = e.pageX - track.offsetLeft;
+    const walk = (x - startXCertsRef.current) * 1.5;
+    track.scrollLeft = scrollLeftCertsRef.current - walk;
+  };
+
+  const handleCertsMouseUp = () => {
+    isDraggingCertsRef.current = false;
+  };
+
   // GSAP Entrance Timeline & ScrollTrigger Animations
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -98,110 +253,83 @@ export function HomePage() {
     } catch (_e) {}
 
     const ctx = gsap.context(() => {
-      // 1. Hero Entrance Timeline
+      // 1. Sarthak Sharma-Style Hero Entrance
       const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       heroTl
-        .from('.hero-badge', {
+        .from('.hero-top-meta', {
           y: -20,
           opacity: 0,
-          scale: 0.9,
-          duration: 0.6,
-          delay: 0.1,
-          clearProps: 'all'
+          duration: 0.8,
+          delay: 0.1
         })
         .from(
-          '.hero-eyebrow',
+          '.hero-presence-strip',
           {
-            y: 20,
+            x: -25,
             opacity: 0,
-            duration: 0.5
+            duration: 0.8
           },
-          '-=0.3'
+          '-=0.5'
         )
         .from(
-          '.hero-headline',
-          {
-            y: 35,
-            opacity: 0,
-            duration: 0.8,
-            ease: 'back.out(1.1)'
-          },
-          '-=0.35'
-        )
-        .from(
-          '.hero-marquee-badge',
+          '.hero-portrait-stage',
           {
             scale: 0.92,
             opacity: 0,
+            y: 20,
+            duration: 1,
+            ease: 'power2.out'
+          },
+          '-=0.6'
+        )
+        .from(
+          '.hero-sub-eyebrow',
+          {
+            y: 15,
+            opacity: 0,
             duration: 0.6
+          },
+          '-=0.5'
+        )
+        .from(
+          '.hero-name-editorial',
+          {
+            y: 30,
+            opacity: 0,
+            duration: 0.9,
+            ease: 'power3.out'
           },
           '-=0.45'
         )
         .from(
-          '.hero-desc',
+          '.hero-narrative-editorial',
           {
-            y: 25,
+            y: 20,
             opacity: 0,
             duration: 0.7
           },
           '-=0.4'
         )
-        .fromTo(
-          '.hero-cta-btn',
+        .from(
+          '.hero-actions-editorial > *',
           {
-            y: 20,
+            y: 15,
             opacity: 0,
-            scale: 0.95
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
             stagger: 0.1,
             duration: 0.6,
-            ease: 'back.out(1.2)',
-            clearProps: 'all'
-          },
-          '-=0.35'
-        )
-        .from(
-          '.hero-social-wrap',
-          {
-            y: 20,
-            opacity: 0,
-            duration: 0.5
+            ease: 'back.out(1.2)'
           },
           '-=0.3'
         )
         .from(
-          '.hero-portrait-col',
+          '.hero-bottom-footer',
           {
-            scale: 0.9,
+            y: 20,
             opacity: 0,
-            duration: 0.9,
-            ease: 'power2.out'
+            duration: 0.6
           },
-          0.2
-        )
-        .from(
-          '.hero-workbench-col',
-          {
-            x: 35,
-            opacity: 0,
-            duration: 0.9,
-            ease: 'power3.out'
-          },
-          0.35
-        )
-        .from(
-          '.hero-marquee-bar',
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.75
-          },
-          0.6
+          '-=0.3'
         );
 
       // 2. Section 01: Bento Intro & Focus Areas ScrollTrigger
@@ -247,69 +375,69 @@ export function HomePage() {
         });
       }
 
-      // 3. Section 03: Projects Showcase ScrollTrigger
-      gsap.from('.projects-home-section .section-header > *', {
+      // 3. Section 02: Projects Horizontal Track Entrance
+      gsap.from('.projects-home-section .showcase-header > *', {
         scrollTrigger: {
           trigger: '.projects-home-section',
           start: 'top 85%',
           toggleActions: 'play none none none'
         },
-        y: 30,
+        y: 25,
         opacity: 0,
         stagger: 0.1,
         duration: 0.7,
         ease: 'power3.out'
       });
 
-      const projCards = containerRef.current.querySelectorAll('.projects-home-grid .project-card');
-      if (projCards.length > 0) {
-        gsap.from(projCards, {
+      const projSlides = containerRef.current.querySelectorAll('.project-card-slide');
+      if (projSlides.length > 0) {
+        gsap.from(projSlides, {
           scrollTrigger: {
-            trigger: '.projects-home-grid',
+            trigger: '.projects-home-section .horizontal-scroll-track',
             start: 'top 85%',
             toggleActions: 'play none none none'
           },
-          y: 50,
+          x: 40,
           opacity: 0,
-          scale: 0.96,
-          stagger: 0.15,
-          duration: 0.85,
-          ease: 'back.out(1.2)'
+          scale: 0.97,
+          stagger: 0.12,
+          duration: 0.8,
+          ease: 'power3.out'
         });
       }
 
-      // 4. Section 04: Certificates Showcase ScrollTrigger
-      gsap.from('.certs-home-section .section-header > *', {
+      // 4. Section 03: Certificates Horizontal Track Entrance
+      gsap.from('.certs-home-section .showcase-header > *', {
         scrollTrigger: {
           trigger: '.certs-home-section',
           start: 'top 85%',
           toggleActions: 'play none none none'
         },
-        y: 30,
+        y: 25,
         opacity: 0,
         stagger: 0.1,
         duration: 0.7,
         ease: 'power3.out'
       });
 
-      const certCards = containerRef.current.querySelectorAll('.certs-home-grid .cert-card');
-      if (certCards.length > 0) {
-        gsap.from(certCards, {
+      const certSlides = containerRef.current.querySelectorAll('.cert-card-slide');
+      if (certSlides.length > 0) {
+        gsap.from(certSlides, {
           scrollTrigger: {
-            trigger: '.certs-home-grid',
+            trigger: '.certs-home-section .horizontal-scroll-track',
             start: 'top 85%',
             toggleActions: 'play none none none'
           },
-          y: 45,
+          x: 40,
           opacity: 0,
-          scale: 0.96,
-          stagger: 0.15,
+          scale: 0.97,
+          stagger: 0.12,
           duration: 0.8,
-          ease: 'back.out(1.2)'
+          ease: 'power3.out'
         });
       }
 
-      // 5. Section 05: Academic Journey ScrollTrigger
+      // 5. Section 04: Academic Journey ScrollTrigger
       gsap.from('.journey-home-section .section-header > *', {
         scrollTrigger: {
           trigger: '.journey-home-section',
@@ -323,33 +451,16 @@ export function HomePage() {
         ease: 'power3.out'
       });
 
-      const journeyCards = containerRef.current.querySelectorAll('.journey-card');
-      if (journeyCards.length > 0) {
-        gsap.from(journeyCards, {
-          scrollTrigger: {
-            trigger: '.journey-grid',
-            start: 'top 85%',
-            toggleActions: 'play none none none'
-          },
-          y: 40,
-          opacity: 0,
-          scale: 0.96,
-          stagger: 0.14,
-          duration: 0.8,
-          ease: 'back.out(1.2)'
-        });
-      }
-
-      // 6. Section 06: CTA Banner ScrollTrigger
+      // 6. Section 05: CTA Banner ScrollTrigger
       gsap.from('.home-cta-banner', {
         scrollTrigger: {
           trigger: '.home-cta-banner',
           start: 'top 88%',
           toggleActions: 'play none none none'
         },
-        scale: 0.93,
+        scale: 0.95,
         opacity: 0,
-        y: 35,
+        y: 30,
         duration: 0.85,
         ease: 'power3.out'
       });
@@ -360,120 +471,152 @@ export function HomePage() {
     return () => ctx.revert();
   }, []);
 
+  const heroPhotoSrc = p.portrait?.url || '/images/ayush-hero-event.jpg';
+
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="relative overflow-hidden">
       <SEO
         title="Ayush Prajapati | Full-Stack Developer & Software Engineer"
         description={p.headline || p.heroDescription || 'Full-Stack Developer crafting high-performance web products, scalable backend systems, and interactive architectures.'}
         schema={[personSchema(p), websiteSchema(p)]}
       />
-      {/* Hero & Bento Stage */}
-      <section ref={heroRef} className="mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 lg:px-8 sm:pt-28 lg:pt-28 lg:pb-14">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
-          {/* Left Column (5 Cols) */}
-          <div className="lg:col-span-5 space-y-4">
-            <div className="hero-badge inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-charcoal/90 px-3.5 py-1.5 shadow-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sage opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-sage" />
-              </span>
-              <span className="font-mono text-xs font-medium text-alabaster">{p.availabilityLabel}</span>
-            </div>
 
-            <div className="space-y-3.5">
-              <p className="hero-eyebrow font-mono text-xs font-semibold uppercase tracking-[0.16em] text-vermilion">{p.eyebrow}</p>
-              <h1 className="hero-headline font-display text-4xl font-extrabold tracking-tight text-alabaster sm:text-5xl lg:text-[2.85rem] xl:text-[3.25rem] leading-[1.1]">
-                {p.headline}
-              </h1>
+      {/* =========================================================================
+          HERO SECTION (Image 1 Sarthak Sharma Composition + Image 4 Photo)
+          ========================================================================= */}
+      <section ref={heroRef} className="hero-editorial-stage">
+        {/* Architectural 4-column guide lines */}
+        <div className="hero-editorial-guides" aria-hidden="true">
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
 
-              <div className="hero-marquee-badge overflow-hidden rounded-2xl border border-cyanglow/30 bg-gradient-to-r from-charcoal via-graphite to-charcoal py-2.5 px-3 shadow-inner">
-                <div className="animate-hero-text-scroll flex items-center gap-10 whitespace-nowrap">
-                  <span className="font-display text-lg sm:text-xl font-bold text-cyanglow">{p.supportingHeadline}</span>
-                  <span className="text-vermilion font-mono text-sm">✦</span>
-                  <span className="font-display text-lg sm:text-xl font-bold text-alabaster">{p.supportingHeadline}</span>
-                  <span className="text-vermilion font-mono text-sm">✦</span>
-                  <span className="font-display text-lg sm:text-xl font-bold text-cyanglow">{p.supportingHeadline}</span>
-                  <span className="text-vermilion font-mono text-sm">✦</span>
-                </div>
-              </div>
-            </div>
-
-            <p className="hero-desc text-base leading-relaxed text-stonewarm max-w-xl">{p.heroDescription}</p>
-
-            <div className="flex flex-wrap items-center gap-3 pt-1">
-              <button
-                type="button"
-                onClick={() => goTo('/projects')}
-                onMouseMove={handleMagneticMouseMove}
-                onMouseLeave={handleMagneticMouseLeave}
-                className="hero-cta-btn focus-ring inline-flex items-center gap-2.5 rounded-full bg-vermilion px-6 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-vermilion/25 transition-all hover:opacity-95"
-              >
-                <span>{p.primaryCtaText || 'Explore Live Projects'}</span>
-                <span aria-hidden="true">→</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => goTo('/contact')}
-                onMouseMove={handleMagneticMouseMove}
-                onMouseLeave={handleMagneticMouseLeave}
-                className="hero-cta-btn focus-ring inline-flex items-center gap-2 rounded-full border border-cyanglow/40 bg-charcoal px-5 py-3.5 text-sm font-semibold text-cyanglow transition-colors hover:bg-cyanglow hover:text-obsidian"
-              >
-                <span>{p.secondaryCtaText && p.secondaryCtaText !== 'Download Resume' ? p.secondaryCtaText : "Let's Connect"}</span>
-                <span aria-hidden="true">→</span>
-              </button>
-            </div>
-
-            <div className="hero-social-wrap pt-4 border-t hairline-border flex items-center gap-3.5">
-              <SocialIconButtons socialLinks={p.socialLinks} />
-            </div>
+        {/* Top Eyebrow Meta Row */}
+        <div className="hero-top-meta">
+          <div className="hero-meta-left">
+            <span className="hero-meta-dot">▪</span>
+            <span>ENGINEER. DEVELOPER. BUILDER.</span>
           </div>
-
-          {/* Center Column: Portrait & Particle FX (4 Cols) */}
-          <div className="hero-portrait-col lg:col-span-4 flex flex-col items-center">
-            <PortraitParticles
-              imageUrl={p.portrait?.url || '/images/ayush-hero-portrait.jpg'}
-              alt={p.portrait?.alt || p.name}
-              name={p.name}
-              roleLabel={`${p.education?.stage || 'CGPA: 8.42 · Batch of 2026'} · SISTec, Bhopal`}
-              offsetX={p.portrait?.offsetX || 0}
-              offsetY={p.portrait?.offsetY || 0}
-              sampleGap={p.portrait?.particleDensity || 4}
-              toggleOffLabel={ui.particleToggleOff}
-              toggleOnLabel={ui.particleToggleOn}
-            />
-          </div>
-
-          {/* Right Column: Developer Workbench & Bento Cards (3 Cols) */}
-          <div className="hero-workbench-col lg:col-span-3">
-            <DeveloperWorkbench />
+          <div className="hero-meta-right">
+            BASED IN BHOPAL · THINKING BEYOND
           </div>
         </div>
 
-        {/* Infinite Tech Stack Marquee Bar */}
-        {doubledSkills.length > 0 && (
-          <div className="hero-marquee-bar mt-14 overflow-hidden rounded-2xl border hairline-border bg-charcoal/60 py-4 backdrop-blur-md">
+        {/* Center Editorial Showcase */}
+        <div className="hero-center-showcase">
+          {/* Mid-Left Presence Vertical Strip */}
+          <div className="hero-presence-strip" aria-hidden="true">
+            <span className="presence-num">01 / PRESENCE</span>
+            <span className="presence-plus">+</span>
+            <span className="presence-word">FULL-STACK</span>
+            <span className="presence-word">PROBLEM SOLVING</span>
+            <span className="presence-word">INTELLIGENT SYSTEMS</span>
+          </div>
+
+          {/* Masked Editorial Portrait with Ambient Backlight Glow */}
+          <div
+            ref={portraitStageRef}
+            className="hero-portrait-stage"
+            onMouseMove={handlePortraitMouseMove}
+            onMouseLeave={handlePortraitMouseLeave}
+          >
+            <img
+              src={heroPhotoSrc}
+              alt={p.name || 'Ayush Prajapati'}
+              className="hero-portrait-img"
+              loading="eager"
+            />
+          </div>
+
+          {/* Sub-Eyebrow */}
+          <div className="hero-sub-eyebrow">
+            A HUMAN PERSPECTIVE ON SOFTWARE
+          </div>
+
+          {/* Large Name Typography (Instrument Serif Upright + Italic) */}
+          <h1 className="hero-name-editorial">
+            <span className="name-first">Ayush</span>
+            <span className="name-last">Prajapati</span>
+          </h1>
+
+          {/* Narrative / Tagline */}
+          <p className="hero-narrative-editorial">
+            {p.heroDescription || 'I build scalable full-stack products, solve algorithmic challenges, and engineer intelligent web applications.'}
+          </p>
+
+          {/* Interactive CTAs */}
+          <div className="hero-actions-editorial">
+            <button
+              type="button"
+              onClick={() => scrollToSection('featured-projects')}
+              onMouseMove={handleMagneticMouseMove}
+              onMouseLeave={handleMagneticMouseLeave}
+              className="hero-btn-work"
+            >
+              <span>Explore my work</span>
+              <span aria-hidden="true">↓</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => goTo('/contact')}
+              onMouseMove={handleMagneticMouseMove}
+              onMouseLeave={handleMagneticMouseLeave}
+              className="hero-btn-talk"
+            >
+              <span>Start a conversation</span>
+              <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Bottom Hero Footer Strip */}
+        <div className="hero-bottom-footer">
+          <div className="hero-footer-left">
+            <span>SCROLL TO DISCOVER</span>
+            <span className="animate-bounce inline-block">↓</span>
+          </div>
+          <div>
+            BUILDING & SHIPPING SINCE 2022
+          </div>
+          <div>
+            AN ONGOING EXPLORATION
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Marquee Bar */}
+      {doubledSkills.length > 0 && (
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-16">
+          <div className="hero-marquee-bar overflow-hidden rounded-2xl border hairline-border bg-charcoal/60 py-3.5 backdrop-blur-md">
             <div className="animate-marquee flex items-center gap-6 px-4">
               {doubledSkills.map((item, idx) => (
                 <div
                   key={`${item.name}-${idx}`}
-                  className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-obsidian/90 px-4 py-2 text-xs font-semibold text-alabaster shadow-sm"
+                  className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-obsidian/90 px-4 py-1.5 text-xs font-semibold text-alabaster shadow-sm"
                 >
-                  <TechLogo name={item.logoKey || item.name} className="h-4 w-4" />
+                  <TechLogo name={item.logoKey || item.name} className="h-3.5 w-3.5" />
                   <span>{item.name}</span>
                 </div>
               ))}
             </div>
           </div>
-        )}
-      </section>
+        </div>
+      )}
 
       {/* Main Home Content Sections */}
-      <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24 pt-6">
-        {/* Section 01: Bento Introduction & Education */}
+      <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24">
+        {/* =========================================================================
+            SECTION 01: Bento Introduction & Focus Areas
+            ========================================================================= */}
         <section className="bento-section space-y-10 border-t hairline-border pt-16">
           <div className="bento-header max-w-3xl space-y-3">
-            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeIntroEyebrow}</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster leading-tight">{ui.homeIntroHeading}</h2>
+            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeIntroEyebrow || '01 · ABOUT & MISSION'}</p>
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster leading-tight">
+              {ui.homeIntroHeading || 'Clean code is the start. Thoughtful design is the point.'}
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
@@ -512,94 +655,188 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Section 02: Technical Capabilities / Skills Section */}
+        {/* Technical Capabilities / Skills Widget */}
         <InteractiveSkillsWidget showCta={true} onCtaClick={() => goTo('/skills')} />
 
-        {/* Section 03: Live Deployed Projects */}
-        <section className="projects-home-section border-t hairline-border pt-16 space-y-10">
-          <div className="section-header flex flex-wrap items-end justify-between gap-4">
-            <div className="space-y-2">
-              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeProjectsEyebrow}</p>
-              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">{ui.homeProjectsHeading}</h2>
+        {/* =========================================================================
+            SECTION 02: Horizontal Scrollable Live Deployed Projects Track
+            ========================================================================= */}
+        <section id="featured-projects" className="projects-home-section horizontal-showcase-section border-t hairline-border pt-16">
+          <div className="showcase-header">
+            <div>
+              <p className="showcase-eyebrow">
+                {ui.homeProjectsEyebrow || '02 · LIVE DEPLOYED PROJECTS'}
+              </p>
+              <h2 className="showcase-title">
+                {ui.homeProjectsHeading || 'Featured Full-Stack Applications'}
+              </h2>
             </div>
-            <button
-              type="button"
-              onClick={() => goTo('/projects')}
-              onMouseMove={handleMagneticMouseMove}
-              onMouseLeave={handleMagneticMouseLeave}
-              className="focus-ring rounded-full border border-white/15 bg-charcoal px-5 py-2.5 font-mono text-xs font-semibold text-alabaster transition-colors hover:border-vermilion"
-            >
-              {ui.homeProjectsCta} ({publishedProjects.length}) →
-            </button>
+
+            <div className="showcase-controls">
+              <span className="showcase-counter">
+                0{projectsIndex} / 0{displayProjects.length || 1}
+              </span>
+
+              <button
+                type="button"
+                className="showcase-arrow-btn"
+                onClick={() => scrollProjects('left')}
+                title="Scroll Left"
+                aria-label="Scroll projects left"
+              >
+                <i className="fa-solid fa-chevron-left" />
+              </button>
+
+              <button
+                type="button"
+                className="showcase-arrow-btn"
+                onClick={() => scrollProjects('right')}
+                title="Scroll Right"
+                aria-label="Scroll projects right"
+              >
+                <i className="fa-solid fa-chevron-right" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => goTo('/projects')}
+                className="showcase-view-all"
+              >
+                {ui.homeProjectsCta || 'View All Projects'} ({publishedProjects.length}) ↗
+              </button>
+            </div>
           </div>
 
+          {/* Progress Indicator */}
+          <div className="showcase-progress-bar">
+            <div className="showcase-progress-thumb" style={{ width: `${projectsProgress}%` }} />
+          </div>
+
+          {/* Horizontal Track */}
           {displayProjects.length === 0 ? (
             <div className="glass-card rounded-2xl p-8 text-center text-stonewarm font-mono text-sm border border-white/5">
               No projects published yet. Click "Admin CMS" in the top bar to create and publish your first project.
             </div>
           ) : (
-            <div className={`projects-home-grid grid grid-cols-1 gap-8 ${displayProjects.length === 1 ? 'max-w-3xl' : 'lg:grid-cols-2'}`}>
+            <div
+              ref={projectsTrackRef}
+              className="horizontal-scroll-track"
+              onScroll={handleProjectsScroll}
+              onMouseDown={handleProjectsMouseDown}
+              onMouseMove={handleProjectsMouseMove}
+              onMouseUp={handleProjectsMouseUp}
+              onMouseLeave={handleProjectsMouseUp}
+            >
               {displayProjects.map((proj, idx) => (
-                <ProjectCard
-                  key={proj.id}
-                  proj={proj}
-                  indexNum={idx + 1}
-                  isSelected={highlightedProjectId === proj.id}
-                  onSelect={setHighlightedProjectId}
-                  onCardMouseMove={handleCardMouseMove}
-                  onCardMouseLeave={handleCardMouseLeave}
-                />
+                <div key={proj.id} className="project-card-slide">
+                  <ProjectCard
+                    proj={proj}
+                    indexNum={idx + 1}
+                    isSelected={highlightedProjectId === proj.id}
+                    onSelect={setHighlightedProjectId}
+                    onCardMouseMove={handleCardMouseMove}
+                    onCardMouseLeave={handleCardMouseLeave}
+                  />
+                </div>
               ))}
             </div>
           )}
         </section>
 
-        {/* Section 04: Verified Certificates Showcase */}
-        <section className="certs-home-section border-t hairline-border pt-16 space-y-10">
-          <div className="section-header flex flex-wrap items-end justify-between gap-4">
-            <div className="space-y-2">
-              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-cyanglow">
-                {ui.homeCertsEyebrow || '04 · VERIFIED CREDENTIALS'}
+        {/* =========================================================================
+            SECTION 03: Horizontal Scrollable Verified Certificates Track
+            ========================================================================= */}
+        <section className="certs-home-section horizontal-showcase-section border-t hairline-border pt-16">
+          <div className="showcase-header">
+            <div>
+              <p className="showcase-eyebrow">
+                {ui.homeCertsEyebrow || '03 · VERIFIED CREDENTIALS'}
               </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">
+              <h2 className="showcase-title">
                 {ui.homeCertsHeading || 'Certifications & Achievements'}
               </h2>
             </div>
-            <button
-              type="button"
-              onClick={() => goTo('/certificates')}
-              onMouseMove={handleMagneticMouseMove}
-              onMouseLeave={handleMagneticMouseLeave}
-              className="focus-ring rounded-full border border-white/15 bg-charcoal px-5 py-2.5 font-mono text-xs font-semibold text-alabaster transition-colors hover:border-cyanglow"
-            >
-              {ui.homeCertsCta || 'View Certificates'} ({certificates.length}) →
-            </button>
+
+            <div className="showcase-controls">
+              <span className="showcase-counter">
+                0{certsIndex} / 0{certificates.length || 1}
+              </span>
+
+              <button
+                type="button"
+                className="showcase-arrow-btn"
+                onClick={() => scrollCerts('left')}
+                title="Scroll Left"
+                aria-label="Scroll certificates left"
+              >
+                <i className="fa-solid fa-chevron-left" />
+              </button>
+
+              <button
+                type="button"
+                className="showcase-arrow-btn"
+                onClick={() => scrollCerts('right')}
+                title="Scroll Right"
+                aria-label="Scroll certificates right"
+              >
+                <i className="fa-solid fa-chevron-right" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => goTo('/certificates')}
+                className="showcase-view-all"
+              >
+                {ui.homeCertsCta || 'View Certificates'} ({certificates.length}) ↗
+              </button>
+            </div>
           </div>
 
+          {/* Progress Indicator */}
+          <div className="showcase-progress-bar">
+            <div className="showcase-progress-thumb" style={{ width: `${certsProgress}%` }} />
+          </div>
+
+          {/* Horizontal Track */}
           {certificates.length === 0 ? (
             <div className="glass-card rounded-2xl p-8 text-center text-stonewarm font-mono text-sm border border-white/5">
               No certificates added yet. Upload your credentials in the Admin CMS to showcase them here.
             </div>
           ) : (
-            <div className={`certs-home-grid grid grid-cols-1 gap-8 ${certificates.length === 1 ? 'max-w-2xl' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
-              {certificates.slice(0, 3).map((cert, idx) => (
-                <CertificateCard
-                  key={cert.id}
-                  cert={cert}
-                  indexNum={idx + 1}
-                  onCardMouseMove={handleCardMouseMove}
-                  onCardMouseLeave={handleCardMouseLeave}
-                />
+            <div
+              ref={certsTrackRef}
+              className="horizontal-scroll-track"
+              onScroll={handleCertsScroll}
+              onMouseDown={handleCertsMouseDown}
+              onMouseMove={handleCertsMouseMove}
+              onMouseUp={handleCertsMouseUp}
+              onMouseLeave={handleCertsMouseUp}
+            >
+              {certificates.map((cert, idx) => (
+                <div key={cert.id} className="cert-card-slide">
+                  <CertificateCard
+                    cert={cert}
+                    indexNum={idx + 1}
+                    onCardMouseMove={handleCardMouseMove}
+                    onCardMouseLeave={handleCardMouseLeave}
+                  />
+                </div>
               ))}
             </div>
           )}
         </section>
 
-        {/* Section 05: Education & Academic Projects */}
+        {/* =========================================================================
+            SECTION 04: Education & Academic Journey
+            ========================================================================= */}
         <section className="journey-home-section border-t hairline-border pt-16 space-y-10">
           <div className="section-header space-y-2">
-            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeJourneyEyebrow}</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">{ui.homeJourneyHeading}</h2>
+            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
+              {ui.homeJourneyEyebrow || '04 · ACADEMIC MILESTONES'}
+            </p>
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-alabaster">
+              {ui.homeJourneyHeading || 'Academic Journey & Technical Milestones'}
+            </h2>
           </div>
           <div className="journey-grid grid grid-cols-1 gap-6 md:grid-cols-3">
             {(p.learningJourney || []).map((step, i) => (
@@ -619,12 +856,20 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Section 06: Direct Resume Download & Contact CTA */}
-        <section className="home-cta-banner rounded-3xl border border-vermilion/30 bg-gradient-to-r from-charcoal via-graphite to-charcoal p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl">
+        {/* =========================================================================
+            SECTION 05: Direct Contact CTA Banner
+            ========================================================================= */}
+        <section className="home-cta-banner rounded-3xl border border-white/10 bg-gradient-to-r from-charcoal via-graphite to-charcoal p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl">
           <div className="space-y-3 max-w-2xl">
-            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">{ui.homeBannerEyebrow}</p>
-            <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-alabaster leading-tight">{ui.homeBannerHeading}</h2>
-            <p className="text-sm sm:text-base text-stonewarm">{ui.homeBannerSubtext}</p>
+            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
+              {ui.homeBannerEyebrow || 'GET IN TOUCH'}
+            </p>
+            <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-alabaster leading-tight">
+              {ui.homeBannerHeading || "Let's build something extraordinary together."}
+            </h2>
+            <p className="text-sm sm:text-base text-stonewarm">
+              {ui.homeBannerSubtext || "Available for software engineering roles, full-stack development, and ambitious client projects."}
+            </p>
           </div>
           <div className="flex flex-wrap gap-3.5 shrink-0">
             <button
@@ -632,9 +877,9 @@ export function HomePage() {
               onClick={() => goTo('/contact')}
               onMouseMove={handleMagneticMouseMove}
               onMouseLeave={handleMagneticMouseLeave}
-              className="focus-ring rounded-full bg-vermilion px-7 py-3.5 text-sm font-bold text-obsidian shadow-lg shadow-vermilion/25 transition-transform hover:-translate-y-0.5"
+              className="btn-primary"
             >
-              Contact Me →
+              Contact Me ↗
             </button>
           </div>
         </section>
@@ -642,4 +887,3 @@ export function HomePage() {
     </div>
   );
 }
-

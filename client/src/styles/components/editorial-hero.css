@@ -1,0 +1,494 @@
+/* ==========================================================================
+   Editorial Hero & Horizontal Showcase System
+   - Sarthak Sharma Hero Stage (Matching Image 1 with Ayush Photo from Image 4)
+   - Right-to-Left Horizontal Scroll Carousel for Projects & Certificates
+   ========================================================================== */
+
+/* --- HERO STAGE (Image 1 Sarthak Sharma Composition) --- */
+.hero-editorial-stage {
+  position: relative;
+  min-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 130px 24px 36px;
+  max-width: 1360px;
+  margin: 0 auto;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .hero-editorial-stage {
+    min-height: auto;
+    padding: 110px 18px 30px;
+    gap: 36px;
+  }
+}
+
+/* Background vertical architectural guidelines */
+.hero-editorial-guides {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-left: 1px solid rgba(255, 255, 255, 0.035);
+  border-right: 1px solid rgba(255, 255, 255, 0.035);
+  z-index: 0;
+}
+
+.hero-editorial-guides div {
+  border-right: 1px solid rgba(255, 255, 255, 0.035);
+}
+
+@media (max-width: 768px) {
+  .hero-editorial-guides {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Top Meta Row */
+.hero-top-meta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9a968f;
+}
+
+.hero-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-meta-dot {
+  color: var(--brand-color, #ff8c59);
+  font-size: 0.8rem;
+}
+
+.hero-meta-right {
+  color: #858079;
+}
+
+@media (max-width: 640px) {
+  .hero-top-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.68rem;
+  }
+}
+
+/* Center Stage */
+.hero-center-showcase {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: auto 0;
+  padding: 10px 0;
+}
+
+/* Mid-Left Presence Meta (Desktop) */
+.hero-presence-strip {
+  position: absolute;
+  left: 0;
+  top: 42%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: #65625c;
+  text-transform: uppercase;
+  z-index: 3;
+}
+
+.presence-num {
+  color: var(--brand-color, #ff8c59);
+  font-weight: 600;
+}
+
+.presence-plus {
+  font-size: 0.85rem;
+  color: #9a968f;
+  margin: 2px 0;
+}
+
+.presence-word {
+  color: #858079;
+  line-height: 1.4;
+}
+
+@media (max-width: 1024px) {
+  .hero-presence-strip {
+    display: none;
+  }
+}
+
+/* Portrait Stage */
+.hero-portrait-stage {
+  position: relative;
+  width: min(420px, 84vw);
+  height: min(480px, 48vh);
+  margin: 0 auto -24px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Ambient Backlight Glow */
+.hero-portrait-stage::before {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 440px;
+  height: 440px;
+  background: radial-gradient(circle, rgba(255, 140, 89, 0.16) 0%, rgba(255, 255, 255, 0.04) 45%, transparent 72%);
+  filter: blur(52px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Masked Editorial Portrait */
+.hero-portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: 24px;
+  filter: grayscale(70%) contrast(1.16) brightness(0.98);
+  mask-image: radial-gradient(ellipse at 50% 40%, black 50%, transparent 80%), linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 50%, transparent 80%), linear-gradient(to bottom, black 60%, transparent 100%);
+  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, filter;
+}
+
+.hero-portrait-stage:hover .hero-portrait-img {
+  filter: grayscale(10%) contrast(1.1) brightness(1.02);
+  transform: scale(1.02);
+}
+
+/* Sub-eyebrow right above huge name */
+.hero-sub-eyebrow {
+  position: relative;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #858079;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  z-index: 3;
+}
+
+/* Large Editorial Name Typography */
+.hero-name-editorial {
+  position: relative;
+  font-family: 'Instrument Serif', 'Playfair Display', Georgia, serif !important;
+  font-size: clamp(4rem, 10.5vw, 8.2rem) !important;
+  font-weight: 400 !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.025em !important;
+  color: #f4f1ec !important;
+  margin: 0 0 16px !important;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
+  z-index: 3;
+}
+
+.hero-name-editorial .name-first {
+  font-style: normal;
+  color: #ffffff;
+}
+
+.hero-name-editorial .name-last {
+  font-style: italic;
+  color: #f4f1ec;
+  margin-left: 0.18em;
+  font-weight: 400;
+}
+
+/* Subtitle Narrative */
+.hero-narrative-editorial {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.6;
+  color: #9a968f;
+  max-width: 580px;
+  margin: 0 auto 24px;
+  z-index: 2;
+}
+
+/* Actions CTA */
+.hero-actions-editorial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  z-index: 2;
+}
+
+.hero-btn-work {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 26px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f4f1ec;
+  font-size: 0.88rem;
+  font-weight: 500;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.hero-btn-work:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.12);
+}
+
+.hero-btn-talk {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #9a968f;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 11px 20px;
+  transition: color 0.25s, transform 0.25s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.hero-btn-talk:hover {
+  color: #f4f1ec;
+  transform: translateY(-1px);
+}
+
+/* Bottom Footer Row */
+.hero-bottom-footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #65625c;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.hero-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 640px) {
+  .hero-bottom-footer {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+
+/* --- HORIZONTAL SHOWCASE CAROUSEL (Projects & Certificates) --- */
+.horizontal-showcase-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.showcase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.showcase-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-color, #ff8c59);
+  margin-bottom: 6px;
+}
+
+.showcase-title {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-size: clamp(2.2rem, 4vw, 3.2rem) !important;
+  font-weight: 500 !important;
+  color: #f4f1ec !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.showcase-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.showcase-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #858079;
+  letter-spacing: 0.1em;
+  padding-right: 4px;
+}
+
+.showcase-arrow-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f4f1ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 0.85rem;
+}
+
+.showcase-arrow-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.showcase-arrow-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.showcase-view-all {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9a968f;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.showcase-view-all:hover {
+  color: #f4f1ec;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* The Horizontal Track */
+.horizontal-scroll-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 8px 4px 28px;
+  cursor: grab;
+  user-select: none;
+  will-change: scroll-position;
+}
+
+.horizontal-scroll-track::-webkit-scrollbar {
+  display: none;
+}
+
+.horizontal-scroll-track:active {
+  cursor: grabbing;
+}
+
+/* Slides */
+.horizontal-scroll-track .project-card-slide {
+  flex: 0 0 clamp(340px, 46vw, 560px);
+  scroll-snap-align: start;
+  transition: transform 0.35s ease;
+  display: flex;
+}
+
+.horizontal-scroll-track .cert-card-slide {
+  flex: 0 0 clamp(290px, 32vw, 400px);
+  scroll-snap-align: start;
+  transition: transform 0.35s ease;
+  display: flex;
+}
+
+/* Ensure cards inside horizontal slides stretch to uniform full height */
+.horizontal-scroll-track .project-card-slide > article,
+.horizontal-scroll-track .project-card-slide .project-card,
+.horizontal-scroll-track .cert-card-slide > article,
+.horizontal-scroll-track .cert-card-slide .cert-card {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 640px) {
+  .horizontal-scroll-track .project-card-slide {
+    flex: 0 0 88vw;
+  }
+  .horizontal-scroll-track .cert-card-slide {
+    flex: 0 0 82vw;
+  }
+}
+
+/* Showcase Progress Bar */
+.showcase-progress-bar {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: -12px;
+  margin-bottom: 24px;
+}
+
+.showcase-progress-thumb {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  transition: width 0.25s ease-out;
+}
