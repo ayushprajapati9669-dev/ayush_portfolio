@@ -506,85 +506,96 @@ export function HomePage() {
           </div>
         </div>
 
-        {/* Center Editorial Showcase */}
+        {/* Center Showcase matching uploaded reference photo */}
         <div className="hero-center-showcase">
-          {/* Mid-Left Presence Vertical Strip */}
-          <div className="hero-presence-strip" aria-hidden="true">
-            <span className="presence-num">01 / PRESENCE</span>
-            <span className="presence-plus">+</span>
-            <span className="presence-word">FULL-STACK</span>
-            <span className="presence-word">PROBLEM SOLVING</span>
-            <span className="presence-word">INTELLIGENT SYSTEMS</span>
-          </div>
-
-          {/* Masked Editorial Portrait with Ambient Backlight Glow */}
+          {/* Top Announcement Capsule Pill */}
           <div
-            ref={portraitStageRef}
-            className="hero-portrait-stage"
-            onMouseMove={handlePortraitMouseMove}
-            onMouseLeave={handlePortraitMouseLeave}
+            className="hero-announcement-capsule"
+            onClick={() => scrollToSection('featured-projects')}
+            role="button"
+            tabIndex={0}
           >
-            {/* Theatrical Overhead Spotlight Beam */}
-            <div className="hero-spotlight-beam" aria-hidden="true" />
-
-            {/* Live Status Eyebrow Badge */}
-            <div className="hero-portrait-badge">
-              <span className="portrait-badge-dot" />
-              <span>OPEN FOR COLLABORATION</span>
-            </div>
-
-            {/* Warm Ambient Aura Halo */}
-            <div className="hero-portrait-halo" aria-hidden="true" />
-
-            <img
-              src={heroPhotoSrc}
-              alt={p.name || 'Ayush Prajapati'}
-              className="hero-portrait-img"
-              loading="eager"
-            />
+            <span className="capsule-icon">✦</span>
+            <span>Available for Full-Stack & Engineering Roles</span>
+            <span className="capsule-arrow">→</span>
           </div>
 
-          {/* Sub-Eyebrow */}
-          <div className="hero-sub-eyebrow">
-            A HUMAN PERSPECTIVE ON SOFTWARE
-          </div>
-
-          {/* Large Name Typography (Powder / Colt Gibson Grotesque) */}
-          <h1 className="hero-name-editorial">
-            <span className="name-first">Ayush</span>
-            <span className="name-last">Prajapati</span>
-            <span className="name-dot text-amber-400 font-bold hero-dot-pulse">.</span>
-          </h1>
-
-          {/* Narrative / Tagline */}
+          {/* Modern Hero Headline */}
           <ScrollWriteText
-            as="p"
-            className="hero-narrative-editorial"
+            as="h1"
+            className="hero-modern-title"
             mode="words"
-            stagger={0.03}
-            delay={0.35}
-            highlightWords={['scalable', 'full-stack', 'algorithmic', 'intelligent']}
+            stagger={0.035}
+            delay={0.15}
           >
-            {p.heroDescription || 'I build scalable full-stack products, solve algorithmic challenges, and engineer intelligent web applications.'}
+            Solid full-stack engineering that turns ideas into software
           </ScrollWriteText>
 
-          {/* Interactive CTAs with Framer Motion Spring Magnetic Physics */}
-          <div className="hero-actions-editorial">
+          {/* Modern Subtitle */}
+          <ScrollWriteText
+            as="p"
+            className="hero-modern-desc"
+            mode="words"
+            stagger={0.02}
+            delay={0.25}
+          >
+            {p.heroDescription || 'Engineering scalable web applications, robust cloud backends, and intelligent interactive products with clean craft.'}
+          </ScrollWriteText>
+
+          {/* Modern Action Buttons: Solid White Pill + Circular Glass Play Button */}
+          <div className="hero-modern-actions">
             <MagneticButton
               onClick={() => scrollToSection('featured-projects')}
-              className="hero-btn-work"
+              className="hero-btn-solid-white"
             >
-              <span>Explore my work</span>
-              <span aria-hidden="true">↓</span>
+              <span>Explore work</span>
+              <span aria-hidden="true" className="text-xs ml-0.5">↓</span>
             </MagneticButton>
 
-            <MagneticButton
-              onClick={() => goTo('/contact')}
-              className="hero-btn-talk"
+            <button
+              type="button"
+              onClick={() => openResumeModal()}
+              className="hero-btn-play-circle"
+              title="Open Interactive Resume"
+              aria-label="Open Interactive Resume"
             >
-              <span>Start a conversation</span>
-              <span aria-hidden="true">↗</span>
-            </MagneticButton>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="6 4 20 12 6 20 6 4" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Floating Stage Container Card (The "Welcome back" card in reference photo) */}
+          <div className="hero-stage-card-wrap">
+            <div className="hero-stage-card">
+              <div className="hero-stage-header">
+                <div className="stage-logo-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <rect x="12" y="2" width="14" height="14" rx="2" transform="rotate(45 12 2)" fill="#ffffff" />
+                  </svg>
+                </div>
+                <div className="stage-badge">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>GLSL LIVE TERRAIN ENGINE</span>
+                </div>
+                <div className="stage-menu-icon" onClick={() => goTo('/about')} title="Explore Details">
+                  <span />
+                  <span />
+                </div>
+              </div>
+
+              <div className="hero-stage-content">
+                <h3 className="hero-stage-title">Welcome to the Portfolio Architecture</h3>
+                <p className="hero-stage-subtitle">
+                  Interactive Three.js 3D Wave Displacement · Full-Stack MERN Architecture · Verified Milestones
+                </p>
+              </div>
+
+              {/* The 3D Mesh Wave inside the stage card */}
+              <div className="hero-stage-canvas-wrap">
+                <InteractiveMeshWave className="w-full h-full" />
+              </div>
+            </div>
           </div>
         </div>
 

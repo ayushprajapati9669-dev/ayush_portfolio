@@ -3821,3 +3821,104 @@ button[style*="38bdf8"] {
   background: #d4af37 !important;
   color: #000000 !important;
 }
+
+
+/* =========================================================================
+   Modern Stripe / Vercel Luxury Dark Mode Admin CMS Polish
+   ========================================================================= */
+
+.admin-layout,
+.admin-main-wrapper {
+  background: #090a0f !important;
+}
+
+.admin-sidebar {
+  background: rgba(13, 14, 20, 0.95) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.7) !important;
+}
+
+.admin-sidebar .nav-item {
+  border-radius: 10px !important;
+  transition: all 0.22s ease !important;
+  color: #94a3b8 !important;
+}
+
+.admin-sidebar .nav-item:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff !important;
+}
+
+.admin-sidebar .nav-item.active {
+  background: linear-gradient(135deg, rgba(223, 183, 64, 0.18), rgba(223, 183, 64, 0.06)) !important;
+  border: 1px solid rgba(223, 183, 64, 0.3) !important;
+  color: #dfb740 !important;
+}
+
+.admin-card {
+  background: linear-gradient(145deg, rgba(20, 22, 30, 0.82) 0%, rgba(13, 14, 20, 0.92) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.admin-card:hover {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+.stat-card {
+  background: linear-gradient(145deg, rgba(22, 24, 34, 0.85) 0%, rgba(14, 15, 22, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+  padding: 22px !important;
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.28s ease !important;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px) !important;
+  border-color: rgba(223, 183, 64, 0.35) !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.85), 0 0 20px rgba(223, 183, 64, 0.1) !important;
+}
+
+.admin-card input[type="text"],
+.admin-card input[type="email"],
+.admin-card input[type="password"],
+.admin-card input[type="number"],
+.admin-card textarea,
+.admin-card select {
+  background: rgba(12, 13, 18, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px !important;
+  color: #f1f5f9 !important;
+  transition: all 0.2s ease !important;
+}
+
+.admin-card input:focus,
+.admin-card textarea:focus,
+.admin-card select:focus {
+  border-color: #dfb740 !important;
+  box-shadow: 0 0 0 3px rgba(223, 183, 64, 0.16) !important;
+  outline: none !important;
+}
+
+.admin-card .btn-primary {
+  background: #ffffff !important;
+  color: #0b0c10 !important;
+  border: none !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.2) !important;
+}
+
+.admin-card .btn-primary:hover {
+  background: #f1f5f9 !important;
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.3) !important;
+}

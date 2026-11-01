@@ -103,6 +103,33 @@ export function BackgroundLayers() {
         />
       )}
 
+      {/* Cinematic Dusk Landscape Wallpaper (Matching Uploaded Reference Photo) */}
+      {!isAdmin && (
+        <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+          <img
+            src="/images/cinematic-dusk-landscape.jpg"
+            alt=""
+            className="w-full h-full object-cover object-bottom opacity-85"
+            loading="eager"
+            fetchpriority="high"
+          />
+          {/* Ambient Central Dark Vignette so all typography remains 100% crisp & readable */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(ellipse 75% 65% at 50% 36%, rgba(14, 16, 22, 0.62) 0%, rgba(11, 12, 17, 0.82) 55%, rgba(7, 8, 10, 0.96) 100%)'
+            }}
+          />
+          {/* Bottom Horizon Gradient to blend cleanly into subsequent content sections */}
+          <div
+            className="absolute inset-x-0 bottom-0 h-80"
+            style={{
+              background: 'linear-gradient(to top, #090a0d 0%, rgba(9, 10, 13, 0.8) 50%, transparent 100%)'
+            }}
+          />
+        </div>
+      )}
+
       {/* VSLFlow Gold Radial Glow from Bottom-Center */}
       <div
         className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] max-w-[100vw] h-[400px] z-0"

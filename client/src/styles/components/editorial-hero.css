@@ -19,7 +19,7 @@
   margin: 0 auto;
   overflow: visible !important;
   box-sizing: border-box;
-  background: #000000;
+  background: transparent;
 }
 
 @media (max-width: 768px) {
@@ -609,4 +609,271 @@
   inset: 0;
   background: radial-gradient(ellipse at 50% 120%, rgba(212, 175, 55, 0.06), transparent 65%);
   pointer-events: none;
+}
+
+/* =========================================================================
+   Modern Linear/Apple Dusk Minimalist Hero (Matching Reference Photo)
+   ========================================================================= */
+
+.hero-editorial-guides,
+.hero-presence-strip {
+  display: none !important;
+}
+
+.hero-editorial-stage {
+  background: transparent !important;
+  min-height: 90vh !important;
+  padding-top: 130px !important;
+}
+
+.hero-center-showcase {
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+/* Top Announcement Capsule */
+.hero-announcement-capsule {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  padding: 7px 22px !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 9999px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  font-family: 'Jost', -apple-system, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #d1d5e2 !important;
+  margin: 0 auto 28px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+}
+
+.hero-announcement-capsule:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+.hero-announcement-capsule .capsule-icon {
+  color: #dfb740 !important;
+  font-size: 11px !important;
+}
+
+.hero-announcement-capsule .capsule-arrow {
+  font-size: 13px !important;
+  color: #9da3b4 !important;
+  transition: transform 0.25s ease, color 0.25s ease !important;
+}
+
+.hero-announcement-capsule:hover .capsule-arrow {
+  transform: translateX(3px) !important;
+  color: #ffffff !important;
+}
+
+/* Modern Headline */
+.hero-modern-title {
+  font-family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: clamp(2.8rem, 6.2vw, 4.8rem) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.12 !important;
+  color: #ffffff !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  max-width: 900px !important;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Modern Description */
+.hero-modern-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: clamp(15px, 1.7vw, 18px) !important;
+  font-weight: 350 !important;
+  color: #9ea4b5 !important;
+  max-width: 560px !important;
+  text-align: center !important;
+  line-height: 1.65 !important;
+  margin: 20px auto 0 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Modern Actions Row */
+.hero-modern-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  margin-top: 28px !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.hero-btn-solid-white {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 12px 30px !important;
+  background: #ffffff !important;
+  color: #0d0f14 !important;
+  font-family: 'Jost', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.02em !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 24px rgba(255, 255, 255, 0.25) !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  text-decoration: none !important;
+}
+
+.hero-btn-solid-white:hover {
+  background: #f0f0f5 !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 34px rgba(255, 255, 255, 0.42) !important;
+  color: #000000 !important;
+}
+
+.hero-btn-play-circle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  padding: 0 !important;
+}
+
+.hero-btn-play-circle:hover {
+  background: rgba(255, 255, 255, 0.24) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-2px) scale(1.08) !important;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Floating Stage Container Card (The "Welcome back" card in reference photo) */
+.hero-stage-card-wrap {
+  width: 100% !important;
+  max-width: 1040px !important;
+  margin: 48px auto 0 !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.hero-stage-card {
+  background: linear-gradient(180deg, rgba(22, 24, 32, 0.92) 0%, rgba(13, 14, 19, 0.98) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 35px 80px -15px rgba(0, 0, 0, 0.92), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(28px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+  overflow: hidden !important;
+  padding: 24px 28px 28px !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hero-stage-card:hover {
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 45px 100px -15px rgba(0, 0, 0, 0.96), 0 0 35px rgba(223, 183, 64, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.26) !important;
+}
+
+.hero-stage-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 16px !important;
+  padding: 0 4px !important;
+}
+
+.stage-logo-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+.stage-badge {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 1.5px !important;
+  color: #10b981 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  text-transform: uppercase !important;
+}
+
+.stage-menu-icon {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  cursor: pointer !important;
+  padding: 6px !important;
+}
+
+.stage-menu-icon span {
+  display: block !important;
+  width: 18px !important;
+  height: 2px !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  border-radius: 1px !important;
+  transition: background-color 0.2s !important;
+}
+
+.stage-menu-icon:hover span {
+  background: #ffffff !important;
+}
+
+.hero-stage-content {
+  text-align: center !important;
+  margin-bottom: 20px !important;
+}
+
+.hero-stage-title {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 1.45rem !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  margin-bottom: 6px !important;
+  letter-spacing: -0.01em !important;
+}
+
+.hero-stage-subtitle {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 13.5px !important;
+  color: #8f95a6 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.hero-stage-canvas-wrap {
+  height: 340px !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: radial-gradient(ellipse at 50% 100%, rgba(223, 183, 64, 0.12) 0%, transparent 70%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
