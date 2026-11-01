@@ -1250,16 +1250,17 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 /* Nav links */
 .nav-link {
   font-family: 'Jost', sans-serif !important;
-  font-size: 13px !important;
+  font-size: 13.5px !important;
   font-weight: 500 !important;
-  letter-spacing: 0.03em !important;
-  color: #777777 !important;
-  transition: color 0.2s ease !important;
+  letter-spacing: 0.02em !important;
+  color: #cbd5e1 !important;
+  transition: all 0.2s ease !important;
 }
 
 .nav-link:hover,
 .nav-link:focus-visible {
-  color: #cccccc !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 12px rgba(212, 175, 55, 0.4) !important;
 }
 
 .nav-link.active {
@@ -1379,4 +1380,38 @@ a.btn-primary:hover {
   background: #0a0a0a !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95) !important;
+}
+
+/* =========================================================================
+   Guaranteed Navbar Visibility & High-Contrast Gold Styling
+   ========================================================================= */
+.nav-wrapper {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 99999 !important;
+}
+
+.navbar {
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: rgba(8, 8, 8, 0.94) !important;
+  border: 1px solid rgba(212, 175, 55, 0.25) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.95), 0 0 24px rgba(212, 175, 55, 0.08) !important;
+}
+
+.active-pill {
+  background: rgba(212, 175, 55, 0.16) !important;
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.15) !important;
+}
+
+.mobile-nav-toggle {
+  background: rgba(212, 175, 55, 0.1) !important;
+  border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.mobile-nav-toggle:hover {
+  background: rgba(212, 175, 55, 0.2) !important;
+  border-color: #d4af37 !important;
 }

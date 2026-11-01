@@ -143,38 +143,25 @@ export function AboutPage() {
     if (reduceMotion || !containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.from('.page-header > *', {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out'
-      });
+      gsap.fromTo('.page-header > *', 
+        { y: 30, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'power2.out', clearProps: 'all' }
+      );
 
-      gsap.from('.top-section .about-card', {
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.18,
-        ease: 'back.out(1.2)'
-      });
+      gsap.fromTo('.top-section .about-card', 
+        { y: 30, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out', clearProps: 'all' }
+      );
 
-      gsap.from('.spotlight-section .spotlight-card', {
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        ease: 'back.out(1.2)',
-        delay: 0.1
-      });
+      gsap.fromTo('.spotlight-section .spotlight-card', 
+        { y: 30, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', delay: 0.08, clearProps: 'all' }
+      );
 
-      gsap.from('.bottom-section .about-card', {
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.18,
-        ease: 'back.out(1.2)',
-        delay: 0.15
-      });
+      gsap.fromTo('.bottom-section .about-card', 
+        { y: 30, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out', delay: 0.1, clearProps: 'all' }
+      );
     }, containerRef);
 
     return () => ctx.revert();

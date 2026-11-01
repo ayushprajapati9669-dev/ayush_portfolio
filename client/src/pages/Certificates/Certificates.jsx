@@ -239,27 +239,22 @@ export function CertificatesPage() {
     if (reduceMotion) return;
 
     const ctx = gsap.context(() => {
-      gsap.from('.page-header > *', {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out'
-      });
+      gsap.fromTo('.page-header > *', 
+        { y: 30, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'power2.out', clearProps: 'all' }
+      );
 
-      gsap.from('.cert-card', {
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'back.out(1.2)',
-        delay: 0.2,
-        onComplete: () => {
-          document.querySelectorAll('.cert-card').forEach((c) => {
-            c.style.transform = '';
-          });
+      gsap.fromTo('.cert-card', 
+        { y: 30, opacity: 0 }, 
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 0.5, 
+          stagger: 0.05, 
+          ease: 'power2.out', 
+          clearProps: 'all' 
         }
-      });
+      );
     }, containerRef);
 
     return () => ctx.revert();

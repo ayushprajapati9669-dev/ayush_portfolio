@@ -295,15 +295,11 @@ export function Header() {
       return;
     }
 
-    // 1. Entrance drop-in
-    gsap.from(navWrapper, {
-      y: -30,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      delay: 0.15,
-      clearProps: 'all'
-    });
+    // 1. Entrance drop-in (safe fromTo)
+    gsap.fromTo(navWrapper, 
+      { y: -20, opacity: 0 }, 
+      { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out', clearProps: 'all' }
+    );
 
     // 2. 3D Tilt on mouse move
     const handleMouseMove = (e) => {
@@ -423,11 +419,9 @@ export function Header() {
           <nav className="navbar" id="navbar" ref={navbarRef}>
             {/* Left: Brand / Monogram */}
             <Link to="/" className="nav-left" onClick={() => playTick()}>
-              {isAdmin && (
-                <div className="nav-logo-box">
-                  {p.monogram || 'AP'}
-                </div>
-              )}
+              <div className="nav-logo-box">
+                {p.monogram || 'AP'}
+              </div>
               <div className="nav-logo-text">
                 {p.displayName || p.name || 'Ayush Prajapati'}
               </div>
@@ -675,7 +669,7 @@ export function Header() {
 
               {/* Developer CLI Terminal Trigger (Retro Cyberpunk >_ Terminal) */}
               {!isAdmin && (
-                <div className="magnetic">
+                <div className="magnetic hidden lg:inline-block">
                   <button
                     type="button"
                     className="btn-outline font-mono"
@@ -694,7 +688,7 @@ export function Header() {
 
               {/* Resume Button (Only visible on Public pages per reference) */}
               {!isAdmin && (
-                <div className="magnetic">
+                <div className="magnetic hidden md:inline-block">
                   <button
                     type="button"
                     className="btn-outline"

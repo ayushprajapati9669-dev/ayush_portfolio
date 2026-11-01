@@ -417,3 +417,13 @@
   font-size: 10px !important;
   color: #555555 !important;
 }
+
+/* =========================================================================
+   Guaranteed Certificates Visibility
+   ========================================================================= */
+.certificates-page .cert-card,
+.certificates-page .cert-grid,
+.cert-card {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
