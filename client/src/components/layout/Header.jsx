@@ -534,8 +534,9 @@ export function Header() {
                     </div>
                   </div>
                 </div>
-              )}                {/* Theme & Accent Controls (Available across ALL pages: Public & Admin) */}
-              <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
+              )}                {/* Theme & Accent Controls (Only on Admin) */}
+              {isAdmin && (
+                <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
                 {/* Theme Selector Dropdown (10 Curated Dark Themes - No Light) */}
                 <select
                   className="theme-selector"
@@ -579,8 +580,7 @@ export function Header() {
                 </div>
 
                 {/* Admin Quick Settings & Tools Dropdown */}
-                {isAdmin && (
-                  <div className="relative" ref={toolsMenuRef}>
+                <div className="relative" ref={toolsMenuRef}>
                     <button
                       type="button"
                       className={`btn-icon ${toolsMenuOpen ? 'active' : ''}`}
@@ -647,8 +647,8 @@ export function Header() {
                       </div>
                     )}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Command Palette Trigger (Search ⌘K) (Positioned with safe right padding) */}
               {isAdmin && (

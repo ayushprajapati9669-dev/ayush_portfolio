@@ -1,22 +1,26 @@
 /* ==========================================================================
-   Modern Editorial Hero & Horizontal Showcase System
-   - Clean Inter Typography (Bold, Modern, Realistic SaaS aesthetic)
-   - Brand Cyan Accents (#06b6d4) with #050505 Pitch Dark Atmosphere
-   - Compact Horizontal Scroll Carousels for Projects & Certificates
+   Obsidian Dark Editorial Hero (Sarthak Sharma 1:1 Architectural Design System)
+   - Instrument Serif Giant Headline (Upright First Name, Italic Last Name)
+   - Pure Pitch Black #030303 Void with Subtle 4-Column Architectural Grid
+   - High-Contrast Monochrome Portrait with Warm Amber Rim Light (#ff8c59)
+   - Pill Link & Underline Interactive CTAs
    ========================================================================== */
 
 /* --- HERO STAGE --- */
 .hero-editorial-stage {
   position: relative;
-  min-height: 94vh;
+  height: 100vh;
+  min-height: 680px;
+  max-height: 980px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 85px 24px 20px;
-  max-width: 1360px;
+  padding: 80px clamp(24px, 5vw, 64px) 16px;
+  max-width: 1400px;
   margin: 0 auto;
-  overflow: visible;
+  overflow: hidden;
   box-sizing: border-box;
+  background: #030303;
 }
 
 @media (max-width: 768px) {
@@ -30,23 +34,19 @@
 /* Background vertical architectural guidelines */
 .hero-editorial-guides {
   position: absolute;
-  inset: 0;
+  inset: 104px clamp(24px, 5vw, 64px) 0;
   pointer-events: none;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-left: 1px solid rgba(34, 34, 37, 0.45);
-  border-right: 1px solid rgba(34, 34, 37, 0.45);
+  background: linear-gradient(90deg, rgba(204, 220, 245, 0.12) 1px, transparent 1px);
+  background-size: 25% 100%;
+  opacity: 0.22;
+  -webkit-mask-image: linear-gradient(#000, transparent 92%);
+  mask-image: linear-gradient(#000, transparent 92%);
+  border: none;
   z-index: 0;
 }
 
 .hero-editorial-guides div {
-  border-right: 1px solid rgba(34, 34, 37, 0.45);
-}
-
-@media (max-width: 768px) {
-  .hero-editorial-guides {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  display: none;
 }
 
 /* Top Meta Row */
@@ -56,28 +56,30 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.4px;
   text-transform: uppercase;
-  color: var(--text-secondary, #94a3b8);
-  font-weight: 500;
+  color: #a0a0a0;
+  font-weight: 400;
 }
 
 .hero-meta-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .hero-meta-dot {
-  color: var(--brand-cyan, #06b6d4);
-  font-size: 0.8rem;
+  color: #ff8c59;
+  font-size: 0.55rem;
+  display: inline-block;
+  box-shadow: 0 0 10px rgba(255, 140, 89, 0.45);
 }
 
 .hero-meta-right {
-  color: var(--text-muted, #475569);
-  font-weight: 500;
+  color: #a0a0a0;
+  font-weight: 400;
 }
 
 @media (max-width: 640px) {
@@ -85,7 +87,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-    font-size: 0.7rem;
+    font-size: 8px;
   }
 }
 
@@ -106,35 +108,40 @@
 .hero-presence-strip {
   position: absolute;
   left: 0;
-  top: 42%;
+  top: 38%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  color: var(--text-muted, #475569);
+  gap: 65px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.4px;
+  line-height: 1.8;
+  color: #a39b93;
   text-transform: uppercase;
   z-index: 3;
 }
 
 .presence-num {
-  color: var(--brand-cyan, #06b6d4);
-  font-weight: 600;
+  color: #ff8c59;
+  font-weight: 500;
+  position: relative;
 }
 
 .presence-plus {
-  font-size: 0.85rem;
-  color: var(--text-secondary, #94a3b8);
-  margin: 2px 0;
+  position: absolute;
+  top: 32px;
+  left: 0;
+  color: #ff8c59;
+  font-size: 20px;
+  line-height: 1;
 }
 
 .presence-word {
-  color: var(--text-secondary, #94a3b8);
-  line-height: 1.4;
-  font-weight: 500;
+  color: #a39b93;
+  line-height: 1.8;
+  font-weight: 400;
 }
 
 @media (max-width: 1024px) {
@@ -143,12 +150,12 @@
   }
 }
 
-/* Portrait Stage (Seamless vignette emerging from #050505 black) */
+/* Portrait Stage (Seamless vignette emerging from #030303 black) */
 .hero-portrait-stage {
   position: relative;
-  width: min(440px, 86vw);
-  height: min(430px, 45vh);
-  margin: 0 auto -20px;
+  width: min(480px, 80vw);
+  height: min(340px, 38vh);
+  margin: 0 auto -32px;
   border-radius: 0 !important;
   border: none !important;
   box-shadow: none !important;
@@ -159,156 +166,146 @@
   z-index: 1;
 }
 
-/* Ambient Backlight Glow */
+/* Ambient Backlight Glow - removed for crisp pure obsidian void */
 .hero-portrait-stage::before {
-  content: "";
-  position: absolute;
-  top: 18%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 440px;
-  height: 440px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.16) 0%, rgba(59, 130, 246, 0.04) 45%, transparent 72%);
-  filter: blur(52px);
-  pointer-events: none;
-  z-index: -1;
+  display: none !important;
 }
 
-/* Masked Portrait (Feather vignette dissolving into pitch black #050505) */
+/* Clean Editorial Portrait */
 .hero-portrait-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 24%;
+  object-fit: contain;
+  object-position: center top;
   border-radius: 0 !important;
   border: none !important;
   box-shadow: none !important;
-  filter: contrast(1.12) brightness(0.96) !important;
-  mask-image: radial-gradient(ellipse 48% 58% at 50% 38%, black 24%, rgba(0, 0, 0, 0.72) 40%, rgba(0, 0, 0, 0.2) 54%, transparent 68%),
-              linear-gradient(to bottom, transparent 6%, black 20%, black 74%, transparent 96%) !important;
-  -webkit-mask-image: radial-gradient(ellipse 48% 58% at 50% 38%, black 24%, rgba(0, 0, 0, 0.72) 40%, rgba(0, 0, 0, 0.2) 54%, transparent 68%),
-                      linear-gradient(to bottom, transparent 6%, black 20%, black 74%, transparent 96%) !important;
-  -webkit-mask-composite: destination-in;
-  mask-composite: intersect;
-  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, filter;
+  filter: none !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .hero-portrait-stage:hover .hero-portrait-img {
-  filter: contrast(1.16) brightness(1.02) !important;
   transform: scale(1.02);
 }
 
 /* Sub-eyebrow right above huge name */
 .hero-sub-eyebrow {
   position: relative;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 1.6px;
   text-transform: uppercase;
-  color: var(--brand-cyan, #06b6d4);
-  margin-top: 4px;
-  margin-bottom: 8px;
+  color: #bbbbbb;
+  margin-top: 0;
+  margin-bottom: 6px;
   z-index: 3;
 }
 
-/* Large Clean Modern Name Typography (Inter Sans-Serif) */
+/* Large Editorial Name Typography (Instrument Serif) */
 .hero-name-editorial {
   position: relative;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  font-size: clamp(3rem, 7.5vw, 5.4rem) !important;
-  font-weight: 700 !important;
-  line-height: 1.05 !important;
-  letter-spacing: -0.035em !important;
-  color: #f8fafc !important;
-  margin: 0 0 12px !important;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.85);
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-size: clamp(56px, 7.5vw, 120px) !important;
+  font-weight: 400 !important;
+  line-height: 1.01 !important;
+  letter-spacing: -0.06em !important;
+  color: #f1eee8 !important;
+  margin: -6px 0 12px !important;
+  text-shadow: 0 4px 45px rgba(0, 0, 0, 0.95);
   z-index: 3;
 }
 
 .hero-name-editorial .name-first {
   font-style: normal;
-  color: #f8fafc;
-  font-weight: 700;
+  color: #f1eee8;
+  font-weight: 400;
 }
 
 .hero-name-editorial .name-last {
-  font-style: normal;
-  font-weight: 700;
-  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(110deg, #f1f1f1, silver);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-left: 0.15em;
+  margin-left: 0.12em;
 }
 
 /* Subtitle Narrative */
 .hero-narrative-editorial {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: clamp(0.92rem, 1.3vw, 1.08rem);
-  line-height: 1.6;
-  color: var(--text-secondary, #94a3b8);
-  max-width: 580px;
-  margin: 0 auto 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #aaa9a4;
+  max-width: 500px;
+  margin: 0 auto 16px;
   z-index: 2;
 }
 
-/* Actions CTA */
+/* Actions CTA (Sarthak Sharma Pill + Text Link) */
 .hero-actions-editorial {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 24px;
   flex-wrap: nowrap;
   z-index: 2;
+  margin-bottom: 8px;
 }
 
 .hero-btn-work {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 26px;
-  border-radius: var(--radius-md, 12px);
-  background: var(--brand-cyan, #06b6d4);
-  border: none;
-  color: #000;
+  gap: 14px;
+  padding: 12px 22px;
+  border-radius: 9999px;
+  background: rgba(19, 19, 19, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #f1eee8;
   font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25);
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.3);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .hero-btn-work:hover {
-  background: var(--brand-cyan-hover, #0891b2);
+  background: #ff8c59;
+  border-color: #ff8c59;
+  color: #0c0c0c;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
 }
 
 .hero-btn-talk {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: var(--text-primary, #f8fafc);
+  gap: 8px;
+  color: #aaa9a4;
   font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 12px 22px;
-  border-radius: var(--radius-md, 12px);
-  background: var(--bg-surface, #0f0f11);
-  border: 1px solid var(--border-subtle, #222225);
-  transition: all 0.25s ease;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 6px 0;
+  border: none;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0;
+  transition: all 0.2s ease;
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .hero-btn-talk:hover {
-  background: var(--bg-surface-elevated, #17171a);
-  border-color: var(--border-focus, #3f3f46);
-  transform: translateY(-1px);
+  color: #ff8c59;
+  border-color: #ff8c59;
+  gap: 14px;
 }
 
 /* Bottom Footer Row */
@@ -318,29 +315,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--text-muted, #475569);
-  padding-top: 20px;
-  border-top: 1px solid var(--border-subtle, #222225);
-  font-weight: 500;
+  color: #999999;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-weight: 400;
 }
 
 .hero-footer-left {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-@media (max-width: 640px) {
-  .hero-bottom-footer {
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-    text-align: center;
-  }
+  gap: 8px;
 }
 
 /* --- HORIZONTAL SHOWCASE CAROUSEL (Projects & Certificates) --- */

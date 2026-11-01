@@ -311,23 +311,28 @@ export function HomePage() {
           },
           '-=0.4'
         )
-        .from(
+        .fromTo(
           '.hero-actions-editorial > *',
+          { y: 15, opacity: 0 },
           {
-            y: 15,
-            opacity: 0,
+            y: 0,
+            opacity: 1,
             stagger: 0.1,
             duration: 0.6,
-            ease: 'back.out(1.2)'
+            ease: 'power2.out',
+            clearProps: 'all'
           },
           '-=0.3'
         )
-        .from(
+        .fromTo(
           '.hero-bottom-footer',
+          { y: 20, opacity: 0 },
           {
-            y: 20,
-            opacity: 0,
-            duration: 0.6
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+            clearProps: 'all'
           },
           '-=0.3'
         );
