@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificatesPage } from '../Certificates/Certificates';
+import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { itemListSchema, projectSchema } from '../../utils/seo';
@@ -271,11 +272,31 @@ export function ProjectsPage({ viewMode = 'projects' }) {
       )}
       {/* Page Header */}
       <div className="page-header">
-        <div className="page-tagline">02 · Featured Work</div>
-        <h1 className="page-title">Live Deployed Projects</h1>
-        <p className="page-desc">
+        <ScrollWriteText
+          as="div"
+          className="page-tagline"
+          mode="typewriter"
+          typewriterSpeed={24}
+        >
+          02 · Featured Work
+        </ScrollWriteText>
+        <ScrollWriteText
+          as="h1"
+          className="page-title"
+          mode="words"
+          stagger={0.05}
+          highlightWords={['Live', 'Projects']}
+        >
+          Live Deployed Projects
+        </ScrollWriteText>
+        <ScrollWriteText
+          as="p"
+          className="page-desc"
+          mode="words"
+          stagger={0.02}
+        >
           A collection of full-stack web applications, interactive dashboards, and AI-powered tools I've designed, built, and deployed.
-        </p>
+        </ScrollWriteText>
       </div>
 
       {/* Toolbar & Filters */}

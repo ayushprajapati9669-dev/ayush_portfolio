@@ -1,9 +1,11 @@
 /* ==========================================================================
-   VSLFlow Luxury Black-Gold Atmospheric Effects
+   VSLFlow Luxury Black-Gold Atmospheric Effects & Animation Architecture
    - Pure absolute black #000000 canvas
-   - Subtle gold aurora blobs
-   - Architectural hairline grid guides
-   - Subtle film grain overlay
+   - Living breathing gold aurora ambient nebulae
+   - Cosmic starlight twinkle system
+   - Dual-stage precision cursor spotlight
+   - Scroll-triggered dynamic ink writing reveal architecture
+   - Architectural hairline grid guides & film grain
    ========================================================================== */
 
 /* 1. Complete Removal of 3D Spheres & Droplets */
@@ -57,52 +59,149 @@
   mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
 }
 
-/* 4. Gold Aurora Ambient Blobs */
+/* 4. Living Gold Aurora Ambient Blobs with Organic Breathing Drift */
+@keyframes auroraDrift1 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate3d(5vw, -4vh, 0) scale(1.15);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.65;
+  }
+}
+
+@keyframes auroraDrift2 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(-5vw, 6vh, 0) scale(1.12);
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.45;
+  }
+}
+
+@keyframes auroraDrift3 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.95);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate3d(3vw, 4vh, 0) scale(1.2);
+    opacity: 0.48;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.95);
+    opacity: 0.25;
+  }
+}
+
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(160px);
+  filter: blur(140px);
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .aurora-1 {
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 65%);
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.02) 40%, transparent 70%);
   bottom: -15%;
   left: -10%;
-  opacity: 0.7;
+  animation: auroraDrift1 22s ease-in-out infinite;
 }
 
 .aurora-2 {
-  width: 45vw;
-  height: 45vw;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.04) 0%, transparent 65%);
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, rgba(245, 158, 11, 0.02) 45%, transparent 70%);
   top: -10%;
   right: -10%;
-  opacity: 0.5;
+  animation: auroraDrift2 26s ease-in-out infinite;
 }
 
 .aurora-3 {
-  display: none !important;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(255, 230, 160, 0.035) 0%, rgba(212, 175, 55, 0.012) 50%, transparent 75%);
+  top: 30%;
+  left: 20%;
+  animation: auroraDrift3 30s ease-in-out infinite;
 }
 
-/* 5. Minimal Gold-Tinted Cursor Spotlight */
+/* 5. Dual-Stage Luxury Mouse Spotlight */
 .mouse-light {
   position: fixed;
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.02) 0%, transparent 60%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle 140px at center, rgba(212, 175, 55, 0.055) 0%, rgba(212, 175, 55, 0.02) 40%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 2;
   top: 0;
   left: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 0 140px rgba(212, 175, 55, 0.025);
 }
 
-/* Noise overlay */
+/* 6. Cosmic Starlight Twinkle System */
+@keyframes starTwinkle1 {
+  0%, 100% { opacity: 0.2; transform: scale(0.85); }
+  50% { opacity: 0.95; transform: scale(1.3); }
+}
+
+@keyframes starTwinkle2 {
+  0%, 100% { opacity: 0.85; transform: scale(1.2); }
+  50% { opacity: 0.15; transform: scale(0.7); }
+}
+
+@keyframes starTwinkle3 {
+  0%, 100% { opacity: 0.35; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+.cosmic-starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cosmic-star {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  pointer-events: none;
+}
+
+.cosmic-star-gold {
+  background: #f5d77f;
+  box-shadow: 0 0 6px rgba(245, 215, 127, 0.8);
+}
+
+.cosmic-star-diamond {
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+}
+
+.twinkle-1 { animation: starTwinkle1 4s ease-in-out infinite; }
+.twinkle-2 { animation: starTwinkle2 6s ease-in-out infinite; }
+.twinkle-3 { animation: starTwinkle3 5s ease-in-out infinite; }
+
+/* 7. Noise Overlay */
 .bg-noise {
   position: fixed;
   inset: 0;
@@ -112,15 +211,86 @@
   opacity: 0.4;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .liquid-bg::before,
-  .aurora-blob {
-    animation: none !important;
-  }
+/* ==========================================================================
+   Scroll-Triggered Dynamic Writing / Ink Reveal Text Architecture
+   ========================================================================== */
+.scroll-write-container {
+  display: inline;
+  vertical-align: baseline;
+}
+
+.scroll-write-inner {
+  display: inline;
+}
+
+.scroll-write-token {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px) translateZ(0);
+  filter: blur(4px);
+  transition: opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.52s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
+}
+
+.scroll-write-container.is-revealed .scroll-write-token {
+  opacity: 1;
+  transform: translateY(0) translateZ(0);
+  filter: blur(0);
+}
+
+.scroll-write-token.token-highlight {
+  color: #f5d77f;
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.scroll-write-token.token-italic {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  color: #f5d77f;
+  text-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+}
+
+/* Typewriter Caret Cursor */
+.scroll-typewriter-cursor {
+  display: inline-block;
+  color: #d4af37;
+  font-weight: 300;
+  margin-left: 2px;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink-fast {
+  animation: cursorBlink 0.7s steps(2, start) infinite;
+}
+
+.cursor-blink-slow {
+  animation: cursorBlink 1.2s steps(2, start) infinite;
+}
+
+/* Top Hairline Scroll Progress Bar */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #d4af37, #f59e0b, #ffe599);
+  z-index: 99999;
+  transform-origin: 0% 50%;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
 /* ==========================================================================
-   Luxury Micro-Interactions & Animation Architecture
+   Luxury Micro-Interactions & Animation Physics
    ========================================================================== */
 
 /* 1. Gold Ambient Breathing Aura */
@@ -237,4 +407,19 @@ button.btn-outline:hover {
   transform: translateY(-2px) scale(1.02) !important;
   border-color: rgba(212, 175, 55, 0.6) !important;
   box-shadow: 0 6px 24px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  .liquid-bg::before,
+  .aurora-blob,
+  .cosmic-star,
+  .scroll-write-token,
+  .scroll-typewriter-cursor {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
 }

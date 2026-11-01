@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
+import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { SEO } from '../../components/SEO';
 import { personSchema } from '../../utils/seo';
@@ -38,15 +39,31 @@ export function SkillsPage() {
       />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="skills-page-header text-center max-w-3xl mx-auto mb-10 space-y-3">
-          <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cyanglow">
+          <ScrollWriteText
+            as="p"
+            className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cyanglow"
+            mode="typewriter"
+            typewriterSpeed={24}
+          >
             {ui.homeSkillsEyebrow || '03 · Technical Capabilities'}
-          </p>
-          <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 400, fontSize: 'clamp(2.5rem, 5vw, 4rem)', letterSpacing: '-0.025em', color: '#ffffff' }}>
-            Skills & <span style={{ color: "#d4af37", fontStyle: "italic", fontWeight: 300 }}>Tech Stack</span>
-          </h1>
-          <p className="text-sm sm:text-base text-stonewarm leading-relaxed">
+          </ScrollWriteText>
+          <ScrollWriteText
+            as="h1"
+            className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal"
+            mode="words"
+            stagger={0.05}
+            highlightWords={['Skills', 'Tech', 'Stack']}
+          >
+            Skills & *Tech Stack*
+          </ScrollWriteText>
+          <ScrollWriteText
+            as="p"
+            className="text-sm sm:text-base text-stonewarm leading-relaxed"
+            mode="words"
+            stagger={0.02}
+          >
             Full-stack proficiency across languages, modern frontend systems, backend APIs, distributed databases, and engineering developer tools.
-          </p>
+          </ScrollWriteText>
         </div>
 
         <InteractiveSkillsWidget isStandalonePage={true} />

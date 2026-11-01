@@ -8,6 +8,7 @@ import { personSchema } from '../../utils/seo';
 import { MilestoneSpotlightSlider } from '../../components/ui/MilestoneSpotlightSlider';
 import { TechLogo } from '../../components/common/TechLogos';
 import { LeetCodeMetricsBadge } from '../../components/ui/LeetCodeMetricsBadge';
+import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 
 export function AboutPage() {
   const { appState } = usePortfolio();
@@ -181,10 +182,23 @@ export function AboutPage() {
       />
       {/* Header */}
       <div className="page-header">
-        <div className="page-tagline">
+        <ScrollWriteText
+          as="div"
+          className="page-tagline"
+          mode="typewriter"
+          typewriterSpeed={24}
+        >
           {p.aboutEyebrow || p.eyebrow || 'Computer Science Student · Developer · Builder'}
-        </div>
-        <h1 className="page-title">{p.name || 'Ayush Prajapati'}</h1>
+        </ScrollWriteText>
+        <ScrollWriteText
+          as="h1"
+          className="page-title"
+          mode="words"
+          stagger={0.05}
+          highlightWords={['Prajapati']}
+        >
+          {p.name || 'Ayush Prajapati'}
+        </ScrollWriteText>
         <div className="page-contact-info">
           <a
             href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}
@@ -238,7 +252,9 @@ export function AboutPage() {
             <span className="realistic-icon">
               <i className="fa-solid fa-user-astronaut" />
             </span>{' '}
-            About & Academic Profile
+            <ScrollWriteText as="span" mode="words" stagger={0.04}>
+              About & Academic Profile
+            </ScrollWriteText>
           </h3>
 
           {p.aboutBio && Array.isArray(p.aboutBio) && p.aboutBio.length > 0 ? (
@@ -364,7 +380,9 @@ export function AboutPage() {
             <span className="realistic-icon">
               <i className="fa-solid fa-graduation-cap" />
             </span>{' '}
-            Education Qualifications
+            <ScrollWriteText as="span" mode="words" stagger={0.04}>
+              Education Qualifications
+            </ScrollWriteText>
           </h3>
 
           <div className="edu-grid">
@@ -406,7 +424,9 @@ export function AboutPage() {
             <span className="realistic-icon">
               <i className="fa-solid fa-trophy" />
             </span>{' '}
-            Achievements & Journey
+            <ScrollWriteText as="span" mode="words" stagger={0.04}>
+              Achievements & Journey
+            </ScrollWriteText>
           </h3>
 
           <div className="timeline-list">

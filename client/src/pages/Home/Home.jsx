@@ -12,6 +12,7 @@ import { TiltCard } from '../../components/ui/TiltCard';
 import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificateCard } from '../../components/projects/CertificateCard';
 import { TechLogo } from '../../components/common/TechLogos';
+import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { personSchema, websiteSchema } from '../../utils/seo';
@@ -556,9 +557,16 @@ export function HomePage() {
           </h1>
 
           {/* Narrative / Tagline */}
-          <p className="hero-narrative-editorial">
+          <ScrollWriteText
+            as="p"
+            className="hero-narrative-editorial"
+            mode="words"
+            stagger={0.03}
+            delay={0.35}
+            highlightWords={['scalable', 'full-stack', 'algorithmic', 'intelligent']}
+          >
             {p.heroDescription || 'I build scalable full-stack products, solve algorithmic challenges, and engineer intelligent web applications.'}
-          </p>
+          </ScrollWriteText>
 
           {/* Interactive CTAs with Framer Motion Spring Magnetic Physics */}
           <div className="hero-actions-editorial">
@@ -605,16 +613,31 @@ export function HomePage() {
         <section className="bento-section space-y-10 border-t hairline-border pt-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="bento-header lg:col-span-6 space-y-4">
-              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
+              <ScrollWriteText
+                as="p"
+                className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion"
+                mode="typewriter"
+                typewriterSpeed={24}
+              >
                 {ui.homeIntroEyebrow || '01 · THE PERSON BEHIND THE WORK'}
-              </p>
-              <h2 className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal">
-                Technology is the starting point.{' '}
-                <span className="font-editorial-italic italic">People are the point.</span>
-              </h2>
-              <p className="text-stonewarm text-sm sm:text-base leading-relaxed">
+              </ScrollWriteText>
+              <ScrollWriteText
+                as="h2"
+                className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal"
+                mode="words"
+                stagger={0.035}
+                highlightWords={['Technology', 'People']}
+              >
+                Technology is the starting point. *People are the point.*
+              </ScrollWriteText>
+              <ScrollWriteText
+                as="p"
+                className="text-stonewarm text-sm sm:text-base leading-relaxed"
+                mode="words"
+                stagger={0.02}
+              >
                 Engineering intelligent web applications, scalable cloud backends, and responsive interactive products with clean craft.
-              </p>
+              </ScrollWriteText>
             </div>
 
             {/* Interactive 3D Three.js GLSL Undulating Wave Mesh */}
@@ -679,12 +702,23 @@ export function HomePage() {
         <section id="featured-projects" className="projects-home-section horizontal-showcase-section border-t hairline-border pt-16">
           <div className="showcase-header">
             <div>
-              <p className="showcase-eyebrow">
+              <ScrollWriteText
+                as="p"
+                className="showcase-eyebrow"
+                mode="typewriter"
+                typewriterSpeed={24}
+              >
                 {ui.homeProjectsEyebrow || '02 · LIVE DEPLOYED PROJECTS'}
-              </p>
-              <h2 className="showcase-title">
+              </ScrollWriteText>
+              <ScrollWriteText
+                as="h2"
+                className="showcase-title"
+                mode="words"
+                stagger={0.035}
+                highlightWords={['Full-Stack', 'Applications']}
+              >
                 {ui.homeProjectsHeading || 'Featured Full-Stack Applications'}
-              </h2>
+              </ScrollWriteText>
             </div>
 
             <div className="showcase-controls">
@@ -764,12 +798,23 @@ export function HomePage() {
         <section className="certs-home-section horizontal-showcase-section border-t hairline-border pt-16">
           <div className="showcase-header">
             <div>
-              <p className="showcase-eyebrow">
+              <ScrollWriteText
+                as="p"
+                className="showcase-eyebrow"
+                mode="typewriter"
+                typewriterSpeed={24}
+              >
                 {ui.homeCertsEyebrow || '03 · VERIFIED CREDENTIALS'}
-              </p>
-              <h2 className="showcase-title">
+              </ScrollWriteText>
+              <ScrollWriteText
+                as="h2"
+                className="showcase-title"
+                mode="words"
+                stagger={0.035}
+                highlightWords={['Certifications', 'Achievements']}
+              >
                 {ui.homeCertsHeading || 'Certifications & Achievements'}
-              </h2>
+              </ScrollWriteText>
             </div>
 
             <div className="showcase-controls">
@@ -848,15 +893,31 @@ export function HomePage() {
             ========================================================================= */}
         <section className="home-cta-banner rounded-3xl border border-white/10 bg-gradient-to-r from-charcoal via-graphite to-charcoal p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl">
           <div className="space-y-3 max-w-2xl">
-            <p className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion">
+            <ScrollWriteText
+              as="p"
+              className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion"
+              mode="typewriter"
+              typewriterSpeed={24}
+            >
               {ui.homeBannerEyebrow || 'GET IN TOUCH'}
-            </p>
-            <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-alabaster leading-tight">
+            </ScrollWriteText>
+            <ScrollWriteText
+              as="h2"
+              className="font-display text-2xl sm:text-4xl font-extrabold text-alabaster leading-tight"
+              mode="words"
+              stagger={0.035}
+              highlightWords={['extraordinary', 'together']}
+            >
               {ui.homeBannerHeading || "Let's build something extraordinary together."}
-            </h2>
-            <p className="text-sm sm:text-base text-stonewarm">
+            </ScrollWriteText>
+            <ScrollWriteText
+              as="p"
+              className="text-sm sm:text-base text-stonewarm"
+              mode="words"
+              stagger={0.02}
+            >
               {ui.homeBannerSubtext || "Available for software engineering roles, full-stack development, and ambitious client projects."}
-            </p>
+            </ScrollWriteText>
           </div>
           <div className="flex flex-wrap gap-3.5 shrink-0">
             <button

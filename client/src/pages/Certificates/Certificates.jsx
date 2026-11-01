@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { CertificateCard } from '../../components/projects/CertificateCard';
+import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { itemListSchema } from '../../utils/seo';
@@ -271,15 +272,31 @@ export function CertificatesPage() {
       />
       {/* Page Header */}
       <div className="page-header">
-        <div className="page-tagline">
+        <ScrollWriteText
+          as="div"
+          className="page-tagline"
+          mode="typewriter"
+          typewriterSpeed={24}
+        >
           {ui.homeCertsEyebrow || '04 · Verified Credentials'}
-        </div>
-        <h1 className="page-title">
+        </ScrollWriteText>
+        <ScrollWriteText
+          as="h1"
+          className="page-title"
+          mode="words"
+          stagger={0.05}
+          highlightWords={['Certifications', 'Achievements']}
+        >
           {ui.homeCertsHeading || 'Certifications & Achievements'}
-        </h1>
-        <p className="page-desc">
+        </ScrollWriteText>
+        <ScrollWriteText
+          as="p"
+          className="page-desc"
+          mode="words"
+          stagger={0.02}
+        >
           Click on any certificate card or "View Certificate" to inspect the full-resolution credential in the interactive viewer.
-        </p>
+        </ScrollWriteText>
       </div>
 
       {/* Dynamic Masonry Grid */}
