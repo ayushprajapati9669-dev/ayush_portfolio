@@ -56,10 +56,10 @@
   align-items: center;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
-  letter-spacing: 1.6px;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
-  color: #666666;
-  font-weight: 400;
+  color: #92929e;
+  font-weight: 500;
 }
 
 .hero-meta-left {
@@ -69,15 +69,15 @@
 }
 
 .hero-meta-dot {
-  color: #d4af37;
+  color: #dfb740;
   font-size: 0.5rem;
   display: inline-block;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 10px rgba(223, 183, 64, 0.6);
 }
 
 .hero-meta-right {
-  color: #555555;
-  font-weight: 400;
+  color: #848492;
+  font-weight: 500;
 }
 
 @media (max-width: 640px) {
@@ -113,17 +113,17 @@
   align-items: flex-start;
   gap: 60px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 1.4px;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
   line-height: 1.8;
-  color: #555555;
+  color: #848492;
   text-transform: uppercase;
   z-index: 3;
 }
 
 .presence-num {
-  color: #d4af37;
-  font-weight: 500;
+  color: #dfb740;
+  font-weight: 600;
   position: relative;
 }
 
@@ -131,15 +131,15 @@
   position: absolute;
   top: 32px;
   left: 0;
-  color: #d4af37;
+  color: #dfb740;
   font-size: 18px;
   line-height: 1;
 }
 
 .presence-word {
-  color: #444444;
+  color: #727282;
   line-height: 1.8;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 @media (max-width: 1024px) {
@@ -279,10 +279,10 @@
   position: relative;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
-  font-weight: 400;
-  letter-spacing: 2px;
+  font-weight: 500;
+  letter-spacing: 2.6px;
   text-transform: uppercase;
-  color: #555555;
+  color: #a4a4b2;
   margin-bottom: 10px;
   z-index: 2;
 }
@@ -321,25 +321,25 @@
 }
 
 .name-dot {
-  color: #d4af37 !important;
+  color: #dfb740 !important;
   font-weight: 700 !important;
   font-size: 0.6em;
   display: inline-block;
   vertical-align: middle;
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+  text-shadow: 0 0 20px rgba(223, 183, 64, 0.7);
 }
 
 /* Narrative / tagline */
 .hero-narrative-editorial {
   font-family: 'Jost', sans-serif !important;
-  font-size: clamp(13px, 1.6vw, 16px) !important;
-  font-weight: 300 !important;
-  color: #888888 !important;
-  max-width: 500px !important;
+  font-size: clamp(14px, 1.6vw, 17px) !important;
+  font-weight: 350 !important;
+  color: #b8b8c6 !important;
+  max-width: 520px !important;
   text-align: center !important;
-  line-height: 1.7 !important;
+  line-height: 1.8 !important;
   margin: 24px auto 0 !important;
-  letter-spacing: 0.01em !important;
+  letter-spacing: 0.015em !important;
   position: relative;
   z-index: 2;
 }
@@ -364,25 +364,26 @@
   align-items: center !important;
   gap: 10px !important;
   padding: 13px 28px !important;
-  background: #ffffff !important;
+  background: #dfb740 !important;
   color: #000000 !important;
   font-family: 'Jost', sans-serif !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   font-size: 14px !important;
-  letter-spacing: 0.02em !important;
+  letter-spacing: 0.03em !important;
   border-radius: 9999px !important;
-  border: none !important;
+  border: 1px solid #dfb740 !important;
   cursor: pointer !important;
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: none !important;
+  box-shadow: 0 4px 20px rgba(223, 183, 64, 0.35) !important;
   text-decoration: none !important;
 }
 
 .hero-btn-work:hover {
-  background: #d4af37 !important;
+  background: #f5d466 !important;
+  border-color: #f5d466 !important;
   color: #000000 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 30px rgba(223, 183, 64, 0.55) !important;
 }
 
 /* Secondary CTA — Ghost/Underline */
@@ -391,24 +392,25 @@
   align-items: center !important;
   gap: 10px !important;
   padding: 13px 24px !important;
-  background: transparent !important;
-  color: #888888 !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: #d1d1dc !important;
   font-family: 'Jost', sans-serif !important;
-  font-weight: 400 !important;
+  font-weight: 500 !important;
   font-size: 14px !important;
   letter-spacing: 0.02em !important;
   border-radius: 9999px !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   cursor: pointer !important;
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
 }
 
 .hero-btn-talk:hover {
-  border-color: rgba(212, 175, 55, 0.4) !important;
-  color: #d4af37 !important;
-  background: rgba(212, 175, 55, 0.05) !important;
-  transform: translateY(-2px) !important;
+  border-color: rgba(223, 183, 64, 0.55) !important;
+  color: #dfb740 !important;
+  background: rgba(223, 183, 64, 0.08) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(223, 183, 64, 0.15) !important;
 }
 
 /* Bottom Hero Footer Strip */
@@ -419,10 +421,11 @@
   justify-content: space-between;
   align-items: center;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 8.5px;
-  letter-spacing: 1.4px;
+  font-size: 11px;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
-  color: #444444;
+  color: #888896;
+  font-weight: 500;
 }
 
 .hero-footer-left {

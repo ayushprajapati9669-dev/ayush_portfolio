@@ -641,18 +641,23 @@ export function HomePage() {
             </div>
 
             {/* Interactive 3D Three.js GLSL Undulating Wave Mesh */}
-            <div className="lg:col-span-6 h-[320px] sm:h-[380px] rounded-3xl border hairline-border bg-[#070709]/80 backdrop-blur-md p-4 relative overflow-hidden flex flex-col justify-between group shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]">
-              <div className="flex items-center justify-between text-[11px] font-mono text-stone-500 uppercase tracking-widest z-10 px-2 pt-1 pointer-events-none">
-                <span>01 / 03 · WAVE DISPLACEMENT</span>
-                <span className="text-emerald-400/80 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="lg:col-span-6 h-[340px] sm:h-[400px] rounded-3xl border border-white/10 hover:border-gold/50 bg-gradient-to-b from-[#13131c]/90 via-[#0a0a0f]/95 to-[#060608] backdrop-blur-xl p-5 relative overflow-hidden flex flex-col justify-between group shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] transition-all duration-500">
+              {/* Warm gold ambient spotlight behind 3D terrain */}
+              <div
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_65%,rgba(223,183,64,0.18),transparent_72%)]"
+                aria-hidden="true"
+              />
+              <div className="flex items-center justify-between text-[11px] font-mono text-stone-300 uppercase tracking-widest z-10 px-2 pt-1 pointer-events-none">
+                <span className="text-amber-300/90 font-medium">01 / 03 · WAVE DISPLACEMENT</span>
+                <span className="text-emerald-400 flex items-center gap-1.5 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
                   GLSL LIVE
                 </span>
               </div>
               <InteractiveMeshWave className="absolute inset-0" />
-              <div className="flex items-center justify-between text-[10px] font-mono text-stone-500 uppercase tracking-wider z-10 px-2 pb-1 pointer-events-none">
-                <span>THREE.JS SHADER</span>
-                <span>INTERACTIVE · HOVER TO RIPPLE</span>
+              <div className="flex items-center justify-between text-[10.5px] font-mono text-stone-400 uppercase tracking-wider z-10 px-2 pb-1 pointer-events-none">
+                <span className="text-stone-300">THREE.JS DUAL MESH</span>
+                <span className="text-amber-400/90 font-medium">INTERACTIVE · HOVER TO RIPPLE ↗</span>
               </div>
             </div>
           </div>

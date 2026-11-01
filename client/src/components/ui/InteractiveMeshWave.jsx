@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
-const vertexShader = `
+const waveVertexShader = `
   uniform float uTime;
   uniform vec2 uMouse;
   uniform float uMouseSpeed;
@@ -9,61 +9,83 @@ const vertexShader = `
   varying vec3 vPosition;
   varying float vElevation;
   varying float vDistToMouse;
+  varying vec2 vUv;
 
   void main() {
-    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-    
-    // Multi-frequency undulating wave
-    float wave1 = sin(modelPosition.x * 0.16 + uTime * 0.85) * cos(modelPosition.z * 0.14 + uTime * 0.7) * 1.6;
-    float wave2 = sin(modelPosition.x * 0.32 - uTime * 1.1) * 0.5;
-    float wave3 = cos(modelPosition.z * 0.28 + uTime * 0.9) * 0.4;
-    
-    float elevation = wave1 + wave2 + wave3;
-    
-    // Interactive mouse displacement ripple
-    float dist = distance(modelPosition.xz, uMouse);
-    float mouseInfluence = smoothstep(14.0, 0.0, dist);
-    elevation += mouseInfluence * sin(dist * 1.8 - uTime * 3.5) * (1.2 + uMouseSpeed * 0.5);
+    vUv = uv;
+    vec3 pos = position;
 
-    modelPosition.y += elevation;
-    
+    // Harmonic multi-octave rolling terrain waves
+    float wave1 = sin(pos.x * 0.18 + uTime * 1.3) * cos(pos.y * 0.16 + uTime * 1.0) * 2.8;
+    float wave2 = sin(pos.x * 0.38 - uTime * 1.7 + pos.y * 0.22) * 1.2;
+    float wave3 = cos(length(pos.xy) * 0.26 - uTime * 2.0) * 0.85;
+    float wave4 = sin(pos.x * 0.72 + uTime * 2.4) * 0.35;
+    float elevation = wave1 + wave2 + wave3 + wave4;
+
+    // Fluid interactive mouse ripple displacement
+    float distToMouse = distance(pos.xy, uMouse);
+    float mouseInfluence = smoothstep(16.0, 0.0, distToMouse);
+    float ripple = sin(distToMouse * 2.0 - uTime * 4.2) * (1.6 + uMouseSpeed * 0.5);
+    elevation += mouseInfluence * ripple;
+
+    pos.z += elevation;
+
     vElevation = elevation;
-    vPosition = modelPosition.xyz;
-    vDistToMouse = dist;
+    vPosition = pos;
+    vDistToMouse = distToMouse;
 
-    vec4 viewPosition = viewMatrix * modelPosition;
-    gl_Position = projectionMatrix * viewPosition;
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
 
-    // Attenuated point size with dynamic hover scaling
-    gl_PointSize = (22.0 / -viewPosition.z) * (1.0 + mouseInfluence * 0.7);
+    // Dynamic point size scaling with depth and mouse proximity
+    float pSize = (32.0 / -mvPosition.z) * (1.0 + mouseInfluence * 0.8);
+    gl_PointSize = clamp(pSize, 2.0, 16.0);
   }
 `;
 
-const fragmentShader = `
-  uniform vec3 uColorLow;
-  uniform vec3 uColorMid;
-  uniform vec3 uColorHigh;
+const waveFragmentShader = `
+  uniform vec3 uColorAbyss;
+  uniform vec3 uColorGold;
+  uniform vec3 uColorCrest;
+  uniform float uIsPoints;
   
   varying vec3 vPosition;
   varying float vElevation;
   varying float vDistToMouse;
+  varying vec2 vUv;
 
   void main() {
-    // Soft anti-aliased circular particle dot
-    float dist = distance(gl_PointCoord, vec2(0.5));
-    if (dist > 0.5) discard;
-    float alpha = smoothstep(0.5, 0.12, dist);
+    float alpha = 1.0;
 
-    // Elevation gradient: deep stone -> warm amber -> alabaster cream
-    float normElevation = clamp((vElevation + 1.8) / 3.6, 0.0, 1.0);
-    vec3 color = mix(uColorLow, uColorMid, smoothstep(0.0, 0.5, normElevation));
-    color = mix(color, uColorHigh, smoothstep(0.5, 1.0, normElevation));
+    if (uIsPoints > 0.5) {
+      // Anti-aliased circular particle with glowing core
+      float dist = distance(gl_PointCoord, vec2(0.5));
+      if (dist > 0.5) discard;
+      alpha = smoothstep(0.5, 0.08, dist);
+    }
 
-    // Subtle highlight near cursor
-    float mouseGlow = smoothstep(10.0, 0.0, vDistToMouse) * 0.35;
-    color += vec3(mouseGlow * 0.9, mouseGlow * 0.55, mouseGlow * 0.3);
+    // Normalized elevation mapping: -3.5 to +4.5
+    float normElevation = clamp((vElevation + 3.2) / 6.8, 0.0, 1.0);
 
-    gl_FragColor = vec4(color, alpha * 0.72);
+    // Multi-stage luxury metallic gold color transition
+    vec3 color = mix(uColorAbyss, uColorGold, smoothstep(0.08, 0.55, normElevation));
+    color = mix(color, uColorCrest, smoothstep(0.55, 0.95, normElevation));
+
+    // Interactive radiant cursor aura
+    float mouseGlow = smoothstep(12.0, 0.0, vDistToMouse);
+    color += vec3(1.0, 0.88, 0.45) * mouseGlow * 0.65;
+
+    // Peak sparkle highlight
+    float crestSparkle = smoothstep(0.78, 1.0, normElevation) * 0.35;
+    color += vec3(crestSparkle);
+
+    // Distance vignette fade along edges
+    float edgeFade = smoothstep(0.0, 0.12, vUv.x) * smoothstep(1.0, 0.88, vUv.x) *
+                     smoothstep(0.0, 0.12, vUv.y) * smoothstep(1.0, 0.88, vUv.y);
+
+    float finalAlpha = (uIsPoints > 0.5 ? alpha * 0.92 : 0.45 + normElevation * 0.45) * edgeFade;
+
+    gl_FragColor = vec4(color, finalAlpha);
   }
 `;
 
@@ -75,22 +97,22 @@ export function InteractiveMeshWave({ className = '' }) {
     const container = mountRef.current;
     if (!container) return;
 
-    // Respect reduced motion
+    // Respect user motion preference
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // 1. Scene & Camera Setup
+    // 1. Scene & Cinematic Camera Setup
     const scene = new THREE.Scene();
     const width = container.clientWidth || 600;
     const height = container.clientHeight || 360;
 
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 14, 28);
+    const camera = new THREE.PerspectiveCamera(46, width / height, 0.1, 100);
+    camera.position.set(0, 9.5, 20.5);
     camera.lookAt(0, 0, 0);
 
-    // 2. WebGL Renderer
+    // 2. High-Performance WebGL Renderer
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true,
@@ -101,49 +123,57 @@ export function InteractiveMeshWave({ className = '' }) {
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
-    // 3. 3D Grid Geometry
-    const cols = 56;
-    const rows = 42;
-    const spacing = 0.65;
-    const count = cols * rows;
+    // 3. Dense 3D Plane Geometry
+    // 84 cols x 56 rows provides lush, silky liquid contours
+    const geometry = new THREE.PlaneGeometry(38, 25, 84, 56);
 
-    const positions = new Float32Array(count * 3);
-    let idx = 0;
-    const xOffset = ((cols - 1) * spacing) / 2;
-    const zOffset = ((rows - 1) * spacing) / 2;
+    // 4. Uniforms
+    const uniforms = {
+      uTime: { value: 0 },
+      uMouse: { value: new THREE.Vector2(-999, -999) },
+      uMouseSpeed: { value: 0 },
+      uColorAbyss: { value: new THREE.Color('#141006') },  // deep dark obsidian gold
+      uColorGold:  { value: new THREE.Color('#d4af37') },  // vibrant 24k metallic gold
+      uColorCrest: { value: new THREE.Color('#fff9e6') },  // luminous diamond white crest
+      uIsPoints:   { value: 0.0 }
+    };
 
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        positions[idx * 3] = c * spacing - xOffset;
-        positions[idx * 3 + 1] = 0;
-        positions[idx * 3 + 2] = r * spacing - zOffset;
-        idx++;
-      }
-    }
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    // 4. Custom GLSL Shader Material
-    const material = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
+    // Layer 1: Luminous Wireframe Terrain Mesh
+    const wireframeMaterial = new THREE.ShaderMaterial({
+      vertexShader: waveVertexShader,
+      fragmentShader: waveFragmentShader,
       transparent: true,
+      wireframe: true,
       depthWrite: false,
-      blending: THREE.NormalBlending,
+      blending: THREE.AdditiveBlending,
       uniforms: {
-        uTime: { value: 0 },
-        uMouse: { value: new THREE.Vector2(-999, -999) },
-        uMouseSpeed: { value: 0 },
-        uColorLow: { value: new THREE.Color('#383531') },      // dim stone
-        uColorMid: { value: new THREE.Color('#9a968f') },      // warm stone
-        uColorHigh: { value: new THREE.Color('#f4f1ec') }      // alabaster cream
+        ...uniforms,
+        uIsPoints: { value: 0.0 }
       }
     });
 
-    const points = new THREE.Points(geometry, material);
-    points.rotation.x = -Math.PI * 0.08;
-    scene.add(points);
+    const wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial);
+    wireframeMesh.rotation.x = -Math.PI * 0.44;
+    wireframeMesh.position.y = -1.2;
+    scene.add(wireframeMesh);
+
+    // Layer 2: Glowing Crest Star Particles on the exact same geometry vertices
+    const pointsMaterial = new THREE.ShaderMaterial({
+      vertexShader: waveVertexShader,
+      fragmentShader: waveFragmentShader,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      uniforms: {
+        ...uniforms,
+        uIsPoints: { value: 1.0 }
+      }
+    });
+
+    const pointsMesh = new THREE.Points(geometry, pointsMaterial);
+    pointsMesh.rotation.x = -Math.PI * 0.44;
+    pointsMesh.position.y = -1.2;
+    scene.add(pointsMesh);
 
     // 5. Mouse Interaction Tracking with Raycaster plane
     const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
@@ -162,19 +192,15 @@ export function InteractiveMeshWave({ className = '' }) {
       mouseNorm.x = (clientX / rect.width) * 2 - 1;
       mouseNorm.y = -(clientY / rect.height) * 2 + 1;
 
-      // Track speed
       const dx = clientX - prevMouseX;
       const dy = clientY - prevMouseY;
-      mouseSpeed = Math.min(Math.sqrt(dx * dx + dy * dy) * 0.05, 3.0);
+      mouseSpeed = Math.min(Math.sqrt(dx * dx + dy * dy) * 0.04, 3.5);
       prevMouseX = clientX;
       prevMouseY = clientY;
 
-      raycaster.setFromCamera(mouseNorm, camera);
-      const intersectionPoint = new THREE.Vector3();
-      if (raycaster.ray.intersectPlane(plane, intersectionPoint)) {
-        targetMousePos.x = intersectionPoint.x;
-        targetMousePos.y = intersectionPoint.z;
-      }
+      // Project onto the plane
+      targetMousePos.x = mouseNorm.x * 16.0;
+      targetMousePos.y = mouseNorm.y * 12.0;
     };
 
     const handlePointerLeave = () => {
@@ -219,19 +245,23 @@ export function InteractiveMeshWave({ className = '' }) {
 
       if (!inViewport) return;
 
-      const delta = clock.getDelta();
       const time = prefersReducedMotion ? 0 : clock.getElapsedTime();
 
-      material.uniforms.uTime.value = time;
+      wireframeMaterial.uniforms.uTime.value = time;
+      pointsMaterial.uniforms.uTime.value = time;
 
       // Smooth mouse interpolation
-      material.uniforms.uMouse.value.lerp(targetMousePos, 0.12);
-      mouseSpeed = THREE.MathUtils.lerp(mouseSpeed, 0, 0.08);
-      material.uniforms.uMouseSpeed.value = mouseSpeed;
+      wireframeMaterial.uniforms.uMouse.value.lerp(targetMousePos, 0.14);
+      pointsMaterial.uniforms.uMouse.value.lerp(targetMousePos, 0.14);
 
-      // Gentle auto-rotation drift
+      mouseSpeed = THREE.MathUtils.lerp(mouseSpeed, 0, 0.07);
+      wireframeMaterial.uniforms.uMouseSpeed.value = mouseSpeed;
+      pointsMaterial.uniforms.uMouseSpeed.value = mouseSpeed;
+
+      // Subtle dynamic camera drift
       if (!prefersReducedMotion) {
-        points.rotation.y = Math.sin(time * 0.15) * 0.05;
+        wireframeMesh.rotation.z = Math.sin(time * 0.2) * 0.035;
+        pointsMesh.rotation.z = Math.sin(time * 0.2) * 0.035;
       }
 
       renderer.render(scene, camera);
@@ -251,7 +281,8 @@ export function InteractiveMeshWave({ className = '' }) {
         container.removeChild(renderer.domElement);
       }
       geometry.dispose();
-      material.dispose();
+      wireframeMaterial.dispose();
+      pointsMaterial.dispose();
       renderer.dispose();
     };
   }, []);
@@ -264,4 +295,3 @@ export function InteractiveMeshWave({ className = '' }) {
     />
   );
 }
-

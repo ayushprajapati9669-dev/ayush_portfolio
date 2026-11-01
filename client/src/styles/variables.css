@@ -11,44 +11,44 @@
   /* Backgrounds */
   --bg-base: #000000;
   --bg-obsidian: #000000;
-  --bg-dark: #000000;
-  --bg-surface: #0a0a0a;
-  --bg-surface-elevated: #111111;
-  --bg-card: rgba(255, 255, 255, 0.02);
-  --bg-card-hover: rgba(255, 255, 255, 0.05);
-  --bg-elevated: #111111;
-  --bg-panel: #0a0a0a;
-  --bg-modal: #0d0d0d;
-  --card-bg: rgba(255, 255, 255, 0.02);
-  --bg-input: #0a0a0a;
+  --bg-dark: #020204;
+  --bg-surface: #0a0a0f;
+  --bg-surface-elevated: #111118;
+  --bg-card: rgba(18, 18, 24, 0.75);
+  --bg-card-hover: rgba(26, 26, 36, 0.88);
+  --bg-elevated: #111118;
+  --bg-panel: #0a0a0f;
+  --bg-modal: #0d0d14;
+  --card-bg: rgba(18, 18, 24, 0.75);
+  --bg-input: #0b0b10;
 
   /* Typography Colors */
   --text-primary: #ffffff;
-  --text-alabaster: #f5f5f5;
+  --text-alabaster: #fcfcfd;
   --text-main: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-muted: #666666;
-  --text-stone: #888888;
-  --text-stonewarm: #999999;
-  --text-dim: #555555;
+  --text-secondary: #b0b0ba;
+  --text-muted: #787884;
+  --text-stone: #94949e;
+  --text-stonewarm: #b0b0ba;
+  --text-dim: #6c6c78;
   --text-inverse: #000000;
 
   /* Gold Accent System */
-  --gold: #d4af37;
-  --gold-light: #e8c84a;
-  --gold-muted: rgba(212, 175, 55, 0.25);
-  --gold-border: rgba(212, 175, 55, 0.18);
-  --gold-glow: rgba(212, 175, 55, 0.15);
-  --gold-dark: #b8952e;
+  --gold: #dfb740;
+  --gold-light: #f5d466;
+  --gold-muted: rgba(223, 183, 64, 0.28);
+  --gold-border: rgba(223, 183, 64, 0.32);
+  --gold-glow: rgba(223, 183, 64, 0.22);
+  --gold-dark: #b89224;
 
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-focus: rgba(212, 175, 55, 0.4);
-  --border-color: rgba(255, 255, 255, 0.07);
-  --border: rgba(255, 255, 255, 0.07);
-  --border-medium: rgba(255, 255, 255, 0.12);
-  --border-glass: rgba(255, 255, 255, 0.10);
-  --border-gold: rgba(212, 175, 55, 0.25);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(223, 183, 64, 0.5);
+  --border-color: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --border-gold: rgba(223, 183, 64, 0.32);
 
   /* Brand / Accent — Mapped to Gold */
   --brand-color: #d4af37;
