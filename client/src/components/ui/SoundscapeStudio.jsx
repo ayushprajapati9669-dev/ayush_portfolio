@@ -76,6 +76,8 @@ export function SoundscapeStudio() {
     updateSetting('lofiVolume', vol);
   };
 
+  if (isAdmin) return null;
+
   return (
     <div className="fixed bottom-6 left-6 z-[9990] font-sans" ref={panelRef}>
       {/* Studio Popover Panel */}

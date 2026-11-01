@@ -51,16 +51,18 @@ button.btn-primary {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  border-radius: var(--radius-md, 12px) !important;
-  background: var(--brand-cyan, #06b6d4) !important;
-  color: #000 !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f4f1ec !important;
   font-family: 'Inter', sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 14px !important;
-  padding: 12px 20px !important;
-  border: none !important;
-  box-shadow: 0 4px 15px var(--brand-cyan-glow, rgba(6, 182, 212, 0.25)) !important;
-  transition: all 0.2s ease !important;
+  font-weight: 500 !important;
+  font-size: 13.5px !important;
+  padding: 9px 22px !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
   cursor: pointer !important;
   white-space: nowrap !important;
@@ -69,9 +71,27 @@ button.btn-primary {
 .btn-primary:hover,
 .hero-btn-primary:hover,
 button.btn-primary:hover {
-  background: var(--brand-cyan-hover, #0891b2) !important;
-  box-shadow: 0 6px 20px var(--brand-cyan-glow, rgba(6, 182, 212, 0.35)) !important;
+  background: #f4f1ec !important;
+  color: #030303 !important;
+  border-color: #f4f1ec !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2) !important;
   transform: translateY(-1px) !important;
+}
+
+/* Explicit Admin Save/Action Button */
+.admin-card .btn-primary,
+.admin-modal .btn-primary,
+.btn-admin-action {
+  background: var(--brand-cyan, #06b6d4) !important;
+  color: #000 !important;
+  border-radius: 10px !important;
+  border: none !important;
+}
+
+.admin-card .btn-primary:hover,
+.admin-modal .btn-primary:hover,
+.btn-admin-action:hover {
+  background: var(--brand-cyan-hover, #0891b2) !important;
   color: #000 !important;
 }
 

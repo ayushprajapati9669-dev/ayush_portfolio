@@ -70,16 +70,16 @@ export function ResumeModal() {
     >
       <div
         ref={cardRef}
-        className="w-full max-w-[920px] h-[90vh] flex flex-col rounded-[20px] border border-cyan-500/30 bg-[#0b1120] shadow-[0_40px_120px_-20px_rgba(0,0,0,1),0_0_80px_rgba(6,182,212,0.15)] overflow-hidden"
+        className="w-full max-w-[920px] h-[90vh] flex flex-col rounded-[20px] border border-white/10 bg-[#0a0a0c] shadow-[0_40px_120px_-20px_rgba(0,0,0,1)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/30 z-10 flex-wrap gap-3">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#030303]/90 z-10 flex-wrap gap-3">
           <div className="flex flex-col gap-1">
-            <span className="text-[#06b6d4] font-mono text-[11px] font-bold tracking-[1px] uppercase">
+            <span className="text-stone-400 font-mono text-[11px] font-medium tracking-[0.14em] uppercase">
               Curriculum Vitae
             </span>
-            <h2 className="text-white font-['Space_Grotesk',sans-serif] text-xl font-semibold tracking-tight">
+            <h2 className="text-[#f4f1ec] font-['Instrument_Serif',serif] text-2xl font-normal tracking-tight">
               {displayName} — Resume
             </h2>
           </div>
@@ -92,7 +92,7 @@ export function ResumeModal() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleDownload}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#06b6d4] to-[#10b981] text-black font-bold text-xs sm:text-sm px-4 py-2 rounded-lg shadow-[0_4px_15px_rgba(6,182,212,0.4)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(6,182,212,0.5)] transition-all active:scale-95 no-underline"
+              className="inline-flex items-center gap-2 bg-[#f4f1ec] text-[#030303] font-medium text-xs sm:text-sm px-4 py-2 rounded-full border border-white/20 hover:bg-white transition-all active:scale-95 no-underline"
             >
               <i className="fa-solid fa-download text-xs" />
               <span>Download PDF</span>
@@ -102,7 +102,7 @@ export function ResumeModal() {
             <button
               type="button"
               onClick={handleClose}
-              className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-lg hover:bg-white/15 transition-all active:scale-95 outline-none"
+              className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 text-[#f4f1ec] font-medium text-xs sm:text-sm px-4 py-2 rounded-full hover:bg-white/10 transition-all active:scale-95 outline-none"
             >
               <i className="fa-solid fa-xmark text-xs" />
               <span>Close</span>
@@ -120,8 +120,8 @@ export function ResumeModal() {
           />
 
           {/* Mobile Fallback */}
-          <div className="md:hidden absolute inset-0 flex flex-col items-center justify-center bg-[#0b1120] text-center p-8 z-5">
-            <i className="fa-regular fa-file-pdf text-5xl text-[#06b6d4] mb-4" />
+          <div className="md:hidden absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0c] text-center p-8 z-5">
+            <i className="fa-regular fa-file-pdf text-5xl text-stone-400 mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">Resume Preview</h3>
             <p className="text-slate-400 text-sm max-w-sm mb-6 leading-relaxed">
               Mobile browsers do not support direct PDF embedding. Please click the button below to download or view the full resume.
@@ -132,7 +132,7 @@ export function ResumeModal() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleDownload}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#06b6d4] to-[#10b981] text-black font-bold text-sm px-6 py-3 rounded-lg shadow-[0_4px_15px_rgba(6,182,212,0.4)] hover:-translate-y-0.5 transition-all no-underline"
+              className="inline-flex items-center gap-2 bg-[#f4f1ec] text-[#030303] font-medium text-sm px-6 py-3 rounded-full hover:-translate-y-0.5 transition-all no-underline"
             >
               <i className="fa-solid fa-download text-sm" />
               <span>Download Resume</span>

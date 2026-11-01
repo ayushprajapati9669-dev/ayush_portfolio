@@ -23,7 +23,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #050505 !important;
+  background-color: #030303 !important;
   color: var(--text-primary, #f8fafc) !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
   overflow-x: clip;
@@ -101,10 +101,10 @@ h1, h2, h3, .font-display {
 }
 
 .projects-page .filter-btn.active {
-  background: var(--brand-cyan, #06b6d4) !important;
-  color: #000 !important;
+  background: #f4f1ec !important;
+  color: #030303 !important;
   font-weight: 600 !important;
-  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25) !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15) !important;
   border-color: transparent !important;
 }
 
@@ -115,7 +115,7 @@ h1, h2, h3, .font-display {
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #030303;
 }
 
 ::-webkit-scrollbar-thumb {
