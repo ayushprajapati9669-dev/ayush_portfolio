@@ -422,3 +422,4 @@ certs_css = """/* ==============================================================
 with open(r"d:\MY_PROJECT\FULL_STACK_PROJECT\ayush_portfolio_main\client\src\styles\pages\certificates.css", 'w', encoding='utf-8') as f:
     f.write(certs_css)
 print("certificates.css rewritten successfully with VSLFlow layout")
+

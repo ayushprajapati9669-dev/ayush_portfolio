@@ -74,3 +74,4 @@ async function shot(page, name, extraWait = 1000) {
   await browser.close();
   console.log('Final audit complete!');
 })();
+

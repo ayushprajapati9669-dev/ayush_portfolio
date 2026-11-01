@@ -360,3 +360,4 @@ spotlight_css = """
 with open(r"d:\MY_PROJECT\FULL_STACK_PROJECT\ayush_portfolio_main\client\src\styles\pages\about.css", 'a', encoding='utf-8') as f:
     f.write("\n" + spotlight_css)
 print("Appended spotlight_css to about.css")
+

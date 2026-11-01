@@ -387,3 +387,4 @@ about_css = """/* ==============================================================
 with open(r"d:\MY_PROJECT\FULL_STACK_PROJECT\ayush_portfolio_main\client\src\styles\pages\about.css", 'w', encoding='utf-8') as f:
     f.write(about_css)
 print("about.css rewritten successfully with VSLFlow layout")
+
