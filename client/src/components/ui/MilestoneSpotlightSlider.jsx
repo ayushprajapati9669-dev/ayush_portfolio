@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { playTick } from '../../utils/audio';
+import { TechLogo } from '../common/TechLogos';
 
 // ===== TECH ICON MAP (Branded real icons matching public_abou_spotlight_milestone.html) =====
 const TECH_ICONS = {
@@ -176,6 +177,13 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
       // Deep dive / description
       const deepdive = (m.deepdive || m.desc || '').trim();
 
+      // Clean concise executive summary
+      let summary = (m.metric || '').trim();
+      if (!summary && m.desc) {
+        const plain = m.desc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        summary = plain.length > 170 ? plain.slice(0, 170).trim() + '...' : plain;
+      }
+
       // Tech tags
       const tech = Array.isArray(m.tags) && m.tags.length > 0 ? m.tags : [];
 
@@ -190,7 +198,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
           solution: 'My Architecture',
           outcome: 'The Outcome'
         },
-        showExploreBtn: m.showExploreBtn !== false,
+        summary,
         links,
         challenge,
         solution,
@@ -455,7 +463,14 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               )}
 
               {/* HD Zoom Floating Pill Button (Bottom Right) */}
-              <div className="hd-btn">
+              <div
+                className="hd-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openLightbox('main');
+                }}
+                title="Click to Zoom Full HD Photo"
+              >
                 <i className="fa-solid fa-magnifying-glass-plus" />
                 <span>Zoom</span>
               </div>
@@ -507,7 +522,9 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
             {/* Title Top Bar: Category, Year, Share, Bookmark */}
             <div className="title-top">
               <div className="tags">
-                <span className="tag tag-pink">Flagship Milestone</span>
+                <span className="tag tag-pink">
+                  {currentSlide.badgeText || 'Flagship Milestone'}
+                </span>
                 <span className="tag tag-gray">
                   <i className="fa-regular fa-calendar mr-1" /> Year {currentSlide.year}
                 </span>
@@ -556,49 +573,27 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               </div>
             )}
 
-            {/* Structured Text Grid: Challenge, Architecture, Outcome - Only if any field is populated */}
-            {(currentSlide.challenge || currentSlide.solution || currentSlide.outcome) && (
-              <div className="text-grid">
-                {currentSlide.challenge && (
-                  <div className={`text-block ${!currentSlide.solution ? 'full' : ''}`}>
-                    <h4>{currentSlide.labels?.challenge || 'Challenge'}</h4>
-                    <p>{currentSlide.challenge}</p>
-                  </div>
-                )}
-                {currentSlide.solution && (
-                  <div className={`text-block ${!currentSlide.challenge ? 'full' : ''}`}>
-                    <h4>{currentSlide.labels?.solution || 'Architecture'}</h4>
-                    <p>{currentSlide.solution}</p>
-                  </div>
-                )}
-                {currentSlide.outcome && (
-                  <div className="text-block full">
-                    <h4>{currentSlide.labels?.outcome || 'Outcome'}</h4>
-                    <p>{currentSlide.outcome}</p>
-                  </div>
-                )}
-              </div>
+            {/* Concise Executive Summary */}
+            {currentSlide.summary && (
+              <p className="spotlight-summary-text">
+                {currentSlide.summary}
+              </p>
             )}
 
-            {/* Enhanced Skills Container with Branded Tech Icons */}
+            {/* Enhanced Skills Container with Official Branded Tech Logos */}
             {Array.isArray(currentSlide.tech) && currentSlide.tech.length > 0 && (
               <div className="skills-container">
-                {currentSlide.tech.map((techName, tIdx) => {
-                  const icon = getTechIcon(techName);
-                  return (
-                    <span key={tIdx} className="skill-tag" title={techName}>
-                      <span className={`skill-icon ${icon.class}`}>
-                        <i className={icon.icon} />
-                      </span>
-                      <span>{techName}</span>
-                    </span>
-                  );
-                })}
+                {currentSlide.tech.map((techName, tIdx) => (
+                  <span key={tIdx} className="skill-tag" title={techName}>
+                    <TechLogo name={techName} className="h-4 w-4 shrink-0" />
+                    <span>{techName}</span>
+                  </span>
+                ))}
               </div>
             )}
 
-            {/* Expandable Architecture & Deep Dive Accordion - Only if deepdive exists */}
-            {Boolean(currentSlide.deepdive) && (
+            {/* Expandable Architecture & Deep Dive Accordion */}
+            {(Boolean(currentSlide.deepdive) || currentSlide.challenge || currentSlide.solution || currentSlide.outcome) && (
               <>
                 <button
                   type="button"
@@ -612,22 +607,50 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
                     <i className="fa-solid fa-layer-group mr-2 text-yellow-400" />
                     Read Architecture &amp; Deep Dive
                   </span>
-                  <i className="fa-solid fa-chevron-down" />
+                  <i className={`fa-solid fa-chevron-${isDeepDiveOpen ? 'up' : 'down'}`} />
                 </button>
                 <div
                   className="deep-dive-content"
                   style={{
-                    maxHeight: isDeepDiveOpen ? '500px' : '0px',
+                    maxHeight: isDeepDiveOpen ? '800px' : '0px',
                     opacity: isDeepDiveOpen ? 1 : 0,
                     overflow: 'hidden',
                     pointerEvents: isDeepDiveOpen ? 'auto' : 'none',
                     transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 >
-                  <div
-                    className="deep-dive-inner"
-                    dangerouslySetInnerHTML={{ __html: currentSlide.deepdive }}
-                  />
+                  <div className="deep-dive-inner">
+                    {/* Structured Text Grid: Challenge, Architecture, Outcome */}
+                    {(currentSlide.challenge || currentSlide.solution || currentSlide.outcome) && (
+                      <div className="pillars-grid">
+                        {currentSlide.challenge && (
+                          <div className="pillar-box">
+                            <h5>{currentSlide.labels?.challenge || 'Challenge'}</h5>
+                            <p>{currentSlide.challenge}</p>
+                          </div>
+                        )}
+                        {currentSlide.solution && (
+                          <div className="pillar-box">
+                            <h5>{currentSlide.labels?.solution || 'Architecture'}</h5>
+                            <p>{currentSlide.solution}</p>
+                          </div>
+                        )}
+                        {currentSlide.outcome && (
+                          <div className="pillar-box">
+                            <h5>{currentSlide.labels?.outcome || 'Outcome'}</h5>
+                            <p>{currentSlide.outcome}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {currentSlide.deepdive && (
+                      <div
+                        className="deepdive-body"
+                        dangerouslySetInnerHTML={{ __html: currentSlide.deepdive }}
+                      />
+                    )}
+                  </div>
                 </div>
               </>
             )}
@@ -676,29 +699,32 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               </div>
             )}
 
-            {/* Dynamic Action Buttons */}
+            {/* Luxury Action Row: HD Zoom button as Primary (Explored connected projects removed per user requirement) */}
             <div className="action-row">
-              {currentSlide.showExploreBtn && (
-                <button
-                  type="button"
-                  className="spotlight-btn-primary"
-                  onClick={() => {
-                    playTick();
-                    navigate('/projects');
-                  }}
-                >
-                  <span>Explore Connected Projects</span>
-                  <i className="fa-solid fa-arrow-right" />
-                </button>
-              )}
               <button
                 type="button"
-                className="spotlight-btn-secondary"
-                onClick={() => openLightbox('main')}
+                className="spotlight-btn-primary"
+                onClick={() => {
+                  playTick();
+                  openLightbox('main');
+                }}
               >
                 <i className="fa-solid fa-expand" />
                 <span>View Full Photo (HD)</span>
               </button>
+
+              {currentSlide.links && currentSlide.links.length > 0 && currentSlide.links[0]?.url && currentSlide.links[0].url !== '#' && (
+                <a
+                  href={currentSlide.links[0].url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="spotlight-btn-secondary"
+                  onClick={() => playTick()}
+                >
+                  <i className="fa-solid fa-arrow-up-right-from-square" />
+                  <span>{currentSlide.links[0].label || 'View Resource'}</span>
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -734,8 +760,26 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
         createPortal(
           <div
             className="spotlight-lightbox active"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100vw',
+              height: '100vh',
+              zIndex: 9999999,
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'rgba(5, 5, 8, 0.95)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)'
+            }}
             onClick={(e) => {
-              if (e.target.classList.contains('lightbox-backdrop')) {
+              if (
+                e.target.classList.contains('lightbox-backdrop') ||
+                e.target.classList.contains('spotlight-lightbox')
+              ) {
                 closeLightbox();
               }
             }}

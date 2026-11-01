@@ -473,6 +473,51 @@ export function TechLogo({ name, className = 'h-6 w-6' }) {
     );
   }
 
+  // Hackathon / Competition
+  if (k.includes('hackathon') || k.includes('contest') || k.includes('champion')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#F59E0B" aria-hidden="true">
+        <path d="M19 4h-2V2H7v2H5c-1.1 0-2 .9-2 2v2c0 2.5 1.9 4.6 4.4 4.9.7 1.4 1.9 2.4 3.3 2.8V18H8v2h8v-2h-2.7v-2.3c1.4-.4 2.6-1.4 3.3-2.8 2.5-.3 4.4-2.4 4.4-4.9V6c0-1.1-.9-2-2-2zM5 8V6h2v4.8C5.8 10.4 5 9.3 5 8zm14 0c0 1.3-.8 2.4-2 2.8V6h2v2z" />
+      </svg>
+    );
+  }
+
+  // Internship / Industry Experience
+  if (k.includes('intern') || k.includes('career') || k.includes('experience')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#3B82F6" aria-hidden="true">
+        <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+      </svg>
+    );
+  }
+
+  // REST APIs / Backend APIs
+  if (k.includes('api') || k.includes('rest')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#10B981" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2V7h2v9z" />
+      </svg>
+    );
+  }
+
+  // FullStack / MERN Stack
+  if (k.includes('fullstack') || k.includes('mern') || k.includes('stack')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#8B5CF6" aria-hidden="true">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      </svg>
+    );
+  }
+
+  // DevOps / CI/CD
+  if (k.includes('devops') || k.includes('ci/cd') || k.includes('pipeline')) {
+    return (
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#06B6D4" aria-hidden="true">
+        <path d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.95l-2.83-2.8c-.97-.97-2.33-1.53-3.77-1.53-2.94 0-5.33 2.39-5.33 5.33s2.39 5.33 5.33 5.33c1.44 0 2.8-.56 3.77-1.53L12 12.95l2.83 2.8c.97.97 2.33 1.53 3.77 1.53 2.94 0 5.33-2.39 5.33-5.33s-2.39-5.33-5.33-5.33zM5.4 15.35c-1.84 0-3.33-1.49-3.33-3.33s1.49-3.33 3.33-3.33c.9 0 1.75.35 2.36.96L10.1 12l-2.34 2.34c-.61.66-1.46 1.01-2.36 1.01zm13.2 0c-.9 0-1.75-.35-2.36-.96L13.9 12l2.34-2.34c.61-.61 1.46-.96 2.36-.96 1.84 0 3.33 1.49 3.33 3.33s-1.49 3.32-3.33 3.32z" />
+      </svg>
+    );
+  }
+
   // Responsive UI
   if (k.includes('responsive') || k.includes('interface')) {
     return (
