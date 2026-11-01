@@ -1,0 +1,389 @@
+about_css = """/* ==========================================================================
+   VSLFlow Luxury Editorial About Page
+   Aesthetic: Pure Black (#000000), Metallic Gold (#D4AF37),
+              Cormorant Garamond Headings, Jost Body & Meta
+   ========================================================================== */
+
+.about-page {
+  min-height: 100vh !important;
+  background: #000000 !important;
+  padding-top: 130px !important;
+  padding-bottom: 120px !important;
+  color: #ffffff !important;
+}
+
+/* Page Header */
+.about-page .page-header {
+  max-width: 1280px !important;
+  margin: 0 auto 56px auto !important;
+  padding: 0 clamp(20px, 5vw, 64px) !important;
+}
+
+.about-page .page-tagline {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #d4af37 !important;
+  letter-spacing: 2.5px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 16px !important;
+  display: block !important;
+}
+
+.about-page .page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(3.2rem, 7.5vw, 6.5rem) !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.03em !important;
+  color: #ffffff !important;
+  line-height: 0.95 !important;
+  margin: 0 0 24px 0 !important;
+}
+
+.about-page .page-contact-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+
+.about-page .contact-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 16px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12px !important;
+  color: #a0a0a0 !important;
+  text-decoration: none !important;
+  transition: all 0.22s ease !important;
+  cursor: pointer !important;
+}
+
+.about-page .contact-item:hover {
+  background: rgba(212, 175, 55, 0.08) !important;
+  border-color: rgba(212, 175, 55, 0.3) !important;
+  color: #d4af37 !important;
+}
+
+/* Sections Containers */
+.about-page > .top-section,
+.about-page > .spotlight-section,
+.about-page > .bottom-section,
+.about-page > div:not(.page-header) {
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 0 clamp(20px, 5vw, 64px) !important;
+}
+
+/* ── Top Section: 2-Column Grid (Bio Card + Profile Card) ── */
+.about-page .top-section {
+  display: grid !important;
+  grid-template-columns: 1.4fr 0.9fr !important;
+  gap: 28px !important;
+  align-items: stretch !important;
+  margin-bottom: 40px !important;
+}
+
+@media (max-width: 960px) {
+  .about-page .top-section {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Shared Card Architecture */
+.about-page .about-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 20px !important;
+  padding: 36px !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.about-page .about-card:hover {
+  border-color: rgba(212, 175, 55, 0.25) !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(212, 175, 55, 0.1) !important;
+}
+
+.about-page .about-card h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.55rem !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
+  color: #ffffff !important;
+  margin-bottom: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.about-page .realistic-icon {
+  color: #d4af37 !important;
+  font-size: 16px !important;
+}
+
+.about-page .about-card p {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 14.5px !important;
+  line-height: 1.8 !important;
+  color: #999999 !important;
+  margin-bottom: 16px !important;
+}
+
+.about-page .about-card p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.about-page .about-card p strong {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* ── Profile Card ── */
+.about-page .about-card.profile-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 40px 28px !important;
+}
+
+.about-page .avatar-ring {
+  width: 140px !important;
+  height: 140px !important;
+  min-width: 140px !important;
+  min-height: 140px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(212, 175, 55, 0.35) !important;
+  box-shadow: 0 0 35px rgba(212, 175, 55, 0.12), inset 0 0 15px rgba(212, 175, 55, 0.1) !important;
+  padding: 5px !important;
+  margin: 0 auto 20px auto !important;
+  position: relative !important;
+  transition: all 0.3s ease !important;
+}
+
+.about-page .about-card.profile-card:hover .avatar-ring {
+  border-color: rgba(212, 175, 55, 0.6) !important;
+  box-shadow: 0 0 45px rgba(212, 175, 55, 0.22) !important;
+}
+
+.about-page .profile-img-wrap {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #0a0a0a !important;
+}
+
+.about-page .profile-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  display: block !important;
+}
+
+.about-page .initials-fallback {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 2rem !important;
+  color: #d4af37 !important;
+}
+
+.about-page .profile-details h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.8rem !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.02em !important;
+  color: #ffffff !important;
+  margin: 0 0 6px 0 !important;
+}
+
+.about-page .profile-details p {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 13px !important;
+  color: #d4af37 !important;
+  margin: 0 0 20px 0 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.about-page .profile-details .social-links {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+}
+
+.about-page .social-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #a0a0a0 !important;
+  font-size: 15px !important;
+  transition: all 0.22s ease !important;
+  text-decoration: none !important;
+}
+
+.about-page .social-btn:hover {
+  background: rgba(212, 175, 55, 0.12) !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  color: #d4af37 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ── Spotlight Section ── */
+.about-page .spotlight-section {
+  margin: 40px auto !important;
+}
+
+/* ── Bottom Section: 2-Column Grid (Education + Achievements) ── */
+.about-page .bottom-section {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 28px !important;
+  align-items: start !important;
+  margin-top: 40px !important;
+}
+
+@media (max-width: 960px) {
+  .about-page .bottom-section {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Education Grid */
+.about-page .edu-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px !important;
+  margin-top: 16px !important;
+}
+
+@media (max-width: 600px) {
+  .about-page .edu-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.about-page .edu-item {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 14px !important;
+  padding: 22px 18px !important;
+  transition: all 0.22s ease !important;
+}
+
+.about-page .edu-item:hover {
+  border-color: rgba(212, 175, 55, 0.25) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.about-page .edu-score {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 2.2rem !important;
+  font-weight: 300 !important;
+  color: #d4af37 !important;
+  line-height: 1 !important;
+  margin-bottom: 8px !important;
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 4px !important;
+}
+
+.about-page .edu-score span {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  color: #777777 !important;
+  text-transform: uppercase !important;
+}
+
+.about-page .edu-title {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  margin-bottom: 6px !important;
+  line-height: 1.4 !important;
+}
+
+.about-page .edu-subtitle {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12px !important;
+  color: #777777 !important;
+  line-height: 1.4 !important;
+}
+
+/* ── Timeline List ── */
+.about-page .timeline-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+  margin-top: 16px !important;
+  position: relative !important;
+}
+
+.about-page .timeline-item {
+  position: relative !important;
+  padding-left: 24px !important;
+  border-left: 1px solid rgba(212, 175, 55, 0.2) !important;
+  padding-bottom: 12px !important;
+}
+
+.about-page .timeline-dot {
+  width: 9px !important;
+  height: 9px !important;
+  border-radius: 50% !important;
+  background: #d4af37 !important;
+  position: absolute !important;
+  left: -5px !important;
+  top: 5px !important;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5) !important;
+}
+
+.about-page .timeline-year {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #d4af37 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.about-page .timeline-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.25rem !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  margin-bottom: 6px !important;
+}
+
+.about-page .timeline-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  color: #888888 !important;
+}
+"""
+
+with open(r"d:\MY_PROJECT\FULL_STACK_PROJECT\ayush_portfolio_main\client\src\styles\pages\about.css", 'w', encoding='utf-8') as f:
+    f.write(about_css)
+print("about.css rewritten successfully with VSLFlow layout")

@@ -223,9 +223,9 @@ export function AboutPage() {
             type="button"
             className="contact-item magnetic"
             style={{
-              background: 'rgba(6, 182, 212, 0.1)',
-              borderColor: 'rgba(6, 182, 212, 0.3)',
-              color: 'var(--accent-1, #06b6d4)'
+              background: 'rgba(212, 175, 55, 0.1)',
+              borderColor: 'rgba(212, 175, 55, 0.3)',
+              color: 'var(--accent-1, #d4af37)'
             }}
             onMouseMove={handleMagneticMouseMove}
             onMouseLeave={handleMagneticMouseLeave}
@@ -444,19 +444,19 @@ export function AboutPage() {
                             ? 'rgba(16, 185, 129, 0.15)'
                             : item.status === 'planned'
                             ? 'rgba(168, 85, 247, 0.15)'
-                            : 'rgba(6, 182, 212, 0.15)',
+                            : 'rgba(212, 175, 55, 0.15)',
                         color:
                           item.status === 'completed'
                             ? '#34d399'
                             : item.status === 'planned'
                             ? '#c084fc'
-                            : '#22d3ee',
+                            : '#d4af37',
                         border: `1px solid ${
                           item.status === 'completed'
                             ? 'rgba(16, 185, 129, 0.3)'
                             : item.status === 'planned'
                             ? 'rgba(168, 85, 247, 0.3)'
-                            : 'rgba(6, 182, 212, 0.3)'
+                            : 'rgba(212, 175, 55, 0.3)'
                         }`
                       }}
                     >
@@ -476,11 +476,11 @@ export function AboutPage() {
                         fontSize: '11px',
                         fontFamily: 'JetBrains Mono, monospace',
                         fontWeight: '700',
-                        color: 'var(--accent-1, #06b6d4)',
+                        color: 'var(--accent-1, #d4af37)',
                         padding: '2px 8px',
                         borderRadius: '6px',
-                        background: 'rgba(6, 182, 212, 0.1)',
-                        border: '1px solid rgba(6, 182, 212, 0.25)',
+                        background: 'rgba(212, 175, 55, 0.1)',
+                        border: '1px solid rgba(212, 175, 55, 0.25)',
                         flexShrink: 0
                       }}
                     >
@@ -504,7 +504,7 @@ export function AboutPage() {
                   <div className="mt-2.5 max-w-xs">
                     <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"
+                        className="h-full bg-gradient-to-r from-yellow-400 to-blue-500 rounded-full"
                         style={{ width: `${item.progress}%` }}
                       />
                     </div>
@@ -518,7 +518,7 @@ export function AboutPage() {
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 font-semibold mt-2"
+                    className="inline-flex items-center gap-1.5 text-xs text-yellow-400 hover:text-yellow-300 font-semibold mt-2"
                   >
                     <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
                     <span>View Project Resource</span>

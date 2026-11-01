@@ -27,7 +27,7 @@ export function AdminHeroPortrait({
   const [statusTag, setStatusTag] = useState(p.availabilityLabel || 'Open to SWE Internships');
   const [primaryCta, setPrimaryCta] = useState(p.primaryCtaText || 'View Projects');
   const [secondaryCta, setSecondaryCta] = useState(p.secondaryCtaText || 'Contact Me');
-  const [themeColor, setThemeColor] = useState(p.themeColor || '#0ea5e9');
+  const [themeColor, setThemeColor] = useState(p.themeColor || '#d4af37');
   const [fontFamily, setFontFamily] = useState(p.fontFamily || "'Inter', sans-serif");
   const [photoUrl, setPhotoUrl] = useState(p.photoUrl || p.portrait?.url || '/images/ayush-hero-portrait.jpg');
   const [imageAltText, setImageAltText] = useState(p.portrait?.alt || 'Ayush Prajapati - Hero Portrait');
@@ -462,7 +462,7 @@ export function AdminHeroPortrait({
       {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-image" /> HERO SECTION STUDIO
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Hero Portrait & Config</h2>
@@ -478,7 +478,7 @@ export function AdminHeroPortrait({
           <button
             type="button"
             className="btn-create-project"
-            style={{ background: 'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(6,182,212,0.4))' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand-color, #d4af37), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(212,175,55,0.4))' }}
             onClick={handleSave}
             disabled={isSaving}
           >
@@ -492,7 +492,7 @@ export function AdminHeroPortrait({
       <div className="hero-top-navbar">
         <div className="hero-top-left">
           <div className="hero-config-title">
-            <i className="fa-solid fa-sliders text-cyan-400" />
+            <i className="fa-solid fa-sliders text-yellow-400" />
             <span>Hero Portrait & Config</span>
           </div>
 
@@ -611,7 +611,7 @@ export function AdminHeroPortrait({
       <div className="glass-card-admin p-6 sm:p-8">
         <div className="card-header border-b border-white/10 pb-4 mb-6">
           <h2 className="card-title flex items-center gap-2.5 text-lg font-bold text-white">
-            <i className="fa-solid fa-laptop-code text-cyan-400" />
+            <i className="fa-solid fa-laptop-code text-yellow-400" />
             <span>Interactive Live Hero Editor</span>
           </h2>
           <span className="text-xs font-mono text-slate-400">
@@ -687,7 +687,7 @@ export function AdminHeroPortrait({
                 <div className="flex gap-2.5">
                   <div className="hero-file-upload-wrapper flex-1">
                     <button type="button" className="hero-file-upload-btn">
-                      <i className="fa-solid fa-cloud-arrow-up text-cyan-400" />
+                      <i className="fa-solid fa-cloud-arrow-up text-yellow-400" />
                       <span>Upload & Crop Image</span>
                     </button>
                     <input
@@ -707,7 +707,7 @@ export function AdminHeroPortrait({
                     }}
                     title="Select from Media Library"
                   >
-                    <i className="fa-solid fa-images text-cyan-400" />
+                    <i className="fa-solid fa-images text-yellow-400" />
                     <span>Library</span>
                   </button>
                 </div>
@@ -843,7 +843,7 @@ export function AdminHeroPortrait({
                 <div className="hero-form-group">
                   <label>
                     <span>Brand Color Accent</span>
-                    <span className="font-mono text-xs text-cyan-400">{themeColor}</span>
+                    <span className="font-mono text-xs text-yellow-400">{themeColor}</span>
                   </label>
                   <div className="flex items-center gap-3">
                     <input
@@ -855,7 +855,7 @@ export function AdminHeroPortrait({
 
                     <div className="hero-theme-presets">
                       {[
-                        { color: '#0ea5e9', name: 'Cyan' },
+                        { color: '#d4af37', name: 'Cyan' },
                         { color: '#8b5cf6', name: 'Purple' },
                         { color: '#f59e0b', name: 'Amber' },
                         { color: '#10b981', name: 'Emerald' },
@@ -1043,7 +1043,7 @@ export function AdminHeroPortrait({
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title flex items-center gap-2">
-                <i className="fa-solid fa-crop text-cyan-400" />
+                <i className="fa-solid fa-crop text-yellow-400" />
                 <span>Crop Portrait (1:1 Aspect)</span>
               </h3>
               <button
@@ -1102,7 +1102,7 @@ export function AdminHeroPortrait({
           <div className="modal-box" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title flex items-center gap-2">
-                <i className="fa-solid fa-images text-cyan-400" />
+                <i className="fa-solid fa-images text-yellow-400" />
                 <span>Hero Media Library</span>
               </h3>
               <button
@@ -1124,7 +1124,7 @@ export function AdminHeroPortrait({
                   key={idx}
                   src={url}
                   alt={`Library media ${idx}`}
-                  className={`hero-media-item ${photoUrl === url ? 'ring-2 ring-cyan-400 scale-[1.03]' : ''}`}
+                  className={`hero-media-item ${photoUrl === url ? 'ring-2 ring-yellow-400 scale-[1.03]' : ''}`}
                   onClick={() => handleSelectMedia(url)}
                 />
               ))}
@@ -1167,7 +1167,7 @@ export function AdminHeroPortrait({
 
               <div className="hero-file-upload-wrapper">
                 <button type="button" className="btn-hero-action w-full py-2.5 text-xs font-semibold">
-                  <i className="fa-solid fa-upload text-cyan-400" />
+                  <i className="fa-solid fa-upload text-yellow-400" />
                   <span>Import Hero Config JSON</span>
                 </button>
                 <input

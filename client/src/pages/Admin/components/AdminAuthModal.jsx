@@ -134,9 +134,9 @@ export function AdminAuthModal({
 
   return (
     <div className="mx-auto max-w-md px-4 pt-32 pb-24">
-      <div ref={cardRef} className="glass-card-admin rounded-3xl p-7 sm:p-9 space-y-6 border border-cyan-400/30">
+      <div ref={cardRef} className="glass-card-admin rounded-3xl p-7 sm:p-9 space-y-6 border border-yellow-400/30">
         <div className="space-y-1.5">
-          <div className="inline-flex items-center gap-2 rounded-full bg-cyan-400/10 border border-cyan-400/30 px-3 py-1 font-mono text-[10px] font-bold text-cyan-400">
+          <div className="inline-flex items-center gap-2 rounded-full bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 font-mono text-[10px] font-bold text-yellow-400">
             <i className="fa-solid fa-lock text-xs" />
             <span>PROTECTED ADMIN PORTAL</span>
           </div>
@@ -167,7 +167,7 @@ export function AdminAuthModal({
                 value={forgotForm.email}
                 onChange={(e) => setForgotForm({ ...forgotForm, email: e.target.value })}
                 placeholder="ayushprajapati9669@gmail.com"
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
               {authErrors.email && <p className="mt-1 font-mono text-[11px] text-red-400">{authErrors.email}</p>}
             </div>
@@ -181,7 +181,7 @@ export function AdminAuthModal({
                 value={forgotForm.phone}
                 onChange={(e) => setForgotForm({ ...forgotForm, phone: e.target.value })}
                 placeholder="9669802554"
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
               {authErrors.phone && <p className="mt-1 font-mono text-[11px] text-red-400">{authErrors.phone}</p>}
             </div>
@@ -195,7 +195,7 @@ export function AdminAuthModal({
                 value={forgotForm.newPass}
                 onChange={(e) => setForgotForm({ ...forgotForm, newPass: e.target.value })}
                 placeholder="Min 8 chars, e.g. Ayush7162@"
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
               <FormErrorMessage message={authErrors.newPass} />
             </div>
@@ -209,7 +209,7 @@ export function AdminAuthModal({
                 value={forgotForm.confirmPass}
                 onChange={(e) => setForgotForm({ ...forgotForm, confirmPass: e.target.value })}
                 placeholder="Re-enter new password"
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
               <FormErrorMessage message={authErrors.confirmPass} />
             </div>
@@ -229,7 +229,7 @@ export function AdminAuthModal({
                   setAuthMode('login');
                   setAuthErrors({});
                 }}
-                className="font-mono text-xs text-cyan-400 hover:underline"
+                className="font-mono text-xs text-yellow-400 hover:underline"
               >
                 ← Back to Administrator Sign In
               </button>
@@ -246,7 +246,7 @@ export function AdminAuthModal({
                 value={loginUser}
                 onChange={(e) => setLoginUser(e.target.value)}
                 placeholder="ayushprajapati9669@gmail.com"
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
               <FormErrorMessage message={authErrors.user} />
             </div>
@@ -261,7 +261,7 @@ export function AdminAuthModal({
                     setAuthMode('forgot');
                     setAuthErrors({});
                   }}
-                  className="font-mono text-[11px] text-cyan-400 hover:underline"
+                  className="font-mono text-[11px] text-yellow-400 hover:underline"
                 >
                   Forgot Password?
                 </button>
@@ -271,7 +271,7 @@ export function AdminAuthModal({
                 value={loginPass}
                 onChange={(e) => setLoginPass(e.target.value)}
                 placeholder="Enter your master password"
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
               <FormErrorMessage message={authErrors.pass} />
             </div>

@@ -868,7 +868,7 @@ export function AdminCertificates({
          ======================================================== */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-certificate"></i> ACCREDITED CREDENTIALS MANAGER
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Certifications & Honors</h2>
@@ -1025,7 +1025,7 @@ export function AdminCertificates({
                     session.token
                   )
                 }
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
                 placeholder="03 · VERIFIED CREDENTIALS"
               />
             </div>
@@ -1048,7 +1048,7 @@ export function AdminCertificates({
                     session.token
                   )
                 }
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
                 placeholder="Technical Certifications & Honors"
               />
             </div>
@@ -1060,15 +1060,15 @@ export function AdminCertificates({
           3. MULTI-STAGE WIZARD FORM (TOP 1% EXPERIENCE)
          ======================================================== */}
       {isFormOpen && (
-        <div className="glass-card-admin rounded-3xl border border-cyan-500/40 p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden animate-in fade-in duration-300">
+        <div className="glass-card-admin rounded-3xl border border-yellow-500/40 p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden animate-in fade-in duration-300">
           {/* Subtle Ambient Radial Glow */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/10 blur-[100px] pointer-events-none rounded-full" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-yellow-500/10 blur-[100px] pointer-events-none rounded-full" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/10 blur-[100px] pointer-events-none rounded-full" />
 
           {/* Form Top Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/40 bg-cyan-500/10 text-cyan-400 shadow-md shadow-cyan-500/20">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-yellow-400/40 bg-yellow-500/10 text-yellow-400 shadow-md shadow-cyan-500/20">
                 <i className={editingId ? 'fa-solid fa-pen-nib' : 'fa-solid fa-certificate'} />
               </div>
               <div>
@@ -1103,7 +1103,7 @@ export function AdminCertificates({
             {/* Visual Step Progress Bar */}
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
+                className="h-full bg-gradient-to-r from-yellow-400 via-indigo-400 to-purple-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
                 style={{ width: `${(currentStep / 4) * 100}%` }}
               />
             </div>
@@ -1125,7 +1125,7 @@ export function AdminCertificates({
                     onClick={() => handleJumpToStep(item.step)}
                     className={`flex items-center gap-3 rounded-2xl border p-3 text-left transition-all ${
                       isActive
-                        ? 'border-cyan-400 bg-cyan-500/10 text-white shadow-md shadow-cyan-500/15'
+                        ? 'border-yellow-400 bg-yellow-500/10 text-white shadow-md shadow-cyan-500/15'
                         : isPassed
                         ? 'border-emerald-500/30 bg-emerald-500/5 text-slate-300 hover:border-emerald-500/50'
                         : 'border-white/10 bg-black/40 text-slate-400 hover:border-white/20'
@@ -1134,7 +1134,7 @@ export function AdminCertificates({
                     <div
                       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl font-mono text-xs font-bold transition-all ${
                         isActive
-                          ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/40'
+                          ? 'bg-yellow-400 text-black shadow-md shadow-cyan-400/40'
                           : isPassed
                           ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                           : 'bg-white/10 text-slate-400'
@@ -1175,7 +1175,7 @@ export function AdminCertificates({
                     value={form.title}
                     onChange={(e) => setForm({ ...form, title: e.target.value })}
                     placeholder="e.g. Full Stack Web Development (MERN)"
-                    className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+                    className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all"
                   />
                   <FormErrorMessage message={errors.title} />
                 </div>
@@ -1186,7 +1186,7 @@ export function AdminCertificates({
                     <label className="block font-mono text-xs font-semibold text-slate-200">
                       Category / Domain *
                     </label>
-                    <span className="font-mono text-[10px] text-cyan-400">
+                    <span className="font-mono text-[10px] text-yellow-400">
                       Type custom or choose preset
                     </span>
                   </div>
@@ -1200,7 +1200,7 @@ export function AdminCertificates({
                         if (errors.category) setErrors((prev) => ({ ...prev, category: '' }));
                       }}
                       placeholder="e.g. Cyber Security / NPTEL / Cloud Computing / AWS"
-                      className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-sans"
+                      className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all font-sans"
                     />
                     <datalist id="category-suggestions-list">
                       {categorySuggestions.map((cat) => (
@@ -1240,7 +1240,7 @@ export function AdminCertificates({
                           }}
                           className={`rounded-lg border px-2 py-1 font-mono text-[11px] transition-all ${
                             isActive
-                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold shadow-sm shadow-cyan-400/20'
+                              ? 'border-yellow-400 bg-yellow-500/20 text-yellow-300 font-bold shadow-sm shadow-cyan-400/20'
                               : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-white'
                           }`}
                         >
@@ -1258,14 +1258,14 @@ export function AdminCertificates({
                   <label className="block font-mono text-xs font-semibold text-slate-200">
                     Issuer / Organization *
                   </label>
-                  <span className="font-mono text-[10px] text-cyan-400">Quick presets available</span>
+                  <span className="font-mono text-[10px] text-yellow-400">Quick presets available</span>
                 </div>
                 <input
                   type="text"
                   value={form.issuer}
                   onChange={(e) => setForm({ ...form, issuer: e.target.value })}
                   placeholder="e.g. Apna College / Meta / Amazon Web Services"
-                  className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+                  className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all"
                 />
                 <FormErrorMessage message={errors.issuer} />
 
@@ -1283,7 +1283,7 @@ export function AdminCertificates({
                       }}
                       className={`rounded-lg border px-2.5 py-1 font-mono text-[11px] transition-all ${
                         form.issuer === preset
-                          ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold'
+                          ? 'border-yellow-400 bg-yellow-500/20 text-yellow-300 font-bold'
                           : 'border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-white'
                       }`}
                     >
@@ -1304,7 +1304,7 @@ export function AdminCertificates({
                     value={form.issueDate}
                     onChange={(e) => setForm({ ...form, issueDate: e.target.value })}
                     placeholder="2025"
-                    className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+                    className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all"
                   />
                   <FormErrorMessage message={errors.issueDate} />
 
@@ -1380,7 +1380,7 @@ export function AdminCertificates({
                     <button
                       type="button"
                       onClick={handleAutoGenerateId}
-                      className="font-mono text-[10px] text-cyan-400 hover:underline"
+                      className="font-mono text-[10px] text-yellow-400 hover:underline"
                     >
                       ⚡ Auto-Generate
                     </button>
@@ -1390,7 +1390,7 @@ export function AdminCertificates({
                     value={form.credentialId}
                     onChange={(e) => setForm({ ...form, credentialId: e.target.value })}
                     placeholder="e.g. CERT-2025-AP01 or UC-8df3..."
-                    className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-mono"
+                    className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all font-mono"
                   />
                 </div>
 
@@ -1413,7 +1413,7 @@ export function AdminCertificates({
                             ? st === 'Verified'
                               ? 'border-emerald-400 bg-emerald-500/20 text-emerald-300'
                               : st === 'Accredited'
-                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300'
+                              ? 'border-yellow-400 bg-yellow-500/20 text-yellow-300'
                               : 'border-amber-400 bg-amber-500/20 text-amber-300'
                             : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
                         }`}
@@ -1445,7 +1445,7 @@ export function AdminCertificates({
                       href={form.credentialUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-mono text-[11px] text-cyan-400 hover:underline inline-flex items-center gap-1"
+                      className="font-mono text-[11px] text-yellow-400 hover:underline inline-flex items-center gap-1"
                     >
                       <span>Test Link ↗</span>
                     </a>
@@ -1457,7 +1457,7 @@ export function AdminCertificates({
                     value={form.credentialUrl}
                     onChange={(e) => setForm({ ...form, credentialUrl: e.target.value })}
                     placeholder="https://coursera.org/verify/... or https://badgr.com/..."
-                    className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+                    className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all"
                   />
                   {form.credentialUrl && (
                     <span className="absolute right-3.5 text-xs">
@@ -1482,7 +1482,7 @@ export function AdminCertificates({
                   value={form.downloadUrl}
                   onChange={(e) => setForm({ ...form, downloadUrl: e.target.value })}
                   placeholder="https://... (defaults to the uploaded certificate image if left blank)"
-                  className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+                  className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all"
                 />
                 <FormErrorMessage message={errors.downloadUrl} />
               </div>
@@ -1500,7 +1500,7 @@ export function AdminCertificates({
                   <label className="block font-mono text-xs font-semibold text-slate-200">
                     Interactive Skill Tags (Type & Press Enter or comma)
                   </label>
-                  <span className="font-mono text-[10px] text-cyan-400">
+                  <span className="font-mono text-[10px] text-yellow-400">
                     {currentSkillTags.length} active skills
                   </span>
                 </div>
@@ -1511,7 +1511,7 @@ export function AdminCertificates({
                     currentSkillTags.map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-1 font-mono text-xs font-semibold text-cyan-300 shadow-sm"
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-yellow-400/30 bg-yellow-500/10 px-3 py-1 font-mono text-xs font-semibold text-yellow-300 shadow-sm"
                       >
                         <span>{tag}</span>
                         <button
@@ -1544,12 +1544,12 @@ export function AdminCertificates({
                       }
                     }}
                     placeholder="Type skill (e.g. React, Docker, Python) and press Enter..."
-                    className="flex-1 rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+                    className="flex-1 rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => handleAddSkillTag()}
-                    className="rounded-xl border border-cyan-400/30 bg-cyan-500/20 px-4 py-2.5 font-mono text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-all"
+                    className="rounded-xl border border-yellow-400/30 bg-yellow-500/20 px-4 py-2.5 font-mono text-xs font-bold text-yellow-300 hover:bg-yellow-500/30 transition-all"
                   >
                     + Add
                   </button>
@@ -1593,7 +1593,7 @@ export function AdminCertificates({
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   placeholder="Summarize key topics covered, projects built, or honors received..."
-                  className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+                  className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all"
                 />
               </div>
             </div>
@@ -1645,8 +1645,8 @@ export function AdminCertificates({
                       onClick={() => imageFileInputRef.current?.click()}
                       className={`relative rounded-2xl border-2 border-dashed p-6 text-center transition-all cursor-pointer ${
                         isDraggingFile
-                          ? 'border-cyan-400 bg-cyan-500/20 shadow-xl shadow-cyan-500/30 scale-[1.02]'
-                          : 'border-white/20 bg-black/40 hover:border-cyan-400/50'
+                          ? 'border-yellow-400 bg-yellow-500/20 shadow-xl shadow-cyan-500/30 scale-[1.02]'
+                          : 'border-white/20 bg-black/40 hover:border-yellow-400/50'
                       }`}
                     >
                       <input
@@ -1663,8 +1663,8 @@ export function AdminCertificates({
                       <div
                         className={`mx-auto flex h-12 w-12 items-center justify-center rounded-2xl transition-all mb-3 ${
                           isDraggingFile
-                            ? 'bg-cyan-400 text-black scale-110 shadow-lg shadow-cyan-400/50'
-                            : 'bg-cyan-500/10 text-cyan-400'
+                            ? 'bg-yellow-400 text-black scale-110 shadow-lg shadow-cyan-400/50'
+                            : 'bg-yellow-500/10 text-yellow-400'
                         }`}
                       >
                         <i
@@ -1679,10 +1679,10 @@ export function AdminCertificates({
                         {isDraggingFile ? 'Drop Certificate Image Here!' : 'Upload Credential Badge'}
                       </p>
                       <p className="text-xs text-slate-400 mb-4">
-                        Drag & drop file here or <span className="text-cyan-400 underline">click to browse</span> (PNG, JPG, WEBP).
+                        Drag & drop file here or <span className="text-yellow-400 underline">click to browse</span> (PNG, JPG, WEBP).
                       </p>
 
-                      <div className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 px-5 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 shadow-md shadow-cyan-400/20 transition-all">
+                      <div className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-yellow-400 to-indigo-500 px-5 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 shadow-md shadow-cyan-400/20 transition-all">
                         <i className="fa-solid fa-folder-open" />
                         <span>{isUploading ? 'Uploading...' : 'Choose File'}</span>
                       </div>
@@ -1703,7 +1703,7 @@ export function AdminCertificates({
                         setErrors((prev) => ({ ...prev, imageUrl: '' }));
                       }}
                       placeholder="https://images.unsplash.com/... or https://res.cloudinary.com/..."
-                      className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all"
+                      className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all"
                     />
                   </div>
 
@@ -1756,7 +1756,7 @@ export function AdminCertificates({
                 {/* Live 3D Preview Column (5 cols) */}
                 <div className="lg:col-span-5 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-cyan-400">
+                    <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-yellow-400">
                       Live 3D Public Preview
                     </span>
                     <span className="font-mono text-[10px] text-slate-500">Hover to tilt</span>
@@ -1815,7 +1815,7 @@ export function AdminCertificates({
                                 });
                               }
                             }}
-                            className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400 text-black shadow-lg shadow-cyan-400/50 hover:scale-110 transition-all"
+                            className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 text-black shadow-lg shadow-cyan-400/50 hover:scale-110 transition-all"
                             title="Inspect in Lightbox (Pan & Zoom)"
                           >
                             <i className="fa-solid fa-expand" />
@@ -1847,7 +1847,7 @@ export function AdminCertificates({
                     {/* Content */}
                     <div className="pt-4 space-y-2">
                       <div className="flex items-center justify-between text-[11px]">
-                        <span className="font-mono font-bold uppercase tracking-wider text-cyan-400 truncate max-w-[55%]">
+                        <span className="font-mono font-bold uppercase tracking-wider text-yellow-400 truncate max-w-[55%]">
                           {form.issuer || 'ISSUER'}
                         </span>
                         <div className="flex items-center gap-1.5">
@@ -1876,7 +1876,7 @@ export function AdminCertificates({
                         </span>
 
                         {form.credentialUrl && (
-                          <span className="font-mono text-[11px] text-cyan-400">
+                          <span className="font-mono text-[11px] text-yellow-400">
                             Verify Credential ↗
                           </span>
                         )}
@@ -1918,7 +1918,7 @@ export function AdminCertificates({
                 <button
                   type="button"
                   onClick={handleNextStep}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 px-5 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-400/20"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-yellow-400 to-indigo-500 px-5 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-400/20"
                 >
                   <span>
                     Next:{' '}
@@ -1934,7 +1934,7 @@ export function AdminCertificates({
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 via-emerald-400 to-teal-400 px-6 py-2.5 font-mono text-xs font-extrabold text-black hover:opacity-90 transition-all shadow-lg shadow-emerald-400/30"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-yellow-400 via-emerald-400 to-yellow-400 px-6 py-2.5 font-mono text-xs font-extrabold text-black hover:opacity-90 transition-all shadow-lg shadow-emerald-400/30"
                 >
                   <i className="fa-solid fa-cloud-arrow-up" />
                   <span>{editingId ? 'Update Certificate' : 'Publish Certificate'}</span>
@@ -1956,7 +1956,7 @@ export function AdminCertificates({
               <h3 className="text-xl font-bold text-white tracking-tight">
                 Existing Credentials
               </h3>
-              <span className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-0.5 font-mono text-xs font-bold text-cyan-400">
+              <span className="rounded-full border border-yellow-400/30 bg-yellow-500/10 px-2.5 py-0.5 font-mono text-xs font-bold text-yellow-400">
                 {filteredCertificates.length} / {certificates.length}
               </span>
             </div>
@@ -1972,14 +1972,14 @@ export function AdminCertificates({
               onClick={handleToggleSelectAll}
               className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 font-mono text-xs font-semibold transition-all cursor-pointer ${
                 selectedCertIds.length === filteredCertificates.length && filteredCertificates.length > 0
-                  ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300'
+                  ? 'border-yellow-400 bg-yellow-500/20 text-yellow-300'
                   : 'border-white/15 bg-white/5 text-slate-300 hover:border-white/30 hover:text-white'
               }`}
             >
               <i
                 className={`fa-solid ${
                   selectedCertIds.length === filteredCertificates.length && filteredCertificates.length > 0
-                    ? 'fa-square-check text-cyan-400'
+                    ? 'fa-square-check text-yellow-400'
                     : 'fa-square-check text-slate-400'
                 }`}
               />
@@ -1999,7 +1999,7 @@ export function AdminCertificates({
                   window.__openCommandPalette({ query: 'cert' });
                 }
               }}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2 font-mono text-xs font-semibold text-slate-300 hover:border-cyan-400/40 hover:text-white transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2 font-mono text-xs font-semibold text-slate-300 hover:border-yellow-400/40 hover:text-white transition-all cursor-pointer"
               title="Open Command Palette (⌘K)"
             >
               <span className="text-slate-400 font-mono">&gt;_</span>
@@ -2011,7 +2011,7 @@ export function AdminCertificates({
               <button
                 type="button"
                 onClick={handleOpenCreateForm}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer"
               >
                 <i className="fa-solid fa-plus text-xs" />
                 <span>Add Credential</span>
@@ -2025,7 +2025,7 @@ export function AdminCertificates({
            ======================================================== */}
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl border border-white/10 bg-[#070b12]/60 w-full max-w-full">
           <div className="flex items-center gap-2.5">
-            <i className="fa-solid fa-layer-group text-cyan-400 text-sm" />
+            <i className="fa-solid fa-layer-group text-yellow-400 text-sm" />
             <span className="font-sans text-xs sm:text-sm font-semibold text-white">
               Filter by Domain / Category:
             </span>
@@ -2039,7 +2039,7 @@ export function AdminCertificates({
                   playTick();
                   setSelectedCategory(e.target.value);
                 }}
-                className="appearance-none w-full sm:w-auto min-w-[220px] rounded-xl border border-white/10 bg-[#0B101B]/90 pl-4 pr-9 py-2 text-xs font-medium text-white outline-none hover:border-cyan-400/40 focus:border-cyan-400 cursor-pointer transition-colors"
+                className="appearance-none w-full sm:w-auto min-w-[220px] rounded-xl border border-white/10 bg-[#0B101B]/90 pl-4 pr-9 py-2 text-xs font-medium text-white outline-none hover:border-yellow-400/40 focus:border-yellow-400 cursor-pointer transition-colors"
               >
                 {availableCategories.map((cat) => {
                   const count =
@@ -2172,9 +2172,9 @@ export function AdminCertificates({
             STICKY / FLOATING BATCH ACTIONS TOOLBAR (Requirement 1)
            ======================================================== */}
         {selectedCertIds.length > 0 && (
-          <div className="sticky top-28 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-cyan-400/40 bg-[#090d14]/95 p-3.5 shadow-2xl shadow-cyan-500/20 backdrop-blur-2xl animate-in slide-in-from-top-2 duration-200">
+          <div className="sticky top-28 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-yellow-400/40 bg-[#090d14]/95 p-3.5 shadow-2xl shadow-cyan-500/20 backdrop-blur-2xl animate-in slide-in-from-top-2 duration-200">
             <div className="flex items-center gap-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-cyan-400 text-black font-extrabold text-xs shadow-md shadow-cyan-400/50">
+              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-yellow-400 text-black font-extrabold text-xs shadow-md shadow-cyan-400/50">
                 {selectedCertIds.length}
               </span>
               <div>
@@ -2258,13 +2258,13 @@ export function AdminCertificates({
                   onDrop={(e) => handleDropReorder(index)}
                   className={`group relative rounded-2xl border p-4 space-y-3 flex flex-col justify-between transition-all backdrop-blur-xl ${
                     isDragOver
-                      ? 'border-2 border-cyan-400 bg-cyan-500/20 shadow-2xl shadow-cyan-400/40 translate-y-1'
+                      ? 'border-2 border-yellow-400 bg-yellow-500/20 shadow-2xl shadow-cyan-400/40 translate-y-1'
                       : isDragging
-                      ? 'opacity-40 scale-95 border-dashed border-cyan-400/60'
+                      ? 'opacity-40 scale-95 border-dashed border-yellow-400/60'
                       : isSelected
-                      ? 'border-cyan-400 bg-cyan-500/15 shadow-xl shadow-cyan-500/25 ring-1 ring-cyan-400/40'
+                      ? 'border-yellow-400 bg-yellow-500/15 shadow-xl shadow-cyan-500/25 ring-1 ring-yellow-400/40'
                       : isEditing
-                      ? 'border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-500/20'
+                      ? 'border-yellow-400 bg-yellow-500/10 shadow-lg shadow-cyan-500/20'
                       : 'border-white/10 bg-black/40 hover:border-white/25 hover:bg-black/60'
                   }`}
                 >
@@ -2287,7 +2287,7 @@ export function AdminCertificates({
                             playTick();
                             openCertificateLightbox(cert.id);
                           }}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-cyan-400 px-3.5 py-1.5 font-mono text-xs font-bold text-black shadow-lg shadow-cyan-400/40 hover:scale-105 active:scale-95 transition-all"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-yellow-400 px-3.5 py-1.5 font-mono text-xs font-bold text-black shadow-lg shadow-cyan-400/40 hover:scale-105 active:scale-95 transition-all"
                           title="Inspect in full Lightbox (Pan & Zoom)"
                         >
                           <i className="fa-solid fa-expand" />
@@ -2319,8 +2319,8 @@ export function AdminCertificates({
                           }}
                           className={`flex h-7 w-7 items-center justify-center rounded-lg border transition-all ${
                             isSelected
-                              ? 'bg-cyan-400 text-black border-cyan-400 shadow-md shadow-cyan-400/50'
-                              : 'bg-black/70 text-transparent border-white/20 hover:border-cyan-400 hover:text-cyan-400/60'
+                              ? 'bg-yellow-400 text-black border-yellow-400 shadow-md shadow-cyan-400/50'
+                              : 'bg-black/70 text-transparent border-white/20 hover:border-yellow-400 hover:text-yellow-400/60'
                           }`}
                           title={isSelected ? 'Deselect certificate' : 'Select for batch actions'}
                         >
@@ -2338,7 +2338,7 @@ export function AdminCertificates({
                             setDraggedCertIndex(null);
                             setDragOverCertIndex(null);
                           }}
-                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-cyan-300 hover:border-cyan-400/40 cursor-grab active:cursor-grabbing transition-all select-none"
+                          className="flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 border border-white/20 text-slate-400 hover:text-yellow-300 hover:border-yellow-400/40 cursor-grab active:cursor-grabbing transition-all select-none"
                           title="Drag this handle to reposition certificate"
                         >
                           <i className="fa-solid fa-grip-vertical text-xs pointer-events-none" />
@@ -2393,7 +2393,7 @@ export function AdminCertificates({
 
                     {/* Metadata Header */}
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="font-mono font-bold uppercase tracking-wider text-cyan-400 truncate max-w-[65%]">
+                      <span className="font-mono font-bold uppercase tracking-wider text-yellow-400 truncate max-w-[65%]">
                         {cert.issuer || 'Issuer'}
                       </span>
                       <div className="flex items-center gap-1.5">
@@ -2468,7 +2468,7 @@ export function AdminCertificates({
                             playTick();
                             openCertificateLightbox(cert.id);
                           }}
-                          className="font-mono text-[11px] text-cyan-400 hover:underline inline-flex items-center gap-1"
+                          className="font-mono text-[11px] text-yellow-400 hover:underline inline-flex items-center gap-1"
                         >
                           <i className="fa-solid fa-eye text-[10px]" />
                           <span>Inspect</span>
@@ -2498,7 +2498,7 @@ export function AdminCertificates({
                             e.stopPropagation();
                             handleEdit(cert);
                           }}
-                          className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 font-mono text-[11px] font-bold text-cyan-300 hover:bg-cyan-500/20 transition-all flex items-center gap-1"
+                          className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-2.5 py-1 font-mono text-[11px] font-bold text-yellow-300 hover:bg-yellow-500/20 transition-all flex items-center gap-1"
                         >
                           <i className="fa-solid fa-pen text-[10px]" />
                           <span>Edit</span>

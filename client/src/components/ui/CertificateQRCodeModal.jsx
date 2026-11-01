@@ -165,16 +165,16 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
     >
       <div
         ref={modalBoxRef}
-        className="w-full max-w-lg rounded-3xl border border-cyan-500/30 bg-gradient-to-b from-[#0f172a] to-[#060a10] p-6 shadow-2xl shadow-cyan-500/10 text-white relative overflow-hidden"
+        className="w-full max-w-lg rounded-3xl border border-yellow-500/30 bg-gradient-to-b from-[#0f172a] to-[#060a10] p-6 shadow-2xl shadow-cyan-500/10 text-white relative overflow-hidden"
       >
         {/* Glow corner */}
-        <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-cyan-500/20 blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-yellow-500/20 blur-3xl pointer-events-none" />
 
         {/* Modal Header */}
         <div className="flex items-start justify-between border-b border-white/10 pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300">
+              <span className="inline-flex items-center gap-1 rounded-full border border-yellow-400/30 bg-yellow-500/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-yellow-300">
                 <i className="fa-solid fa-qrcode text-[10px]" /> QR Verification
               </span>
               <span className="font-mono text-xs text-slate-400">{cert.issuer}</span>
@@ -204,7 +204,7 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
             }}
             className={`flex-1 rounded-lg py-1.5 font-mono text-xs font-semibold transition-all ${
               targetType === 'credential'
-                ? 'bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-md'
+                ? 'bg-gradient-to-r from-yellow-500 to-indigo-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -218,7 +218,7 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
             }}
             className={`flex-1 rounded-lg py-1.5 font-mono text-xs font-semibold transition-all ${
               targetType === 'portfolio'
-                ? 'bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-md'
+                ? 'bg-gradient-to-r from-yellow-500 to-indigo-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -228,7 +228,7 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
 
         {/* QR Code Display Card */}
         <div className="my-5 flex flex-col items-center justify-center">
-          <div className="relative rounded-3xl border-2 border-cyan-400/40 bg-white p-5 shadow-2xl shadow-cyan-500/20 group">
+          <div className="relative rounded-3xl border-2 border-yellow-400/40 bg-white p-5 shadow-2xl shadow-cyan-500/20 group">
             <svg
               viewBox={`0 0 ${size} ${size}`}
               className="h-52 w-52 sm:h-60 sm:w-60"
@@ -240,14 +240,14 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
 
             {/* Center Logo Watermark */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#0a0f16] border-2 border-cyan-400 text-cyan-400 shadow-md">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#0a0f16] border-2 border-yellow-400 text-yellow-400 shadow-md">
                 <i className="fa-solid fa-certificate text-base" />
               </div>
             </div>
           </div>
 
           <p className="mt-3 flex items-center gap-1.5 font-mono text-[11px] text-slate-400">
-            <i className="fa-solid fa-camera text-cyan-400 text-xs" />
+            <i className="fa-solid fa-camera text-yellow-400 text-xs" />
             <span>Scan with phone camera to instantly verify credential</span>
           </p>
         </div>
@@ -255,7 +255,7 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
         {/* Active URL Snippet */}
         <div className="rounded-2xl border border-white/10 bg-black/50 p-3 flex items-center justify-between gap-3 text-xs">
           <div className="truncate font-mono text-[11px] text-slate-300">
-            <span className="text-cyan-400 select-none">URL: </span>
+            <span className="text-yellow-400 select-none">URL: </span>
             <span className="select-all">{targetUrl}</span>
           </div>
           <button
@@ -264,7 +264,7 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
             className={`shrink-0 rounded-lg px-2.5 py-1 font-mono text-xs font-bold transition-all flex items-center gap-1 ${
               copied
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                : 'border border-cyan-400/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20'
+                : 'border border-yellow-400/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
             }`}
           >
             <i className={`fa-solid ${copied ? 'fa-check' : 'fa-copy'}`} />
@@ -277,16 +277,16 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
           <button
             type="button"
             onClick={handleDownloadPNG}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 py-2.5 font-mono text-xs font-semibold text-slate-200 hover:border-cyan-400/40 hover:text-white transition-all"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 py-2.5 font-mono text-xs font-semibold text-slate-200 hover:border-yellow-400/40 hover:text-white transition-all"
           >
-            <i className="fa-solid fa-download text-cyan-400 text-[11px]" />
+            <i className="fa-solid fa-download text-yellow-400 text-[11px]" />
             <span>PNG</span>
           </button>
 
           <button
             type="button"
             onClick={handleDownloadSVG}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 py-2.5 font-mono text-xs font-semibold text-slate-200 hover:border-cyan-400/40 hover:text-white transition-all"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 py-2.5 font-mono text-xs font-semibold text-slate-200 hover:border-yellow-400/40 hover:text-white transition-all"
           >
             <i className="fa-solid fa-file-code text-indigo-400 text-[11px]" />
             <span>SVG</span>
@@ -298,7 +298,7 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
               target="_blank"
               rel="noreferrer"
               onClick={() => playTick()}
-              className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-400/20"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-yellow-400 to-indigo-500 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-400/20"
             >
               <span>Visit ↗</span>
             </a>
@@ -306,7 +306,7 @@ export function CertificateQRCodeModal({ cert, isOpen, onClose, showToast }) {
             <button
               type="button"
               onClick={handleCopyLink}
-              className="flex items-center justify-center gap-1.5 rounded-xl bg-cyan-500/20 border border-cyan-400/30 py-2.5 font-mono text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-all"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-yellow-500/20 border border-yellow-400/30 py-2.5 font-mono text-xs font-bold text-yellow-300 hover:bg-yellow-500/30 transition-all"
             >
               <span>Copy Link</span>
             </button>

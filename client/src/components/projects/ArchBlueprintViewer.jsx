@@ -55,7 +55,7 @@ export function ArchBlueprintViewer({
           playTick();
           onExpandLightbox && onExpandLightbox(effectiveDiagram);
         }}
-        className="arch-blueprint-frame cursor-zoom-in group max-h-[560px] flex items-center justify-center p-4 sm:p-6 transition-all hover:border-cyan-400/60 shadow-2xl relative"
+        className="arch-blueprint-frame cursor-zoom-in group max-h-[560px] flex items-center justify-center p-4 sm:p-6 transition-all hover:border-yellow-400/60 shadow-2xl relative"
       >
         <img
           src={effectiveDiagram}
@@ -63,12 +63,12 @@ export function ArchBlueprintViewer({
           className="w-full h-auto max-h-[480px] object-contain rounded-xl transition-transform duration-500 group-hover:scale-[1.02]"
         />
 
-        <div className="absolute top-4 left-4 px-3 py-1.5 rounded-xl bg-black/80 backdrop-blur-md border border-cyan-500/30 text-[11px] font-mono text-cyan-300 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+        <div className="absolute top-4 left-4 px-3 py-1.5 rounded-xl bg-black/80 backdrop-blur-md border border-yellow-500/30 text-[11px] font-mono text-yellow-300 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
           <span>Multi-Tier Topology Specification</span>
         </div>
 
-        <div className="absolute bottom-4 right-4 px-3.5 py-2 rounded-xl bg-black/85 backdrop-blur-md border border-white/20 text-xs font-mono text-cyan-400 flex items-center gap-2 shadow-lg group-hover:border-cyan-400 transition-colors">
+        <div className="absolute bottom-4 right-4 px-3.5 py-2 rounded-xl bg-black/85 backdrop-blur-md border border-white/20 text-xs font-mono text-yellow-400 flex items-center gap-2 shadow-lg group-hover:border-yellow-400 transition-colors">
           <i className="fa-solid fa-magnifying-glass-plus" />
           <span>Click to Inspect Full Blueprint</span>
         </div>
@@ -89,7 +89,7 @@ export function ArchBlueprintViewer({
               }}
               className={`font-mono text-xs px-3 py-1 rounded-lg transition-all ${
                 activeTier === 'client'
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
+                  ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 font-bold'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -128,12 +128,12 @@ export function ArchBlueprintViewer({
 
         {/* Tier Details Card */}
         {activeTier === 'client' && (
-          <div className="p-5 rounded-2xl bg-[#0B1528] border border-cyan-500/30 space-y-3 animate-in fade-in duration-200 shadow-xl">
+          <div className="p-5 rounded-2xl bg-[#0a0800] border border-yellow-500/30 space-y-3 animate-in fade-in duration-200 shadow-xl">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className="font-mono text-xs text-cyan-400 font-bold flex items-center gap-2">
+              <span className="font-mono text-xs text-yellow-400 font-bold flex items-center gap-2">
                 <i className="fa-brands fa-react" /> Presentation & State Management Layer
               </span>
-              <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold">
+              <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-yellow-500/15 text-yellow-300 border border-yellow-500/30 font-semibold">
                 Stack: {clientTech}
               </span>
             </div>

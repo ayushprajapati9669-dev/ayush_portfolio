@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 
@@ -18,12 +18,6 @@ export function BackgroundLayers() {
     location.pathname &&
     (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
   );
-
-  const [showDroplets, setShowDroplets] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => setShowDroplets(true), 150);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -51,28 +45,39 @@ export function BackgroundLayers() {
 
   return (
     <>
-      {/* Powder & Colt Gibson Top Overhead Ambient Lamp Spotlight Cone */}
+      {/* VSLFlow Gold Radial Glow from Bottom-Center */}
       <div
-        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[1100px] max-w-[95vw] h-[520px] z-0"
+        className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] max-w-[100vw] h-[400px] z-0"
         style={{
-          background: 'radial-gradient(ellipse 65% 42% at 50% 0%, rgba(245, 158, 11, 0.14), rgba(245, 158, 11, 0.03) 55%, transparent 75%)'
+          background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(212, 175, 55, 0.07), rgba(212, 175, 55, 0.02) 55%, transparent 75%)'
         }}
         aria-hidden="true"
       />
 
-      {/* Obsidian Pitch Black Liquid Canvas with Subtle Waving Dot Matrix */}
+      {/* Very subtle gold top ambient */}
+      <div
+        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[700px] max-w-[90vw] h-[300px] z-0"
+        style={{
+          background: 'radial-gradient(ellipse 55% 40% at 50% 0%, rgba(212, 175, 55, 0.04), transparent 70%)'
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Pure Black Canvas */}
       <div className={`liquid-bg ${isCaseStudy ? 'liquid-bg-case-study' : ''}`} aria-hidden="true">
+        {/* Subtle gold aurora blob bottom-left */}
         <div className="aurora-blob aurora-1" />
+        {/* Subtle gold aurora blob top-right */}
         <div className="aurora-blob aurora-2" />
       </div>
 
-      {/* Sarthak Sharma 4-Column Architectural Hairline Guides */}
+      {/* Architectural 4-Column Hairline Guides */}
       <div className="editorial-grid-guides" aria-hidden="true" />
 
       {/* Film Grain Noise Texture Overlay */}
       <div className="bg-noise" aria-hidden="true" />
 
-      {/* Minimal Ambient Cursor Spotlight Follower */}
+      {/* Minimal Gold-Tinted Cursor Spotlight */}
       <div className="mouse-light" id="mouseLight" ref={mouseLightRef} aria-hidden="true" />
     </>
   );

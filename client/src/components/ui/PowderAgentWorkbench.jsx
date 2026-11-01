@@ -270,3 +270,4 @@ export function PowderAgentWorkbench({ onOpenTerminal, onOpenResume }) {
     </div>
   );
 }
+

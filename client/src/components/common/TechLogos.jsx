@@ -249,7 +249,7 @@ export function TechLogo({ name, className = 'h-6 w-6' }) {
   // Tailwind CSS
   if (k.includes('tailwind')) {
     return (
-      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#38BDF8" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#D4AF37" aria-hidden="true">
         <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
       </svg>
     );
@@ -317,7 +317,7 @@ export function TechLogo({ name, className = 'h-6 w-6' }) {
   // MySQL / SQL
   if (k.includes('mysql') || k.includes('sql')) {
     return (
-      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#38BDF8" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="#D4AF37" aria-hidden="true">
         <path d="M12 3C6.5 3 2 4.79 2 7v10c0 2.21 4.5 4 10 4s10-1.79 10-4V7c0-2.21-4.5-4-10-4zm0 2c4.42 0 8 1.12 8 2.5S16.42 10 12 10 4 8.88 4 7.5 7.58 5 12 5zm8 12c0 1.38-3.58 2.5-8 2.5S4 18.38 4 17v-2.16c1.82 1.03 4.73 1.66 8 1.66s6.18-.63 8-1.66V17zm0-5c0 1.38-3.58 2.5-8 2.5S4 13.38 4 12V9.84c1.82 1.03 4.73 1.66 8 1.66s6.18-.63 8-1.66V12z" />
       </svg>
     );
@@ -397,7 +397,7 @@ export function TechLogo({ name, className = 'h-6 w-6' }) {
   // Responsive UI
   if (k.includes('responsive') || k.includes('interface')) {
     return (
-      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="none" stroke="#38BDF8" strokeWidth="1.8" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className={`${className} shrink-0`} fill="none" stroke="#D4AF37" strokeWidth="1.8" aria-hidden="true">
         <rect x="2" y="4" width="14" height="12" rx="2" />
         <path d="M6 20h6M9 16v4" strokeLinecap="round" />
         <rect x="15" y="8" width="7" height="12" rx="1.5" />

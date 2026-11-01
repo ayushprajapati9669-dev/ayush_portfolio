@@ -380,7 +380,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
       <div className="spotlight-toast-container">
         {toasts.map((t) => (
           <div key={t.id} className={`spotlight-toast show ${t.type}`}>
-            <i className={`fa-solid ${t.type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-circle-info text-cyan-400'}`} />
+            <i className={`fa-solid ${t.type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-circle-info text-yellow-400'}`} />
             <span>{t.message}</span>
           </div>
         ))}
@@ -528,7 +528,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
                   onClick={toggleBookmark}
                   title="Bookmark Milestone"
                 >
-                  <i className={`fa-${savedSlides[currentSlide.id] ? 'solid text-cyan-400' : 'regular'} fa-bookmark`} />
+                  <i className={`fa-${savedSlides[currentSlide.id] ? 'solid text-yellow-400' : 'regular'} fa-bookmark`} />
                 </button>
               </div>
             </div>
@@ -609,7 +609,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
                   }}
                 >
                   <span>
-                    <i className="fa-solid fa-layer-group mr-2 text-cyan-400" />
+                    <i className="fa-solid fa-layer-group mr-2 text-yellow-400" />
                     Read Architecture &amp; Deep Dive
                   </span>
                   <i className="fa-solid fa-chevron-down" />

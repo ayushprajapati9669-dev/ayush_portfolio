@@ -35,14 +35,14 @@ function FormErrorMessage({ message }) {
 
 // Brand icons map for tech stack tags matching reference design
 const TECH_ICONS = {
-  react: { icon: 'fa-brands fa-react', color: 'text-cyan-400' },
-  'react js': { icon: 'fa-brands fa-react', color: 'text-cyan-400' },
+  react: { icon: 'fa-brands fa-react', color: 'text-yellow-400' },
+  'react js': { icon: 'fa-brands fa-react', color: 'text-yellow-400' },
   'node.js': { icon: 'fa-brands fa-node-js', color: 'text-emerald-400' },
   node: { icon: 'fa-brands fa-node-js', color: 'text-emerald-400' },
   mongodb: { icon: 'fa-solid fa-leaf', color: 'text-green-500' },
   mongo: { icon: 'fa-solid fa-leaf', color: 'text-green-500' },
-  tailwindcss: { icon: 'fa-solid fa-wind', color: 'text-sky-400' },
-  tailwind: { icon: 'fa-solid fa-wind', color: 'text-sky-400' },
+  tailwindcss: { icon: 'fa-solid fa-wind', color: 'text-yellow-400' },
+  tailwind: { icon: 'fa-solid fa-wind', color: 'text-yellow-400' },
   express: { icon: 'fa-solid fa-server', color: 'text-amber-400' },
   'express.js': { icon: 'fa-solid fa-server', color: 'text-amber-400' },
   javascript: { icon: 'fa-brands fa-js', color: 'text-yellow-400' },
@@ -59,7 +59,7 @@ const TECH_ICONS = {
   git: { icon: 'fa-brands fa-git-alt', color: 'text-red-500' },
   github: { icon: 'fa-brands fa-github', color: 'text-slate-300' },
   docker: { icon: 'fa-brands fa-docker', color: 'text-blue-400' },
-  mysql: { icon: 'fa-solid fa-database', color: 'text-cyan-300' },
+  mysql: { icon: 'fa-solid fa-database', color: 'text-yellow-300' },
   redux: { icon: 'fa-solid fa-atom', color: 'text-purple-400' },
   firebase: { icon: 'fa-solid fa-fire', color: 'text-amber-500' }
 };
@@ -69,7 +69,7 @@ function getTechBadgeData(rawName) {
   if (TECH_ICONS[clean]) {
     return TECH_ICONS[clean];
   }
-  return { icon: 'fa-solid fa-cube', color: 'text-cyan-400' };
+  return { icon: 'fa-solid fa-cube', color: 'text-yellow-400' };
 }
 
 const COMMON_PROJECT_CATEGORIES = [
@@ -964,7 +964,7 @@ export function AdminProjects({
       {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-layer-group" /> FULL-STACK ARCHITECTURES & APPS
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Deploy & Showcase Applications</h2>
@@ -1007,7 +1007,7 @@ export function AdminProjects({
               }, 100);
             }}
             className="btn-create-project"
-            style={{ background: 'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(6,182,212,0.4))' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand-color, #d4af37), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(212,175,55,0.4))' }}
           >
             <i className="fa-solid fa-plus font-bold" />
             <span>New Project</span>
@@ -1018,7 +1018,7 @@ export function AdminProjects({
       {/* ========================================================
           2. LIVE SECTION HEADINGS CUSTOMIZER (COLLAPSIBLE)
          ======================================================== */}
-      <div className="glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 transition-all hover:border-cyan-500/30">
+      <div className="glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 transition-all hover:border-yellow-500/30">
         <div
           className="flex cursor-pointer items-center justify-between select-none"
           onClick={() => {
@@ -1027,12 +1027,12 @@ export function AdminProjects({
           }}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 shadow-sm shadow-cyan-500/10">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 shadow-sm shadow-cyan-500/10">
               <i className="fa-solid fa-heading" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-400 font-bold">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-yellow-400 font-bold">
                   SECTION HEADINGS CUSTOMIZER
                 </span>
               </div>
@@ -1068,7 +1068,7 @@ export function AdminProjects({
                     uiLabels: { ...prev.uiLabels, homeProjectsEyebrow: e.target.value }
                   }), session.token)
                 }
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
                 placeholder="02 · LIVE DEPLOYED PROJECTS"
               />
             </div>
@@ -1085,7 +1085,7 @@ export function AdminProjects({
                     uiLabels: { ...prev.uiLabels, homeProjectsHeading: e.target.value }
                   }), session.token)
                 }
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                 placeholder="Featured Full-Stack Applications"
               />
             </div>
@@ -1099,12 +1099,12 @@ export function AdminProjects({
           ref={formRef}
           onSubmit={handleSave}
           noValidate
-          className="glass-card-admin p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200 border-cyan-500/30"
+          className="glass-card-admin p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200 border-yellow-500/30"
         >
           {/* Header */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400">
                 <i className={editingId ? 'fa-solid fa-pen-to-square' : 'fa-solid fa-plus'}></i>
               </div>
               <div>
@@ -1112,7 +1112,7 @@ export function AdminProjects({
                   <h2 className="text-xl font-bold text-white">
                     {editingId ? 'Edit Project' : 'Create New Live Project'}
                   </h2>
-                  <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                  <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/30">
                     Step {currentStep} of 5
                   </span>
                 </div>
@@ -1138,7 +1138,7 @@ export function AdminProjects({
             {/* Visual Step Progress Slider */}
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
+                className="h-full bg-gradient-to-r from-yellow-400 via-indigo-400 to-purple-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
                 style={{ width: `${(currentStep / 5) * 100}%` }}
               />
             </div>
@@ -1158,7 +1158,7 @@ export function AdminProjects({
                   onClick={() => handleJumpToStep(s.num)}
                   className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-left transition-all ${
                     currentStep === s.num
-                      ? 'border-cyan-400 bg-cyan-500/10 text-white shadow-md shadow-cyan-500/15'
+                      ? 'border-yellow-400 bg-yellow-500/10 text-white shadow-md shadow-cyan-500/15'
                       : currentStep > s.num
                       ? 'border-emerald-500/30 bg-emerald-500/5 text-slate-300 hover:border-emerald-500/50'
                       : 'border-white/10 bg-black/40 text-slate-400 hover:border-white/20'
@@ -1167,7 +1167,7 @@ export function AdminProjects({
                   <div
                     className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
                       currentStep === s.num
-                        ? 'bg-cyan-400 text-black shadow-md shadow-cyan-400/40'
+                        ? 'bg-yellow-400 text-black shadow-md shadow-cyan-400/40'
                         : currentStep > s.num
                         ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                         : 'bg-white/10 text-slate-400'
@@ -1191,7 +1191,7 @@ export function AdminProjects({
             <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
                 <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                  <i className="fa-solid fa-file-lines text-cyan-400"></i>
+                  <i className="fa-solid fa-file-lines text-yellow-400"></i>
                   <span>Project Identity & Classification</span>
                 </div>
                 <span className="text-[11px] font-mono text-slate-400">Required fields marked with *</span>
@@ -1215,11 +1215,11 @@ export function AdminProjects({
                     if (errors.title) setErrors((prev) => ({ ...prev, title: '' }));
                   }}
                   placeholder="e.g. Airbnb Clone — Vacation Rental Platform"
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 shadow-inner"
                 />
                 <FormErrorMessage message={errors.title} />
                 <p className="text-[11px] text-slate-400 mt-1 font-mono">
-                  Slug will be auto-generated: <span className="text-cyan-400">/{form.title ? form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') : 'project-slug'}</span>
+                  Slug will be auto-generated: <span className="text-yellow-400">/{form.title ? form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') : 'project-slug'}</span>
                 </p>
               </div>
 
@@ -1236,7 +1236,7 @@ export function AdminProjects({
                     if (errors.category) setErrors((prev) => ({ ...prev, category: '' }));
                   }}
                   placeholder="e.g. Full-Stack Web App, AI & Machine Learning, Mobile..."
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 shadow-inner"
                 />
                 <FormErrorMessage message={errors.category} />
 
@@ -1257,11 +1257,11 @@ export function AdminProjects({
                           }}
                           className={`font-mono text-xs px-3 py-1.5 rounded-lg border transition-all ${
                             isSelected
-                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold shadow-sm shadow-cyan-500/20'
+                              ? 'border-yellow-400 bg-yellow-500/20 text-yellow-300 font-bold shadow-sm shadow-cyan-500/20'
                               : 'border-white/10 bg-black/30 text-slate-400 hover:text-white hover:border-white/25'
                           }`}
                         >
-                          {isSelected && <i className="fa-solid fa-check text-[10px] mr-1.5 text-cyan-400"></i>}
+                          {isSelected && <i className="fa-solid fa-check text-[10px] mr-1.5 text-yellow-400"></i>}
                           {cat}
                         </button>
                       );
@@ -1277,7 +1277,7 @@ export function AdminProjects({
             <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
                 <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                  <i className="fa-solid fa-align-left text-cyan-400"></i>
+                  <i className="fa-solid fa-align-left text-yellow-400"></i>
                   <span>Project Overview & Short Description</span>
                 </div>
                 <span className="text-[11px] font-mono text-slate-400">Required field marked with *</span>
@@ -1300,7 +1300,7 @@ export function AdminProjects({
                     if (errors.shortDescription) setErrors((prev) => ({ ...prev, shortDescription: '' }));
                   }}
                   placeholder="Describe the application value proposition, core engineering highlights, and primary user workflow. This is shown on project cards and hero sections..."
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 shadow-inner"
                 />
                 <FormErrorMessage message={errors.shortDescription} />
                 <p className="text-[11px] text-slate-400 mt-2">
@@ -1315,7 +1315,7 @@ export function AdminProjects({
             <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
                 <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                  <i className="fa-solid fa-code text-cyan-400"></i>
+                  <i className="fa-solid fa-code text-yellow-400"></i>
                   <span>Tech Stack & Project Links</span>
                 </div>
                 <span className="text-[11px] font-mono text-slate-400">Required fields marked with *</span>
@@ -1340,7 +1340,7 @@ export function AdminProjects({
                     if (errors.technologies) setErrors((prev) => ({ ...prev, technologies: '' }));
                   }}
                   placeholder="React JS, Node.js, Express.js, MongoDB, Tailwind CSS..."
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 shadow-inner"
                 />
                 <FormErrorMessage message={errors.technologies} />
 
@@ -1387,13 +1387,13 @@ export function AdminProjects({
                           onClick={() => handleToggleTechPreset(tech)}
                           className={`font-mono text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                             isSelected
-                              ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 font-bold shadow-sm shadow-cyan-500/20'
+                              ? 'border-yellow-400 bg-yellow-500/20 text-yellow-300 font-bold shadow-sm shadow-cyan-500/20'
                               : 'border-white/10 bg-black/30 text-slate-400 hover:text-white hover:border-white/25'
                           }`}
                         >
                           <i className={`${badge.icon} ${badge.color}`}></i>
                           <span>{tech}</span>
-                          {isSelected && <i className="fa-solid fa-check text-[10px] text-cyan-400 ml-0.5"></i>}
+                          {isSelected && <i className="fa-solid fa-check text-[10px] text-yellow-400 ml-0.5"></i>}
                         </button>
                       );
                     })}
@@ -1407,7 +1407,7 @@ export function AdminProjects({
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label className="block font-mono text-xs text-slate-300 font-semibold flex items-center gap-1.5">
-                      <i className="fa-solid fa-arrow-up-right-from-square text-cyan-400"></i>
+                      <i className="fa-solid fa-arrow-up-right-from-square text-yellow-400"></i>
                       <span>Live Demo URL *</span>
                     </label>
                     {form.liveDemoUrl && /^https?:\/\//i.test(form.liveDemoUrl) && (
@@ -1415,7 +1415,7 @@ export function AdminProjects({
                         href={form.liveDemoUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-mono text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
+                        className="font-mono text-[11px] text-yellow-400 hover:underline flex items-center gap-1"
                       >
                         <span>Test Link</span>
                         <i className="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
@@ -1430,11 +1430,11 @@ export function AdminProjects({
                       if (errors.liveDemoUrl) setErrors((prev) => ({ ...prev, liveDemoUrl: '' }));
                     }}
                     placeholder="https://airbnbclone2-8519.onrender.com"
-                    className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                    className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 shadow-inner"
                   />
                   <FormErrorMessage message={errors.liveDemoUrl} />
                   <p className="text-[11px] text-slate-400 font-mono">
-                    Must begin with <span className="text-cyan-400">https://</span> or <span className="text-cyan-400">http://</span>
+                    Must begin with <span className="text-yellow-400">https://</span> or <span className="text-yellow-400">http://</span>
                   </p>
                 </div>
 
@@ -1450,7 +1450,7 @@ export function AdminProjects({
                         href={form.githubUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-mono text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
+                        className="font-mono text-[11px] text-yellow-400 hover:underline flex items-center gap-1"
                       >
                         <span>Open Repo</span>
                         <i className="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
@@ -1465,7 +1465,7 @@ export function AdminProjects({
                       if (errors.githubUrl) setErrors((prev) => ({ ...prev, githubUrl: '' }));
                     }}
                     placeholder="https://github.com/ayushprajapati9669-dev/project-repo"
-                    className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 shadow-inner"
+                    className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 shadow-inner"
                   />
                   <FormErrorMessage message={errors.githubUrl} />
                   <p className="text-[11px] text-slate-400 font-mono">
@@ -1481,7 +1481,7 @@ export function AdminProjects({
             <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
                 <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                  <i className="fa-solid fa-photo-film text-cyan-400"></i>
+                  <i className="fa-solid fa-photo-film text-yellow-400"></i>
                   <span>Media Upload, Visibility & Card Preview</span>
                 </div>
                 <span className="text-[11px] font-mono text-slate-400">Step 4 of 5</span>
@@ -1493,7 +1493,7 @@ export function AdminProjects({
                   {/* Cover Image Upload */}
                   <div className="space-y-2">
                     <label className="block font-mono text-xs text-slate-300 font-semibold flex items-center gap-1.5">
-                      <i className="fa-solid fa-image text-cyan-400"></i>
+                      <i className="fa-solid fa-image text-yellow-400"></i>
                       <span>Project Cover Image *</span>
                     </label>
 
@@ -1516,7 +1516,7 @@ export function AdminProjects({
                         }}
                         className="hidden"
                       />
-                      <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg shadow-inner">
+                      <div className="w-12 h-12 rounded-full bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-lg shadow-inner">
                         {isUploading ? (
                           <i className="fa-solid fa-circle-notch fa-spin"></i>
                         ) : (
@@ -1526,7 +1526,7 @@ export function AdminProjects({
                       <div>
                         <p className="text-xs font-semibold text-white">
                           {isUploading ? 'Uploading to cloud...' : 'Drag & Drop cover image here, or '}
-                          {!isUploading && <span className="text-cyan-400 underline cursor-pointer">browse</span>}
+                          {!isUploading && <span className="text-yellow-400 underline cursor-pointer">browse</span>}
                         </p>
                         <p className="text-[11px] text-slate-400 mt-0.5 font-mono">
                           PNG, JPG, WebP up to 10MB (Cloudinary automated optimization)
@@ -1544,7 +1544,7 @@ export function AdminProjects({
                           if (errors.thumbnailUrl) setErrors((prev) => ({ ...prev, thumbnailUrl: '' }));
                         }}
                         placeholder="Or paste direct image URL (https://...)"
-                        className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                        className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
                       />
                       <FormErrorMessage message={errors.thumbnailUrl} />
                     </div>
@@ -1651,13 +1651,13 @@ export function AdminProjects({
                 {/* Right Column: Real-time Live Project Card Preview */}
                 <div className="lg:col-span-5 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-cyan-400 font-semibold flex items-center gap-1.5">
+                    <span className="font-mono text-xs text-yellow-400 font-semibold flex items-center gap-1.5">
                       <i className="fa-solid fa-eye"></i> Live Portfolio Card Preview
                     </span>
                     <span className="font-mono text-[10px] text-slate-400">What visitors will see</span>
                   </div>
 
-                  <div className="rounded-2xl border border-cyan-500/30 bg-black/60 overflow-hidden shadow-2xl backdrop-blur-md">
+                  <div className="rounded-2xl border border-yellow-500/30 bg-black/60 overflow-hidden shadow-2xl backdrop-blur-md">
                     {/* Preview Thumbnail */}
                     <div className="relative aspect-video w-full bg-slate-900 overflow-hidden group">
                       {form.thumbnailUrl ? (
@@ -1675,7 +1675,7 @@ export function AdminProjects({
 
                       {/* Top badging on card */}
                       <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
-                        <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-cyan-300 border border-cyan-400/30">
+                        <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-yellow-300 border border-yellow-400/30">
                           {form.category || 'Category'}
                         </span>
                         {form.featured && (
@@ -1684,7 +1684,7 @@ export function AdminProjects({
                           </span>
                         )}
                         {(form.caseStudy?.problem || form.caseStudy?.result?.summary) && (
-                          <span className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1 backdrop-blur-md">
+                          <span className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 flex items-center gap-1 backdrop-blur-md">
                             📖 Case Study
                           </span>
                         )}
@@ -1729,7 +1729,7 @@ export function AdminProjects({
                           );
                         })}
                         {currentTechList.length > 4 && (
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
                             +{currentTechList.length - 4} more
                           </span>
                         )}
@@ -1737,7 +1737,7 @@ export function AdminProjects({
 
                       {/* Action buttons preview */}
                       <div className="flex items-center gap-2 pt-2 border-t border-white/10">
-                        <span className="flex-1 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-center text-xs font-semibold flex items-center justify-center gap-1.5">
+                        <span className="flex-1 py-1.5 rounded-lg bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 text-center text-xs font-semibold flex items-center justify-center gap-1.5">
                           <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                           <span>Live Demo</span>
                         </span>
@@ -1758,7 +1758,7 @@ export function AdminProjects({
             <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
               <div className="flex flex-wrap items-center justify-between border-b border-white/5 pb-2 gap-2">
                 <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                  <i className="fa-solid fa-book-open text-cyan-400"></i>
+                  <i className="fa-solid fa-book-open text-yellow-400"></i>
                   <span>Engineering Case Study (Problem → Approach → Tech Decisions → Result → Learnings)</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1766,13 +1766,13 @@ export function AdminProjects({
                     type="button"
                     onClick={handleGenerateAiBreakdown}
                     disabled={isGeneratingAi}
-                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-500/20 to-cyan-500/20 hover:from-purple-500/30 hover:to-cyan-500/30 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all active:scale-95 disabled:opacity-50"
+                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-500/20 to-yellow-500/20 hover:from-purple-500/30 hover:to-yellow-500/30 border border-yellow-500/40 text-yellow-300 font-mono text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all active:scale-95 disabled:opacity-50"
                     title="Automatically generate Problem Statement, Strategy, Trade-offs, and Metrics using AI"
                   >
-                    <i className={`fa-solid ${isGeneratingAi ? 'fa-circle-notch animate-spin text-purple-400' : 'fa-wand-magic-sparkles text-cyan-400'}`}></i>
+                    <i className={`fa-solid ${isGeneratingAi ? 'fa-circle-notch animate-spin text-purple-400' : 'fa-wand-magic-sparkles text-yellow-400'}`}></i>
                     <span>{isGeneratingAi ? 'Generating Architecture...' : '✨ Generate AI Architecture Breakdown'}</span>
                   </button>
-                  <span className="text-[11px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+                  <span className="text-[11px] font-mono text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20">
                     Optional / Skip Available
                   </span>
                 </div>
@@ -1785,7 +1785,7 @@ export function AdminProjects({
                   <div className="space-y-2 p-4 rounded-2xl border border-white/10 bg-black/30">
                     <div className="flex items-center justify-between">
                       <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">1</span>
+                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">1</span>
                         <span>The Problem Statement</span>
                       </label>
                       <div className="flex items-center gap-3">
@@ -1795,7 +1795,7 @@ export function AdminProjects({
                         <button
                           type="button"
                           onClick={() => toggleMarkdownPreview('problem')}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-cyan-400 hover:bg-cyan-500/10"
+                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-yellow-400 hover:bg-yellow-500/10"
                         >
                           {markdownPreviews.problem ? 'Edit Markdown' : 'Preview MD'}
                         </button>
@@ -1811,7 +1811,7 @@ export function AdminProjects({
                         value={form.caseStudy?.problem || ''}
                         onChange={(e) => handleCaseStudyChange('problem', e.target.value)}
                         placeholder="Explain the real-world friction, scaling challenge, or user need that required solving (supports Markdown)..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
                       />
                     )}
                     <FormErrorMessage message={errors.csProblem} />
@@ -1821,7 +1821,7 @@ export function AdminProjects({
                   <div className="space-y-2 p-4 rounded-2xl border border-white/10 bg-black/30">
                     <div className="flex items-center justify-between">
                       <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">2</span>
+                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">2</span>
                         <span>Engineering Approach</span>
                       </label>
                       <div className="flex items-center gap-3">
@@ -1831,7 +1831,7 @@ export function AdminProjects({
                         <button
                           type="button"
                           onClick={() => toggleMarkdownPreview('approach')}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-cyan-400 hover:bg-cyan-500/10"
+                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-yellow-400 hover:bg-yellow-500/10"
                         >
                           {markdownPreviews.approach ? 'Edit Markdown' : 'Preview MD'}
                         </button>
@@ -1847,7 +1847,7 @@ export function AdminProjects({
                         value={form.caseStudy?.approach || ''}
                         onChange={(e) => handleCaseStudyChange('approach', e.target.value)}
                         placeholder="Detail how you partitioned the architecture, phased milestones, and solved challenges (supports Markdown)..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
                       />
                     )}
                     <FormErrorMessage message={errors.csApproach} />
@@ -1857,7 +1857,7 @@ export function AdminProjects({
                   <div className="space-y-2 p-4 rounded-2xl border border-white/10 bg-black/30">
                     <div className="flex items-center justify-between">
                       <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">3</span>
+                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">3</span>
                         <span>Tech Decisions & Architectural Trade-offs</span>
                       </label>
                       <div className="flex items-center gap-3">
@@ -1867,7 +1867,7 @@ export function AdminProjects({
                         <button
                           type="button"
                           onClick={() => toggleMarkdownPreview('techDecisions')}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-cyan-400 hover:bg-cyan-500/10"
+                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-yellow-400 hover:bg-yellow-500/10"
                         >
                           {markdownPreviews.techDecisions ? 'Edit Markdown' : 'Preview MD'}
                         </button>
@@ -1883,7 +1883,7 @@ export function AdminProjects({
                         value={form.caseStudy?.techDecisions || ''}
                         onChange={(e) => handleCaseStudyChange('techDecisions', e.target.value)}
                         placeholder="Explain WHY you chose Node HTTP vs Express, MongoDB vs PostgreSQL, or React vs Next.js — highlight trade-offs..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
                       />
                     )}
                     <FormErrorMessage message={errors.csTech} />
@@ -1893,7 +1893,7 @@ export function AdminProjects({
                   <div className="space-y-4 p-4 rounded-2xl border border-white/10 bg-black/30">
                     <div className="flex items-center justify-between">
                       <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">4</span>
+                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">4</span>
                         <span>Result & Measurable Outcomes</span>
                       </label>
                       <span className="font-mono text-[10px] text-slate-400">
@@ -1918,21 +1918,21 @@ export function AdminProjects({
                         }));
                       }}
                       placeholder="High-level business & engineering impact summary..."
-                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
                     />
 
                     {/* Dynamic Metrics List */}
                     <div className="space-y-2 pt-2 border-t border-white/5">
                       <div className="flex items-center justify-between">
                         <span className="font-mono text-[11px] text-slate-300 font-semibold flex items-center gap-1">
-                          <i className="fa-solid fa-chart-line text-cyan-400"></i>
+                          <i className="fa-solid fa-chart-line text-yellow-400"></i>
                           <span>Key Metrics (Max 10)</span>
                         </span>
                         <button
                           type="button"
                           onClick={handleAddMetric}
                           disabled={(form.caseStudy?.result?.metrics || []).length >= 10}
-                          className="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-all flex items-center gap-1 disabled:opacity-40"
+                          className="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20 transition-all flex items-center gap-1 disabled:opacity-40"
                         >
                           <i className="fa-solid fa-plus text-[9px]"></i> Add Metric
                         </button>
@@ -1946,14 +1946,14 @@ export function AdminProjects({
                               value={m.label || ''}
                               onChange={(e) => handleMetricChange(idx, 'label', e.target.value)}
                               placeholder="Metric label (e.g. API Endpoints)"
-                              className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white outline-none focus:border-cyan-400 font-mono"
+                              className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white outline-none focus:border-yellow-400 font-mono"
                             />
                             <input
                               type="text"
                               value={m.value || ''}
                               onChange={(e) => handleMetricChange(idx, 'value', e.target.value)}
                               placeholder="Value (e.g. 15+)"
-                              className="w-28 rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-cyan-300 outline-none focus:border-cyan-400 font-mono font-bold"
+                              className="w-28 rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-yellow-300 outline-none focus:border-yellow-400 font-mono font-bold"
                             />
                             <button
                               type="button"
@@ -1978,7 +1978,7 @@ export function AdminProjects({
                   <div className="space-y-3 p-4 rounded-2xl border border-white/10 bg-black/30">
                     <div className="flex items-center justify-between">
                       <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">5</span>
+                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">5</span>
                         <span>System Architecture Diagram</span>
                       </label>
                       {form.caseStudy?.architectureDiagramUrl && (
@@ -1993,7 +1993,7 @@ export function AdminProjects({
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <label className="cursor-pointer font-mono text-xs px-3 py-2 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/25 transition-all flex items-center gap-1.5">
+                      <label className="cursor-pointer font-mono text-xs px-3 py-2 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/25 transition-all flex items-center gap-1.5">
                         <i className="fa-solid fa-cloud-arrow-up"></i>
                         <span>Upload Diagram</span>
                         <input
@@ -2012,12 +2012,12 @@ export function AdminProjects({
                         value={form.caseStudy?.architectureDiagramUrl || ''}
                         onChange={(e) => handleCaseStudyChange('architectureDiagramUrl', e.target.value)}
                         placeholder="Or direct diagram image URL (https://...)"
-                        className="flex-1 rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white outline-none focus:border-cyan-400 font-mono"
+                        className="flex-1 rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white outline-none focus:border-yellow-400 font-mono"
                       />
                     </div>
 
                     {form.caseStudy?.architectureDiagramUrl && (
-                      <div className="relative rounded-xl overflow-hidden border border-cyan-500/30 bg-black/60 aspect-video max-h-48">
+                      <div className="relative rounded-xl overflow-hidden border border-yellow-500/30 bg-black/60 aspect-video max-h-48">
                         <img
                           src={form.caseStudy.architectureDiagramUrl}
                           alt="Architecture diagram preview"
@@ -2030,7 +2030,7 @@ export function AdminProjects({
                   {/* Before & After Screenshots */}
                   <div className="space-y-4 p-4 rounded-2xl border border-white/10 bg-black/30">
                     <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">6</span>
+                      <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">6</span>
                       <span>Before & After Screenshots (Max 5 Each)</span>
                     </label>
 
@@ -2113,7 +2113,7 @@ export function AdminProjects({
                   <div className="space-y-2 p-4 rounded-2xl border border-white/10 bg-black/30">
                     <div className="flex items-center justify-between">
                       <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">7</span>
+                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">7</span>
                         <span>What I Learned (Engineering Retrospective)</span>
                       </label>
                       <div className="flex items-center gap-3">
@@ -2123,7 +2123,7 @@ export function AdminProjects({
                         <button
                           type="button"
                           onClick={() => toggleMarkdownPreview('learnings')}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-cyan-400 hover:bg-cyan-500/10"
+                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-yellow-400 hover:bg-yellow-500/10"
                         >
                           {markdownPreviews.learnings ? 'Edit Markdown' : 'Preview MD'}
                         </button>
@@ -2139,7 +2139,7 @@ export function AdminProjects({
                         value={form.caseStudy?.learnings || ''}
                         onChange={(e) => handleCaseStudyChange('learnings', e.target.value)}
                         placeholder="What unexpected edge cases occurred? What would you do differently on Day 1 next time? (supports Markdown)..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500 font-mono"
+                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
                       />
                     )}
                     <FormErrorMessage message={errors.csLearnings} />
@@ -2149,22 +2149,22 @@ export function AdminProjects({
                 {/* Right Column: Case Study Simulated Live Preview */}
                 <div className="lg:col-span-5 space-y-4 sticky top-6">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-cyan-400 font-semibold flex items-center gap-1.5">
+                    <span className="font-mono text-xs text-yellow-400 font-semibold flex items-center gap-1.5">
                       <i className="fa-solid fa-book-open"></i> Case Study Live Preview
                     </span>
                     <button
                       type="button"
                       onClick={() => setIsPreviewCaseStudyModalOpen(true)}
-                      className="font-mono text-[10px] text-cyan-400 hover:underline flex items-center gap-1"
+                      className="font-mono text-[10px] text-yellow-400 hover:underline flex items-center gap-1"
                     >
                       <span>Full Preview Modal</span>
                       <i className="fa-solid fa-expand text-[9px]"></i>
                     </button>
                   </div>
 
-                  <div className="rounded-2xl border border-cyan-500/30 bg-black/70 p-5 space-y-4 shadow-2xl backdrop-blur-md">
+                  <div className="rounded-2xl border border-yellow-500/30 bg-black/70 p-5 space-y-4 shadow-2xl backdrop-blur-md">
                     <div>
-                      <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                      <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-yellow-500/15 text-yellow-300 border border-yellow-500/30">
                         {form.category || 'Category'}
                       </span>
                       <h3 className="text-base font-bold text-white mt-2">
@@ -2180,7 +2180,7 @@ export function AdminProjects({
                       <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
                         {form.caseStudy.result.metrics.slice(0, 4).map((m, i) => (
                           <div key={i} className="p-2 rounded-lg bg-white/5 border border-white/10">
-                            <span className="text-sm font-bold text-cyan-300 block">{m.value || '—'}</span>
+                            <span className="text-sm font-bold text-yellow-300 block">{m.value || '—'}</span>
                             <span className="text-[10px] text-slate-400 truncate block">{m.label || 'Metric'}</span>
                           </div>
                         ))}
@@ -2190,7 +2190,7 @@ export function AdminProjects({
                     {/* Problem excerpt */}
                     {form.caseStudy?.problem && (
                       <div className="pt-2 border-t border-white/10">
-                        <span className="font-mono text-[10px] uppercase text-cyan-400 font-bold block mb-1">
+                        <span className="font-mono text-[10px] uppercase text-yellow-400 font-bold block mb-1">
                           The Problem
                         </span>
                         <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
@@ -2203,7 +2203,7 @@ export function AdminProjects({
                     {form.caseStudy?.architectureDiagramUrl && (
                       <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
                         <span className="text-slate-400 flex items-center gap-1.5 font-mono text-[11px]">
-                          <i className="fa-solid fa-diagram-project text-cyan-400"></i> Architecture Included
+                          <i className="fa-solid fa-diagram-project text-yellow-400"></i> Architecture Included
                         </span>
                         <span className="text-[10px] font-mono text-emerald-400">✓ Uploaded</span>
                       </div>
@@ -2213,7 +2213,7 @@ export function AdminProjects({
                     {((form.caseStudy?.beforeScreenshots?.length || 0) > 0 || (form.caseStudy?.afterScreenshots?.length || 0) > 0) && (
                       <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
                         <span className="text-slate-400 flex items-center gap-1.5 font-mono text-[11px]">
-                          <i className="fa-solid fa-images text-cyan-400"></i> Screenshots
+                          <i className="fa-solid fa-images text-yellow-400"></i> Screenshots
                         </span>
                         <span className="text-[10px] font-mono text-slate-300">
                           {form.caseStudy?.beforeScreenshots?.length || 0} Before / {form.caseStudy?.afterScreenshots?.length || 0} After
@@ -2224,7 +2224,7 @@ export function AdminProjects({
                     <button
                       type="button"
                       onClick={() => setIsPreviewCaseStudyModalOpen(true)}
-                      className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-cyan-300 font-mono flex items-center justify-center gap-2 transition-all mt-2"
+                      className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-yellow-300 font-mono flex items-center justify-center gap-2 transition-all mt-2"
                     >
                       <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                       <span>Launch Full Public Case Study Simulation</span>
@@ -2286,7 +2286,7 @@ export function AdminProjects({
                   <button
                     type="button"
                     onClick={() => setIsPreviewCaseStudyModalOpen(true)}
-                    className="font-mono text-xs px-4 py-2.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 transition-all flex items-center gap-1.5"
+                    className="font-mono text-xs px-4 py-2.5 rounded-xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20 transition-all flex items-center gap-1.5"
                   >
                     <i className="fa-solid fa-eye"></i>
                     <span>Preview Case Study</span>
@@ -2319,11 +2319,11 @@ export function AdminProjects({
       {/* Modal: Full Public Case Study Preview Simulation */}
       {isPreviewCaseStudyModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="glass-card-admin max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-8 rounded-3xl border border-cyan-500/30 custom-scrollbar shadow-2xl">
+          <div className="glass-card-admin max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-8 rounded-3xl border border-yellow-500/30 custom-scrollbar shadow-2xl">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs uppercase text-cyan-400 font-bold px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20">
+                <span className="font-mono text-xs uppercase text-yellow-400 font-bold px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20">
                   Public Case Study Preview
                 </span>
                 <span className="text-xs text-slate-400">
@@ -2347,7 +2347,7 @@ export function AdminProjects({
                 </div>
               )}
               <div>
-                <span className="font-mono text-xs text-cyan-400 font-bold">{form.category || 'Category'}</span>
+                <span className="font-mono text-xs text-yellow-400 font-bold">{form.category || 'Category'}</span>
                 <h1 className="text-2xl font-bold text-white mt-1">{form.title || 'Project Title'}</h1>
                 <p className="text-sm text-slate-300 mt-2 leading-relaxed">{form.shortDescription}</p>
               </div>
@@ -2368,7 +2368,7 @@ export function AdminProjects({
               {form.caseStudy?.problem && (
                 <div className="space-y-2">
                   <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-cyan-400">01.</span> The Problem
+                    <span className="text-yellow-400">01.</span> The Problem
                   </h2>
                   <div className="markdown-body p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
                     <MarkdownView content={form.caseStudy.problem} />
@@ -2380,7 +2380,7 @@ export function AdminProjects({
               {form.caseStudy?.approach && (
                 <div className="space-y-2">
                   <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-cyan-400">02.</span> My Approach
+                    <span className="text-yellow-400">02.</span> My Approach
                   </h2>
                   <div className="markdown-body p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
                     <MarkdownView content={form.caseStudy.approach} />
@@ -2392,7 +2392,7 @@ export function AdminProjects({
               {form.caseStudy?.techDecisions && (
                 <div className="space-y-2">
                   <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-cyan-400">03.</span> Tech Decisions & Trade-offs
+                    <span className="text-yellow-400">03.</span> Tech Decisions & Trade-offs
                   </h2>
                   <div className="markdown-body p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
                     <MarkdownView content={form.caseStudy.techDecisions} />
@@ -2404,7 +2404,7 @@ export function AdminProjects({
               {(form.caseStudy?.result?.summary || (Array.isArray(form.caseStudy?.result?.metrics) && form.caseStudy.result.metrics.length > 0)) && (
                 <div className="space-y-4">
                   <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-cyan-400">04.</span> Result & Measurable Impact
+                    <span className="text-yellow-400">04.</span> Result & Measurable Impact
                   </h2>
                   {form.caseStudy.result?.summary && (
                     <p className="text-sm text-slate-300 leading-relaxed">{form.caseStudy.result.summary}</p>
@@ -2412,8 +2412,8 @@ export function AdminProjects({
                   {Array.isArray(form.caseStudy.result?.metrics) && form.caseStudy.result.metrics.length > 0 && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {form.caseStudy.result.metrics.map((m, i) => (
-                        <div key={i} className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-center">
-                          <span className="text-2xl font-bold text-cyan-300 block">{m.value}</span>
+                        <div key={i} className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-center">
+                          <span className="text-2xl font-bold text-yellow-300 block">{m.value}</span>
                           <span className="text-xs text-slate-400 block mt-1">{m.label}</span>
                         </div>
                       ))}
@@ -2448,7 +2448,7 @@ export function AdminProjects({
               {form.caseStudy?.architectureDiagramUrl && (
                 <div className="space-y-2">
                   <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-cyan-400">05.</span> System Architecture
+                    <span className="text-yellow-400">05.</span> System Architecture
                   </h2>
                   <div className="rounded-2xl overflow-hidden border border-white/10 bg-black/60">
                     <img src={form.caseStudy.architectureDiagramUrl} alt="Architecture" className="w-full object-contain max-h-96" />
@@ -2460,7 +2460,7 @@ export function AdminProjects({
               {form.caseStudy?.learnings && (
                 <div className="space-y-2">
                   <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-cyan-400">06.</span> What I Learned
+                    <span className="text-yellow-400">06.</span> What I Learned
                   </h2>
                   <div className="markdown-body p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
                     <MarkdownView content={form.caseStudy.learnings} />
@@ -2473,7 +2473,7 @@ export function AdminProjects({
               <button
                 type="button"
                 onClick={() => setIsPreviewCaseStudyModalOpen(false)}
-                className="font-mono text-xs px-6 py-2.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/30 transition-all"
+                className="font-mono text-xs px-6 py-2.5 rounded-xl bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 hover:bg-yellow-500/30 transition-all"
               >
                 Close Preview
               </button>
@@ -2492,7 +2492,7 @@ export function AdminProjects({
         {/* Section Header (Matching Image 2) */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-400 shadow-sm shadow-cyan-400/10">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-yellow-400/30 bg-yellow-500/10 text-yellow-400 shadow-sm shadow-cyan-400/10">
               <i className="fa-solid fa-layer-group text-base" />
             </div>
             <div>
@@ -2500,7 +2500,7 @@ export function AdminProjects({
                 <h3 className="text-xl font-bold text-white tracking-tight">
                   Existing Projects
                 </h3>
-                <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-400/20 px-2.5 py-0.5 rounded-full">
+                <span className="font-mono text-xs font-bold text-yellow-400 bg-yellow-500/10 border border-yellow-400/20 px-2.5 py-0.5 rounded-full">
                   {filteredProjects.length} / {projects.length}
                 </span>
               </div>
@@ -2532,7 +2532,7 @@ export function AdminProjects({
                   formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 100);
               }}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer"
             >
               <i className="fa-solid fa-plus text-xs" />
               <span>New Project</span>
@@ -2677,8 +2677,8 @@ export function AdminProjects({
 
         {/* Action Controls when selected */}
         {selectedIds.length > 0 && (
-          <div className="flex items-center justify-between p-3 rounded-xl bg-cyan-500/10 border border-cyan-400/30">
-            <span className="text-xs text-cyan-300 font-semibold flex items-center gap-2">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-yellow-500/10 border border-yellow-400/30">
+            <span className="text-xs text-yellow-300 font-semibold flex items-center gap-2">
               <i className="fa-solid fa-check-circle" /> {selectedIds.length} projects selected
             </span>
             <div className="flex items-center gap-2">
@@ -2734,10 +2734,10 @@ export function AdminProjects({
                   onDragLeave={() => handleProjDragLeave(idx)}
                   onDrop={() => handleProjDropReorder(idx)}
                   className={`group relative flex flex-col rounded-2xl border border-white/5 bg-[#0a111c] hover:border-white/20 transition-all duration-300 overflow-hidden shadow-xl ${
-                    isSelected ? 'ring-2 ring-cyan-400' : ''
+                    isSelected ? 'ring-2 ring-yellow-400' : ''
                   } ${
                     dragOverProjIndex === idx
-                      ? 'border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-400/20 scale-[1.01]'
+                      ? 'border-yellow-400 bg-yellow-500/10 shadow-lg shadow-cyan-400/20 scale-[1.01]'
                       : ''
                   } ${draggedProjIndex === idx ? 'opacity-40 cursor-grabbing' : ''}`}
                 >
@@ -2767,7 +2767,7 @@ export function AdminProjects({
                         setDraggedProjIndex(null);
                         setDragOverProjIndex(null);
                       }}
-                      className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#050a14]/80 backdrop-blur-md border border-white/10 text-white text-xs font-semibold cursor-grab active:cursor-grabbing hover:border-cyan-400/40 transition-all select-none shadow-sm"
+                      className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#050a14]/80 backdrop-blur-md border border-white/10 text-white text-xs font-semibold cursor-grab active:cursor-grabbing hover:border-yellow-400/40 transition-all select-none shadow-sm"
                       title="Drag handle to reorder project"
                     >
                       <i className="fa-solid fa-grip-vertical text-slate-400 text-xs pointer-events-none" />
@@ -2783,7 +2783,7 @@ export function AdminProjects({
                             e.stopPropagation();
                             handleEdit(proj);
                           }}
-                          className="w-7 h-7 rounded-lg bg-[#050a14]/90 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-300 flex items-center justify-center text-xs transition-all shadow-sm"
+                          className="w-7 h-7 rounded-lg bg-[#050a14]/90 hover:bg-yellow-500/20 border border-white/10 hover:border-yellow-400/40 text-slate-300 hover:text-yellow-300 flex items-center justify-center text-xs transition-all shadow-sm"
                           title="Edit Project"
                         >
                           <i className="fa-solid fa-pen text-[10px]" />
@@ -2827,7 +2827,7 @@ export function AdminProjects({
                     <div>
                       {/* Meta Line: PROJECT 01 + Click to Visit */}
                       <div className="flex items-center justify-between gap-2 mb-1.5">
-                        <span className="font-mono text-[11px] font-bold text-cyan-400 tracking-wider">
+                        <span className="font-mono text-[11px] font-bold text-yellow-400 tracking-wider">
                           PROJECT {indexStr}
                         </span>
                         {proj.liveDemoUrl && (
@@ -2844,7 +2844,7 @@ export function AdminProjects({
                       </div>
 
                       {/* Card Title */}
-                      <h4 className="text-[16px] font-bold text-white mb-1 hover:text-cyan-300 transition-colors">
+                      <h4 className="text-[16px] font-bold text-white mb-1 hover:text-yellow-300 transition-colors">
                         {proj.title}
                       </h4>
 
@@ -2876,7 +2876,7 @@ export function AdminProjects({
                         href={proj.liveDemoUrl || '#'}
                         target={proj.liveDemoUrl ? '_blank' : '_self'}
                         rel="noreferrer"
-                        className="flex items-center justify-center gap-2 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_20px_-5px_rgba(6,182,212,0.4)]"
+                        className="flex items-center justify-center gap-2 py-2 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_20px_-5px_rgba(212,175,55,0.4)]"
                       >
                         <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
                         <span>Live Demo</span>

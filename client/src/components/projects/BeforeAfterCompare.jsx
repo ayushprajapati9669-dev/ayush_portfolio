@@ -38,7 +38,7 @@ export function BeforeAfterCompare({
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
         <div>
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
-            <i className="fa-solid fa-code-compare text-cyan-400" />
+            <i className="fa-solid fa-code-compare text-yellow-400" />
             <span>Visual Evolution (Before & After)</span>
           </h3>
           <p className="text-xs text-slate-400 mt-0.5">
@@ -55,7 +55,7 @@ export function BeforeAfterCompare({
             }}
             className={`font-mono text-xs px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
               viewMode === 'slider'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-sm font-bold'
+                ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/40 shadow-sm font-bold'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -70,7 +70,7 @@ export function BeforeAfterCompare({
             }}
             className={`font-mono text-xs px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
               viewMode === 'side-by-side'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-sm font-bold'
+                ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/40 shadow-sm font-bold'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -115,10 +115,10 @@ export function BeforeAfterCompare({
 
             {/* Glowing Splitter Bar */}
             <div
-              className="absolute top-0 bottom-0 z-30 w-1 bg-cyan-400 shadow-[0_0_15px_#38bdf8] pointer-events-none"
+              className="absolute top-0 bottom-0 z-30 w-1 bg-yellow-400 shadow-[0_0_15px_#d4af37] pointer-events-none"
               style={{ left: `${sliderPos}%` }}
             >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/90 border-2 border-cyan-400 text-cyan-300 flex items-center justify-center text-xs shadow-lg">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/90 border-2 border-yellow-400 text-yellow-300 flex items-center justify-center text-xs shadow-lg">
                 <i className="fa-solid fa-arrows-left-right" />
               </div>
             </div>
@@ -138,7 +138,7 @@ export function BeforeAfterCompare({
             <button
               type="button"
               onClick={() => onImageClick && onImageClick(sliderPos > 50 ? primaryBefore : primaryAfter)}
-              className="absolute bottom-4 left-4 z-40 font-mono text-[11px] px-3 py-1.5 rounded-xl bg-black/80 hover:bg-black text-cyan-300 border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition-all shadow-md"
+              className="absolute bottom-4 left-4 z-40 font-mono text-[11px] px-3 py-1.5 rounded-xl bg-black/80 hover:bg-black text-yellow-300 border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition-all shadow-md"
             >
               <i className="fa-solid fa-magnifying-glass-plus" />
               <span>Inspect in Lightbox</span>
@@ -146,7 +146,7 @@ export function BeforeAfterCompare({
           </div>
 
           <p className="text-center font-mono text-[11px] text-slate-400 flex items-center justify-center gap-2">
-            <i className="fa-solid fa-hand-pointer text-cyan-400" />
+            <i className="fa-solid fa-hand-pointer text-yellow-400" />
             <span>Drag slider left or right to inspect real-time visual architectural transformation</span>
           </p>
         </div>

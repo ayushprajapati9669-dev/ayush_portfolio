@@ -219,7 +219,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   font-size: 17px;
   color: #000 !important;
   position: relative;
-  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4) !important;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
 }
@@ -330,17 +330,17 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .btn-admin-cms:hover {
-  border-color: rgba(56, 189, 248, 0.4);
-  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.08);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
 }
 
 .btn-admin-cms.active {
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  background: linear-gradient(135deg, #d4af37, #d4af37);
   color: #f4f1ec !important;
   border-color: transparent;
-  box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
   transform: translateY(-1px);
 }
 
@@ -390,10 +390,10 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 .notif-btn:hover,
 .notif-btn.open {
-  color: var(--accent-1, #38bdf8);
-  border-color: rgba(56, 189, 248, 0.4);
-  background: rgba(56, 189, 248, 0.1);
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+  color: var(--accent-1, #d4af37);
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.1);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
 }
 
 .notif-badge {
@@ -417,7 +417,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 .notif-btn:hover .fa-bell {
   transform: scale(1.1);
-  color: var(--accent-1, #38bdf8);
+  color: var(--accent-1, #d4af37);
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
@@ -616,10 +616,10 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .btn-outline:hover {
-  background: rgba(56, 189, 248, 0.1);
-  border-color: #38bdf8;
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #d4af37;
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
 }
 
 .cmd-kbd {
@@ -644,7 +644,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
 }
 
 .btn-primary::after {
@@ -863,7 +863,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   width: 14px !important;
   height: 14px !important;
   border-radius: 50% !important;
-  background: var(--accent-primary, #22d3ee) !important;
+  background: var(--accent-primary, #d4af37) !important;
 }
 .accent-palette {
   position: absolute !important;
@@ -916,8 +916,8 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   transform: translateY(-1px) !important;
 }
 .btn-icon.active {
-  color: var(--accent-primary, #22d3ee) !important;
-  border-color: var(--accent-primary, #22d3ee) !important;
+  color: var(--accent-primary, #d4af37) !important;
+  border-color: var(--accent-primary, #d4af37) !important;
   background: rgba(34, 211, 238, 0.12) !important;
 }
 .density-toggle {
@@ -941,7 +941,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 .density-btn.active {
   background: rgba(255, 255, 255, 0.14) !important;
-  color: var(--accent-primary, #22d3ee) !important;
+  color: var(--accent-primary, #d4af37) !important;
 }
 
 /* Admin Tools Popover */
@@ -954,7 +954,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   border-radius: 14px;
   padding: 8px;
   min-width: 210px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 15px var(--brand-glow, rgba(6, 182, 212, 0.2));
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 15px var(--brand-glow, rgba(212, 175, 55, 0.2));
   backdrop-filter: blur(25px);
   z-index: 1000;
   display: flex;
@@ -990,7 +990,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 .admin-tools-popover .popover-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: var(--brand-color, #06b6d4);
+  color: var(--brand-color, #d4af37);
   transform: translateX(2px);
 }
 
@@ -1003,14 +1003,14 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   display: flex !important;
   width: 32px !important;
   height: 32px !important;
-  background: linear-gradient(135deg, #06b6d4, #3b82f6) !important;
+  background: linear-gradient(135deg, #d4af37, #3b82f6) !important;
   border-radius: 8px !important;
   align-items: center !important;
   justify-content: center !important;
   font-weight: 700 !important;
   font-size: 13px !important;
   color: white !important;
-  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25) !important;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25) !important;
 }
 
 .nav-logo-text {
@@ -1029,8 +1029,8 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .active-pill {
-  background: rgba(6, 182, 212, 0.15) !important;
-  border: 1px solid rgba(6, 182, 212, 0.25) !important;
+  background: rgba(212, 175, 55, 0.15) !important;
+  border: 1px solid rgba(212, 175, 55, 0.25) !important;
 }
 
 .nav-link {
@@ -1045,25 +1045,25 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .nav-link.active {
-  color: #06b6d4 !important;
+  color: #d4af37 !important;
 }
 
 .btn-primary {
-  background: #06b6d4 !important;
+  background: #d4af37 !important;
   color: #000 !important;
   font-family: 'Inter', sans-serif !important;
   font-weight: 600 !important;
   border-radius: 9999px !important;
   border: none !important;
   padding: 8px 18px !important;
-  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25) !important;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25) !important;
   transition: all 0.25s ease !important;
 }
 
 .btn-primary:hover {
-  background: #0891b2 !important;
+  background: #b8960e !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35) !important;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35) !important;
   color: #000 !important;
 }
 
@@ -1212,4 +1212,171 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 .navbar .nav-active-dot {
   background: #f4f1ec !important;
   box-shadow: 0 0 8px rgba(244, 241, 236, 0.4) !important;
+}
+
+/* =========================================================================
+   VSLFlow Gold-Black Navbar Overrides
+   Applied over existing navbar.css base structure
+   ========================================================================= */
+
+/* Logo Text — Cormorant Garamond */
+.nav-logo-text {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 22px !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+  color: #ffffff !important;
+}
+
+/* Navbar pill background */
+.nav-beam-container {
+  background: rgba(0, 0, 0, 0.75) !important;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+}
+
+.navbar {
+  background: rgba(5, 5, 5, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Active nav pill */
+.active-pill {
+  background: rgba(212, 175, 55, 0.12) !important;
+  border: 1px solid rgba(212, 175, 55, 0.2) !important;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.08) !important;
+}
+
+/* Nav links */
+.nav-link {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.03em !important;
+  color: #777777 !important;
+  transition: color 0.2s ease !important;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: #cccccc !important;
+}
+
+.nav-link.active {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.nav-link i {
+  font-size: 11px !important;
+  color: #d4af37 !important;
+  opacity: 0.8;
+}
+
+.nav-link.active i {
+  color: #d4af37 !important;
+  opacity: 1;
+}
+
+/* Logo avatar box */
+.nav-logo-box {
+  background: rgba(212, 175, 55, 0.12) !important;
+  border: 1px solid rgba(212, 175, 55, 0.25) !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.12) !important;
+  color: #d4af37 !important;
+  font-family: 'Cormorant Garamond', serif !important;
+}
+
+/* Admin CMS button — gold */
+.btn-admin-cms {
+  background: rgba(212, 175, 55, 0.06) !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  color: #d4af37 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+}
+
+.btn-admin-cms:hover {
+  background: rgba(212, 175, 55, 0.12) !important;
+  border-color: rgba(212, 175, 55, 0.35) !important;
+  color: #e8c84a !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-admin-cms.active {
+  background: rgba(212, 175, 55, 0.15) !important;
+  color: #d4af37 !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* Notification bell */
+.notif-btn:hover,
+.notif-btn.open {
+  color: #d4af37 !important;
+  border-color: rgba(212, 175, 55, 0.35) !important;
+  background: rgba(212, 175, 55, 0.08) !important;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.15) !important;
+}
+
+.notif-badge {
+  background: #d4af37 !important;
+  color: #000000 !important;
+}
+
+/* Resume button */
+.btn-outline.btn-resume,
+a[href*="resume"],
+button.btn-resume {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  font-family: 'Jost', sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 12.5px !important;
+  letter-spacing: 0.03em !important;
+  transition: all 0.22s ease !important;
+}
+
+.btn-outline.btn-resume:hover,
+a[href*="resume"]:hover {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  color: #d4af37 !important;
+  background: rgba(212, 175, 55, 0.06) !important;
+}
+
+/* Let's talk / Hire button */
+.btn-primary.btn-hire,
+a.btn-primary {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-family: 'Jost', sans-serif !important;
+  border: none !important;
+}
+
+.btn-primary.btn-hire:hover,
+a.btn-primary:hover {
+  background: #d4af37 !important;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3) !important;
+}
+
+/* Divider */
+.nav-v-divider {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Mobile drawer */
+.mobile-drawer {
+  background: #050505 !important;
+  border-top: 1px solid rgba(212, 175, 55, 0.12) !important;
+}
+
+/* Dropdown / notification panel */
+.notif-dropdown {
+  background: #0a0a0a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95) !important;
 }

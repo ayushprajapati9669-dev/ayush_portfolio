@@ -569,7 +569,7 @@ export function Header() {
                   />
                   {accentPaletteOpen && (
                     <div className="accent-palette active" style={{ display: 'flex' }}>
-                      <div className={`accent-swatch ${currentAccent === 'accent-cyan' ? 'selected' : ''}`} style={{ background: '#06b6d4' }} onClick={() => handleAccentChange('accent-cyan')} title="Electric Cyan" />
+                      <div className={`accent-swatch ${currentAccent === 'accent-cyan' ? 'selected' : ''}`} style={{ background: '#d4af37' }} onClick={() => handleAccentChange('accent-cyan')} title="Electric Cyan" />
                       <div className={`accent-swatch ${currentAccent === 'accent-violet' ? 'selected' : ''}`} style={{ background: '#a855f7' }} onClick={() => handleAccentChange('accent-violet')} title="Neon Violet" />
                       <div className={`accent-swatch ${currentAccent === 'accent-rose' ? 'selected' : ''}`} style={{ background: '#f43f5e' }} onClick={() => handleAccentChange('accent-rose')} title="Crimson Rose" />
                       <div className={`accent-swatch ${currentAccent === 'accent-emerald' ? 'selected' : ''}`} style={{ background: '#10b981' }} onClick={() => handleAccentChange('accent-emerald')} title="Cyber Emerald" />
@@ -630,7 +630,7 @@ export function Header() {
                             setToolsMenuOpen(false);
                           }}
                         >
-                          <i className="fa-solid fa-terminal text-xs text-cyan-400" />
+                          <i className="fa-solid fa-terminal text-xs text-yellow-400" />
                           <span>Developer Terminal</span>
                           <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">Ctrl+~</kbd>
                         </button>
@@ -685,7 +685,7 @@ export function Header() {
                     }}
                     title="Open Retro Developer Terminal (Ctrl + ~)"
                   >
-                    <i className="fa-solid fa-terminal text-cyan-400" style={{ fontSize: '10px' }} />
+                    <i className="fa-solid fa-terminal text-yellow-400" style={{ fontSize: '10px' }} />
                     <span className="hidden sm:inline">&gt;_ Terminal</span>
                     <span className="cmd-kbd hidden xl:inline">Ctrl+~</span>
                   </button>

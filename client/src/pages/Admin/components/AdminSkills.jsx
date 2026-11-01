@@ -87,7 +87,7 @@ const CATEGORY_COLORS = [
   '#10B981', // Emerald
   '#F59E0B', // Amber
   '#EC4899', // Pink
-  '#06B6D4', // Deep Cyan
+  '#D4AF37', // Deep Cyan
   '#6366F1'  // Indigo
 ];
 
@@ -597,7 +597,7 @@ export function AdminSkills({
          ======================================================== */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-code" /> TECHNICAL CAPABILITIES · SKILLS STACK CMS
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Technical Skills & Categories</h2>
@@ -613,7 +613,7 @@ export function AdminSkills({
             className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 font-mono text-xs font-semibold text-slate-300 hover:border-white/30 hover:text-white transition-all inline-flex items-center gap-2"
             title="Preview live public skills page"
           >
-            <i className="fa-solid fa-arrow-up-right-from-square text-cyan-400" />
+            <i className="fa-solid fa-arrow-up-right-from-square text-yellow-400" />
             <span>Preview Live</span>
           </a>
           <button
@@ -649,7 +649,7 @@ export function AdminSkills({
           <div>
             <div className="stat-value cyan">{allSkills.length}</div>
             <div className="stat-trend">
-              <i className="fa-solid fa-layer-group text-cyan-400" />
+              <i className="fa-solid fa-layer-group text-yellow-400" />
               <span>{categories.length} Categories</span>
             </div>
           </div>
@@ -725,7 +725,7 @@ export function AdminSkills({
       <div className="flex flex-wrap md:flex-nowrap items-center rounded-2xl border border-white/10 bg-[#070b12]/60 px-3 py-1.5 w-full gap-2">
         {/* Search Input */}
         <div className="flex-1 min-w-[220px] relative flex items-center">
-          <i className="fa-solid fa-magnifying-glass text-cyan-400 text-xs pl-1 pr-2.5" />
+          <i className="fa-solid fa-magnifying-glass text-yellow-400 text-xs pl-1 pr-2.5" />
           <input
             type="text"
             value={searchQuery}
@@ -754,14 +754,14 @@ export function AdminSkills({
 
         {/* Category Dropdown */}
         <div className="relative min-w-[170px] flex items-center">
-          <i className="fa-solid fa-layer-group text-cyan-400 text-xs pl-2 mr-1 pointer-events-none" />
+          <i className="fa-solid fa-layer-group text-yellow-400 text-xs pl-2 mr-1 pointer-events-none" />
           <select
             value={activeCategory}
             onChange={(e) => {
               playTick();
               setActiveCategory(e.target.value);
             }}
-            className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-semibold text-white outline-none cursor-pointer hover:text-cyan-300 transition-colors"
+            className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-semibold text-white outline-none cursor-pointer hover:text-yellow-300 transition-colors"
             title="Filter by Skill Category"
           >
             <option value="all" className="bg-[#0b101b] text-white">
@@ -806,7 +806,7 @@ export function AdminSkills({
             playTick();
             setCatModalVisible(true);
           }}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer whitespace-nowrap ml-auto"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 px-4 py-2 font-mono text-xs font-bold text-slate-950 transition-all shadow-md shadow-cyan-400/20 cursor-pointer whitespace-nowrap ml-auto"
           title="Create new skill category"
         >
           <i className="fa-solid fa-plus text-xs" />
@@ -822,10 +822,10 @@ export function AdminSkills({
         <div className="lg:col-span-5 glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-5 relative lg:sticky lg:top-24">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <i className="fa-solid fa-plus-circle text-cyan-400" />
+              <i className="fa-solid fa-plus-circle text-yellow-400" />
               <span>Add New Skill</span>
             </h3>
-            <span className="font-mono text-[10px] text-cyan-400">
+            <span className="font-mono text-[10px] text-yellow-400">
               Auto-detects Devicon
             </span>
           </div>
@@ -834,7 +834,7 @@ export function AdminSkills({
             {/* Skill Name Input with Auto-Suggestion */}
             <div className="space-y-1.5 relative">
               <label className="block font-mono text-xs font-semibold text-slate-300">
-                Skill Name <span className="text-cyan-400">*</span>
+                Skill Name <span className="text-yellow-400">*</span>
               </label>
               <input
                 ref={nameInputRef}
@@ -852,7 +852,7 @@ export function AdminSkills({
                 className={`w-full rounded-xl border bg-black/50 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all font-sans ${
                   duplicateError
                     ? 'border-red-500/80 focus:border-red-400'
-                    : 'border-white/15 focus:border-cyan-400'
+                    : 'border-white/15 focus:border-yellow-400'
                 }`}
               />
 
@@ -892,7 +892,7 @@ export function AdminSkills({
               <select
                 value={selectedFormCategory}
                 onChange={(e) => setSelectedFormCategory(e.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 text-sm text-white outline-none focus:border-cyan-400 transition-all cursor-pointer font-sans"
+                className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 text-sm text-white outline-none focus:border-yellow-400 transition-all cursor-pointer font-sans"
               >
                 {categories.length === 0 ? (
                   <option value="">No categories available - click New Category</option>
@@ -919,7 +919,7 @@ export function AdminSkills({
                     ) : livePreviewIcon ? (
                       <i className={`${livePreviewIcon} colored`} />
                     ) : (
-                      <span className="initials text-cyan-400">
+                      <span className="initials text-yellow-400">
                         {skillNameInput.substring(0, 2).toUpperCase()}
                       </span>
                     )}
@@ -935,7 +935,7 @@ export function AdminSkills({
                       {previewCategory.name} Preview
                     </p>
                   </div>
-                  <span className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2 py-0.5 font-mono text-[10px] text-cyan-300">
+                  <span className="rounded-full border border-yellow-400/30 bg-yellow-500/10 px-2 py-0.5 font-mono text-[10px] text-yellow-300">
                     Live Preview
                   </span>
                 </>
@@ -948,7 +948,7 @@ export function AdminSkills({
             <button
               type="submit"
               disabled={isAdding || Boolean(duplicateError) || !skillNameInput.trim()}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 px-5 py-3 font-mono text-xs font-bold text-black hover:opacity-95 transition-all shadow-md shadow-cyan-400/20 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-yellow-400 to-indigo-500 px-5 py-3 font-mono text-xs font-bold text-black hover:opacity-95 transition-all shadow-md shadow-cyan-400/20 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {isAdding ? (
                 <>
@@ -970,7 +970,7 @@ export function AdminSkills({
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2.5">
               <h3 className="text-base font-bold text-white">Current Skills</h3>
-              <span className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-0.5 font-mono text-[11px] text-cyan-400">
+              <span className="rounded-full border border-yellow-400/30 bg-yellow-500/10 px-2.5 py-0.5 font-mono text-[11px] text-yellow-400">
                 {totalActiveCount} active
               </span>
             </div>
@@ -980,10 +980,10 @@ export function AdminSkills({
                 <button
                   type="button"
                   onClick={handleSelectAllVisible}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/15 bg-white/5 hover:bg-cyan-500/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-300 font-mono text-[11px] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/15 bg-white/5 hover:bg-yellow-500/10 hover:border-yellow-400/40 text-slate-300 hover:text-yellow-300 font-mono text-[11px] transition-all cursor-pointer"
                   title={selectedSkills.size === filteredSkills.length && filteredSkills.length > 0 ? "Deselect all visible skills" : "Select all visible skills"}
                 >
-                  <i className={`fa-solid ${selectedSkills.size === filteredSkills.length && filteredSkills.length > 0 ? 'fa-check-double text-cyan-400' : 'fa-list-check'}`} />
+                  <i className={`fa-solid ${selectedSkills.size === filteredSkills.length && filteredSkills.length > 0 ? 'fa-check-double text-yellow-400' : 'fa-list-check'}`} />
                   <span>{selectedSkills.size === filteredSkills.length && filteredSkills.length > 0 ? 'Deselect All' : 'Select All'}</span>
                 </button>
               )}
@@ -1034,8 +1034,8 @@ export function AdminSkills({
                       setDragOverSkillId(null);
                     }}
                     className={`skill-row-item ${isSelected ? 'selected' : ''} ${
-                      isDragOver ? 'border-2 border-cyan-400 bg-cyan-500/20' : ''
-                    } ${isDragging ? 'opacity-40 scale-95 border-dashed border-cyan-400' : ''}`}
+                      isDragOver ? 'border-2 border-yellow-400 bg-yellow-500/20' : ''
+                    } ${isDragging ? 'opacity-40 scale-95 border-dashed border-yellow-400' : ''}`}
                   >
                     {/* Drag Handle */}
                     <div
@@ -1062,7 +1062,7 @@ export function AdminSkills({
                       ) : skill.icon ? (
                         <i className={`${skill.icon} colored`} />
                       ) : (
-                        <span className="initials text-cyan-400">
+                        <span className="initials text-yellow-400">
                           {skill.name.substring(0, 2).toUpperCase()}
                         </span>
                       )}
@@ -1113,7 +1113,7 @@ export function AdminSkills({
          ======================================================== */}
       <div className={`skills-bulk-bar ${selectedSkills.size > 0 ? 'show' : ''}`}>
         <div className="font-mono text-xs font-bold text-white flex items-center gap-2">
-          <i className="fa-solid fa-check-double text-cyan-400" />
+          <i className="fa-solid fa-check-double text-yellow-400" />
           <span>{selectedSkills.size} skills selected</span>
         </div>
         <div className="flex items-center gap-2">
@@ -1144,7 +1144,7 @@ export function AdminSkills({
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <i className="fa-solid fa-tags text-cyan-400" />
+                <i className="fa-solid fa-tags text-yellow-400" />
                 <span>Manage Skill Categories</span>
               </h3>
               <button
@@ -1168,7 +1168,7 @@ export function AdminSkills({
                   value={newCatName}
                   onChange={(e) => setNewCatName(e.target.value)}
                   placeholder="e.g. DevOps, Cloud & Tools, Mobile App"
-                  className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-sans"
+                  className="w-full rounded-xl border border-white/15 bg-black/60 px-3.5 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all font-sans"
                 />
               </div>
 
@@ -1192,7 +1192,7 @@ export function AdminSkills({
               <button
                 type="button"
                 onClick={handleCreateCategory}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 px-4 py-2 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-400/20 mt-1"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-yellow-400 to-indigo-500 px-4 py-2 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-400/20 mt-1"
               >
                 <i className="fa-solid fa-plus" />
                 <span>Create Category</span>

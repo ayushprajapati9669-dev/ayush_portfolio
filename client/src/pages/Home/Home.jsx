@@ -8,9 +8,6 @@ import { HeroCosmosCanvas } from '../../components/ui/HeroCosmosCanvas';
 import { InteractiveMeshWave } from '../../components/ui/InteractiveMeshWave';
 import { MagneticButton } from '../../components/ui/MagneticButton';
 import { TiltCard } from '../../components/ui/TiltCard';
-import { PowderFeatureCards } from '../../components/ui/PowderFeatureCards';
-import { PowderAgentWorkbench } from '../../components/ui/PowderAgentWorkbench';
-import { RetornoHardwareMetrics } from '../../components/ui/RetornoHardwareMetrics';
 
 import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificateCard } from '../../components/projects/CertificateCard';
@@ -604,17 +601,6 @@ export function HomePage() {
           </div>
         </div>
       )}
-
-      {/* Powder Interactive AI Agent Workbench (from Image 2/5) */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-6 mb-12">
-        <PowderAgentWorkbench />
-      </div>
-
-      {/* Retorno Hardware Console Metrics Strip (from Image 3) */}
-      <RetornoHardwareMetrics />
-
-      {/* Powder Signature Isometric Wireframe Feature Cards (from Image 1/4) */}
-      <PowderFeatureCards />
 
       {/* Main Home Content Sections */}
       <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24">

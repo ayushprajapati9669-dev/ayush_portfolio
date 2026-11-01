@@ -1,9 +1,8 @@
 /* ==========================================================================
-   Modern Obsidian Tech Component & Card Architecture (Reference Standard)
-   - Cards: #0f0f11, border: 1px solid #222225, radius: 12px
-   - Hover: #17171a, border-color: #3f3f46, translateY(-2px)
-   - Primary Buttons: background: #06b6d4, color: #000, font-weight: 600, radius: 12px
-   - Secondary Buttons: background: #0f0f11, border: 1px solid #222225, color: #f8fafc
+   VSLFlow Luxury Black-Gold Card & Component Architecture
+   - Cards: rgba(255,255,255,0.02) surface, gold border on hover
+   - Primary Buttons: solid gold #D4AF37, black text
+   - Secondary Buttons: ghost with gold border
    ========================================================================== */
 
 .glass-card,
@@ -14,10 +13,10 @@
 .about-card,
 .profile-card,
 .stat-card {
-  background: var(--bg-surface, #0f0f11) !important;
-  border: 1px solid var(--border-subtle, #222225) !important;
-  border-radius: var(--radius-md, 12px) !important;
-  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: var(--radius-md, 10px) !important;
+  transition: transform 0.28s ease, border-color 0.28s ease, background-color 0.28s ease, box-shadow 0.28s ease !important;
 }
 
 .glass-card-hover,
@@ -27,23 +26,23 @@
 .about-card:hover,
 .profile-card:hover,
 .stat-card:hover {
-  transform: translateY(-2px) !important;
-  border-color: var(--border-focus, #3f3f46) !important;
-  background: var(--bg-surface-elevated, #17171a) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  transform: translateY(-3px) !important;
+  border-color: rgba(212, 175, 55, 0.3) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.08), 0 0 0 1px rgba(212, 175, 55, 0.15) !important;
 }
 
 /* Modals & Dialogs */
 .modal-box,
 .modal-content,
 .cmd-modal {
-  background: var(--bg-surface, #0f0f11) !important;
-  border: 1px solid var(--border-subtle, #222225) !important;
+  background: #0a0a0a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: var(--radius-lg, 16px) !important;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95) !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.98), 0 0 0 1px rgba(212, 175, 55, 0.08) !important;
 }
 
-/* Primary Button (Reference: #06b6d4 cyan) */
+/* Primary Button — Solid Gold */
 .btn-primary,
 .hero-btn-primary,
 button.btn-primary {
@@ -52,15 +51,16 @@ button.btn-primary {
   justify-content: center !important;
   gap: 8px !important;
   border-radius: 9999px !important;
-  background: #ffffff !important;
-  color: #050507 !important;
-  font-family: var(--font-sans, 'Inter', sans-serif) !important;
+  background: #d4af37 !important;
+  color: #000000 !important;
+  font-family: 'Jost', sans-serif !important;
   font-weight: 600 !important;
   font-size: 13.5px !important;
-  padding: 9px 22px !important;
-  border: 1px solid #ffffff !important;
-  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.15) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  letter-spacing: 0.04em !important;
+  padding: 10px 24px !important;
+  border: 1px solid #d4af37 !important;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
   cursor: pointer !important;
   white-space: nowrap !important;
@@ -69,31 +69,31 @@ button.btn-primary {
 .btn-primary:hover,
 .hero-btn-primary:hover,
 button.btn-primary:hover {
-  background: #f4f4f5 !important;
-  color: #050507 !important;
-  border-color: #ffffff !important;
-  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.28) !important;
+  background: #e8c84a !important;
+  color: #000000 !important;
+  border-color: #e8c84a !important;
+  box-shadow: 0 6px 28px rgba(212, 175, 55, 0.4) !important;
   transform: translateY(-1px) !important;
 }
 
-/* Explicit Admin Save/Action Button */
+/* Admin action buttons remain gold */
 .admin-card .btn-primary,
 .admin-modal .btn-primary,
 .btn-admin-action {
-  background: var(--brand-cyan, #06b6d4) !important;
-  color: #000 !important;
-  border-radius: 10px !important;
+  background: #d4af37 !important;
+  color: #000000 !important;
+  border-radius: 8px !important;
   border: none !important;
 }
 
 .admin-card .btn-primary:hover,
 .admin-modal .btn-primary:hover,
 .btn-admin-action:hover {
-  background: var(--brand-cyan-hover, #0891b2) !important;
-  color: #000 !important;
+  background: #e8c84a !important;
+  color: #000000 !important;
 }
 
-/* Secondary Button (Reference: #0f0f11 surface with #222225 border) */
+/* Secondary Button — Ghost with gold border */
 .btn-secondary,
 .btn-outline,
 button.btn-outline {
@@ -102,14 +102,15 @@ button.btn-outline {
   justify-content: center !important;
   gap: 8px !important;
   border-radius: 9999px !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  color: #e4e4e7 !important;
-  font-family: var(--font-sans, 'Inter', sans-serif) !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  font-family: 'Jost', sans-serif !important;
   font-weight: 500 !important;
   font-size: 13.5px !important;
-  padding: 9px 20px !important;
-  transition: all 0.22s ease !important;
+  letter-spacing: 0.04em !important;
+  padding: 9px 22px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
   cursor: pointer !important;
   white-space: nowrap !important;
@@ -118,48 +119,635 @@ button.btn-outline {
 .btn-secondary:hover,
 .btn-outline:hover,
 button.btn-outline:hover {
-  background: rgba(255, 255, 255, 0.09) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  color: #ffffff !important;
+  border-color: rgba(212, 175, 55, 0.5) !important;
+  color: #d4af37 !important;
+  background: rgba(212, 175, 55, 0.06) !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.12) !important;
   transform: translateY(-1px) !important;
 }
 
-/* Form Inputs (Reference: #0a0a0c) */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea,
-select,
-.form-input,
-.search-input {
-  background-color: var(--bg-input, #0a0a0c) !important;
-  border: 1px solid var(--border-subtle, #222225) !important;
-  border-radius: var(--radius-md, 12px) !important;
-  color: var(--text-primary, #f8fafc) !important;
-  font-family: 'Inter', sans-serif !important;
-  font-size: 14px !important;
+/* Admin CMS Button */
+.btn-admin-cms,
+a.btn-admin-cms {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  border-radius: 9999px !important;
+  background: rgba(212, 175, 55, 0.08) !important;
+  color: #d4af37 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 500 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.06em !important;
+  padding: 7px 16px !important;
+  border: 1px solid rgba(212, 175, 55, 0.2) !important;
+  transition: all 0.22s ease !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+
+.btn-admin-cms:hover,
+a.btn-admin-cms:hover {
+  background: rgba(212, 175, 55, 0.15) !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  color: #e8c84a !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* Skill Tags & Badge Chips */
+.skill-tag,
+.tech-badge,
+.badge {
+  background: rgba(212, 175, 55, 0.07) !important;
+  color: #d4af37 !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  border-radius: var(--radius-full, 9999px) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+  padding: 3px 10px !important;
+}
+
+/* Input fields */
+input, textarea, select {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  font-family: 'Jost', sans-serif !important;
+  border-radius: 8px !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-textarea:focus,
-select:focus,
-.form-input:focus,
-.search-input:focus {
+input:focus, textarea:focus, select:focus {
   outline: none !important;
-  border-color: var(--brand-cyan, #06b6d4) !important;
-  box-shadow: 0 0 0 3px var(--brand-cyan-glow, rgba(6, 182, 212, 0.15)) !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08) !important;
 }
 
-/* Project Image Grayscale to Color Reveal */
-.project-card .project-img-wrap img {
-  filter: grayscale(80%) contrast(1.05) brightness(0.92);
-  transition: all 0.5s ease;
+input::placeholder, textarea::placeholder {
+  color: #555555 !important;
+}
+
+
+/* ============================================================
+   VSLFlow Project Card Styles
+   ============================================================ */
+
+.project-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+.project-card:hover {
+  border-color: rgba(212, 175, 55, 0.3) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 20px 60px rgba(212, 175, 55, 0.07), 0 0 0 1px rgba(212, 175, 55, 0.12) !important;
+}
+
+.project-card.border-yellow-400 {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  ring: rgba(212, 175, 55, 0.2) !important;
+}
+
+.project-img-wrap {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  border-radius: 12px 12px 0 0;
+}
+
+.project-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
 }
 
 .project-card:hover .project-img-wrap img {
-  filter: grayscale(0%) contrast(1) brightness(1);
-  transform: scale(1.02);
+  transform: scale(1.04);
+}
+
+.project-badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  z-index: 2;
+}
+
+.p-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.75);
+  color: #aaaaaa;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 3px 10px;
+  backdrop-filter: blur(8px);
+}
+
+.p-badge.live {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.25);
+}
+
+.p-badge.case-study {
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.project-content {
+  padding: 20px;
+}
+
+.project-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.project-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+
+.project-link-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #444444;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.project-card:hover .project-link-hint {
+  opacity: 1;
+}
+
+.project-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem) !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.15 !important;
+  margin: 0 0 10px !important;
+}
+
+.project-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12.5px !important;
+  color: #777777 !important;
+  line-height: 1.65 !important;
+  margin: 0 0 14px !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.tech-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: #888888;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  padding: 3px 8px;
+  letter-spacing: 0.04em;
+}
+
+.project-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-case-study {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: #000000;
+  background: #d4af37;
+  border: 1px solid #d4af37;
+  border-radius: 9999px;
+  padding: 7px 16px;
+  text-decoration: none;
+  transition: all 0.22s ease;
+  cursor: pointer;
+}
+
+.btn-case-study:hover {
+  background: #e8c84a;
+  border-color: #e8c84a;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-demo,
+.btn-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #888888;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  text-decoration: none;
+  transition: all 0.22s ease;
+  cursor: pointer;
+}
+
+.btn-demo:hover,
+.btn-code:hover {
+  border-color: rgba(212, 175, 55, 0.3);
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.05);
+}
+
+/* ============================================================
+   VSLFlow Certificate Card Styles
+   ============================================================ */
+
+.cert-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer;
+}
+
+.cert-card:hover {
+  border-color: rgba(212, 175, 55, 0.28) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 14px 40px rgba(212, 175, 55, 0.07) !important;
+}
+
+.cert-img-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+}
+
+.cert-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  display: block;
+}
+
+.cert-card:hover .cert-img-wrap img {
+  transform: scale(1.05);
+}
+
+.cert-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  color: #d4af37;
+  font-size: 24px;
+}
+
+.cert-card:hover .cert-overlay {
+  opacity: 1;
+}
+
+.cert-content {
+  padding: 16px;
+}
+
+.cert-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cert-issuer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+
+.cert-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #444444;
+  letter-spacing: 0.06em;
+}
+
+.cert-category-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: #888888;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9999px;
+  padding: 2px 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cert-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(1rem, 2vw, 1.25rem) !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+  margin: 0 0 8px !important;
+}
+
+.cert-desc {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  color: #555555;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cert-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.07);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.btn-view:hover {
+  background: rgba(212, 175, 55, 0.14);
+  border-color: rgba(212, 175, 55, 0.35);
+  color: #e8c84a;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.07);
+  border: 1px solid rgba(74, 222, 128, 0.18);
+  border-radius: 9999px;
+  padding: 4px 10px;
+  letter-spacing: 0.05em;
+}
+
+/* ========================================================================
+   Project Card Image Height Constraints — Critical Fix
+   ======================================================================== */
+
+/* Wrap the image in an anchor tag with class 'project-img-wrap' */
+a.project-img-wrap {
+  display: block !important;
+  height: 200px !important;
+  max-height: 200px !important;
+  min-height: 200px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+}
+
+a.project-img-wrap picture {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+a.project-img-wrap img,
+a.project-img-wrap picture img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  aspect-ratio: unset !important;  /* override inline style */
+}
+
+/* The project card itself must be flex column */
+article.project-card {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Card badges overlay */
+.project-badges {
+  position: absolute !important;
+  top: 12px !important;
+  left: 12px !important;
+  display: flex !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  z-index: 2 !important;
+}
+
+.p-badge {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  padding: 3px 10px !important;
+  border-radius: 999px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  background: rgba(0,0,0,0.75) !important;
+  color: #aaaaaa !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.p-badge.case-study {
+  background: rgba(212, 175, 55, 0.15) !important;
+  border-color: rgba(212, 175, 55, 0.3) !important;
+  color: #d4af37 !important;
+}
+
+.p-badge.live {
+  background: rgba(74, 222, 128, 0.12) !important;
+  border-color: rgba(74, 222, 128, 0.25) !important;
+  color: #4ade80 !important;
+}
+
+/* Project content area */
+.project-content {
+  padding: 20px !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.project-meta {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.project-num {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  color: #444444 !important;
+  letter-spacing: 0.1em !important;
+}
+
+.project-link-hint {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 10px !important;
+  color: #333333 !important;
+  transition: color 0.2s ease !important;
+}
+
+.project-card:hover .project-link-hint {
+  color: #d4af37 !important;
+}
+
+.project-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.35rem !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+}
+
+.project-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12.5px !important;
+  color: #555555 !important;
+  line-height: 1.65 !important;
+  flex: 1 !important;
+}
+
+.tech-stack {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+.tech-chip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 3px 9px !important;
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  color: #555555 !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Card action buttons */
+.project-actions {
+  display: flex !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+}
+
+.project-btn {
+  flex: 1 !important;
+  padding: 9px 14px !important;
+  border-radius: 8px !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.project-btn.primary {
+  background: #d4af37 !important;
+  color: #000000 !important;
+}
+
+.project-btn.primary:hover {
+  background: #e8c84a !important;
+  box-shadow: 0 4px 16px rgba(212,175,55,0.25) !important;
+}
+
+.project-btn.secondary {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: #888888 !important;
+}
+
+.project-btn.secondary:hover {
+  border-color: rgba(212,175,55,0.2) !important;
+  color: #cccccc !important;
 }

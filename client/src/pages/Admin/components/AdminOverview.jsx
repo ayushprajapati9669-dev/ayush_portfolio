@@ -307,7 +307,7 @@ export function AdminOverview({
       {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-chart-line" /> COMMAND CENTER
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Portfolio Dashboard</h2>
@@ -321,7 +321,7 @@ export function AdminOverview({
             target="_blank"
             rel="noreferrer"
             className="btn-create-project"
-            style={{ background: 'linear-gradient(135deg, var(--brand-color, #06b6d4), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(6,182,212,0.4))' }}
+            style={{ background: 'linear-gradient(135deg, var(--brand-color, #d4af37), var(--accent-2, #3b82f6))', boxShadow: '0 4px 20px var(--brand-glow, rgba(212,175,55,0.4))' }}
             onClick={() => showToast('Live portfolio opened in new tab')}
           >
             <i className="fa-solid fa-arrow-up-right-from-square" />

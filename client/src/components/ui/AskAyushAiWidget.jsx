@@ -104,17 +104,17 @@ export function AskAyushAiWidget() {
               playTick('click');
               setIsOpen(true);
             }}
-            className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-cyan-500/30 hover:border-cyan-400 text-white shadow-[0_10px_35px_rgba(0,240,255,0.25)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95"
+            className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,240,255,0.25)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95"
             aria-label="Open Ask Ayush AI Assistant"
           >
             {/* Pulsing indicator */}
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-500" />
             </span>
 
             <div className="flex items-center gap-2">
-              <i className="fa-solid fa-wand-magic-sparkles text-xs text-cyan-400 group-hover:rotate-12 transition-transform" />
+              <i className="fa-solid fa-wand-magic-sparkles text-xs text-yellow-400 group-hover:rotate-12 transition-transform" />
               <span className="font-mono text-xs font-semibold tracking-wide hidden sm:inline">Ask Ayush AI</span>
             </div>
           </button>
@@ -123,11 +123,11 @@ export function AskAyushAiWidget() {
 
       {/* Floating Chat Drawer */}
       {isOpen && (
-        <div className="fixed bottom-6 right-4 sm:right-6 z-[995] w-[92vw] sm:w-[420px] h-[560px] max-h-[85vh] flex flex-col rounded-2xl bg-[#070c16]/95 border border-cyan-500/30 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(0,240,255,0.15)] backdrop-blur-2xl overflow-hidden font-sans animate-fadeIn">
+        <div className="fixed bottom-6 right-4 sm:right-6 z-[995] w-[92vw] sm:w-[420px] h-[560px] max-h-[85vh] flex flex-col rounded-2xl bg-[#070c16]/95 border border-yellow-500/30 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(0,240,255,0.15)] backdrop-blur-2xl overflow-hidden font-sans animate-fadeIn">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-[#0c1424] border-b border-cyan-500/20">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#0c1424] border-b border-yellow-500/20">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-inner">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-500/20 to-blue-600/20 border border-yellow-500/30 flex items-center justify-center text-yellow-400 shadow-inner">
                 <i className="fa-solid fa-brain text-xs" />
               </div>
               <div>
@@ -168,8 +168,8 @@ export function AskAyushAiWidget() {
                   <div
                     className={`max-w-[88%] rounded-2xl p-3 leading-relaxed ${
                       isAi
-                        ? 'bg-[#0f1a2e] text-slate-200 border border-cyan-500/20 rounded-tl-sm'
-                        : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-medium rounded-tr-sm shadow-md'
+                        ? 'bg-[#0f1a2e] text-slate-200 border border-yellow-500/20 rounded-tl-sm'
+                        : 'bg-gradient-to-r from-yellow-500 to-blue-600 text-black font-medium rounded-tr-sm shadow-md'
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{m.text}</p>
@@ -177,7 +177,7 @@ export function AskAyushAiWidget() {
                     {/* Related Project Preview Pill */}
                     {m.relatedProject && (
                       <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-cyan-300 font-medium truncate">
+                        <span className="text-yellow-300 font-medium truncate">
                           📁 {m.relatedProject.title}
                         </span>
                         <Link
@@ -186,7 +186,7 @@ export function AskAyushAiWidget() {
                             playTick('click');
                             setIsOpen(false);
                           }}
-                          className="text-white hover:text-cyan-300 underline underline-offset-2 shrink-0 ml-2"
+                          className="text-white hover:text-yellow-300 underline underline-offset-2 shrink-0 ml-2"
                         >
                           View Case Study →
                         </Link>
@@ -205,7 +205,7 @@ export function AskAyushAiWidget() {
                         <button
                           key={idx}
                           onClick={() => handleSend(chip)}
-                          className="text-[10px] font-mono px-2 py-1 rounded-lg bg-white/5 hover:bg-cyan-500/15 border border-white/10 hover:border-cyan-500/30 text-white/70 hover:text-cyan-300 transition text-left"
+                          className="text-[10px] font-mono px-2 py-1 rounded-lg bg-white/5 hover:bg-yellow-500/15 border border-white/10 hover:border-yellow-500/30 text-white/70 hover:text-yellow-300 transition text-left"
                         >
                           {chip}
                         </button>
@@ -217,7 +217,7 @@ export function AskAyushAiWidget() {
             })}
 
             {loading && (
-              <div className="flex items-center gap-2 text-cyan-400 text-xs font-mono p-2">
+              <div className="flex items-center gap-2 text-yellow-400 text-xs font-mono p-2">
                 <i className="fa-solid fa-circle-notch animate-spin" />
                 <span>Searching portfolio embeddings...</span>
               </div>
@@ -241,12 +241,12 @@ export function AskAyushAiWidget() {
                 onChange={(e) => setInputVal(e.target.value)}
                 onKeyDown={() => playTick('tick')}
                 placeholder="Ask about MongoDB, projects, hiring..."
-                className="flex-1 bg-[#050810] border border-white/10 focus:border-cyan-500/50 rounded-xl px-3 py-2 text-xs text-white placeholder-white/30 outline-none font-mono focus:ring-1 focus:ring-cyan-500/30 transition"
+                className="flex-1 bg-[#050810] border border-white/10 focus:border-yellow-500/50 rounded-xl px-3 py-2 text-xs text-white placeholder-white/30 outline-none font-mono focus:ring-1 focus:ring-yellow-500/30 transition"
               />
               <button
                 type="submit"
                 disabled={!inputVal.trim() || loading}
-                className="w-9 h-9 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-40 text-black flex items-center justify-center transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)] shrink-0"
+                className="w-9 h-9 rounded-xl bg-yellow-500 hover:bg-yellow-400 disabled:opacity-40 text-black flex items-center justify-center transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)] shrink-0"
               aria-label="Send message"
               >
                 <i className="fa-solid fa-paper-plane text-xs" />

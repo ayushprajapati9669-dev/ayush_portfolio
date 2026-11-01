@@ -57,16 +57,16 @@
       *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { color-scheme: dark; scroll-behavior: smooth; }
       body {
-        background: #030303;
-        color: #f1eee8;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #000000;
+        color: #ffffff;
+        font-family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         min-height: 100vh;
         overflow-x: hidden;
         -webkit-font-smoothing: antialiased;
       }
       #root { min-height: 100vh; }
       /* Prevent CLS from async font load */
-      h1, h2, h3 { font-size: clamp(1.5rem, 4vw, 3.5rem); line-height: 1.1; }
+      h1, h2, h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.5rem, 4vw, 3.5rem); line-height: 1.1; }
     </style>
 
     <!-- DNS Prefetch for faster external resource resolution -->
@@ -76,18 +76,17 @@
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-
-    <!-- Non-render-blocking Google Fonts: loaded asynchronously -->
+    <!-- VSLFlow Design System Fonts: Cormorant Garamond + Jost + JetBrains Mono -->
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       onload="this.onload=null;this.rel='stylesheet'"
     />
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       />
     </noscript>
 
@@ -111,7 +110,7 @@
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     </noscript>
   </head>
-  <body class="min-h-screen bg-[#030303] text-[#f4f1ec] antialiased selection:bg-white/20 selection:text-white">
+  <body class="min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

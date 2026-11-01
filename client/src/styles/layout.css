@@ -47,3 +47,70 @@
 .animate-hero-text-scroll:hover {
   animation-play-state: paused;
 }
+
+/* =========================================================================
+   VSLFlow Layout Overrides
+   ========================================================================= */
+
+/* All page backgrounds */
+.page-wrapper,
+.page-container,
+main,
+.main-content {
+  background: transparent !important;
+  min-height: 100vh;
+}
+
+/* Section borders using gold hairlines */
+.border-t.hairline-border {
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Bento section eyebrow */
+.bento-section .bento-header > p {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 1.8px !important;
+  color: #d4af37 !important;
+  text-transform: uppercase !important;
+}
+
+.bento-section h2.font-editorial {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Bento bio card */
+.bento-bio-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Bento focus cards */
+.bento-focus-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.bento-focus-card:hover {
+  border-color: rgba(212, 175, 55, 0.2) !important;
+}
+
+/* Focus area number badge */
+.bento-focus-card span.inline-flex.bg-vermilion\/15 {
+  background: rgba(212, 175, 55, 0.1) !important;
+  color: #d4af37 !important;
+}
+
+/* Home CTA banner */
+.home-cta-banner {
+  background: rgba(212, 175, 55, 0.03) !important;
+  border-color: rgba(212, 175, 55, 0.12) !important;
+}
+
+.home-cta-banner h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+}

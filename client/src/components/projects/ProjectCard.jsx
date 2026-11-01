@@ -9,16 +9,16 @@ function getTechIcon(name) {
   if (n.includes('express') || n.includes('server')) return <i className="fa-solid fa-server" style={{ color: '#e2e8f0' }} />;
   if (n.includes('mongo') || n.includes('database') || n.includes('sql')) return <i className="fa-solid fa-database" style={{ color: '#4db33d' }} />;
   if (n.includes('openai') || n.includes('ai') || n.includes('gemini') || n.includes('bolt')) return <i className="fa-solid fa-bolt" style={{ color: '#f59e0b' }} />;
-  if (n.includes('recharts') || n.includes('chart')) return <i className="fa-solid fa-chart-line" style={{ color: '#38bdf8' }} />;
+  if (n.includes('recharts') || n.includes('chart')) return <i className="fa-solid fa-chart-line" style={{ color: '#d4af37' }} />;
   if (n.includes('css')) return <i className="fa-brands fa-css3-alt" style={{ color: '#264de4' }} />;
   if (n.includes('next')) return <i className="fa-brands fa-react" style={{ color: '#61dafb' }} />;
   if (n.includes('stripe')) return <i className="fa-brands fa-stripe" style={{ color: '#635bff' }} />;
-  if (n.includes('tailwind') || n.includes('wind')) return <i className="fa-solid fa-wind" style={{ color: '#38bdf8' }} />;
+  if (n.includes('tailwind') || n.includes('wind')) return <i className="fa-solid fa-wind" style={{ color: '#d4af37' }} />;
   if (n.includes('javascript') || n === 'js') return <i className="fa-brands fa-js" style={{ color: '#f7df1e' }} />;
   if (n.includes('python')) return <i className="fa-brands fa-python" style={{ color: '#3776ab' }} />;
   if (n.includes('java')) return <i className="fa-brands fa-java" style={{ color: '#ea2d2e' }} />;
   if (n.includes('git')) return <i className="fa-brands fa-github" style={{ color: '#e2e8f0' }} />;
-  return <i className="fa-solid fa-code" style={{ color: '#06b6d4' }} />;
+  return <i className="fa-solid fa-code" style={{ color: '#d4af37' }} />;
 }
 
 export function ProjectCard({
@@ -123,7 +123,7 @@ export function ProjectCard({
   return (
     <article
       ref={cardRef}
-      className={`project-card ${isSelected ? 'border-cyan-400 ring-2 ring-cyan-400/30' : ''}`}
+      className={`project-card ${isSelected ? 'border-yellow-400 ring-2 ring-yellow-400/30' : ''}`}
       data-category={categoryKey}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -151,7 +151,7 @@ export function ProjectCard({
             decoding={indexNum === 1 ? "sync" : "async"}
             width="600"
             height="340"
-            style={{ aspectRatio: "16/9", objectFit: "cover" }}
+            style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
           />
         </picture>
         <div className="project-badges">

@@ -66,7 +66,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
       {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-book-open" /> DOCUMENTATION & OPERATIONS MANUAL
           </span>
           <h2 className="text-xl font-bold text-white mt-1">User Guide & CMS Manual</h2>
@@ -80,9 +80,9 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           <button
             type="button"
             onClick={() => onSelectTab && onSelectTab('api-docs', '/admin/api-docs')}
-            className="flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border border-white/10 bg-black/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/30 transition-all shadow-sm"
+            className="flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border border-white/10 bg-black/30 text-yellow-300 hover:bg-yellow-500/10 hover:border-yellow-400/30 transition-all shadow-sm"
           >
-            <i className="fa-solid fa-terminal text-cyan-400" />
+            <i className="fa-solid fa-terminal text-yellow-400" />
             <span>Developer API Reference</span>
             <i className="fa-solid fa-arrow-right text-[10px]" />
           </button>
@@ -98,7 +98,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           <div className="glass-card-admin rounded-2xl p-4 sm:p-5 border border-white/10 shadow-xl bg-[#0b1120]/80 backdrop-blur-xl">
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
               <h3 className="text-xs font-bold text-white flex items-center gap-2 uppercase tracking-wider font-mono">
-                <i className="fa-solid fa-list-ol text-cyan-400" />
+                <i className="fa-solid fa-list-ol text-yellow-400" />
                 <span>Documentation Index</span>
               </h3>
               <span className="font-mono text-[10px] text-slate-400 bg-white/5 px-2 py-0.5 rounded">
@@ -114,7 +114,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search topics..."
-                className="w-full rounded-xl border border-white/10 bg-black/40 pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400/60 transition-all font-sans"
+                className="w-full rounded-xl border border-white/10 bg-black/40 pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-yellow-400/60 transition-all font-sans"
               />
             </div>
 
@@ -129,11 +129,11 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
                     onClick={() => scrollToSection(item.id)}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-xs transition-all ${
                       isActive
-                        ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/30 shadow-sm shadow-cyan-500/10'
+                        ? 'bg-yellow-500/20 text-yellow-300 font-semibold border border-yellow-500/30 shadow-sm shadow-cyan-500/10'
                         : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
                     }`}
                   >
-                    <i className={`fa-solid ${item.icon} text-xs w-4 text-center shrink-0 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
+                    <i className={`fa-solid ${item.icon} text-xs w-4 text-center shrink-0 ${isActive ? 'text-yellow-400' : 'text-slate-500'}`} />
                     <span className="truncate">{item.label}</span>
                   </button>
                 );
@@ -144,7 +144,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
             <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-slate-400 space-y-1 font-mono">
               <div className="flex items-center justify-between">
                 <span>Architecture:</span>
-                <span className="text-cyan-400 font-semibold">MERN + Vite</span>
+                <span className="text-yellow-400 font-semibold">MERN + Vite</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Storage:</span>
@@ -165,7 +165,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 1: SYSTEM OVERVIEW */}
           <section id="overview" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-cubes" />
               </div>
               <div>
@@ -183,8 +183,8 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
             {/* Visual Workflow Steps */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2">
-                <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-[10px]">1</span>
+                <div className="flex items-center gap-2 text-yellow-400 font-mono text-xs font-bold">
+                  <span className="w-5 h-5 rounded-full bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-[10px]">1</span>
                   <span>Input & Draft</span>
                 </div>
                 <p className="text-xs text-slate-300">
@@ -193,8 +193,8 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2">
-                <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-[10px]">2</span>
+                <div className="flex items-center gap-2 text-yellow-400 font-mono text-xs font-bold">
+                  <span className="w-5 h-5 rounded-full bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-[10px]">2</span>
                   <span>Live Simulation</span>
                 </div>
                 <p className="text-xs text-slate-300">
@@ -214,10 +214,10 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
             </div>
 
             {/* Note Alert */}
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 text-xs leading-relaxed">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/25 text-yellow-300 text-xs leading-relaxed">
               <i className="fa-solid fa-circle-info text-base mt-0.5 shrink-0" />
               <div>
-                <strong className="font-semibold block mb-0.5 text-cyan-200">Live Client State Synchronization:</strong>
+                <strong className="font-semibold block mb-0.5 text-yellow-200">Live Client State Synchronization:</strong>
                 All modifications made in this CMS synchronize through the high-performance unified state engine. When saved, changes are permanently written to MongoDB Atlas and cached for ultra-fast public visitor page loads.
               </div>
             </div>
@@ -226,7 +226,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 2: MANAGING PROFILE */}
           <section id="profile" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-5 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-user-gear" />
               </div>
               <div>
@@ -242,38 +242,38 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
             </p>
 
             <div className="space-y-4">
-              <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider font-mono">
+              <h4 className="text-xs font-bold text-yellow-400 uppercase tracking-wider font-mono">
                 Form Fields & Specifications:
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                 <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1">
-                  <div className="font-mono text-cyan-300 font-bold">Display Name & Monogram</div>
+                  <div className="font-mono text-yellow-300 font-bold">Display Name & Monogram</div>
                   <p className="text-slate-300">Your full legal/professional name and 2-4 character uppercase initials (e.g., <code className="bg-white/10 px-1 py-0.5 rounded text-white">AP</code>). Powers navbar brand badges and avatar icons.</p>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1">
-                  <div className="font-mono text-cyan-300 font-bold">Email, Phone & Location</div>
+                  <div className="font-mono text-yellow-300 font-bold">Email, Phone & Location</div>
                   <p className="text-slate-300">Public recruiter contact points. Displays in header quick contact, contact form card, and footer direct contact stack.</p>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1">
-                  <div className="font-mono text-cyan-300 font-bold">Header Subtitle & Eyebrow</div>
+                  <div className="font-mono text-yellow-300 font-bold">Header Subtitle & Eyebrow</div>
                   <p className="text-slate-300">Short professional summary (e.g., <em>Full-Stack Developer · SISTec</em>) and eyebrow banner tag above main hero headline.</p>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1">
-                  <div className="font-mono text-cyan-300 font-bold">Hero Headline & Description</div>
+                  <div className="font-mono text-yellow-300 font-bold">Hero Headline & Description</div>
                   <p className="text-slate-300">The primary elevator pitch on the homepage. Keep headline punchy under 160 characters for maximum visual impact.</p>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1">
-                  <div className="font-mono text-cyan-300 font-bold">Academic Background</div>
-                  <p className="text-slate-300">College degree (e.g. <em>B.Tech CSE</em>), Institute (<em>SISTec, Bhopal</em>), CGPA (<code className="bg-white/10 px-1 py-0.5 rounded text-cyan-300">8.42</code>), Batch year, and Class XII board score.</p>
+                  <div className="font-mono text-yellow-300 font-bold">Academic Background</div>
+                  <p className="text-slate-300">College degree (e.g. <em>B.Tech CSE</em>), Institute (<em>SISTec, Bhopal</em>), CGPA (<code className="bg-white/10 px-1 py-0.5 rounded text-yellow-300">8.42</code>), Batch year, and Class XII board score.</p>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-black/40 p-3.5 space-y-1">
-                  <div className="font-mono text-cyan-300 font-bold">Social Profiles & Presence</div>
+                  <div className="font-mono text-yellow-300 font-bold">Social Profiles & Presence</div>
                   <p className="text-slate-300">Direct URLs for GitHub, LinkedIn, and Instagram. Connected URLs automatically enable vibrant brand badges in navigation and hero cards.</p>
                 </div>
               </div>
@@ -286,19 +286,19 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
               </h4>
               <ol className="space-y-2.5 text-xs text-slate-300">
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-cyan-400 text-black font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">1</span>
+                  <span className="w-5 h-5 rounded-full bg-yellow-400 text-black font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">1</span>
                   <span>Type your new narrative paragraph in the dashed biographical text area (max 300 characters).</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-cyan-400 text-black font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">2</span>
+                  <span className="w-5 h-5 rounded-full bg-yellow-400 text-black font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">2</span>
                   <span>Click <strong className="text-white">+ Add</strong> to append the paragraph to your active story list.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-cyan-400 text-black font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">3</span>
+                  <span className="w-5 h-5 rounded-full bg-yellow-400 text-black font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">3</span>
                   <span>Click the trash icon on any paragraph to instantly remove outdated bio segments.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-cyan-400 text-black font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">4</span>
+                  <span className="w-5 h-5 rounded-full bg-yellow-400 text-black font-extrabold flex items-center justify-center text-[10px] shrink-0 mt-0.5">4</span>
                   <span>Click the docked <strong className="text-white">Publish Profile & Resume Changes</strong> button at the bottom to commit to the database.</span>
                 </li>
               </ol>
@@ -317,7 +317,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 3: RESUME UPLOAD */}
           <section id="resume" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-5 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-file-pdf" />
               </div>
               <div>
@@ -334,7 +334,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2">
-                <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs font-mono">
+                <div className="flex items-center gap-2 text-yellow-400 font-bold text-xs font-mono">
                   <i className="fa-solid fa-cloud-arrow-up" />
                   <span>Option A: Direct Drag & Drop Upload</span>
                 </div>
@@ -344,7 +344,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2">
-                <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs font-mono">
+                <div className="flex items-center gap-2 text-yellow-400 font-bold text-xs font-mono">
                   <i className="fa-solid fa-link" />
                   <span>Option B: Direct Cloud URL Input</span>
                 </div>
@@ -355,15 +355,15 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
             </div>
 
             {/* File Constraints Alert */}
-            <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/25 space-y-1.5 text-xs">
-              <div className="flex items-center gap-2 font-bold text-cyan-200">
-                <i className="fa-solid fa-shield-halved text-cyan-400" />
+            <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/25 space-y-1.5 text-xs">
+              <div className="flex items-center gap-2 font-bold text-yellow-200">
+                <i className="fa-solid fa-shield-halved text-yellow-400" />
                 <span>Document Constraints & Specifications:</span>
               </div>
               <ul className="list-disc list-inside space-y-1 text-slate-300 pl-1">
-                <li><strong className="text-white">File Type:</strong> Official PDF document strictly (<code className="text-cyan-300 font-mono">.pdf</code> / <code className="text-cyan-300 font-mono">application/pdf</code>).</li>
+                <li><strong className="text-white">File Type:</strong> Official PDF document strictly (<code className="text-yellow-300 font-mono">.pdf</code> / <code className="text-yellow-300 font-mono">application/pdf</code>).</li>
                 <li><strong className="text-white">Maximum File Size:</strong> 5MB maximum. Compressed vector PDFs recommended.</li>
-                <li><strong className="text-white">Live Testing:</strong> After saving, click the <span className="text-cyan-300 font-semibold font-mono">"Preview Live Resume"</span> button in the top bar to verify external recruiter access.</li>
+                <li><strong className="text-white">Live Testing:</strong> After saving, click the <span className="text-yellow-300 font-semibold font-mono">"Preview Live Resume"</span> button in the top bar to verify external recruiter access.</li>
               </ul>
             </div>
           </section>
@@ -371,7 +371,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 4: HERO PORTRAIT */}
           <section id="hero" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-5 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-image" />
               </div>
               <div>
@@ -388,25 +388,25 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-1.5">
-                <div className="font-mono text-cyan-300 font-bold">Image URL / Upload</div>
+                <div className="font-mono text-yellow-300 font-bold">Image URL / Upload</div>
                 <p className="text-slate-300">Input high-resolution PNG or WebP image with transparent or dark oceanic background.</p>
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-3">
-                <div className="font-mono text-cyan-300 font-bold">Focal Scale & Offset Sliders</div>
+                <div className="font-mono text-yellow-300 font-bold">Focal Scale & Offset Sliders</div>
                 <p className="text-slate-300">Fine-tune image scale (0.6x to 1.5x) and X/Y pixel offsets to align perfectly with the surrounding 3D spheres.</p>
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-1.5">
-                <div className="font-mono text-cyan-300 font-bold">Particle Density (3 - 8)</div>
+                <div className="font-mono text-yellow-300 font-bold">Particle Density (3 - 8)</div>
                 <p className="text-slate-300">Adjust the number of floating 3D liquid droplets orbiting the portrait to optimize performance.</p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 text-xs">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/25 text-yellow-300 text-xs">
               <i className="fa-solid fa-lightbulb text-base mt-0.5 shrink-0" />
               <div>
-                <strong className="font-semibold block mb-0.5 text-cyan-200">Temporary Stand-in Mode:</strong>
+                <strong className="font-semibold block mb-0.5 text-yellow-200">Temporary Stand-in Mode:</strong>
                 If you are updating your professional portrait, enable the "Temporary Stand-in" toggle. The portfolio will display a stylized futuristic monogram canvas until your new high-res photography is uploaded.
               </div>
             </div>
@@ -415,7 +415,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 5: PROJECTS MANAGEMENT */}
           <section id="projects" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-5 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-folder" />
               </div>
               <div>
@@ -433,8 +433,8 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
             {/* 3 Steps Breakdown */}
             <div className="space-y-3">
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2">
-                <div className="flex items-center gap-2 font-mono text-xs font-bold text-cyan-400">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-[10px]">1</span>
+                <div className="flex items-center gap-2 font-mono text-xs font-bold text-yellow-400">
+                  <span className="w-5 h-5 rounded-full bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-[10px]">1</span>
                   <span>Step 1: Core Details & Categorization</span>
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">
@@ -443,18 +443,18 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2">
-                <div className="flex items-center gap-2 font-mono text-xs font-bold text-cyan-400">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-[10px]">2</span>
+                <div className="flex items-center gap-2 font-mono text-xs font-bold text-yellow-400">
+                  <span className="w-5 h-5 rounded-full bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-[10px]">2</span>
                   <span>Step 2: Tech Stack, External Links & Completion Slider</span>
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  Add technologies (type name and press Enter or comma to create pills like React, Node.js, MongoDB), add your GitHub Repo URL, Live Production Demo URL, and adjust the animated <strong className="text-cyan-300">Completion % Slider</strong> (0% to 100%).
+                  Add technologies (type name and press Enter or comma to create pills like React, Node.js, MongoDB), add your GitHub Repo URL, Live Production Demo URL, and adjust the animated <strong className="text-yellow-300">Completion % Slider</strong> (0% to 100%).
                 </p>
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2">
-                <div className="flex items-center gap-2 font-mono text-xs font-bold text-cyan-400">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-[10px]">3</span>
+                <div className="flex items-center gap-2 font-mono text-xs font-bold text-yellow-400">
+                  <span className="w-5 h-5 rounded-full bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-[10px]">3</span>
                   <span>Step 3: Thumbnail Media & Key Technical Highlights</span>
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">
@@ -469,7 +469,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
                 Project Card Drag & Drop Reordering:
               </h4>
               <p>
-                In the Projects list view, you can drag any project card by its handle icon (<i className="fa-solid fa-grip-vertical text-slate-400" />) and drop it into a new position to control the exact display order on the public homepage. You can also click the quick position chevrons (<span className="text-cyan-300 font-bold">▲</span> / <span className="text-cyan-300 font-bold">▼</span>) to shift positions step-by-step.
+                In the Projects list view, you can drag any project card by its handle icon (<i className="fa-solid fa-grip-vertical text-slate-400" />) and drop it into a new position to control the exact display order on the public homepage. You can also click the quick position chevrons (<span className="text-yellow-300 font-bold">▲</span> / <span className="text-yellow-300 font-bold">▼</span>) to shift positions step-by-step.
               </p>
             </div>
           </section>
@@ -477,7 +477,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 6: CERTIFICATES & CREDENTIALS */}
           <section id="certificates" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-certificate" />
               </div>
               <div>
@@ -494,19 +494,19 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
 
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
               <li className="rounded-xl border border-white/10 bg-black/40 p-3 space-y-1">
-                <strong className="text-white block font-mono text-cyan-300">Lightbox Modal Preview:</strong>
+                <strong className="text-white block font-mono text-yellow-300">Lightbox Modal Preview:</strong>
                 Visitors can click any certificate card to open high-resolution certificate imagery in an interactive zoomable modal.
               </li>
               <li className="rounded-xl border border-white/10 bg-black/40 p-3 space-y-1">
-                <strong className="text-white block font-mono text-cyan-300">Credential Verification Link:</strong>
+                <strong className="text-white block font-mono text-yellow-300">Credential Verification Link:</strong>
                 Recruiter-verifiable URL opens official certificate issuing authority in an external secure tab.
               </li>
               <li className="rounded-xl border border-white/10 bg-black/40 p-3 space-y-1">
-                <strong className="text-white block font-mono text-cyan-300">Skills Covered Tagging:</strong>
+                <strong className="text-white block font-mono text-yellow-300">Skills Covered Tagging:</strong>
                 Tag the specific technologies certified (e.g. <em>Java, Data Structures, AWS Cloud</em>).
               </li>
               <li className="rounded-xl border border-white/10 bg-black/40 p-3 space-y-1">
-                <strong className="text-white block font-mono text-cyan-300">Fast Deletion & Edit:</strong>
+                <strong className="text-white block font-mono text-yellow-300">Fast Deletion & Edit:</strong>
                 Manage items with instant inline editing or safety-confirmed removal.
               </li>
             </ul>
@@ -515,7 +515,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 7: TECHNICAL SKILLS */}
           <section id="skills" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-code" />
               </div>
               <div>
@@ -532,12 +532,12 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
 
             <div className="space-y-3 text-xs text-slate-300">
               <div className="p-4 rounded-xl border border-white/10 bg-black/40 space-y-2">
-                <div className="font-mono text-cyan-300 font-bold">Category Management:</div>
+                <div className="font-mono text-yellow-300 font-bold">Category Management:</div>
                 <p>Create categories (e.g., <em>Frontend Development, Backend & APIs, Database & Cloud, Core Programming</em>) and assign a custom HEX accent color using the interactive color picker.</p>
               </div>
 
               <div className="p-4 rounded-xl border border-white/10 bg-black/40 space-y-2">
-                <div className="font-mono text-cyan-300 font-bold">Automatic Devicon Logo Matching:</div>
+                <div className="font-mono text-yellow-300 font-bold">Automatic Devicon Logo Matching:</div>
                 <p>When you type a skill name like <code className="bg-white/10 px-1 py-0.5 rounded text-white font-mono">React</code>, <code className="bg-white/10 px-1 py-0.5 rounded text-white font-mono">Node.js</code>, <code className="bg-white/10 px-1 py-0.5 rounded text-white font-mono">Python</code>, or <code className="bg-white/10 px-1 py-0.5 rounded text-white font-mono">MongoDB</code>, the system automatically detects the official logo from the Devicon library.</p>
               </div>
             </div>
@@ -546,7 +546,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 8: MILESTONES ROADMAP */}
           <section id="journey" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-flag" />
               </div>
               <div>
@@ -565,7 +565,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 9: RECRUITER MESSAGES */}
           <section id="messages" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-envelope" />
               </div>
               <div>
@@ -577,7 +577,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
             </div>
 
             <p className="text-sm text-slate-300 leading-relaxed">
-              Every recruiter submission made on <code className="bg-white/10 px-1.5 py-0.5 rounded text-cyan-300 font-mono">/contact</code> is captured, validated, and persisted in your database.
+              Every recruiter submission made on <code className="bg-white/10 px-1.5 py-0.5 rounded text-yellow-300 font-mono">/contact</code> is captured, validated, and persisted in your database.
             </p>
 
             <ul className="list-disc list-inside space-y-1.5 text-xs text-slate-300">
@@ -590,7 +590,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
           {/* SECTION 10: SECURITY */}
           <section id="security" className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-lock" />
               </div>
               <div>
@@ -610,7 +610,7 @@ export function AdminUserGuide({ onSelectTab, showToast }) {
               <div>
                 <strong className="font-semibold block mb-0.5 text-amber-200">Terminal Recovery Command:</strong>
                 If you ever forget your administrator password, you can reset it locally from the repository root terminal by executing:
-                <div className="mt-2 flex items-center justify-between gap-2 bg-black/60 rounded-lg p-2 font-mono text-[11px] text-cyan-300 border border-white/10">
+                <div className="mt-2 flex items-center justify-between gap-2 bg-black/60 rounded-lg p-2 font-mono text-[11px] text-yellow-300 border border-white/10">
                   <code>npm run setup:admin</code>
                   <button
                     type="button"

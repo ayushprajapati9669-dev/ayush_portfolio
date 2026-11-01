@@ -108,18 +108,18 @@ export function ApiSandbox({ className = '' }) {
 
   return (
     <div
-      className={`relative rounded-2xl bg-[#080d15]/95 border border-cyan-500/25 p-5 sm:p-6 backdrop-blur-xl shadow-[0_15px_50px_rgba(0,0,0,0.6)] ${className}`}
+      className={`relative rounded-2xl bg-[#0a0800]/95 border border-yellow-500/25 p-5 sm:p-6 backdrop-blur-xl shadow-[0_15px_50px_rgba(0,0,0,0.6)] ${className}`}
     >
       {/* Top Banner / Label */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+          <div className="w-8 h-8 rounded-lg bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400">
             <i className="fa-solid fa-server text-xs" />
           </div>
           <div>
             <h4 className="text-white font-semibold text-sm flex items-center gap-2">
               Live Interactive API Console
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 font-mono border border-cyan-500/20">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-300 font-mono border border-yellow-500/20">
                 Sandbox v1
               </span>
             </h4>
@@ -135,7 +135,7 @@ export function ApiSandbox({ className = '' }) {
               onClick={() => handleSelectEndpoint(ep)}
               className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all shrink-0 ${
                 selectedEndpoint.id === ep.id
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-semibold'
+                  ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 font-semibold'
                   : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white border border-transparent'
               }`}
             >
@@ -163,7 +163,7 @@ export function ApiSandbox({ className = '' }) {
         <button
           onClick={handleExecute}
           disabled={loading}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-semibold text-xs font-mono transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.25)] disabled:opacity-50 shrink-0"
+          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-yellow-500 to-blue-600 hover:from-yellow-400 hover:to-blue-500 text-black font-semibold text-xs font-mono transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.25)] disabled:opacity-50 shrink-0"
         >
           {loading ? (
             <>
@@ -198,7 +198,7 @@ export function ApiSandbox({ className = '' }) {
                 setActiveTab('response');
               }}
               className={`transition-colors ${
-                activeTab === 'response' ? 'text-cyan-400 font-semibold' : 'text-white/40 hover:text-white'
+                activeTab === 'response' ? 'text-yellow-400 font-semibold' : 'text-white/40 hover:text-white'
               }`}
             >
               Response Payload
@@ -209,7 +209,7 @@ export function ApiSandbox({ className = '' }) {
                 setActiveTab('headers');
               }}
               className={`transition-colors ${
-                activeTab === 'headers' ? 'text-cyan-400 font-semibold' : 'text-white/40 hover:text-white'
+                activeTab === 'headers' ? 'text-yellow-400 font-semibold' : 'text-white/40 hover:text-white'
               }`}
             >
               Headers ({responseHeaders ? Object.keys(responseHeaders).length : 0})
@@ -229,7 +229,7 @@ export function ApiSandbox({ className = '' }) {
               </span>
             )}
             {latency !== null && (
-              <span className="text-[11px] text-cyan-400/90 font-mono flex items-center gap-1">
+              <span className="text-[11px] text-yellow-400/90 font-mono flex items-center gap-1">
                 <i className="fa-solid fa-bolt text-[10px]" />
                 {latency}ms
               </span>
@@ -248,7 +248,7 @@ export function ApiSandbox({ className = '' }) {
         </div>
 
         {/* Output Content Area */}
-        <div className="p-4 min-h-[160px] max-h-[300px] overflow-y-auto text-xs font-mono selection:bg-cyan-500/30 selection:text-cyan-200">
+        <div className="p-4 min-h-[160px] max-h-[300px] overflow-y-auto text-xs font-mono selection:bg-yellow-500/30 selection:text-yellow-200">
           {!responseData && !loading && (
             <div className="h-28 flex flex-col items-center justify-center text-white/30 text-center">
               <i className="fa-solid fa-code text-lg mb-2 opacity-40" />
@@ -257,7 +257,7 @@ export function ApiSandbox({ className = '' }) {
           )}
 
           {loading && (
-            <div className="h-28 flex flex-col items-center justify-center text-cyan-400/70 text-center animate-pulse">
+            <div className="h-28 flex flex-col items-center justify-center text-yellow-400/70 text-center animate-pulse">
               <i className="fa-solid fa-satellite-dish text-xl mb-2" />
               <span>Dispatching request through Edge Proxy & Redis In-Memory Cache...</span>
             </div>
@@ -273,7 +273,7 @@ export function ApiSandbox({ className = '' }) {
             <div className="space-y-1.5 text-white/80">
               {Object.entries(responseHeaders).map(([k, v]) => (
                 <div key={k} className="flex gap-2">
-                  <span className="text-cyan-400/80 font-medium">{k}:</span>
+                  <span className="text-yellow-400/80 font-medium">{k}:</span>
                   <span className="text-white/90">{v}</span>
                 </div>
               ))}

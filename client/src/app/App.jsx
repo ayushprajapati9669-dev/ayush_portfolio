@@ -20,12 +20,12 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <SmoothScrollProvider>
-          <div className="min-h-screen text-alabaster selection:bg-cyan-500/30 selection:text-cyan-100 flex flex-col relative overflow-x-clip">
+          <div className="min-h-screen text-alabaster selection:bg-yellow-500/30 selection:text-yellow-100 flex flex-col relative overflow-x-clip">
             <BackgroundLayers />
             <TelemetryTracker />
             <a
               href="#main-content"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-cyan-400 focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:font-semibold text-black"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-yellow-400 focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:font-semibold text-black"
             >
               Skip to main content
             </a>

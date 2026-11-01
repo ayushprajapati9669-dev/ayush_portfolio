@@ -17,9 +17,9 @@ function RouteFallback() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center gap-4">
       <div className="relative w-12 h-12 flex items-center justify-center">
-        <div className="absolute inset-0 rounded-full border-2 border-cyan-500/20 animate-ping" />
+        <div className="absolute inset-0 rounded-full border-2 border-yellow-500/20 animate-ping" />
         <div className="w-10 h-10 rounded-full border-2 border-transparent border-t-cyan-400 border-r-cyan-400 animate-spin" />
-        <span className="font-mono text-[10px] font-bold text-cyan-400">AP</span>
+        <span className="font-mono text-[10px] font-bold text-yellow-400">AP</span>
       </div>
       <p className="font-mono text-xs text-slate-400 tracking-widest uppercase animate-pulse">Loading Experience...</p>
     </div>

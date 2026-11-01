@@ -89,7 +89,7 @@ export function AdminAnalytics() {
           disabled={refreshing}
           className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white text-xs font-mono transition-all flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
         >
-          <i className={`fa-solid fa-arrows-rotate ${refreshing ? 'animate-spin text-cyan-400' : ''}`} />
+          <i className={`fa-solid fa-arrows-rotate ${refreshing ? 'animate-spin text-yellow-400' : ''}`} />
           <span>{refreshing ? 'Syncing...' : 'Refresh Metrics'}</span>
         </button>
       </div>
@@ -97,10 +97,10 @@ export function AdminAnalytics() {
       {/* 4 Primary KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1 */}
-        <div className="rounded-2xl bg-[#090f19] border border-cyan-500/20 p-5 backdrop-blur-xl relative overflow-hidden group hover:border-cyan-500/40 transition-all">
+        <div className="rounded-2xl bg-[#090f19] border border-yellow-500/20 p-5 backdrop-blur-xl relative overflow-hidden group hover:border-yellow-500/40 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono text-white/50 uppercase tracking-wide">Total Page Views</span>
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <div className="w-8 h-8 rounded-lg bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400">
               <i className="fa-solid fa-eye text-xs" />
             </div>
           </div>
@@ -181,15 +181,15 @@ export function AdminAnalytics() {
                     <div className="flex items-center justify-between text-xs font-mono mb-1">
                       <div className="flex items-center gap-2 truncate">
                         <span className="w-5 text-white/40 font-bold">{i + 1}.</span>
-                        <span className="text-white/90 group-hover:text-cyan-400 transition-colors truncate">
+                        <span className="text-white/90 group-hover:text-yellow-400 transition-colors truncate">
                           {p.title}
                         </span>
                       </div>
-                      <span className="text-cyan-400 font-bold ml-2 shrink-0">{p.views} views</span>
+                      <span className="text-yellow-400 font-bold ml-2 shrink-0">{p.views} views</span>
                     </div>
                     <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-700"
+                        className="h-full rounded-full bg-gradient-to-r from-yellow-500 to-blue-500 transition-all duration-700"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -203,7 +203,7 @@ export function AdminAnalytics() {
           <div className="rounded-2xl bg-[#080d17] border border-white/10 p-5">
             <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
               <h4 className="text-white font-semibold text-sm flex items-center gap-2">
-                <i className="fa-solid fa-share-nodes text-cyan-400" />
+                <i className="fa-solid fa-share-nodes text-yellow-400" />
                 <span>Traffic Referrer Sources</span>
               </h4>
               <span className="text-[10px] font-mono text-white/40">Total: {totalReferrals}</span>
@@ -216,11 +216,11 @@ export function AdminAnalytics() {
                   <div key={channel} className="p-3 rounded-xl bg-white/5 border border-white/5">
                     <div className="flex items-center justify-between text-xs font-mono mb-1.5">
                       <span className="text-white/80 font-medium">{channel}</span>
-                      <span className="text-cyan-400 font-bold">{count} ({pct}%)</span>
+                      <span className="text-yellow-400 font-bold">{count} ({pct}%)</span>
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-cyan-400"
+                        className="h-full rounded-full bg-yellow-400"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -261,7 +261,7 @@ export function AdminAnalytics() {
                         isDownload
                           ? 'bg-amber-500/10 text-amber-400'
                           : isProject
-                          ? 'bg-cyan-500/10 text-cyan-400'
+                          ? 'bg-yellow-500/10 text-yellow-400'
                           : isSandbox
                           ? 'bg-purple-500/10 text-purple-400'
                           : 'bg-emerald-500/10 text-emerald-400'
@@ -303,7 +303,7 @@ export function AdminAnalytics() {
             <h4 className="text-white font-semibold text-sm mb-3">Device Breakdown</h4>
             <div className="flex items-center justify-between text-xs font-mono text-white/60">
               <span className="flex items-center gap-1.5">
-                <i className="fa-solid fa-laptop text-cyan-400" /> Desktop ({d.devices?.desktop || 780})
+                <i className="fa-solid fa-laptop text-yellow-400" /> Desktop ({d.devices?.desktop || 780})
               </span>
               <span className="flex items-center gap-1.5">
                 <i className="fa-solid fa-mobile-screen text-amber-400" /> Mobile ({d.devices?.mobile || 412})

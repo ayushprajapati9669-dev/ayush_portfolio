@@ -1,0 +1,424 @@
+certs_css = """/* ==========================================================================
+   VSLFlow Luxury Certificates Page & Modal Lightbox
+   Aesthetic: Pure Black (#000000), Metallic Gold (#D4AF37),
+              Cormorant Garamond Headings, Jost Body & Meta
+   ========================================================================== */
+
+.certificates-page {
+  min-height: 100vh !important;
+  background: #000000 !important;
+  padding-top: 130px !important;
+  padding-bottom: 120px !important;
+  color: #ffffff !important;
+}
+
+/* Page Header */
+.certificates-page .page-header {
+  max-width: 1280px !important;
+  margin: 0 auto 48px auto !important;
+  padding: 0 clamp(20px, 5vw, 64px) !important;
+}
+
+.certificates-page .page-tagline {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #d4af37 !important;
+  letter-spacing: 2.5px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 16px !important;
+  display: block !important;
+}
+
+.certificates-page .page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(3.2rem, 7.5vw, 6.5rem) !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.03em !important;
+  color: #ffffff !important;
+  line-height: 0.95 !important;
+  margin: 0 0 20px 0 !important;
+}
+
+.certificates-page .page-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 15px !important;
+  color: #777777 !important;
+  line-height: 1.7 !important;
+  max-width: 600px !important;
+}
+
+/* ── Certificate Grid ── */
+.cert-grid {
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 0 clamp(20px, 5vw, 64px) !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+  gap: 28px !important;
+}
+
+/* ── Certificate Card ── */
+.cert-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.cert-card:hover {
+  border-color: rgba(212, 175, 55, 0.32) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(212, 175, 55, 0.12) !important;
+}
+
+/* Image Wrap */
+.cert-img-wrap {
+  width: 100% !important;
+  height: 200px !important;
+  max-height: 200px !important;
+  min-height: 200px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #0a0a0a !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+}
+
+.cert-img-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  transition: transform 0.4s ease !important;
+}
+
+.cert-card:hover .cert-img-wrap img {
+  transform: scale(1.03) !important;
+}
+
+.cert-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  opacity: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #d4af37 !important;
+  font-size: 1.5rem !important;
+  transition: opacity 0.25s ease !important;
+}
+
+.cert-card:hover .cert-overlay {
+  opacity: 1 !important;
+}
+
+/* Card Content */
+.cert-content {
+  padding: 24px !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.cert-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+.cert-issuer {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10.5px !important;
+  color: #d4af37 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+}
+
+.cert-year {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10.5px !important;
+  color: #666666 !important;
+}
+
+.cert-category-badge {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  padding: 2px 7px !important;
+  background: rgba(212, 175, 55, 0.08) !important;
+  border: 1px solid rgba(212, 175, 55, 0.2) !important;
+  border-radius: 999px !important;
+  color: #d4af37 !important;
+  text-transform: uppercase !important;
+}
+
+.cert-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.4rem !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.25 !important;
+  margin: 0 !important;
+}
+
+.cert-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12.5px !important;
+  color: #777777 !important;
+  line-height: 1.6 !important;
+  flex: 1 !important;
+}
+
+/* Actions Row */
+.cert-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin-top: 8px !important;
+  padding-top: 14px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.btn-view {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 8px 16px !important;
+  background: #d4af37 !important;
+  color: #000000 !important;
+  border: 1px solid #d4af37 !important;
+  border-radius: 8px !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  cursor: pointer !important;
+  transition: all 0.22s ease !important;
+}
+
+.btn-view:hover {
+  background: #e8c84a !important;
+  border-color: #e8c84a !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+.verified-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #4ade80 !important;
+  background: rgba(74, 222, 128, 0.08) !important;
+  border: 1px solid rgba(74, 222, 128, 0.2) !important;
+  border-radius: 999px !important;
+  padding: 3px 10px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+/* ==========================================================================
+   Full-Screen Interactive Lightbox Modal
+   ========================================================================== */
+.modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.88) !important;
+  backdrop-filter: blur(12px) !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: all 0.25s ease !important;
+}
+
+.modal-overlay.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.modal-content {
+  background: #0a0a0a !important;
+  border: 1px solid rgba(212, 175, 55, 0.25) !important;
+  border-radius: 20px !important;
+  width: 100% !important;
+  max-width: 900px !important;
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9), 0 0 50px rgba(212, 175, 55, 0.1) !important;
+}
+
+.modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 20px 24px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.01) !important;
+}
+
+.modal-meta {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #d4af37 !important;
+  letter-spacing: 0.1em !important;
+}
+
+.modal-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.5rem !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  margin: 4px 0 0 0 !important;
+}
+
+.modal-controls {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.zoom-controls {
+  display: flex !important;
+  align-items: center !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.zoom-btn {
+  padding: 6px 10px !important;
+  background: transparent !important;
+  border: none !important;
+  color: #a0a0a0 !important;
+  cursor: pointer !important;
+  font-size: 11px !important;
+  transition: all 0.15s ease !important;
+}
+
+.zoom-btn:hover {
+  color: #d4af37 !important;
+  background: rgba(212, 175, 55, 0.1) !important;
+}
+
+.zoom-level {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  color: #ffffff !important;
+  padding: 0 8px !important;
+}
+
+.btn-modal {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 7px 14px !important;
+  background: rgba(212, 175, 55, 0.1) !important;
+  border: 1px solid rgba(212, 175, 55, 0.25) !important;
+  border-radius: 8px !important;
+  color: #d4af37 !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+.btn-modal:hover {
+  background: rgba(212, 175, 55, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.btn-modal-close {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 7px 14px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  color: #a0a0a0 !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+}
+
+.btn-modal-close:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.modal-body {
+  padding: 24px !important;
+  overflow: auto !important;
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #000000 !important;
+}
+
+.modal-img-container img {
+  max-width: 100% !important;
+  max-height: 60vh !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+}
+
+.modal-footer {
+  padding: 16px 24px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: rgba(255, 255, 255, 0.01) !important;
+}
+
+.modal-footer-info h4 {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.2rem !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  margin: 0 0 2px 0 !important;
+}
+
+.modal-footer-info p {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12px !important;
+  color: #777777 !important;
+  margin: 0 !important;
+}
+
+.modal-skills-badge {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  color: #a0a0a0 !important;
+  margin-top: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.modal-hint {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #555555 !important;
+}
+"""
+
+with open(r"d:\MY_PROJECT\FULL_STACK_PROJECT\ayush_portfolio_main\client\src\styles\pages\certificates.css", 'w', encoding='utf-8') as f:
+    f.write(certs_css)
+print("certificates.css rewritten successfully with VSLFlow layout")

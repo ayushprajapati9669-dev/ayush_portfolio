@@ -1,10 +1,9 @@
 /* ==========================================================================
-   Obsidian Dark Editorial Atmosphere & Background Effects (Reference Style)
-   - Deep pure pitch obsidian background (#030303)
-   - Waving subtle dot mesh / particle matrix (Matching Image 1)
-   - 4-column architectural hairline guides
-   - Subtle film grain noise overlay
-   - COMPLETE REMOVAL OF 3D SPHERES (as explicitly requested)
+   VSLFlow Luxury Black-Gold Atmospheric Effects
+   - Pure absolute black #000000 canvas
+   - Subtle gold aurora blobs
+   - Architectural hairline grid guides
+   - Subtle film grain overlay
    ========================================================================== */
 
 /* 1. Complete Removal of 3D Spheres & Droplets */
@@ -20,7 +19,7 @@
   height: 0 !important;
 }
 
-/* 2. Deep Obsidian Pitch Black Canvas */
+/* 2. Pure Black Canvas */
 .liquid-bg,
 .aurora-bg {
   position: fixed;
@@ -28,69 +27,59 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: #030303 !important;
+  background: #000000 !important;
 }
 
-/* Subtle Waving Dot Matrix / Grid Mesh (Matching Reference Image 1) */
+/* Subtle dot grid — very faint */
 .liquid-bg::before,
 .aurora-bg::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 28px 28px;
-  opacity: 0.18;
-  mask-image: radial-gradient(ellipse at 30% 45%, black 20%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse at 30% 45%, black 20%, transparent 75%);
-  animation: dotWaveShift 24s ease-in-out infinite alternate;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.12;
+  -webkit-mask-image: radial-gradient(ellipse at 40% 35%, black 15%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 40% 35%, black 15%, transparent 70%);
   pointer-events: none;
 }
 
-@keyframes dotWaveShift {
-  0% {
-    transform: translateY(0) scale(1);
-  }
-  100% {
-    transform: translateY(-20px) scale(1.04);
-  }
-}
-
-/* 3. Sarthak Sharma Architectural 4-Column Guide Grid */
+/* 3. Architectural 4-Column Guide Grid — gold-tinted */
 .editorial-grid-guides {
   position: fixed;
   inset: 0 clamp(24px, 5vw, 88px);
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.04) 1px, transparent 1px);
   background-size: 25% 100%;
-  opacity: 0.35;
+  opacity: 0.5;
   pointer-events: none;
   z-index: 0;
-  -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
 }
 
-/* 4. Subtle Ambient Depth Radial Blobs (Emerald & Amber / 0.08 Opacity) */
+/* 4. Gold Aurora Ambient Blobs */
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(140px);
+  filter: blur(160px);
   pointer-events: none;
 }
 
 .aurora-1 {
-  width: 55vw;
-  height: 55vw;
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.08) 0%, transparent 65%);
-  top: -15%;
-  right: -10%;
-  opacity: 0.6;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 65%);
+  bottom: -15%;
+  left: -10%;
+  opacity: 0.7;
 }
 
 .aurora-2 {
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(255, 140, 89, 0.07) 0%, transparent 65%);
-  bottom: -10%;
-  left: -10%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.04) 0%, transparent 65%);
+  top: -10%;
+  right: -10%;
   opacity: 0.5;
 }
 
@@ -98,12 +87,12 @@
   display: none !important;
 }
 
-/* 5. Minimal Ambient Cursor Spotlight Follower */
+/* 5. Minimal Gold-Tinted Cursor Spotlight */
 .mouse-light {
   position: fixed;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.025) 0%, transparent 65%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.02) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
@@ -117,9 +106,10 @@
 .bg-noise {
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E");
   z-index: 1;
   pointer-events: none;
+  opacity: 0.4;
 }
 
 @media (prefers-reduced-motion: reduce) {

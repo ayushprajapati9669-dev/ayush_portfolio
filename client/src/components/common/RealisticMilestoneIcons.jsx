@@ -194,14 +194,14 @@ export function RealisticBullseyeIcon({ size = 42, className = '' }) {
         viewBox="0 0 52 52"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-[0_4px_12px_rgba(56,189,248,0.45)]"
+        className="w-full h-full drop-shadow-[0_4px_12px_rgba(212,175,55,0.45)]"
       >
         <defs>
           <linearGradient id="cyanRim" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#7dd3fc" stopOpacity="0.85" />
+            <stop offset="0%" stopColor="#e8cc6a" stopOpacity="0.85" />
             <stop offset="40%" stopColor="#0284c7" />
             <stop offset="80%" stopColor="#082f49" />
-            <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#d4af37" stopOpacity="0.7" />
           </linearGradient>
 
           <radialGradient id="cyanGlass" cx="35%" cy="30%" r="70%">
@@ -218,7 +218,7 @@ export function RealisticBullseyeIcon({ size = 42, className = '' }) {
 
           <radialGradient id="targetCore" cx="40%" cy="35%" r="60%">
             <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="40%" stopColor="#38bdf8" />
+            <stop offset="40%" stopColor="#d4af37" />
             <stop offset="80%" stopColor="#0284c7" />
             <stop offset="100%" stopColor="#0369a1" />
           </radialGradient>
@@ -229,19 +229,19 @@ export function RealisticBullseyeIcon({ size = 42, className = '' }) {
         <ellipse cx="26" cy="14" rx="14" ry="7" fill="url(#cyanGlint)" />
 
         {/* Concentric Outer Ring */}
-        <circle cx="26" cy="26" r="16" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+        <circle cx="26" cy="26" r="16" stroke="#d4af37" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
 
         {/* Middle Ring */}
-        <circle cx="26" cy="26" r="11" stroke="#38bdf8" strokeWidth="2.2" opacity="0.85" />
+        <circle cx="26" cy="26" r="11" stroke="#d4af37" strokeWidth="2.2" opacity="0.85" />
 
         {/* Crosshair Ticks */}
-        <line x1="26" y1="9" x2="26" y2="13" stroke="#7dd3fc" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="26" y1="39" x2="26" y2="43" stroke="#7dd3fc" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="9" y1="26" x2="13" y2="26" stroke="#7dd3fc" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="39" y1="26" x2="43" y2="26" stroke="#7dd3fc" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="26" y1="9" x2="26" y2="13" stroke="#e8cc6a" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="26" y1="39" x2="26" y2="43" stroke="#e8cc6a" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="9" y1="26" x2="13" y2="26" stroke="#e8cc6a" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="39" y1="26" x2="43" y2="26" stroke="#e8cc6a" strokeWidth="1.8" strokeLinecap="round" />
 
         {/* Central Glowing Bullseye Orb */}
-        <circle cx="26" cy="26" r="5.5" fill="url(#targetCore)" filter="drop-shadow(0 0 6px rgba(56,189,248,0.8))" />
+        <circle cx="26" cy="26" r="5.5" fill="url(#targetCore)" filter="drop-shadow(0 0 6px rgba(212,175,55,0.8))" />
         <circle cx="24.5" cy="24.5" r="1.5" fill="#ffffff" />
       </svg>
     </div>

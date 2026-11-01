@@ -386,7 +386,7 @@ export function AdminMessages({
   // Helper avatar colors
   const getAvatarColor = (name = '') => {
     const colors = [
-      'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+      'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
       'bg-orange-500/20 text-orange-400 border-orange-500/30',
       'bg-purple-500/20 text-purple-400 border-purple-500/30',
       'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
@@ -402,17 +402,17 @@ export function AdminMessages({
       {/* 1. Top KPI Stat Cards (Matching AdminProjects & AdminMilestones) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
         {/* Total Inquiries */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-cyan-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
+        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-yellow-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
           <div>
-            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-cyan-400/80 transition-colors">
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-yellow-400/80 transition-colors">
               TOTAL INQUIRIES
             </div>
             <div className="text-3xl font-bold font-display text-white">
               {totalCount}
             </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <i className="fa-solid fa-inbox text-xl text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.4)]" />
+          <div className="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+            <i className="fa-solid fa-inbox text-xl text-yellow-400 drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]" />
           </div>
         </div>
 
@@ -466,7 +466,7 @@ export function AdminMessages({
       {/* 2. Top Action Banner */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-inbox" /> COMMUNICATIONS &amp; CLIENT INQUIRIES
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Inbox Workspace</h2>
@@ -483,7 +483,7 @@ export function AdminMessages({
             className="px-3 py-1.5 rounded-xl bg-[#0c1424] border border-white/10 hover:border-white/20 text-xs text-slate-300 hover:text-white flex items-center gap-1.5 transition-all"
             title="Export messages to JSON"
           >
-            <i className="fa-solid fa-file-export text-cyan-400 text-xs" />
+            <i className="fa-solid fa-file-export text-yellow-400 text-xs" />
             <span>Export</span>
           </button>
 
@@ -509,7 +509,7 @@ export function AdminMessages({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search messages (⌘K)..."
-              className="w-48 sm:w-60 bg-black/40 border border-white/10 rounded-xl pl-8 pr-12 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400 transition-all font-sans"
+              className="w-48 sm:w-60 bg-black/40 border border-white/10 rounded-xl pl-8 pr-12 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-yellow-400 transition-all font-sans"
             />
             <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/10 font-mono pointer-events-none">
               ⌘K
@@ -540,9 +540,9 @@ export function AdminMessages({
                 <span
                   className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
                   style={{
-                    backgroundColor: 'rgba(6,182,212,0.15)',
-                    color: 'var(--brand-color, #06b6d4)',
-                    border: '1px solid rgba(6,182,212,0.3)'
+                    backgroundColor: 'rgba(212,175,55,0.15)',
+                    color: 'var(--brand-color, #d4af37)',
+                    border: '1px solid rgba(212,175,55,0.3)'
                   }}
                 >
                   {unreadCount} new
@@ -568,10 +568,10 @@ export function AdminMessages({
                 onClick={() => { playTick(); setFilter('unread'); }}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
                   filter === 'unread'
-                    ? 'bg-white/10 text-cyan-300 shadow-sm'
+                    ? 'bg-white/10 text-yellow-300 shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
-                style={filter === 'unread' ? { color: 'var(--brand-color, #06b6d4)' } : undefined}
+                style={filter === 'unread' ? { color: 'var(--brand-color, #d4af37)' } : undefined}
               >
                 Unread ({unreadCount})
               </button>
@@ -635,7 +635,7 @@ export function AdminMessages({
                             ? 'bg-white/[0.07]'
                             : 'hover:bg-white/[0.03]'
                         }`}
-                        style={isActive ? { borderLeft: '3px solid var(--brand-color, #06b6d4)' } : { borderLeft: '3px solid transparent' }}
+                        style={isActive ? { borderLeft: '3px solid var(--brand-color, #d4af37)' } : { borderLeft: '3px solid transparent' }}
                       >
                         {/* Avatar */}
                         <div
@@ -655,8 +655,8 @@ export function AdminMessages({
                                 <span
                                   className="w-2 h-2 rounded-full shrink-0"
                                   style={{
-                                    backgroundColor: 'var(--brand-color, #06b6d4)',
-                                    boxShadow: '0 0 8px var(--brand-glow, rgba(6,182,212,0.8))'
+                                    backgroundColor: 'var(--brand-color, #d4af37)',
+                                    boxShadow: '0 0 8px var(--brand-glow, rgba(212,175,55,0.8))'
                                   }}
                                 />
                               )}
@@ -670,7 +670,7 @@ export function AdminMessages({
                             </div>
                             <span
                               className={`text-[10px] shrink-0 ml-2 font-mono ${
-                                isActive ? 'text-cyan-400 font-semibold' : 'text-slate-500'
+                                isActive ? 'text-yellow-400 font-semibold' : 'text-slate-500'
                               }`}
                             >
                               {m.createdAt
@@ -699,7 +699,7 @@ export function AdminMessages({
                               </span>
                             )}
                             {isUnread && (
-                              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+                              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-yellow-500/15 text-yellow-400 border border-yellow-500/30">
                                 New
                               </span>
                             )}
@@ -719,7 +719,7 @@ export function AdminMessages({
                           <button
                             type="button"
                             onClick={(e) => handleQuickRead(e, m.id)}
-                            className="w-5 h-5 rounded hover:bg-cyan-500/20 text-slate-400 hover:text-cyan-400 flex items-center justify-center text-[9px] transition-colors"
+                            className="w-5 h-5 rounded hover:bg-yellow-500/20 text-slate-400 hover:text-yellow-400 flex items-center justify-center text-[9px] transition-colors"
                             title={isUnread ? 'Mark as read' : 'Mark as unread'}
                           >
                             <i className="fa-solid fa-check" />
@@ -745,7 +745,7 @@ export function AdminMessages({
         {/* Resizer Divider Bar */}
         <div
           onMouseDown={handleMouseDownResize}
-          className="hidden md:flex w-1.5 hover:w-2 bg-transparent hover:bg-cyan-500/20 active:bg-cyan-500/40 cursor-col-resize transition-all relative z-20 items-center justify-center shrink-0"
+          className="hidden md:flex w-1.5 hover:w-2 bg-transparent hover:bg-yellow-500/20 active:bg-yellow-500/40 cursor-col-resize transition-all relative z-20 items-center justify-center shrink-0"
           title="Drag to resize panels"
         >
           <div className="w-0.5 h-6 bg-white/20 rounded-full" />
@@ -824,7 +824,7 @@ export function AdminMessages({
                       activeMail.status === 'replied'
                         ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                         : activeMail.status === 'unread'
-                        ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30'
+                        ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
                         : 'bg-white/10 text-slate-300 border border-white/10'
                     }`}
                   >
@@ -833,7 +833,7 @@ export function AdminMessages({
                         activeMail.status === 'replied'
                           ? 'bg-emerald-400'
                           : activeMail.status === 'unread'
-                          ? 'bg-cyan-400'
+                          ? 'bg-yellow-400'
                           : 'bg-slate-400'
                       }`}
                     />
@@ -882,14 +882,14 @@ export function AdminMessages({
                 </div>
 
                 {/* Message Body Content */}
-                <div className="text-slate-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap pl-3 border-l-2 border-cyan-500/40 py-1 bg-white/[0.01] rounded-r-lg">
+                <div className="text-slate-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap pl-3 border-l-2 border-yellow-500/40 py-1 bg-white/[0.01] rounded-r-lg">
                   {activeMail.message}
                 </div>
 
                 {/* Reply Thread (Displays past replies) */}
                 {Array.isArray(activeMail.replies) && activeMail.replies.length > 0 && (
                   <div className="space-y-3 pt-4 border-t border-white/10">
-                    <span className="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider block">
+                    <span className="text-xs font-mono text-yellow-400 font-bold uppercase tracking-wider block">
                       Conversation History ({activeMail.replies.length})
                     </span>
                     {activeMail.replies.map((reply, rIdx) => (
@@ -897,9 +897,9 @@ export function AdminMessages({
                         key={reply.id || rIdx}
                         className="rounded-xl border border-white/10 bg-[#070c14]/90 p-4 space-y-1.5 relative overflow-hidden"
                       >
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-cyan-400" />
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-400" />
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-cyan-300">{reply.sender}</span>
+                          <span className="font-bold text-yellow-300">{reply.sender}</span>
                           <span className="font-mono text-[10px] text-slate-500">{reply.time || reply.date}</span>
                         </div>
                         <p className="text-xs text-slate-300 leading-relaxed pl-1 whitespace-pre-wrap">
@@ -913,7 +913,7 @@ export function AdminMessages({
                 {/* Fast Template Response Chips */}
                 <div className="pt-2">
                   <div className="flex items-center gap-1.5 mb-2 text-[10px] font-mono text-slate-400 uppercase tracking-wider">
-                    <i className="fa-solid fa-wand-magic-sparkles text-cyan-400" />
+                    <i className="fa-solid fa-wand-magic-sparkles text-yellow-400" />
                     <span>Quick Response Templates</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -922,7 +922,7 @@ export function AdminMessages({
                         key={tmpl.id}
                         type="button"
                         onClick={() => handleInsertTemplate(tmpl)}
-                        className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-500/40 text-slate-300 hover:text-white text-[11px] font-medium transition-all"
+                        className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-yellow-500/40 text-slate-300 hover:text-white text-[11px] font-medium transition-all"
                       >
                         {tmpl.label}
                       </button>
@@ -932,7 +932,7 @@ export function AdminMessages({
 
                 {/* Interactive Reply Box (⌘ + Enter to Send) */}
                 <div className="pt-1">
-                  <div className="rounded-xl border border-white/15 bg-[#070c14] overflow-hidden focus-within:border-cyan-400/60 focus-within:ring-1 focus-within:ring-cyan-400/60 transition-all shadow-inner">
+                  <div className="rounded-xl border border-white/15 bg-[#070c14] overflow-hidden focus-within:border-yellow-400/60 focus-within:ring-1 focus-within:ring-yellow-400/60 transition-all shadow-inner">
                     <textarea
                       rows={4}
                       value={replyText}
@@ -957,8 +957,8 @@ export function AdminMessages({
                         disabled={!replyText.trim() || isSendingReply}
                         className="flex items-center gap-2 px-5 py-2 rounded-xl text-black font-bold text-xs transition-all shadow-md cursor-pointer hover:opacity-95 disabled:opacity-40"
                         style={{
-                          backgroundColor: 'var(--brand-color, #06b6d4)',
-                          boxShadow: '0 4px 15px var(--brand-glow, rgba(6,182,212,0.3))'
+                          backgroundColor: 'var(--brand-color, #d4af37)',
+                          boxShadow: '0 4px 15px var(--brand-glow, rgba(212,175,55,0.3))'
                         }}
                       >
                         {isSendingReply ? (
@@ -993,7 +993,7 @@ export function AdminMessages({
             onClick={() => handleContextAction('read')}
             className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-left"
           >
-            <i className="fa-solid fa-check text-[10px] text-cyan-400 w-4" />
+            <i className="fa-solid fa-check text-[10px] text-yellow-400 w-4" />
             <span>Mark as Read</span>
           </button>
           <button

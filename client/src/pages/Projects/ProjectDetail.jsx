@@ -272,10 +272,10 @@ export function ProjectDetail() {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-[#050811] text-center px-4">
-        <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl animate-pulse">
+        <div className="w-12 h-12 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-xl animate-pulse">
           <i className="fa-solid fa-compass-drafting" />
         </div>
-        <p className="font-mono text-sm text-cyan-400 font-bold tracking-wider">
+        <p className="font-mono text-sm text-yellow-400 font-bold tracking-wider">
           Loading Architectural Case Study...
         </p>
       </div>
@@ -296,7 +296,7 @@ export function ProjectDetail() {
         </div>
         <Link
           to="/projects"
-          className="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs transition-all font-mono"
+          className="px-5 py-2.5 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-xs transition-all font-mono"
         >
           Return to Projects Library
         </Link>
@@ -367,7 +367,7 @@ await session.withTransaction(async () => {
           <div className="cs-sidebar-progress-card">
             <div className="cs-sidebar-progress-card-top">
               <span>READING PROGRESS</span>
-              <span className="font-bold text-cyan-400">{Math.round(readingProgress)}%</span>
+              <span className="font-bold text-yellow-400">{Math.round(readingProgress)}%</span>
             </div>
             <div className="cs-sidebar-progress-card-track">
               <div
@@ -569,7 +569,7 @@ await session.withTransaction(async () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={playTick}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-yellow-500 to-blue-600 hover:from-yellow-400 hover:to-blue-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all"
                 >
                   <i className="fa-solid fa-arrow-up-right-from-square" />
                   <span>Live Production App</span>
@@ -641,7 +641,7 @@ await session.withTransaction(async () => {
             <div className="cs-section-header">
               <span className="cs-section-badge">02 • Strategy &amp; Architecture</span>
               <h2 className="cs-section-title">
-                <i className="fa-solid fa-compass-drafting text-cyan-400" />
+                <i className="fa-solid fa-compass-drafting text-yellow-400" />
                 <span>Engineering Approach</span>
               </h2>
             </div>
@@ -695,7 +695,7 @@ await session.withTransaction(async () => {
                 <div className="cs-arch-pane" role="tabpanel">
                   <div className="cs-arch-header">
                     <div className="cs-arch-title">
-                      <i className="fa-solid fa-desktop text-cyan-400" />
+                      <i className="fa-solid fa-desktop text-yellow-400" />
                       <span>Presentation &amp; State Management</span>
                     </div>
                     <div className="cs-arch-stack">Stack: {clientTech}</div>
@@ -731,7 +731,7 @@ await session.withTransaction(async () => {
                 <div className="cs-arch-pane" role="tabpanel">
                   <div className="cs-arch-header">
                     <div className="cs-arch-title">
-                      <i className="fa-solid fa-server text-cyan-400" />
+                      <i className="fa-solid fa-server text-yellow-400" />
                       <span>Defensive Security &amp; Routing</span>
                     </div>
                     <div className="cs-arch-stack">Stack: {backendTech}</div>
@@ -767,7 +767,7 @@ await session.withTransaction(async () => {
                 <div className="cs-arch-pane" role="tabpanel">
                   <div className="cs-arch-header">
                     <div className="cs-arch-title">
-                      <i className="fa-solid fa-database text-cyan-400" />
+                      <i className="fa-solid fa-database text-yellow-400" />
                       <span>Transactional Persistence</span>
                     </div>
                     <div className="cs-arch-stack">Stack: {databaseTech}</div>
@@ -915,7 +915,7 @@ await session.withTransaction(async () => {
             <div className="cs-section-header">
               <span className="cs-section-badge">05 • System Blueprint</span>
               <h2 className="cs-section-title">
-                <i className="fa-solid fa-diagram-project text-cyan-400" />
+                <i className="fa-solid fa-diagram-project text-yellow-400" />
                 <span>Architecture Diagram &amp; Microservices</span>
               </h2>
             </div>
@@ -951,7 +951,7 @@ await session.withTransaction(async () => {
             <div className="cs-section-header">
               <span className="cs-section-badge">06 • Visual Evolution</span>
               <h2 className="cs-section-title">
-                <i className="fa-solid fa-sliders text-cyan-400" />
+                <i className="fa-solid fa-sliders text-yellow-400" />
                 <span>Before &amp; After</span>
               </h2>
             </div>
@@ -1029,7 +1029,7 @@ await session.withTransaction(async () => {
           <footer className="cs-bottom-bar">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="space-y-1">
-                <span className="font-mono text-[10px] text-cyan-400 uppercase tracking-wider font-bold">
+                <span className="font-mono text-[10px] text-yellow-400 uppercase tracking-wider font-bold">
                   Portfolio Exploration
                 </span>
                 <h3 className="text-xl font-bold text-white font-grotesk">
@@ -1053,7 +1053,7 @@ await session.withTransaction(async () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={playTick}
-                    className="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xs flex items-center gap-2 transition-all font-mono"
+                    className="px-5 py-2.5 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-xs flex items-center gap-2 transition-all font-mono"
                   >
                     <i className="fa-solid fa-arrow-up-right-from-square" />
                     <span>Live Demo</span>
@@ -1085,7 +1085,7 @@ await session.withTransaction(async () => {
                   <Link
                     to={`/projects/${nextProject.slug || nextProject.id}`}
                     onClick={playTick}
-                    className="px-4 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold"
+                    className="px-4 py-2.5 rounded-xl bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold"
                   >
                     <span>Next: {nextProject.title.slice(0, 15)}...</span>
                     <i className="fa-solid fa-arrow-right" />
@@ -1117,7 +1117,7 @@ await session.withTransaction(async () => {
               <i className="fa-solid fa-xmark text-lg" />
             </button>
             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3 font-grotesk">
-              <i className="fa-solid fa-diagram-project text-cyan-400" />
+              <i className="fa-solid fa-diagram-project text-yellow-400" />
               <span>Full System Architecture Blueprint — {project.title}</span>
             </h2>
             <img

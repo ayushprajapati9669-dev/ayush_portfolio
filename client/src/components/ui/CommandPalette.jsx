@@ -368,7 +368,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
               }}
               className={`rounded-lg px-2.5 py-1 font-mono transition-all shrink-0 ${
                 activeCategory === cat
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 font-bold'
+                  ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/40 font-bold'
                   : 'text-slate-400 hover:text-white border border-transparent'
               }`}
             >
@@ -425,7 +425,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
               <kbd className="rounded border border-white/15 bg-white/5 px-1 py-0.5 text-slate-300">esc</kbd> close
             </span>
           </div>
-          <span className="text-cyan-400">Ayush CMS Quick Palette</span>
+          <span className="text-yellow-400">Ayush CMS Quick Palette</span>
         </div>
       </div>
     </div>

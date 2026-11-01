@@ -218,7 +218,7 @@ export function AdminProfile({
       {/* Top Action Banner — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-user-pen" /> IDENTITY, ABOUT & RESUME SETTINGS
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Profile & About Management</h2>
@@ -244,7 +244,7 @@ export function AdminProfile({
             <button
               type="button"
               onClick={() => handlePreviewResume(directResumeUrl)}
-              className="flex items-center gap-1.5 font-mono text-xs px-3.5 py-1.5 rounded-xl border border-white/10 bg-black/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/30 transition-all"
+              className="flex items-center gap-1.5 font-mono text-xs px-3.5 py-1.5 rounded-xl border border-white/10 bg-black/30 text-yellow-300 hover:bg-yellow-500/10 hover:border-yellow-400/30 transition-all"
             >
               <i className="fa-solid fa-file-pdf text-red-400" />
               <span>Preview Resume</span>
@@ -262,10 +262,10 @@ export function AdminProfile({
         <div className="xl:col-span-4 xl:sticky xl:top-6 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-bold text-white flex items-center gap-2 uppercase tracking-wider font-mono">
-              <i className="fa-solid fa-mobile-screen text-cyan-400" />
+              <i className="fa-solid fa-mobile-screen text-yellow-400" />
               <span>Live Rendering</span>
             </h3>
-            <span className="font-mono text-[10px] text-cyan-400 px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/20">
+            <span className="font-mono text-[10px] text-yellow-400 px-2 py-0.5 rounded-md bg-yellow-500/10 border border-yellow-500/20">
               Simulation
             </span>
           </div>
@@ -273,18 +273,18 @@ export function AdminProfile({
           {/* Live Preview Card */}
           <div className="glass-card-admin rounded-2xl p-6 shadow-2xl relative overflow-hidden border border-white/10 bg-[#0b1120]/80 backdrop-blur-xl">
             {/* Top Accent Glowing Line */}
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#06b6d4] to-transparent opacity-60" />
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60" />
 
             {/* Profile Avatar & Name */}
             <div className="flex items-center gap-4 mb-5">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#06b6d4] to-[#0ea5e9] flex items-center justify-center text-lg font-bold text-white shadow-lg shadow-cyan-500/20 transition-all">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#d4af37] to-[#d4af37] flex items-center justify-center text-lg font-bold text-white shadow-lg shadow-cyan-500/20 transition-all">
                 {profileForm.monogram || 'AP'}
               </div>
               <div className="overflow-hidden min-w-0">
                 <h4 className="text-base font-bold text-white truncate">
                   {profileForm.displayName || 'Ayush Prajapati'}
                 </h4>
-                <p className="text-xs text-[#06b6d4] truncate font-medium mt-0.5">
+                <p className="text-xs text-[#d4af37] truncate font-medium mt-0.5">
                   {profileForm.headerSubtitle || 'Full-Stack Developer'}
                 </p>
               </div>
@@ -293,15 +293,15 @@ export function AdminProfile({
             {/* Contact Stack */}
             <div className="space-y-2.5 text-xs text-slate-300 mb-5">
               <div className="flex items-start gap-2.5 text-slate-400">
-                <i className="fa-regular fa-envelope text-cyan-400 w-4 mt-0.5 shrink-0" />
+                <i className="fa-regular fa-envelope text-yellow-400 w-4 mt-0.5 shrink-0" />
                 <span className="break-all">{profileForm.email || 'ayushprajapati9669@gmail.com'}</span>
               </div>
               <div className="flex items-start gap-2.5 text-slate-400">
-                <i className="fa-solid fa-location-dot text-cyan-400 w-4 mt-0.5 shrink-0" />
+                <i className="fa-solid fa-location-dot text-yellow-400 w-4 mt-0.5 shrink-0" />
                 <span className="truncate">{profileForm.location || 'Bhopal, MP, India'}</span>
               </div>
               <div className="flex items-start gap-2.5 text-slate-400">
-                <i className="fa-solid fa-phone text-cyan-400 w-4 mt-0.5 shrink-0" />
+                <i className="fa-solid fa-phone text-yellow-400 w-4 mt-0.5 shrink-0" />
                 <span>{profileForm.phone || '(+91) 9669802554'}</span>
               </div>
             </div>
@@ -318,7 +318,7 @@ export function AdminProfile({
                   {profileForm.degree || 'B.Tech in Computer Science'}
                 </p>
                 {profileForm.cgpa && (
-                  <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">
+                  <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 shrink-0">
                     {profileForm.cgpa} CGPA
                   </span>
                 )}
@@ -383,7 +383,7 @@ export function AdminProfile({
           </div>
 
           <p className="text-[10px] text-center text-slate-500 flex items-center justify-center gap-1.5 font-mono">
-            <i className="fa-solid fa-circle-info text-cyan-400/80" />
+            <i className="fa-solid fa-circle-info text-yellow-400/80" />
             <span>Updates dynamically as you edit the settings below.</span>
           </p>
         </div>
@@ -397,7 +397,7 @@ export function AdminProfile({
             {/* 1. RESUME / CV DOCUMENT UPLOADER */}
             <div className="glass-card-admin p-6 sm:p-7 space-y-4">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-base">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-base">
                 <i className="fa-solid fa-file-pdf" />
               </div>
               <div>
@@ -421,8 +421,8 @@ export function AdminProfile({
                   onClick={() => fileInputRef.current?.click()}
                   className={`border border-dashed rounded-xl p-4 flex flex-col items-center justify-center transition-all cursor-pointer h-[110px] text-center ${
                     isDraggingResume
-                      ? 'border-cyan-400 bg-cyan-500/15 shadow-lg shadow-cyan-400/20'
-                      : 'border-white/15 bg-black/40 hover:border-cyan-400/60 hover:bg-black/60'
+                      ? 'border-yellow-400 bg-yellow-500/15 shadow-lg shadow-cyan-400/20'
+                      : 'border-white/15 bg-black/40 hover:border-yellow-400/60 hover:bg-black/60'
                   }`}
                 >
                   <input
@@ -439,7 +439,7 @@ export function AdminProfile({
                   />
 
                   {resumeLoading ? (
-                    <div className="flex flex-col items-center gap-1.5 text-cyan-400 font-mono text-xs">
+                    <div className="flex flex-col items-center gap-1.5 text-yellow-400 font-mono text-xs">
                       <i className="fa-solid fa-circle-notch fa-spin text-lg" />
                       <span>Uploading PDF...</span>
                     </div>
@@ -450,11 +450,11 @@ export function AdminProfile({
                         <span className="truncate max-w-[200px]">{uploadedResumeName || 'resume.pdf'}</span>
                       </div>
                       <span className="text-[10px] font-mono text-slate-400">{uploadedResumeSize || 'Ready for download'}</span>
-                      <span className="text-[10px] text-cyan-400 hover:underline mt-0.5">Click to replace file</span>
+                      <span className="text-[10px] text-yellow-400 hover:underline mt-0.5">Click to replace file</span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center gap-1">
-                      <i className="fa-solid fa-cloud-arrow-up text-xl text-cyan-400" />
+                      <i className="fa-solid fa-cloud-arrow-up text-xl text-yellow-400" />
                       <p className="text-xs font-semibold text-white">Click or drag PDF to upload</p>
                       <p className="text-[10px] font-mono text-slate-400">PDF up to 5MB</p>
                     </div>
@@ -477,7 +477,7 @@ export function AdminProfile({
                       markDirty();
                     }}
                     placeholder="https://drive.google.com/... or https://.../resume.pdf"
-                    className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-3.5 py-3 text-xs text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                    className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-3.5 py-3 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   />
                 </div>
                 <p className="text-[10px] text-slate-400 font-mono">
@@ -490,7 +490,7 @@ export function AdminProfile({
           {/* 2. PERSONAL & CONTACT DETAILS */}
           <div className="glass-card-admin p-6 sm:p-7 space-y-5">
             <div className="flex items-center gap-2 border-b border-white/10 pb-4">
-              <i className="fa-solid fa-user text-cyan-400 text-sm" />
+              <i className="fa-solid fa-user text-yellow-400 text-sm" />
               <h3 className="text-base font-bold text-white">Personal Details</h3>
             </div>
 
@@ -506,7 +506,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, displayName: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="Ayush Prajapati"
                 />
               </div>
@@ -523,7 +523,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, monogram: e.target.value.toUpperCase() });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all uppercase font-mono font-bold"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all uppercase font-mono font-bold"
                   placeholder="AP"
                 />
               </div>
@@ -539,7 +539,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, email: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="ayushprajapati9669@gmail.com"
                 />
               </div>
@@ -557,7 +557,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, phone: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="(+91) 9669802554"
                 />
               </div>
@@ -573,7 +573,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, location: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="Bhopal, MP, India"
                 />
               </div>
@@ -591,7 +591,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, headerSubtitle: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="Full-Stack Developer · SISTec, Bhopal"
                 />
               </div>
@@ -607,7 +607,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, eyebrow: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="COMPUTER SCIENCE STUDENT · DEVELOPER"
                 />
               </div>
@@ -624,7 +624,7 @@ export function AdminProfile({
                   setProfileForm({ ...profileForm, headline: e.target.value });
                   markDirty();
                 }}
-                className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                 placeholder="Building resilient full-stack systems and high-performance interfaces."
               />
             </div>
@@ -633,7 +633,7 @@ export function AdminProfile({
           {/* 3. ACADEMIC BACKGROUND */}
           <div className="glass-card-admin p-6 sm:p-7 space-y-5">
             <div className="flex items-center gap-2 border-b border-white/10 pb-4">
-              <i className="fa-solid fa-graduation-cap text-cyan-400 text-sm" />
+              <i className="fa-solid fa-graduation-cap text-yellow-400 text-sm" />
               <h3 className="text-base font-bold text-white">Academic Background</h3>
             </div>
 
@@ -649,7 +649,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, degree: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="B.Tech in Computer Science"
                 />
               </div>
@@ -665,7 +665,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, college: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="SISTec, Bhopal"
                 />
               </div>
@@ -681,7 +681,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, cgpa: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all font-mono font-bold placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all font-mono font-bold placeholder-slate-500"
                   placeholder="8.42"
                 />
               </div>
@@ -699,7 +699,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, stage: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="2023 – 2027 (Currently in 4th Semester)"
                 />
               </div>
@@ -715,7 +715,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, schoolXII: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="Higher Secondary (Class XII) · 80%"
                 />
               </div>
@@ -725,7 +725,7 @@ export function AdminProfile({
           {/* 4. SOCIAL NETWORKS */}
           <div className="glass-card-admin p-6 sm:p-7 space-y-5">
             <div className="flex items-center gap-2 border-b border-white/10 pb-4">
-              <i className="fa-solid fa-link text-cyan-400 text-sm" />
+              <i className="fa-solid fa-link text-yellow-400 text-sm" />
               <h3 className="text-base font-bold text-white">Social & Profile Networks</h3>
             </div>
 
@@ -742,7 +742,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, github: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="https://github.com/ayushprajapati9669-dev"
                 />
               </div>
@@ -759,7 +759,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, linkedin: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="https://linkedin.com/in/ayush..."
                 />
               </div>
@@ -776,7 +776,7 @@ export function AdminProfile({
                     setProfileForm({ ...profileForm, instagram: e.target.value });
                     markDirty();
                   }}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400 transition-all placeholder-slate-500"
+                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500"
                   placeholder="https://instagram.com/..."
                 />
               </div>
@@ -787,7 +787,7 @@ export function AdminProfile({
           <div className="glass-card-admin p-6 sm:p-7 space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-2">
-                <i className="fa-solid fa-align-left text-cyan-400 text-sm" />
+                <i className="fa-solid fa-align-left text-yellow-400 text-sm" />
                 <h3 className="text-base font-bold text-white">About Biography Paragraphs</h3>
               </div>
               <span className="text-[10px] font-mono text-slate-400">Max 300 chars per block</span>
@@ -806,14 +806,14 @@ export function AdminProfile({
                       setAboutBioList(updated);
                       markDirty();
                     }}
-                    className="w-full rounded-xl border border-white/15 bg-black/40 p-3.5 pr-12 pb-7 text-xs text-slate-200 outline-none focus:border-cyan-400 transition-all leading-relaxed resize-none"
+                    className="w-full rounded-xl border border-white/15 bg-black/40 p-3.5 pr-12 pb-7 text-xs text-slate-200 outline-none focus:border-yellow-400 transition-all leading-relaxed resize-none"
                   />
                   <div className="absolute right-3 top-3 flex items-center gap-1">
                     <button
                       type="button"
                       onClick={() => handleMoveBio(idx, -1)}
                       disabled={idx === 0}
-                      className="w-7 h-7 rounded-lg bg-black/60 text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center transition-all"
+                      className="w-7 h-7 rounded-lg bg-black/60 text-slate-400 hover:text-yellow-400 hover:bg-yellow-500/10 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center transition-all"
                       title="Move paragraph up"
                     >
                       <i className="fa-solid fa-chevron-up text-xs" />
@@ -822,7 +822,7 @@ export function AdminProfile({
                       type="button"
                       onClick={() => handleMoveBio(idx, 1)}
                       disabled={idx === aboutBioList.length - 1}
-                      className="w-7 h-7 rounded-lg bg-black/60 text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center transition-all"
+                      className="w-7 h-7 rounded-lg bg-black/60 text-slate-400 hover:text-yellow-400 hover:bg-yellow-500/10 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center transition-all"
                       title="Move paragraph down"
                     >
                       <i className="fa-solid fa-chevron-down text-xs" />
@@ -848,7 +848,7 @@ export function AdminProfile({
                     value={newBioParagraph}
                     onChange={(e) => setNewBioParagraph(e.target.value)}
                     placeholder="Write a new paragraph for your About biography..."
-                    className="w-full rounded-xl border border-dashed border-white/20 bg-black/30 p-3.5 pr-14 pb-7 text-xs text-slate-300 outline-none focus:border-cyan-400 focus:border-solid transition-all resize-none placeholder-slate-500"
+                    className="w-full rounded-xl border border-dashed border-white/20 bg-black/30 p-3.5 pr-14 pb-7 text-xs text-slate-300 outline-none focus:border-yellow-400 focus:border-solid transition-all resize-none placeholder-slate-500"
                   />
                   <span className="absolute bottom-2.5 right-3 text-[10px] font-mono text-slate-500">
                     {newBioParagraph.length} / 300
@@ -857,7 +857,7 @@ export function AdminProfile({
                 <button
                   type="button"
                   onClick={handleAddBio}
-                  className="shrink-0 h-[68px] px-4 rounded-xl border border-white/15 bg-white/5 hover:bg-cyan-500/15 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-300 text-xs font-bold transition-all flex items-center gap-2"
+                  className="shrink-0 h-[68px] px-4 rounded-xl border border-white/15 bg-white/5 hover:bg-yellow-500/15 hover:border-yellow-400/40 text-slate-300 hover:text-yellow-300 text-xs font-bold transition-all flex items-center gap-2"
                 >
                   <i className="fa-solid fa-plus" />
                   <span>Add</span>
@@ -892,7 +892,7 @@ export function AdminProfile({
                 type="button"
                 onClick={handleSaveProfile}
                 disabled={isSaving}
-                className="w-full sm:w-auto sm:min-w-[280px] flex items-center justify-center gap-2.5 bg-gradient-to-r from-cyan-400 via-sky-400 to-cyan-500 hover:from-cyan-300 hover:to-sky-400 text-black font-extrabold px-6 py-3.5 rounded-xl shadow-xl shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide cursor-pointer"
+                className="w-full sm:w-auto sm:min-w-[280px] flex items-center justify-center gap-2.5 bg-gradient-to-r from-yellow-400 via-sky-400 to-yellow-500 hover:from-yellow-300 hover:to-sky-400 text-black font-extrabold px-6 py-3.5 rounded-xl shadow-xl shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide cursor-pointer"
               >
                 {isSaving ? (
                   <>

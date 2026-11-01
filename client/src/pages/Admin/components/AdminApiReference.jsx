@@ -12,7 +12,7 @@ function MethodBadge({ method }) {
   }
   if (m === 'POST') {
     return (
-      <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 uppercase tracking-wider shrink-0">
+      <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-yellow-500/15 text-yellow-400 border border-yellow-500/30 uppercase tracking-wider shrink-0">
         POST
       </span>
     );
@@ -86,7 +86,7 @@ function CodeBlock({ code, language = 'bash', title = 'cURL Request' }) {
           let cls = 'text-amber-300'; // number / boolean
           if (/^"/.test(match)) {
             if (/:$/.test(match)) {
-              cls = 'text-sky-300 font-semibold'; // key
+              cls = 'text-yellow-300 font-semibold'; // key
             } else {
               cls = 'text-emerald-300'; // string
             }
@@ -102,7 +102,7 @@ function CodeBlock({ code, language = 'bash', title = 'cURL Request' }) {
     }
 
     return (
-      <pre className="font-mono text-[11.5px] leading-relaxed text-cyan-200 overflow-x-auto p-4 custom-admin-scrollbar">
+      <pre className="font-mono text-[11.5px] leading-relaxed text-yellow-200 overflow-x-auto p-4 custom-admin-scrollbar">
         {code}
       </pre>
     );
@@ -127,7 +127,7 @@ function CodeBlock({ code, language = 'bash', title = 'cURL Request' }) {
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold transition-all border border-white/10 hover:border-cyan-400/40 bg-white/5 hover:bg-cyan-500/15 text-slate-300 hover:text-cyan-300"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold transition-all border border-white/10 hover:border-yellow-400/40 bg-white/5 hover:bg-yellow-500/15 text-slate-300 hover:text-yellow-300"
           title="Copy snippet to clipboard"
         >
           {copied ? (
@@ -696,7 +696,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
       {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-terminal" /> API PROTOCOLS & INTEGRATION SCHEMA
           </span>
           <h2 className="text-xl font-bold text-white mt-1">API Reference & Developer Docs</h2>
@@ -710,9 +710,9 @@ export function AdminApiReference({ onSelectTab, showToast }) {
           <button
             type="button"
             onClick={() => onSelectTab && onSelectTab('guide', '/admin/guide')}
-            className="flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border border-white/10 bg-black/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/30 transition-all shadow-sm"
+            className="flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border border-white/10 bg-black/30 text-yellow-300 hover:bg-yellow-500/10 hover:border-yellow-400/30 transition-all shadow-sm"
           >
-            <i className="fa-solid fa-book-open text-cyan-400" />
+            <i className="fa-solid fa-book-open text-yellow-400" />
             <span>Open User Guide</span>
             <i className="fa-solid fa-arrow-right text-[10px]" />
           </button>
@@ -728,10 +728,10 @@ export function AdminApiReference({ onSelectTab, showToast }) {
           <div className="glass-card-admin rounded-2xl p-4 sm:p-5 border border-white/10 shadow-xl bg-[#0b1120]/80 backdrop-blur-xl">
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
               <h3 className="text-xs font-bold text-white flex items-center gap-2 uppercase tracking-wider font-mono">
-                <i className="fa-solid fa-code-branch text-cyan-400" />
+                <i className="fa-solid fa-code-branch text-yellow-400" />
                 <span>Endpoints Directory</span>
               </h3>
-              <span className="font-mono text-[10px] text-cyan-400 font-bold bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+              <span className="font-mono text-[10px] text-yellow-400 font-bold bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20">
                 {filteredEndpoints.length}
               </span>
             </div>
@@ -744,7 +744,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
                 placeholder="Search GET, POST, /profile..."
-                className="w-full rounded-xl border border-white/10 bg-black/40 pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-400/60 transition-all font-mono"
+                className="w-full rounded-xl border border-white/10 bg-black/40 pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-yellow-400/60 transition-all font-mono"
               />
             </div>
 
@@ -760,7 +760,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
                   }}
                   className={`px-2 py-0.5 rounded-lg transition-all ${
                     selectedGroup === grp
-                      ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30'
+                      ? 'bg-yellow-500/20 text-yellow-300 font-bold border border-yellow-500/30'
                       : 'text-slate-400 hover:text-white bg-white/5'
                   }`}
                 >
@@ -780,7 +780,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
                     onClick={() => scrollToEndpoint(ep.id)}
                     className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-left font-mono text-[11px] transition-all ${
                       isActive
-                        ? 'bg-cyan-500/20 text-white font-bold border border-cyan-500/30 shadow-sm shadow-cyan-500/10'
+                        ? 'bg-yellow-500/20 text-white font-bold border border-yellow-500/30 shadow-sm shadow-cyan-500/10'
                         : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
                     }`}
                   >
@@ -808,18 +808,18 @@ export function AdminApiReference({ onSelectTab, showToast }) {
         <div className="lg:col-span-8 xl:col-span-9 space-y-8">
           {/* Global API Notice & Auth Header info */}
           <div className="glass-card-admin rounded-2xl p-5 sm:p-6 space-y-3 border border-white/10 bg-[#0b1120]/80">
-            <div className="flex items-center gap-2.5 font-mono text-xs font-bold text-cyan-400">
+            <div className="flex items-center gap-2.5 font-mono text-xs font-bold text-yellow-400">
               <i className="fa-solid fa-key" />
               <span>Authentication & Security Protocols</span>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              All administrative routes under <code className="text-cyan-300 bg-white/10 px-1 py-0.5 rounded font-mono">/api/admin/*</code> and <code className="text-cyan-300 bg-white/10 px-1 py-0.5 rounded font-mono">/api/portfolio/sync</code> require authentication. You may supply credentials either through the cryptographically signed <code className="text-emerald-300 bg-white/10 px-1 py-0.5 rounded font-mono">argon_session</code> HttpOnly cookie or by appending the HTTP header:
+              All administrative routes under <code className="text-yellow-300 bg-white/10 px-1 py-0.5 rounded font-mono">/api/admin/*</code> and <code className="text-yellow-300 bg-white/10 px-1 py-0.5 rounded font-mono">/api/portfolio/sync</code> require authentication. You may supply credentials either through the cryptographically signed <code className="text-emerald-300 bg-white/10 px-1 py-0.5 rounded font-mono">argon_session</code> HttpOnly cookie or by appending the HTTP header:
             </p>
-            <div className="bg-black/50 border border-white/10 rounded-xl p-3 font-mono text-xs text-cyan-300">
+            <div className="bg-black/50 border border-white/10 rounded-xl p-3 font-mono text-xs text-yellow-300">
               Authorization: Bearer &lt;session_token&gt;
             </div>
             <p className="text-[11px] text-slate-400 leading-relaxed font-mono">
-              State-mutating methods (<code className="text-cyan-400">POST</code>, <code className="text-amber-400">PUT</code>, <code className="text-purple-400">PATCH</code>, <code className="text-rose-400">DELETE</code>) also enforce CSRF token validation via the <code className="text-amber-300">X-CSRF-Token</code> header to prevent Cross-Site Request Forgery.
+              State-mutating methods (<code className="text-yellow-400">POST</code>, <code className="text-amber-400">PUT</code>, <code className="text-purple-400">PATCH</code>, <code className="text-rose-400">DELETE</code>) also enforce CSRF token validation via the <code className="text-amber-300">X-CSRF-Token</code> header to prevent Cross-Site Request Forgery.
             </p>
           </div>
 
@@ -828,7 +828,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
             <article
               key={ep.id}
               id={ep.id}
-              className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10 transition-all hover:border-cyan-500/30"
+              className="glass-card-admin rounded-2xl p-6 sm:p-7 space-y-4 border border-white/10 transition-all hover:border-yellow-500/30"
             >
               {/* Endpoint Header Bar */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
@@ -921,7 +921,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
                     <td className="py-3 px-4 text-slate-300 font-sans text-xs">Standard success response for GET queries, profile/project updates, and deletions.</td>
                   </tr>
                   <tr className="hover:bg-white/[0.02] transition-colors">
-                    <td className="py-3 px-3 text-cyan-400 font-bold">201</td>
+                    <td className="py-3 px-3 text-yellow-400 font-bold">201</td>
                     <td className="py-3 px-3 text-white font-semibold">Created</td>
                     <td className="py-3 px-4 text-slate-300 font-sans text-xs">Resource successfully created. Returned on new project creation, message submissions, and media uploads.</td>
                   </tr>

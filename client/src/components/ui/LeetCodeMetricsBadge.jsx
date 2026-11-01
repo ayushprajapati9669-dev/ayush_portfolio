@@ -72,10 +72,10 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-[#090f19]/90 border border-cyan-500/20 p-5 sm:p-6 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.5)] transition-all hover:border-cyan-500/40 group ${className}`}
+      className={`relative overflow-hidden rounded-2xl bg-[#090f19]/90 border border-yellow-500/20 p-5 sm:p-6 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.5)] transition-all hover:border-yellow-500/40 group ${className}`}
     >
       {/* Background glow & mesh */}
-      <div className="absolute -top-16 -right-16 w-36 h-36 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/15 transition-all" />
+      <div className="absolute -top-16 -right-16 w-36 h-36 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-yellow-500/15 transition-all" />
       <div className="absolute -bottom-16 -left-16 w-36 h-36 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
@@ -102,7 +102,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => playTick('click')}
-          className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/40 text-white/80 hover:text-cyan-300 text-xs font-mono transition-all flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-yellow-500/20 border border-white/10 hover:border-yellow-500/40 text-white/80 hover:text-yellow-300 text-xs font-mono transition-all flex items-center gap-1.5"
           title="Inspect verified live LeetCode profile"
         >
           <span>Live Profile</span>
@@ -147,7 +147,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
               </span>
             </div>
           </div>
-          <span className="text-[11px] text-cyan-400/90 font-mono mt-2 font-medium">
+          <span className="text-[11px] text-yellow-400/90 font-mono mt-2 font-medium">
             {stats.acceptanceRate || 59.6}% Acceptance Rate
           </span>
         </div>

@@ -1,0 +1,454 @@
+
+# Write comprehensive contact CSS
+contact_css = """/* ==========================================================================
+   VSLFlow Contact Page - Complete Styling
+   ========================================================================== */
+
+.contact-page {
+  min-height: 100vh;
+  background: #000000;
+  padding-top: 120px;
+  position: relative;
+}
+
+.contact-page .page-header {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px) 56px;
+  position: relative;
+}
+
+.contact-page .header-orb {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  position: absolute;
+  top: -80px;
+  right: 80px;
+  pointer-events: none;
+}
+
+.contact-page .page-tagline,
+.contact-page .page-eyebrow {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #d4af37 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 16px !important;
+  display: block !important;
+}
+
+.contact-page .page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(3.5rem, 8vw, 7rem) !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.03em !important;
+  color: #ffffff !important;
+  line-height: 0.95 !important;
+  margin-bottom: 24px !important;
+}
+
+.contact-page .page-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 15px !important;
+  color: #777777 !important;
+  line-height: 1.7 !important;
+  max-width: 560px !important;
+}
+
+/* Contact Grid Layout */
+.contact-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px) 120px;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* Glass Card Base */
+.glass-card {
+  background: rgba(255, 255, 255, 0.025) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 20px !important;
+  padding: 36px !important;
+  transition: border-color 0.3s ease !important;
+}
+
+.glass-card:hover {
+  border-color: rgba(212, 175, 55, 0.14) !important;
+}
+
+.glass-card .card-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.4rem !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  margin-bottom: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.status-badge {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  padding: 3px 10px !important;
+  background: rgba(74, 222, 128, 0.08) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(74, 222, 128, 0.2) !important;
+  border-radius: 9999px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* Contact Form */
+.contact-form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+}
+
+.form-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px !important;
+}
+
+@media (max-width: 560px) {
+  .form-row { grid-template-columns: 1fr !important; }
+}
+
+.form-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.form-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #555555 !important;
+}
+
+.label-req {
+  color: #d4af37 !important;
+}
+
+.form-control {
+  width: 100% !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 10px !important;
+  padding: 13px 16px !important;
+  color: #ffffff !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 14px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  outline: none !important;
+  resize: vertical !important;
+}
+
+.form-control:focus {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.06) !important;
+}
+
+.form-control.error {
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.06) !important;
+}
+
+.form-control::placeholder {
+  color: #333333 !important;
+}
+
+textarea.form-control {
+  min-height: 130px !important;
+}
+
+.field-meta {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-top: 4px !important;
+}
+
+.field-hint {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 11px !important;
+  color: #3a3a3a !important;
+}
+
+.char-count {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #3a3a3a !important;
+}
+
+.field-error-message {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 11px !important;
+  color: #ef4444 !important;
+}
+
+/* Submit / Send Button */
+.btn-send {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 15px 24px !important;
+  background: #d4af37 !important;
+  color: #000000 !important;
+  border: 1px solid #d4af37 !important;
+  border-radius: 10px !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  cursor: pointer !important;
+  transition: all 0.22s ease !important;
+  margin-top: 8px !important;
+}
+
+.btn-send:hover {
+  background: #e8c84a !important;
+  border-color: #e8c84a !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 28px rgba(212, 175, 55, 0.3) !important;
+}
+
+.btn-send:disabled,
+.btn-send.loading {
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.btn-send.success {
+  background: rgba(74,222,128,0.15) !important;
+  border-color: rgba(74,222,128,0.4) !important;
+  color: #4ade80 !important;
+}
+
+/* Status Banners */
+.contact-status-banner {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+  padding: 16px 20px !important;
+  border-radius: 12px !important;
+  margin-bottom: 20px !important;
+}
+
+.contact-status-banner.success {
+  background: rgba(74,222,128,0.06) !important;
+  border: 1px solid rgba(74,222,128,0.2) !important;
+}
+
+.contact-status-banner.error {
+  background: rgba(239,68,68,0.06) !important;
+  border: 1px solid rgba(239,68,68,0.2) !important;
+}
+
+.contact-status-banner .banner-icon {
+  font-size: 18px !important;
+  flex-shrink: 0 !important;
+  margin-top: 2px !important;
+}
+
+.contact-status-banner.success .banner-icon { color: #4ade80 !important; }
+.contact-status-banner.error .banner-icon { color: #ef4444 !important; }
+
+.contact-status-banner .banner-content h4 {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  margin-bottom: 4px !important;
+}
+
+.contact-status-banner .banner-content p {
+  font-size: 12px !important;
+  color: #777777 !important;
+  line-height: 1.6 !important;
+}
+
+/* Info Stack (direct contact section) */
+.info-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.info-block {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+  padding: 14px 16px !important;
+  border-radius: 10px !important;
+  transition: background 0.2s ease !important;
+}
+
+.info-block:hover {
+  background: rgba(255,255,255,0.03) !important;
+}
+
+.info-icon {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(212,175,55,0.08) !important;
+  border: 1px solid rgba(212,175,55,0.15) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #d4af37 !important;
+  font-size: 14px !important;
+  flex-shrink: 0 !important;
+}
+
+.info-text {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.info-text .label {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  color: #444444 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+}
+
+.info-text .value {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 13px !important;
+  color: #cccccc !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  word-break: break-word !important;
+}
+
+.cgpa-badge {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  padding: 2px 8px !important;
+  background: rgba(212,175,55,0.08) !important;
+  border: 1px solid rgba(212,175,55,0.15) !important;
+  border-radius: 999px !important;
+  color: #d4af37 !important;
+}
+
+/* Copy button */
+.copy-btn {
+  background: none !important;
+  border: none !important;
+  color: #3a3a3a !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.copy-btn:hover {
+  color: #d4af37 !important;
+  background: rgba(212,175,55,0.08) !important;
+}
+
+.copy-btn.copied { color: #4ade80 !important; }
+
+/* Social card */
+.social-card {
+  margin-top: 16px !important;
+}
+
+.social-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 8px !important;
+}
+
+.social-header h4 {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #d4af37 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.social-header span {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 11px !important;
+  color: #444444 !important;
+}
+
+.social-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12px !important;
+  color: #555555 !important;
+  line-height: 1.6 !important;
+  margin-bottom: 16px !important;
+}
+
+.social-links {
+  display: flex !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+}
+
+.social-btn {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 10px !important;
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #888888 !important;
+  font-size: 16px !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.social-btn:hover {
+  border-color: rgba(212,175,55,0.3) !important;
+  color: #d4af37 !important;
+  background: rgba(212,175,55,0.06) !important;
+  transform: translateY(-2px) !important;
+}
+"""
+
+with open(r"d:\MY_PROJECT\FULL_STACK_PROJECT\ayush_portfolio_main\client\src\styles\pages\contact.css", 'w', encoding='utf-8') as f:
+    f.write(contact_css)
+print("contact.css written successfully")
+

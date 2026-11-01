@@ -79,7 +79,7 @@ const PRESET_ICONS = [
 
 const PRESET_COLORS = [
   '#ffffff', '#f1f5f9', '#94a3b8', '#64748b', '#0f172a',
-  '#f43f5e', '#f97316', '#f59e0b', '#10b981', '#22d3ee',
+  '#f43f5e', '#f97316', '#f59e0b', '#10b981', '#d4af37',
   '#3b82f6', '#8b5cf6'
 ];
 
@@ -296,7 +296,7 @@ export function AdminMilestones({
   const [wordCount, setWordCount] = useState(0);
   const [charCount, setCharCount] = useState(0);
   const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
-  const [currentColor, setCurrentColor] = useState('#22d3ee');
+  const [currentColor, setCurrentColor] = useState('#d4af37');
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isRteVoiceListening, setIsRteVoiceListening] = useState(false);
   const rteRecognitionRef = useRef(null);
@@ -445,7 +445,7 @@ export function AdminMilestones({
         type: 'PROJECT',
         bg: 'rgba(34, 211, 238, 0.12)',
         border: 'rgba(34, 211, 238, 0.3)',
-        text: '#22d3ee',
+        text: '#d4af37',
         icon: 'fa-solid fa-rocket'
       };
     }
@@ -460,9 +460,9 @@ export function AdminMilestones({
     }
     return {
       type: (m.metaLabel || 'MILESTONE').toUpperCase(),
-      bg: 'rgba(56, 189, 248, 0.12)',
-      border: 'rgba(56, 189, 248, 0.3)',
-      text: '#38bdf8',
+      bg: 'rgba(212, 175, 55, 0.12)',
+      border: 'rgba(212, 175, 55, 0.3)',
+      text: '#d4af37',
       icon: m.icon?.startsWith('fa-') && !m.icon.includes(' ') ? `fa-solid ${m.icon}` : (m.icon || 'fa-solid fa-layer-group')
     };
   }, []);
@@ -615,7 +615,7 @@ export function AdminMilestones({
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     const ctx = canvas.getContext('2d');
-    const colors = ['#22d3ee', '#3b82f6', '#a78bfa', '#f43f5e', '#f59e0b', '#10b981'];
+    const colors = ['#d4af37', '#3b82f6', '#a78bfa', '#f43f5e', '#f59e0b', '#10b981'];
     const particles = [];
     for (let i = 0; i < 150; i++) {
       particles.push({
@@ -1414,7 +1414,7 @@ export function AdminMilestones({
     playTick();
     const title = wizardTitle || 'Milestone';
     if (!rteEditorRef.current) return;
-    rteEditorRef.current.innerHTML = '<p class="text-sky-400"><em><i class="fa-solid fa-spinner fa-spin"></i> Generating structured description with AI...</em></p>';
+    rteEditorRef.current.innerHTML = '<p class="text-yellow-400"><em><i class="fa-solid fa-spinner fa-spin"></i> Generating structured description with AI...</em></p>';
     setTimeout(() => {
       const generated = `<h3>Overview</h3><p>Successfully completed <b>${title}</b> demonstrating rigorous engineering and methodical execution.</p><h3>Key Highlights</h3><ul><li>Applied algorithmic problem-solving and modern development tools.</li><li>Engineered modular architecture with comprehensive test coverage.</li><li>Ensured intuitive responsive interfaces and optimized execution speed.</li></ul>`;
       if (rteEditorRef.current) {
@@ -1495,7 +1495,7 @@ export function AdminMilestones({
     const title = (wizardTitle || 'Milestone').substring(0, 32);
     let svg = '';
     if (style === 'realistic') {
-      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="800" height="400" fill="url(#g)"/><circle cx="700" cy="80" r="140" fill="#38bdf8" opacity="0.15"/><circle cx="100" cy="320" r="180" fill="#22d3ee" opacity="0.1"/><text x="48" y="210" font-family="'Space Grotesk', sans-serif" font-size="34" fill="#ffffff" font-weight="700">${title}</text><text x="48" y="250" font-family="'JetBrains Mono', monospace" font-size="16" fill="#38bdf8">Enterprise CMS v9 Architecture</text></svg>`;
+      svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="800" height="400" fill="url(#g)"/><circle cx="700" cy="80" r="140" fill="#d4af37" opacity="0.15"/><circle cx="100" cy="320" r="180" fill="#d4af37" opacity="0.1"/><text x="48" y="210" font-family="'Space Grotesk', sans-serif" font-size="34" fill="#ffffff" font-weight="700">${title}</text><text x="48" y="250" font-family="'JetBrains Mono', monospace" font-size="16" fill="#d4af37">Enterprise CMS v9 Architecture</text></svg>`;
     } else if (style === 'illustration') {
       svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><defs><linearGradient id="gi" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#312e81"/></linearGradient></defs><rect width="800" height="400" fill="url(#gi)"/><polygon points="380,80 440,240 320,240" fill="#a855f7" opacity="0.4"/><circle cx="580" cy="180" r="60" fill="#f43f5e" opacity="0.3"/><text x="48" y="210" font-family="'Space Grotesk', sans-serif" font-size="32" fill="#e0e7ff" font-weight="700">${title}</text><text x="48" y="250" font-family="'Inter', sans-serif" font-size="16" fill="#a5b4fc">Vector Milestone Identity</text></svg>`;
     } else {
@@ -1940,11 +1940,11 @@ export function AdminMilestones({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
               ACTIVE FOCUS
             </div>
-            <div className="text-3xl font-bold font-display text-sky-400">
+            <div className="text-3xl font-bold font-display text-yellow-400">
               {focusCount}
             </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center shrink-0">
             <RealisticBullseyeIcon size={34} />
           </div>
         </div>
@@ -1974,7 +1974,7 @@ export function AdminMilestones({
             {/* Filter Selects Row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               <select
-                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 cursor-pointer"
+                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500/60 cursor-pointer"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
                 aria-label="Filter status"
@@ -1986,7 +1986,7 @@ export function AdminMilestones({
               </select>
 
               <select
-                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 cursor-pointer"
+                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500/60 cursor-pointer"
                 value={filterYear}
                 onChange={(e) => setFilterYear(e.target.value)}
                 aria-label="Filter year"
@@ -2003,7 +2003,7 @@ export function AdminMilestones({
               </select>
 
               <select
-                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 cursor-pointer"
+                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500/60 cursor-pointer"
                 value={filterSort}
                 onChange={(e) => setFilterSort(e.target.value)}
                 aria-label="Sort milestones"
@@ -2017,7 +2017,7 @@ export function AdminMilestones({
 
               <input
                 type="text"
-                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60"
+                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500/60"
                 placeholder="Filter by tag..."
                 value={filterTag}
                 onChange={(e) => setFilterTag(e.target.value)}
@@ -2028,7 +2028,7 @@ export function AdminMilestones({
             <div className="flex items-center justify-between gap-3 pt-1 border-t border-white/[0.06] flex-wrap">
               <div className="text-xs text-slate-400 flex items-center gap-2">
                 {selectedIds.size > 0 ? (
-                  <span className="font-semibold text-cyan-400">
+                  <span className="font-semibold text-yellow-400">
                     {selectedIds.size} selected
                   </span>
                 ) : (
@@ -2048,7 +2048,7 @@ export function AdminMilestones({
                 </button>
                 <button
                   type="button"
-                  className="w-8 h-8 rounded-xl bg-[#0c1424] border border-white/10 hover:border-white/20 text-sky-400 hover:text-sky-300 flex items-center justify-center transition-all text-xs"
+                  className="w-8 h-8 rounded-xl bg-[#0c1424] border border-white/10 hover:border-white/20 text-yellow-400 hover:text-yellow-300 flex items-center justify-center transition-all text-xs"
                   onClick={() => setIsLinkedInOpen(true)}
                   title="Import from LinkedIn"
                   aria-label="LinkedIn Import"
@@ -2061,7 +2061,7 @@ export function AdminMilestones({
                   onClick={() => setIsTemplatesOpen(true)}
                   title="Open Milestone Templates Library"
                 >
-                  <i className="fa-solid fa-layer-group text-cyan-400" />
+                  <i className="fa-solid fa-layer-group text-yellow-400" />
                   <span>Templates</span>
                 </button>
                 <button
@@ -2085,7 +2085,7 @@ export function AdminMilestones({
                 placeholder="Search milestones across title, description, or technology tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#080e1b] border border-white/[0.08] focus:border-cyan-500/60 rounded-xl pl-9 pr-9 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
+                className="w-full bg-[#080e1b] border border-white/[0.08] focus:border-yellow-500/60 rounded-xl pl-9 pr-9 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
               />
               {searchQuery && (
                 <button
@@ -2103,11 +2103,11 @@ export function AdminMilestones({
           {/* List Meta & Scroll Indicator */}
           <div className="flex items-center justify-between px-1 text-[11px] text-slate-400 font-mono">
             <span>
-              Showing <strong className="text-cyan-400 font-bold">{filteredMilestones.length}</strong> milestones
+              Showing <strong className="text-yellow-400 font-bold">{filteredMilestones.length}</strong> milestones
             </span>
             {filteredMilestones.length > 3 && (
               <span className="text-slate-500 flex items-center gap-1.5 text-[10px]">
-                <i className="fa-solid fa-arrows-up-down text-[9px] text-cyan-500/70" />
+                <i className="fa-solid fa-arrows-up-down text-[9px] text-yellow-500/70" />
                 <span>Scrollable list</span>
               </span>
             )}
@@ -2120,7 +2120,7 @@ export function AdminMilestones({
           >
             {filteredMilestones.length === 0 ? (
               <div className="text-center py-16 px-6 bg-[#080e1b] border border-dashed border-white/10 rounded-2xl">
-                <i className="fa-solid fa-magnifying-glass text-3xl text-cyan-400/50 mb-3" />
+                <i className="fa-solid fa-magnifying-glass text-3xl text-yellow-400/50 mb-3" />
                 <h3 className="font-display font-semibold text-base text-white mb-1">No Milestones Found</h3>
                 <p className="text-xs text-slate-400 mb-4">No entries match your search criteria or filters.</p>
                 <button type="button" className="btn btn-primary text-xs" onClick={openNewWizard}>
@@ -2149,12 +2149,12 @@ export function AdminMilestones({
                       setActiveEditorId(m.id);
                     }}
                     onDoubleClick={() => openEditWizard(m.id)}
-                    className={`group relative flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 ease-out cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-10px_rgba(6,182,212,0.22)] ${
+                    className={`group relative flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 ease-out cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-10px_rgba(212,175,55,0.22)] ${
                       isCurrentActive
-                        ? 'bg-[#0b1424] border-2 border-cyan-500/80 shadow-[0_0_24px_rgba(6,182,212,0.25)]'
+                        ? 'bg-[#0b1424] border-2 border-yellow-500/80 shadow-[0_0_24px_rgba(212,175,55,0.25)]'
                         : isSelected
                         ? 'bg-[#0c1626] border-2 border-purple-500/60'
-                        : 'bg-[#080e1b] border border-white/[0.08] hover:border-cyan-500/40 hover:bg-[#0c1524]'
+                        : 'bg-[#080e1b] border border-white/[0.08] hover:border-yellow-500/40 hover:bg-[#0c1524]'
                     }`}
                   >
                     {/* Checkbox */}
@@ -2163,7 +2163,7 @@ export function AdminMilestones({
                         type="checkbox"
                         checked={isSelected}
                         onChange={(e) => handleToggleSelect(m.id, e.nativeEvent)}
-                        className="w-4 h-4 rounded bg-[#070d18] border-white/20 text-cyan-500 focus:ring-0 cursor-pointer"
+                        className="w-4 h-4 rounded bg-[#070d18] border-white/20 text-yellow-500 focus:ring-0 cursor-pointer"
                         aria-label={`Select ${m.title}`}
                       />
                     </div>
@@ -2234,7 +2234,7 @@ export function AdminMilestones({
                             </span>
                           )}
                           {m.status === 'focus' && (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-950/60 border border-sky-500/40 text-sky-400 flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-yellow-950/60 border border-yellow-500/40 text-yellow-400 flex items-center gap-1">
                               <i className="fa-solid fa-bolt text-[9px]" /> FOCUS
                             </span>
                           )}
@@ -2258,7 +2258,7 @@ export function AdminMilestones({
 
                       {/* Title */}
                       <h3
-                        className="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors mb-1 line-clamp-1"
+                        className="text-sm font-bold text-white group-hover:text-yellow-300 transition-colors mb-1 line-clamp-1"
                         onDoubleClick={() => openEditWizard(m.id)}
                         title="Double click to edit in modal"
                       >
@@ -2277,9 +2277,9 @@ export function AdminMilestones({
                           {m.tags.map((tag, tIdx) => (
                             <span
                               key={tIdx}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#070e1b] border border-white/10 text-[10px] font-mono text-cyan-300/90 hover:border-cyan-500/40 transition-colors"
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#070e1b] border border-white/10 text-[10px] font-mono text-yellow-300/90 hover:border-yellow-500/40 transition-colors"
                             >
-                              <span className="text-cyan-400 text-[9px] font-bold">&lt;/&gt;</span>
+                              <span className="text-yellow-400 text-[9px] font-bold">&lt;/&gt;</span>
                               <span>{tag}</span>
                             </span>
                           ))}
@@ -2335,7 +2335,7 @@ export function AdminMilestones({
                       <button
                         type="button"
                         onClick={() => openEditWizard(m.id)}
-                        className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:bg-white/10 rounded-lg transition-colors text-[11px]"
+                        className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-yellow-400 hover:bg-white/10 rounded-lg transition-colors text-[11px]"
                         title="Edit Milestone in Modal"
                       >
                         <i className="fa-solid fa-pen-to-square" />
@@ -2383,10 +2383,10 @@ export function AdminMilestones({
         {/* Resizer Divider Bar */}
         <div
           onMouseDown={handleMouseDownResize}
-          className="hidden lg:flex flex-col items-center justify-center w-3 hover:w-3.5 bg-transparent hover:bg-cyan-500/20 active:bg-cyan-500/40 cursor-col-resize transition-all relative z-20 shrink-0 mx-0.5 self-stretch rounded-full py-6 group"
+          className="hidden lg:flex flex-col items-center justify-center w-3 hover:w-3.5 bg-transparent hover:bg-yellow-500/20 active:bg-yellow-500/40 cursor-col-resize transition-all relative z-20 shrink-0 mx-0.5 self-stretch rounded-full py-6 group"
           title="Drag horizontally to resize panels"
         >
-          <div className="w-1 h-14 bg-white/20 group-hover:bg-cyan-400 group-hover:h-24 rounded-full transition-all" />
+          <div className="w-1 h-14 bg-white/20 group-hover:bg-yellow-400 group-hover:h-24 rounded-full transition-all" />
         </div>
 
         {/* RIGHT COLUMN: LIVE PORTFOLIO PREVIEW */}
@@ -2397,7 +2397,7 @@ export function AdminMilestones({
           {/* Live Preview Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xs shadow-inner">
+              <div className="w-8 h-8 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-xs shadow-inner">
                 <i className="fa-regular fa-eye" />
               </div>
               <div>
@@ -2435,7 +2435,7 @@ export function AdminMilestones({
                       }}
                       onDoubleClick={() => openEditWizard(m.id)}
                       className={`relative group p-3.5 rounded-xl transition-all cursor-pointer ${
-                        isCurrentActive ? 'bg-cyan-500/10 border border-cyan-500/35 shadow-md' : 'hover:bg-white/[0.03]'
+                        isCurrentActive ? 'bg-yellow-500/10 border border-yellow-500/35 shadow-md' : 'hover:bg-white/[0.03]'
                       }`}
                       title="Click to select • Double-click to edit"
                     >
@@ -2466,7 +2466,7 @@ export function AdminMilestones({
                       </div>
 
                       {/* Title */}
-                      <h4 className="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors">
+                      <h4 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors">
                         {m.title}
                       </h4>
 
@@ -3008,18 +3008,18 @@ export function AdminMilestones({
                     </div>
 
                     {/* Multi-Photo Gallery for Spotlight Switcher (4 Interactive Slots) */}
-                    <div className="bg-[#060b15] border border-cyan-500/25 rounded-2xl p-4 flex flex-col gap-3 shadow-inner">
+                    <div className="bg-[#060b15] border border-yellow-500/25 rounded-2xl p-4 flex flex-col gap-3 shadow-inner">
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <div>
                           <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <i className="fa-solid fa-images text-cyan-400" />
+                            <i className="fa-solid fa-images text-yellow-400" />
                             Spotlight Photo Gallery (4 Interactive Angles)
                           </div>
                           <p className="text-[11px] text-slate-400">
                             Public Spotlight displays a prominent photo with a 4-thumbnail switcher underneath. Configure all 4 photos below.
                           </p>
                         </div>
-                        <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300">
+                        <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-300">
                           {wizardGalleryImages.filter(Boolean).length} / 4 Slots Configured
                         </span>
                       </div>
@@ -3035,10 +3035,10 @@ export function AdminMilestones({
                           return (
                             <div
                               key={slot.idx}
-                              className="bg-[#0b1424] border border-white/10 hover:border-cyan-500/40 rounded-xl p-3 flex flex-col gap-2 transition-all relative group/slot"
+                              className="bg-[#0b1424] border border-white/10 hover:border-yellow-500/40 rounded-xl p-3 flex flex-col gap-2 transition-all relative group/slot"
                             >
                               <div className="flex items-center justify-between">
-                                <span className="text-[11px] font-mono font-bold text-cyan-300 flex items-center gap-1">
+                                <span className="text-[11px] font-mono font-bold text-yellow-300 flex items-center gap-1">
                                   <i className="fa-regular fa-image text-xs" />
                                   {slot.label}
                                 </span>
@@ -3066,7 +3066,7 @@ export function AdminMilestones({
                                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 flex items-center justify-center gap-2 transition-opacity backdrop-blur-[2px]">
                                     <label
                                       htmlFor={`slot-file-${slot.idx}`}
-                                      className="px-2 py-1 rounded bg-cyan-600 text-white text-[10px] font-bold cursor-pointer hover:bg-cyan-500 transition-colors"
+                                      className="px-2 py-1 rounded bg-yellow-600 text-white text-[10px] font-bold cursor-pointer hover:bg-yellow-500 transition-colors"
                                     >
                                       Replace
                                     </label>
@@ -3081,7 +3081,7 @@ export function AdminMilestones({
                                 </div>
                               ) : (
                                 <div
-                                  className="border border-dashed border-white/15 hover:border-cyan-500/50 rounded-lg h-24 flex flex-col items-center justify-center cursor-pointer bg-[#070e1b] hover:bg-[#0c1626] transition-all p-2 text-center"
+                                  className="border border-dashed border-white/15 hover:border-yellow-500/50 rounded-lg h-24 flex flex-col items-center justify-center cursor-pointer bg-[#070e1b] hover:bg-[#0c1626] transition-all p-2 text-center"
                                   onClick={() => document.getElementById(`slot-file-${slot.idx}`)?.click()}
                                   onDragOver={(e) => e.preventDefault()}
                                   onDrop={(e) => {
@@ -3089,7 +3089,7 @@ export function AdminMilestones({
                                     if (e.dataTransfer.files?.[0]) handleGallerySlotFile(slot.idx, e.dataTransfer.files[0]);
                                   }}
                                 >
-                                  <i className="fa-solid fa-cloud-arrow-up text-cyan-400 text-base mb-1" />
+                                  <i className="fa-solid fa-cloud-arrow-up text-yellow-400 text-base mb-1" />
                                   <span className="text-[11px] text-slate-300 font-medium">Click or Drag Image</span>
                                   <span className="text-[9px] text-slate-500 font-mono">PNG, JPG, WebP under 5MB</span>
                                 </div>
@@ -3112,7 +3112,7 @@ export function AdminMilestones({
                                   placeholder="Paste direct image URL..."
                                   value={slotVal}
                                   onChange={(e) => handleGallerySlotUrl(slot.idx, e.target.value)}
-                                  className="w-full bg-[#070e1a] border border-white/10 rounded px-2 py-1 text-[11px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 font-mono"
+                                  className="w-full bg-[#070e1a] border border-white/10 rounded px-2 py-1 text-[11px] text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500/50 font-mono"
                                 />
                               </div>
                             </div>
@@ -3138,7 +3138,7 @@ export function AdminMilestones({
                               showToast('Loaded 4 High-Res Workshop Demo Photos!', 'fa-images');
                             }}
                           >
-                            <i className="fa-solid fa-chalkboard-user text-cyan-400" /> Workshop Preset
+                            <i className="fa-solid fa-chalkboard-user text-yellow-400" /> Workshop Preset
                           </button>
                           <button
                             type="button"
@@ -3222,7 +3222,7 @@ export function AdminMilestones({
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                           {[0, 1, 2].map((mIdx) => (
                             <div key={mIdx} className="bg-[#050b16] border border-white/10 rounded-xl p-2.5 flex flex-col gap-1.5">
-                              <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase">Metric #{mIdx + 1}</span>
+                              <span className="text-[10px] font-mono text-yellow-400 font-bold uppercase">Metric #{mIdx + 1}</span>
                               <input
                                 type="text"
                                 className="form-control text-xs py-1"
@@ -3271,7 +3271,7 @@ export function AdminMilestones({
                           />
                         </div>
                         <div>
-                          <label className="text-[11px] font-semibold text-cyan-300 mb-1 flex items-center gap-1">
+                          <label className="text-[11px] font-semibold text-yellow-300 mb-1 flex items-center gap-1">
                             <i className="fa-solid fa-cubes text-[10px]" /> My Architecture / Solution
                           </label>
                           <textarea
@@ -3371,7 +3371,7 @@ export function AdminMilestones({
                       </div>
                       <div className="review-row">
                         <span className="review-row-label">Status</span>
-                        <span className="review-row-value uppercase font-bold text-cyan-400">{wizardStatus}</span>
+                        <span className="review-row-value uppercase font-bold text-yellow-400">{wizardStatus}</span>
                       </div>
                       <div className="review-row">
                         <span className="review-row-label">Progress</span>
@@ -3413,7 +3413,7 @@ export function AdminMilestones({
                       </div>
                       <div className="review-row">
                         <span className="review-row-label">Spotlight 4-Slot Gallery</span>
-                        <span className="review-row-value text-cyan-400 font-semibold">
+                        <span className="review-row-value text-yellow-400 font-semibold">
                           {wizardGalleryImages.filter(Boolean).length} / 4 Photos Attached
                         </span>
                       </div>
@@ -3615,7 +3615,7 @@ export function AdminMilestones({
                       key={c.hash}
                       className="flex items-center gap-2 p-2.5 bg-slate-900 border border-slate-800 rounded-lg"
                     >
-                      <span className="font-mono text-[10px] text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded">
+                      <span className="font-mono text-[10px] text-yellow-400 bg-yellow-950/60 px-2 py-0.5 rounded">
                         {c.hash}
                       </span>
                       <div className="flex-1 min-w-0">
@@ -3645,7 +3645,7 @@ export function AdminMilestones({
           <div className="modal-content" style={{ maxWidth: '560px' }}>
             <div className="modal-header">
               <h2>
-                <i className="fa-brands fa-linkedin text-sky-500" /> LinkedIn Import
+                <i className="fa-brands fa-linkedin text-yellow-500" /> LinkedIn Import
               </h2>
               <button type="button" className="modal-close" onClick={() => setIsLinkedInOpen(false)}>
                 <i className="fa-solid fa-xmark" />
@@ -3724,7 +3724,7 @@ export function AdminMilestones({
             {/* Information Banner & Bulk Actions */}
             <div className="px-6 py-3 bg-white/[0.02] border-b border-white/5 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2 text-xs text-slate-400">
-                <i className="fa-solid fa-circle-info text-cyan-400 text-xs" />
+                <i className="fa-solid fa-circle-info text-yellow-400 text-xs" />
                 <span>Items are preserved for 30 days before permanent deletion.</span>
               </div>
               {trash.length > 0 && (
@@ -3832,17 +3832,17 @@ export function AdminMilestones({
       {/* ACTIVITY LOG MODAL (Redesigned with Premium Glassmorphism) */}
       {isActivityOpen && (
         <div className="modal-overlay active" role="dialog" aria-modal="true">
-          <div className="modal-content !max-w-2xl !bg-[#070c16]/95 !border-cyan-500/30 !rounded-2xl !p-0 !overflow-hidden !shadow-2xl backdrop-blur-2xl">
+          <div className="modal-content !max-w-2xl !bg-[#070c16]/95 !border-yellow-500/30 !rounded-2xl !p-0 !overflow-hidden !shadow-2xl backdrop-blur-2xl">
             {/* Modal Header */}
             <div className="p-6 border-b border-white/10 flex items-center justify-between gap-4 bg-[#0a1120]/80">
               <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-black font-extrabold text-base shadow-[0_0_20px_rgba(6,182,212,0.4)]">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-blue-600 flex items-center justify-center text-black font-extrabold text-base shadow-[0_0_20px_rgba(212,175,55,0.4)]">
                   <i className="fa-solid fa-clock-rotate-left" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
                     <span>Milestone Activity Log</span>
-                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-yellow-500/15 text-yellow-400 border border-yellow-500/30">
                       {activityLog.length} events
                     </span>
                   </h3>
@@ -3893,7 +3893,7 @@ export function AdminMilestones({
                   let iconClass = 'fa-bolt';
 
                   if (act.includes('reorder')) {
-                    badgeClass = 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30';
+                    badgeClass = 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30';
                     iconClass = 'fa-arrow-down-up-across-line';
                   } else if (act.includes('create') || act.includes('add')) {
                     badgeClass = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
@@ -3970,7 +3970,7 @@ export function AdminMilestones({
         <div className="compare-panel active" role="dialog">
           <div className="flex items-center justify-between p-3 border-b border-slate-800">
             <h3 className="font-display text-sm font-bold flex items-center gap-2">
-              <i className="fa-solid fa-columns text-cyan-400" /> Side-by-Side Milestone Comparison
+              <i className="fa-solid fa-columns text-yellow-400" /> Side-by-Side Milestone Comparison
             </h3>
             <button
               type="button"
@@ -3989,7 +3989,7 @@ export function AdminMilestones({
               if (!target) return null;
               return (
                 <div key={id} className="flex-1 min-w-0 p-2 bg-slate-900/60 rounded-xl border border-slate-800">
-                  <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest block mb-1">
+                  <span className="text-[10px] font-mono font-bold text-yellow-400 uppercase tracking-widest block mb-1">
                     Milestone {idx === 0 ? 'A' : 'B'}
                   </span>
                   <h4 className="font-display font-semibold text-sm text-white mb-1.5">{target.title}</h4>
@@ -4014,7 +4014,7 @@ export function AdminMilestones({
         <div className="shortcuts-overlay active" role="dialog" aria-modal="true">
           <div className="shortcuts-box">
             <h2>
-              <i className="fa-solid fa-keyboard text-cyan-400" /> Keyboard Shortcuts
+              <i className="fa-solid fa-keyboard text-yellow-400" /> Keyboard Shortcuts
             </h2>
             <div className="shortcut-row">
               <span>Command Palette / Quick Navigation</span>
@@ -4072,7 +4072,7 @@ export function AdminMilestones({
                   openNewWizard();
                 }}
               >
-                <i className="fa-solid fa-plus text-cyan-400" /> Add New Milestone
+                <i className="fa-solid fa-plus text-yellow-400" /> Add New Milestone
               </div>
               <div
                 className="cp-item"
@@ -4099,7 +4099,7 @@ export function AdminMilestones({
                   setIsLinkedInOpen(true);
                 }}
               >
-                <i className="fa-brands fa-linkedin text-sky-500" /> LinkedIn Import
+                <i className="fa-brands fa-linkedin text-yellow-500" /> LinkedIn Import
               </div>
               <div
                 className="cp-item"
@@ -4142,7 +4142,7 @@ export function AdminMilestones({
                     openEditWizard(m.id);
                   }}
                 >
-                  <i className="fa-solid fa-arrow-right text-cyan-400" /> {m.title}
+                  <i className="fa-solid fa-arrow-right text-yellow-400" /> {m.title}
                 </div>
               ))}
             </div>
@@ -4239,7 +4239,7 @@ export function AdminMilestones({
             <i className="fa-solid fa-pen-to-square text-amber-400" /> Edit Milestone
           </div>
           <div className="context-item" onClick={() => executeContextAction('duplicate')}>
-            <i className="fa-solid fa-copy text-sky-400" /> Duplicate
+            <i className="fa-solid fa-copy text-yellow-400" /> Duplicate
           </div>
           <div className="context-item" onClick={() => executeContextAction('compare')}>
             <i className="fa-solid fa-columns text-violet-400" /> Compare
@@ -4251,7 +4251,7 @@ export function AdminMilestones({
             <i className="fa-solid fa-link text-emerald-400" /> Copy Link
           </div>
           <div className="context-item" onClick={() => executeContextAction('share')}>
-            <i className="fa-solid fa-share-nodes text-cyan-400" /> Share
+            <i className="fa-solid fa-share-nodes text-yellow-400" /> Share
           </div>
           <div className="context-item" onClick={() => executeContextAction('saveTemplate')}>
             <i className="fa-solid fa-bookmark text-pink-400" /> Save as Template

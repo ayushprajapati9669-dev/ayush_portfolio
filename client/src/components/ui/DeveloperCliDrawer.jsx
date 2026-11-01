@@ -486,10 +486,10 @@ export function DeveloperCliDrawer() {
         ref={containerRef}
         className={`w-full ${
           isMaximized ? 'h-full max-w-full rounded-none' : 'max-w-4xl h-[80vh] sm:h-[620px] rounded-t-2xl sm:rounded-2xl'
-        } bg-[#080d14]/95 border border-cyan-500/30 shadow-[0_20px_70px_rgba(0,240,255,0.15)] flex flex-col font-mono text-xs overflow-hidden backdrop-blur-xl transition-all duration-200`}
+        } bg-[#080d14]/95 border border-yellow-500/30 shadow-[0_20px_70px_rgba(0,240,255,0.15)] flex flex-col font-mono text-xs overflow-hidden backdrop-blur-xl transition-all duration-200`}
       >
         {/* Terminal Title Bar */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-[#0e1622]/90 border-b border-cyan-500/20 select-none">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-[#0e1622]/90 border-b border-yellow-500/20 select-none">
           <div className="flex items-center gap-2">
             {/* Traffic Lights */}
             <button
@@ -516,7 +516,7 @@ export function DeveloperCliDrawer() {
             >
               <i className="fa-solid fa-broom text-[7px] text-black opacity-0 group-hover:opacity-100" />
             </button>
-            <span className="ml-2 text-cyan-400/80 text-[11px] font-semibold tracking-wide flex items-center gap-1.5">
+            <span className="ml-2 text-yellow-400/80 text-[11px] font-semibold tracking-wide flex items-center gap-1.5">
               <i className="fa-solid fa-terminal text-[10px]" />
               ayush@portfolio: ~ (zsh - interactive)
             </span>
@@ -540,7 +540,7 @@ export function DeveloperCliDrawer() {
 
         {/* Terminal Body / Output */}
         <div
-          className="flex-1 p-4 overflow-y-auto space-y-2 selection:bg-cyan-500/30 selection:text-cyan-200"
+          className="flex-1 p-4 overflow-y-auto space-y-2 selection:bg-yellow-500/30 selection:text-yellow-200"
           style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(0,240,255,0.2) transparent' }}
           onClick={() => inputRef.current?.focus()}
         >
@@ -549,7 +549,7 @@ export function DeveloperCliDrawer() {
               return (
                 <pre
                   key={index}
-                  className="text-cyan-400/90 font-mono text-[9px] sm:text-[10px] leading-tight select-none overflow-x-auto"
+                  className="text-yellow-400/90 font-mono text-[9px] sm:text-[10px] leading-tight select-none overflow-x-auto"
                 >
                   {log.content}
                 </pre>
@@ -557,9 +557,9 @@ export function DeveloperCliDrawer() {
             }
             if (log.type === 'input') {
               return (
-                <div key={index} className="flex items-center gap-2 text-cyan-300">
+                <div key={index} className="flex items-center gap-2 text-yellow-300">
                   <span className="text-emerald-400 font-bold select-none">➜</span>
-                  <span className="text-cyan-400 select-none">~</span>
+                  <span className="text-yellow-400 select-none">~</span>
                   <span className="text-white font-medium">{log.content}</span>
                 </div>
               );
@@ -588,7 +588,7 @@ export function DeveloperCliDrawer() {
           {/* Active Input Line */}
           <div className="flex items-center gap-2 pt-1">
             <span className="text-emerald-400 font-bold select-none">➜</span>
-            <span className="text-cyan-400 select-none">~</span>
+            <span className="text-yellow-400 select-none">~</span>
             <input
               ref={inputRef}
               type="text"
@@ -605,29 +605,29 @@ export function DeveloperCliDrawer() {
         </div>
 
         {/* Terminal Status / Footer Bar */}
-        <div className="px-4 py-1.5 bg-[#0b121c] border-t border-cyan-500/10 flex items-center justify-between text-[10px] text-white/50 select-none">
+        <div className="px-4 py-1.5 bg-[#0b121c] border-t border-yellow-500/10 flex items-center justify-between text-[10px] text-white/50 select-none">
           <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto">
             <button
               onClick={() => handleCommand('help')}
-              className="hover:text-cyan-400 transition underline underline-offset-2"
+              className="hover:text-yellow-400 transition underline underline-offset-2"
             >
               help
             </button>
             <button
               onClick={() => handleCommand('whoami')}
-              className="hover:text-cyan-400 transition underline underline-offset-2"
+              className="hover:text-yellow-400 transition underline underline-offset-2"
             >
               whoami
             </button>
             <button
               onClick={() => handleCommand('projects')}
-              className="hover:text-cyan-400 transition underline underline-offset-2"
+              className="hover:text-yellow-400 transition underline underline-offset-2"
             >
               projects
             </button>
             <button
               onClick={() => handleCommand('leetcode')}
-              className="hover:text-cyan-400 transition underline underline-offset-2"
+              className="hover:text-yellow-400 transition underline underline-offset-2"
             >
               leetcode
             </button>

@@ -72,7 +72,7 @@ export function AdminSecurity({
       {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>
-          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #06b6d4)' }}>
+          <span className="font-mono text-xs uppercase tracking-widest font-bold flex items-center gap-2" style={{ color: 'var(--brand-color, #d4af37)' }}>
             <i className="fa-solid fa-shield-halved" /> SYSTEM SECURITY & ACCESS CONTROL
           </span>
           <h2 className="text-xl font-bold text-white mt-1">Admin Authentication & Security</h2>
@@ -99,7 +99,7 @@ export function AdminSecurity({
               value={form.curPass}
               onChange={(e) => setForm({ ...form, curPass: e.target.value })}
               placeholder="Enter current admin password"
-              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
             />
             <FormErrorMessage message={errors.curPass} />
           </div>
@@ -113,7 +113,7 @@ export function AdminSecurity({
               value={form.newPass}
               onChange={(e) => setForm({ ...form, newPass: e.target.value })}
               placeholder="e.g. Ayush7162@ (min 8 chars, 1 uppercase, 1 number, 1 special)"
-              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
             />
             <FormErrorMessage message={errors.newPass} />
           </div>
@@ -127,7 +127,7 @@ export function AdminSecurity({
               value={form.confirmPass}
               onChange={(e) => setForm({ ...form, confirmPass: e.target.value })}
               placeholder="Re-enter new password"
-              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-cyan-400"
+              className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
             />
             <FormErrorMessage message={errors.confirmPass} />
           </div>

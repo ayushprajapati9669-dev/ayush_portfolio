@@ -248,13 +248,13 @@ export function CertificateLightboxModal() {
     >
       <div
         ref={modalBoxRef}
-        className="w-full max-w-5xl max-h-[94vh] flex flex-col rounded-3xl border border-cyan-500/30 bg-[#0a0f16] shadow-2xl overflow-hidden"
+        className="w-full max-w-5xl max-h-[94vh] flex flex-col rounded-3xl border border-yellow-500/30 bg-[#0a0f16] shadow-2xl overflow-hidden"
       >
         {/* Header Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-black/50 px-5 sm:px-7 py-4">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded-full border border-yellow-500/20">
                 {cert.issuer || 'Credential'}
               </span>
               <span className="font-mono text-[10px] text-slate-400">
@@ -287,7 +287,7 @@ export function CertificateLightboxModal() {
               <button
                 type="button"
                 onClick={handleResetZoom}
-                className="px-2.5 h-8 flex items-center justify-center font-mono text-xs font-medium text-cyan-300 hover:bg-white/10 transition-all border-x border-white/10"
+                className="px-2.5 h-8 flex items-center justify-center font-mono text-xs font-medium text-yellow-300 hover:bg-white/10 transition-all border-x border-white/10"
                 title="Reset Zoom (100%)"
               >
                 {Math.round(zoom * 100)}%
@@ -331,7 +331,7 @@ export function CertificateLightboxModal() {
               target="_blank"
               rel="noreferrer"
               download={`${(cert.title || 'Certificate').replace(/[^a-z0-9]+/gi, '_')}.jpg`}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-3.5 py-1.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-500/20"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-yellow-400 to-emerald-400 px-3.5 py-1.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-500/20"
             >
               <i className="fa-solid fa-arrow-down" />
               <span>Download</span>

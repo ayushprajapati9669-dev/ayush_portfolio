@@ -82,11 +82,11 @@ export function SoundscapeStudio() {
     <div className="fixed bottom-6 left-6 z-[9990] font-sans" ref={panelRef}>
       {/* Studio Popover Panel */}
       {isOpen && (
-        <div className="mb-3 w-80 rounded-2xl border border-white/10 bg-[#090e1a]/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(6,182,212,0.15)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-3 duration-200 text-white">
+        <div className="mb-3 w-80 rounded-2xl border border-white/10 bg-[#090e1a]/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(212,175,55,0.15)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-3 duration-200 text-white">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3.5">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xs">
+              <div className="w-7 h-7 rounded-lg bg-yellow-500/15 border border-yellow-500/30 flex items-center justify-center text-yellow-400 text-xs">
                 <i className="fa-solid fa-volume-high" />
               </div>
               <div>
@@ -129,7 +129,7 @@ export function SoundscapeStudio() {
                     onClick={() => updateSetting('preset', sw.id)}
                     className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all ${
                       isActive
-                        ? 'bg-cyan-500/15 border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                        ? 'bg-yellow-500/15 border-yellow-400 text-yellow-300 shadow-[0_0_15px_rgba(212,175,55,0.25)]'
                         : 'bg-white/[0.03] border-white/5 hover:border-white/15 text-slate-400 hover:text-white'
                     }`}
                   >
@@ -147,7 +147,7 @@ export function SoundscapeStudio() {
                 onClick={() => playTick()}
                 className="w-full py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white text-[11px] font-mono flex items-center justify-center gap-1.5 transition-all"
               >
-                <i className="fa-regular fa-keyboard text-[10px] text-cyan-400" />
+                <i className="fa-regular fa-keyboard text-[10px] text-yellow-400" />
                 <span>Test Switch Sound</span>
               </button>
             </div>
@@ -202,10 +202,10 @@ export function SoundscapeStudio() {
         }}
         className={`group relative flex items-center gap-2 px-3.5 py-2 rounded-full border shadow-xl backdrop-blur-xl transition-all duration-300 active:scale-95 ${
           isOpen
-            ? 'bg-cyan-500 text-black border-cyan-400 shadow-[0_0_25px_rgba(6,182,212,0.5)] font-bold'
+            ? 'bg-yellow-500 text-black border-yellow-400 shadow-[0_0_25px_rgba(212,175,55,0.5)] font-bold'
             : isPlayingLofi
             ? 'bg-[#0b1326] border-purple-500/50 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.35)]'
-            : 'bg-[#080d1a]/85 border-white/15 text-slate-300 hover:text-white hover:border-cyan-400/50 hover:bg-[#0c152a]'
+            : 'bg-[#080d1a]/85 border-white/15 text-slate-300 hover:text-white hover:border-yellow-400/50 hover:bg-[#0c152a]'
         }`}
         title="Open Soundscape Studio (Audio Presets & Lo-Fi)"
         aria-label={isPlayingLofi ? "Lo-Fi Active Soundscape Studio" : "Sound FX Studio"}
@@ -217,7 +217,7 @@ export function SoundscapeStudio() {
                 ? 'fa-volume-xmark text-rose-400'
                 : isPlayingLofi
                 ? 'fa-compact-disc text-purple-400 animate-spin'
-                : 'fa-headphones text-cyan-400 group-hover:scale-110'
+                : 'fa-headphones text-yellow-400 group-hover:scale-110'
             } text-xs transition-transform`}
           />
           {isPlayingLofi && (

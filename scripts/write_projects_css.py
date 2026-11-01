@@ -1,0 +1,282 @@
+
+projects_css = """/* ==========================================================================
+   VSLFlow Projects Page - Complete Styling
+   ========================================================================== */
+
+.projects-page {
+  min-height: 100vh;
+  background: #000000;
+  padding-top: 120px;
+}
+
+.projects-page .page-header {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px) 56px;
+}
+
+.projects-page .page-eyebrow,
+.projects-page .page-tagline {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  color: #d4af37 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 16px !important;
+  display: block !important;
+}
+
+.projects-page .page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(3rem, 7vw, 6rem) !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.025em !important;
+  color: #ffffff !important;
+  line-height: 0.95 !important;
+  margin-bottom: 20px !important;
+}
+
+.projects-page .page-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 15px !important;
+  color: #666666 !important;
+  line-height: 1.7 !important;
+  max-width: 600px !important;
+}
+
+/* Filters row */
+.projects-filters-row {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.filter-btn {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.05em !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  color: #666666 !important;
+  border-radius: 9999px !important;
+  padding: 7px 18px !important;
+  cursor: pointer !important;
+  transition: all 0.22s ease !important;
+  white-space: nowrap !important;
+}
+
+.filter-btn:hover {
+  border-color: rgba(212, 175, 55, 0.25) !important;
+  color: #cccccc !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.filter-btn.active {
+  background: #d4af37 !important;
+  color: #000000 !important;
+  border-color: #d4af37 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25) !important;
+}
+
+/* Search */
+.project-search-wrap {
+  position: relative;
+  margin-left: auto;
+}
+
+.project-search-wrap i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #444444;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.project-search-input {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  padding: 9px 14px 9px 34px !important;
+  color: #ffffff !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 13px !important;
+  outline: none !important;
+  width: 240px !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.project-search-input:focus {
+  border-color: rgba(212, 175, 55, 0.3) !important;
+}
+
+.project-search-input::placeholder {
+  color: #333333 !important;
+}
+
+/* Projects grid container */
+.projects-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px) 120px;
+}
+
+.projects-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+  gap: 24px !important;
+}
+
+/* Project Card */
+.project-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.project-card:hover {
+  border-color: rgba(212, 175, 55, 0.28) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 48px rgba(212, 175, 55, 0.07), 0 0 0 1px rgba(212, 175, 55, 0.12) !important;
+}
+
+/* PROJECT CARD IMAGE - CRITICAL FIX */
+.project-card .project-img-wrap,
+.project-card-img-wrap,
+.project-img-wrap {
+  height: 200px !important;
+  max-height: 200px !important;
+  min-height: 200px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+  background: rgba(255,255,255,0.03) !important;
+}
+
+.project-card .project-img-wrap img,
+.project-card-img-wrap img,
+.project-img-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+}
+
+/* Flagship / featured card larger image */
+.flagship-card .project-img-wrap,
+.featured-project .project-img-wrap {
+  height: 280px !important;
+  max-height: 280px !important;
+  min-height: 280px !important;
+}
+
+/* Card body */
+.project-card-body {
+  padding: 20px !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.project-card-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(1.15rem, 2vw, 1.5rem) !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+}
+
+.project-card-desc {
+  font-family: 'Jost', sans-serif !important;
+  font-size: 13px !important;
+  color: #666666 !important;
+  line-height: 1.65 !important;
+}
+
+/* Status badges */
+.status-badge-live {
+  background: rgba(74, 222, 128, 0.1) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(74, 222, 128, 0.2) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  letter-spacing: 0.08em !important;
+  border-radius: 9999px !important;
+  padding: 3px 10px !important;
+  text-transform: uppercase !important;
+}
+
+.status-badge-wip {
+  background: rgba(212, 175, 55, 0.08) !important;
+  color: #d4af37 !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  letter-spacing: 0.08em !important;
+  border-radius: 9999px !important;
+  padding: 3px 10px !important;
+  text-transform: uppercase !important;
+}
+
+/* Tech tags */
+.tech-tag {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  padding: 2px 8px !important;
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  border-radius: 4px !important;
+  color: #666666 !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Project detail page */
+.project-detail-page {
+  min-height: 100vh;
+  background: #000000;
+  padding-top: 120px;
+}
+
+.project-detail-page .detail-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px) 120px;
+}
+
+.project-detail-title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: clamp(2.5rem, 6vw, 5rem) !important;
+  font-weight: 300 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.05 !important;
+}
+
+/* Project hero image constrained */
+.project-hero-img {
+  width: 100% !important;
+  max-height: 520px !important;
+  object-fit: cover !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+}
+"""
+
+with open(r"d:\MY_PROJECT\FULL_STACK_PROJECT\ayush_portfolio_main\client\src\styles\pages\projects.css", 'w', encoding='utf-8') as f:
+    f.write(projects_css)
+print("projects.css written successfully")
+

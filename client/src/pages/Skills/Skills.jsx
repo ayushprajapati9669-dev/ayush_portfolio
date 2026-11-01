@@ -41,8 +41,8 @@ export function SkillsPage() {
           <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cyanglow">
             {ui.homeSkillsEyebrow || '03 · Technical Capabilities'}
           </p>
-          <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-alabaster tracking-tight">
-            Skills & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyanglow via-teal-300 to-sage">Tech Stack</span>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 400, fontSize: 'clamp(2.5rem, 5vw, 4rem)', letterSpacing: '-0.025em', color: '#ffffff' }}>
+            Skills & <span style={{ color: "#d4af37", fontStyle: "italic", fontWeight: 300 }}>Tech Stack</span>
           </h1>
           <p className="text-sm sm:text-base text-stonewarm leading-relaxed">
             Full-stack proficiency across languages, modern frontend systems, backend APIs, distributed databases, and engineering developer tools.

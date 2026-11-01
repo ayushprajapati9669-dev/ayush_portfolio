@@ -2,7 +2,7 @@
   "name": "argon-portfolio-workspace",
   "version": "1.0.0",
   "private": true,
-  "description": "Ayush Prajapati \u2014 Full-Stack MERN Developer Portfolio (Argon Edition)",
+  "description": "Ayush Prajapati — Full-Stack MERN Developer Portfolio (Argon Edition)",
   "scripts": {
     "start": "node server/src/index.js",
     "dev": "node server/src/index.js",
@@ -17,5 +17,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "puppeteer": "^25.16.0"
   }
 }

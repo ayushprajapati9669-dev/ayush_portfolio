@@ -387,7 +387,7 @@ export function SkillsSection({
               onCtaClick();
             }}
             className="filter-btn"
-            style={{ borderColor: 'rgba(6, 182, 212, 0.4)', color: '#06b6d4' }}
+            style={{ borderColor: 'rgba(212, 175, 55, 0.35)', color: '#d4af37' }}
           >
             Full View →
           </button>
@@ -446,12 +446,12 @@ function SkillCardItem({ skill, onMouseMove, onMouseLeave, onClick }) {
           />
         ) : deviconCls ? (
           deviconCls.startsWith('fa-') ? (
-            <i className={`${deviconCls} text-cyan-400 text-xl`} />
+            <i className={`${deviconCls} text-xl`} style={{ color: '#d4af37' }} />
           ) : (
             <i className={`${deviconCls} colored`} style={{ fontSize: '26px' }} />
           )
         ) : (
-          <span className="font-mono font-bold text-xs text-cyan-400">
+          <span className="font-mono font-bold text-xs" style={{ color: "#d4af37" }}>
             {skillName.slice(0, 2).toUpperCase()}
           </span>
         )}

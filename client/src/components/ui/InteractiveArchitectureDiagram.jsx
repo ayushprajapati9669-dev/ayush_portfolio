@@ -99,12 +99,12 @@ export function InteractiveArchitectureDiagram({ className = '' }) {
 
   return (
     <div
-      className={`relative rounded-2xl bg-[#070c14]/95 border border-cyan-500/20 p-5 sm:p-6 backdrop-blur-xl shadow-[0_15px_50px_rgba(0,0,0,0.6)] ${className}`}
+      className={`relative rounded-2xl bg-[#070c14]/95 border border-yellow-500/20 p-5 sm:p-6 backdrop-blur-xl shadow-[0_15px_50px_rgba(0,0,0,0.6)] ${className}`}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+          <div className="w-8 h-8 rounded-lg bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400">
             <i className="fa-solid fa-diagram-project text-xs" />
           </div>
           <div>
@@ -118,7 +118,7 @@ export function InteractiveArchitectureDiagram({ className = '' }) {
           </div>
         </div>
 
-        <span className="text-xs font-mono text-cyan-400/80 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20 shrink-0 self-start sm:self-auto">
+        <span className="text-xs font-mono text-yellow-400/80 bg-yellow-500/10 px-3 py-1 rounded-full border border-yellow-500/20 shrink-0 self-start sm:self-auto">
           Active: <strong className="text-white">{activeNode.title}</strong>
         </span>
       </div>
@@ -190,7 +190,7 @@ export function InteractiveArchitectureDiagram({ className = '' }) {
           {/* Connection flow diagram hint */}
           <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between text-[11px] font-mono text-white/40">
             <span className="flex items-center gap-2">
-              <i className="fa-solid fa-arrows-turn-to-dots text-cyan-400" />
+              <i className="fa-solid fa-arrows-turn-to-dots text-yellow-400" />
               Request Pipeline: Client → WAF → Express API → Redis ⇄ MongoDB
             </span>
             <span className="hidden sm:inline text-emerald-400">P95 SLA: 42ms</span>
