@@ -426,7 +426,7 @@ export function HomePage() {
         });
       }
 
-      // 3.5 Section 03: Skills Showcase Entrance
+      // 3.5 Section 02: Skills Showcase Entrance
       gsap.from('.skills-home-section .showcase-header > *', {
         scrollTrigger: {
           trigger: '.skills-home-section',
@@ -438,18 +438,6 @@ export function HomePage() {
         stagger: 0.1,
         duration: 0.7,
         ease: 'power3.out'
-      });
-
-      gsap.from('.skills-home-section .filter-container, .skills-home-section input', {
-        scrollTrigger: {
-          trigger: '.skills-home-section',
-          start: 'top 82%',
-          toggleActions: 'play none none none'
-        },
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out'
       });
 
       // 4. Section 04: Certificates Horizontal Track Entrance
@@ -548,34 +536,22 @@ export function HomePage() {
             tabIndex={0}
           >
             <span className="capsule-icon">✦</span>
-            <ScrollWriteText as="span" inline mode="scramble" scrambleDuration={22} delay={0.05}>
-              Available for Full-Stack & Engineering Roles
-            </ScrollWriteText>
+            <span>Available for Full-Stack & Engineering Roles</span>
             <span className="capsule-arrow">→</span>
           </div>
 
-          {/* Modern Hero Headline */}
-          <ScrollWriteText
-            as="h1"
-            className="hero-modern-title"
-            mode="mask"
-            stagger={0.038}
-            delay={0.12}
-            highlightWords={['engineering', 'software']}
-          >
-            Solid full-stack engineering that turns ideas into software
-          </ScrollWriteText>
+          {/* Modern Hero Headline Matching Image 4 */}
+          <h1 className="hero-modern-title hero-editorial-title">
+            <span className="hero-title-line">Solid Full-Stack</span>
+            <span className="hero-title-line hero-title-accent">Engineering</span>
+            <span className="hero-title-line">That Turns Ideas Into</span>
+            <span className="hero-title-line hero-title-accent">Software</span>
+          </h1>
 
-          {/* Modern Subtitle */}
-          <ScrollWriteText
-            as="p"
-            className="hero-modern-desc"
-            mode="mask"
-            stagger={0.018}
-            delay={0.24}
-          >
-            {p.heroDescription || 'Engineering scalable web applications, robust cloud backends, and intelligent interactive products with clean craft.'}
-          </ScrollWriteText>
+          {/* Modern Subtitle Matching Image 4 */}
+          <p className="hero-modern-desc">
+            I’m a Computer Science student exploring the intersection of web engineering, problem solving, and intelligent applications. I enjoy turning ideas into useful digital products and continuously improving how I build them.
+          </p>
 
           {/* Modern Action Buttons: Solid White Pill + Circular Glass Play Button */}
           <div className="hero-modern-actions">
@@ -658,12 +634,12 @@ export function HomePage() {
             <div className="lg:col-span-6 h-[270px] sm:h-[310px] rounded-3xl border border-white/10 hover:border-gold/40 bg-gradient-to-b from-[#13131c]/95 via-[#0a0a0f]/98 to-[#060608] backdrop-blur-xl relative overflow-hidden group shadow-[0_20px_50px_-15px_rgba(0,0,0,0.9)] transition-all duration-500">
               {/* Subtle ambient warm gold glow behind 3D wave */}
               <div
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_65%,rgba(212,175,55,0.09),transparent_72%)]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_65%,rgba(180,165,130,0.035),transparent_72%)]"
                 aria-hidden="true"
               />
               {/* Minimalist Micro-Badge: User-friendly indicator */}
               <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 backdrop-blur-md pointer-events-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="font-mono text-[10px] font-medium text-slate-300 uppercase tracking-wider">3D Topography</span>
               </div>
               <div className="absolute bottom-3 right-4 z-10 font-mono text-[9.5px] text-slate-400 pointer-events-none">
@@ -709,11 +685,15 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Technical Capabilities / Skills Widget */}
-        <InteractiveSkillsWidget showCta={true} onCtaClick={() => goTo('/skills')} />
+        {/* =========================================================================
+            SECTION 02: Technical Capabilities / Skills Matrix (Above Projects)
+            ========================================================================= */}
+        <section id="technical-capabilities" className="skills-home-section horizontal-showcase-section border-t hairline-border pt-16">
+          <InteractiveSkillsWidget showCta={true} onCtaClick={() => goTo('/skills')} />
+        </section>
 
         {/* =========================================================================
-            SECTION 02: Horizontal Scrollable Live Deployed Projects Track
+            SECTION 03: Horizontal Scrollable Live Deployed Projects Track
             ========================================================================= */}
         <section id="featured-projects" className="projects-home-section horizontal-showcase-section border-t hairline-border pt-16">
           <div className="showcase-header">
@@ -724,7 +704,7 @@ export function HomePage() {
                 mode="scramble"
                 scrambleDuration={20}
               >
-                {ui.homeProjectsEyebrow || '02 · LIVE DEPLOYED PROJECTS'}
+                {(ui.homeProjectsEyebrow || '03 · LIVE DEPLOYED PROJECTS').replace(/^02\b/, '03')}
               </ScrollWriteText>
               <ScrollWriteText
                 as="h2"
@@ -808,12 +788,7 @@ export function HomePage() {
           )}
         </section>
 
-        {/* =========================================================================
-            SECTION 03: Technical Capabilities / Skills Matrix
-            ========================================================================= */}
-        <section id="technical-capabilities" className="skills-home-section horizontal-showcase-section border-t hairline-border pt-16">
-          <InteractiveSkillsWidget showCta={true} onCtaClick={() => goTo('/skills')} />
-        </section>
+        
 
         {/* =========================================================================
             SECTION 04: Horizontal Scrollable Verified Certificates Track

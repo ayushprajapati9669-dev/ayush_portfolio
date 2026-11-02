@@ -41,7 +41,7 @@ export function DeveloperCliDrawer() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Toggle with Ctrl+` or Ctrl+~ or Cmd+`
-      if ((e.ctrlKey || e.metaKey) && (e.key === '`' || e.key === '~')) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '`' || e.key === '~' || e.key.toLowerCase() === 'k')) {
         e.preventDefault();
         playTick('click');
         setIsOpen((prev) => !prev);

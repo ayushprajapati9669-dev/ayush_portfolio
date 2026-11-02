@@ -971,15 +971,14 @@ p.project-desc {
 }
 
 .skill-card .skill-icon-wrapper {
-  transform: translateZ(22px) !important;
-  transform-style: preserve-3d !important;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .skill-card:hover .skill-icon-wrapper {
-  transform: translateZ(32px) scale(1.14) !important;
+  transform: scale(1.1) !important;
 }
 
 .skill-card .skill-text {
-  transform: translateZ(16px) !important;
+  display: flex !important;
+  align-items: center !important;
 }

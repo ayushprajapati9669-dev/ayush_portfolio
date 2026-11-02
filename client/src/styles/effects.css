@@ -263,11 +263,11 @@ span.scroll-write-container {
 }
 
 .scroll-write-token.token-italic {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
   font-style: italic;
-  font-weight: 300;
-  color: #dfb740;
-  text-shadow: 0 0 18px rgba(223, 183, 64, 0.4);
+  font-weight: 400;
+  color: #dfd7c2 !important;
+  text-shadow: none !important;
 }
 
 /* Decoder Scramble Styling */

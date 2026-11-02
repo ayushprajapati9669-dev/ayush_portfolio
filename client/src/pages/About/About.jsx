@@ -174,6 +174,84 @@ export function AboutPage() {
     return () => ctx.revert();
   }, []);
 
+  // 3D Cinzel Infinite Loop Reveal + Mouse Parallax Tilt for Name Heading
+  useEffect(() => {
+    function splitTextIntoChars(element) {
+      if (!element) return [];
+      const text = element.innerText;
+      element.innerHTML = '';
+      const wordSpan = document.createElement('span');
+      wordSpan.style.display = 'inline-block';
+      wordSpan.style.overflow = 'hidden';
+      [...text].forEach((char) => {
+        const charSpan = document.createElement('span');
+        charSpan.innerText = char;
+        charSpan.className = 'char';
+        if (char === ' ') charSpan.innerHTML = '&nbsp;';
+        wordSpan.appendChild(charSpan);
+      });
+      element.appendChild(wordSpan);
+      return wordSpan.querySelectorAll('.char');
+    }
+
+    const word1El = document.getElementById('word1');
+    const word2El = document.getElementById('word2');
+    if (!word1El || !word2El) return;
+
+    const charsAyush = splitTextIntoChars(word1El);
+    const charsPrajapati = splitTextIntoChars(word2El);
+
+    gsap.set([charsAyush, charsPrajapati], { y: '100%', opacity: 0, rotateX: -90 });
+
+    const tl = gsap.timeline({
+      delay: 0.2,
+      repeat: -1,
+      repeatDelay: 2.5
+    });
+
+    tl.to(charsAyush, {
+      y: '0%',
+      opacity: 1,
+      rotateX: 0,
+      duration: 1.2,
+      stagger: 0.05,
+      ease: 'power4.out'
+    })
+      .to(
+        charsPrajapati,
+        {
+          y: '0%',
+          opacity: 1,
+          rotateX: 0,
+          duration: 1.2,
+          stagger: 0.05,
+          ease: 'power4.out'
+        },
+        '-=1.0'
+      )
+      .to([charsAyush, charsPrajapati], { duration: 1.5 });
+
+    const nameHeading = document.getElementById('mainName');
+    const handleMouseMove = (e) => {
+      if (!nameHeading) return;
+      const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+      const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+      gsap.to(nameHeading, {
+        rotationY: xAxis,
+        rotationX: -yAxis,
+        ease: 'power2.out',
+        duration: 0.5
+      });
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      tl.kill();
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
   const profileImageUrl = p.portrait?.url || p.profileImage || '/images/ayush-hero-portrait.jpg';
   const githubUrl = p.socialLinks?.github || 'https://github.com/ayushprajapati9669-dev';
   const linkedinUrl = p.socialLinks?.linkedin || 'https://www.linkedin.com/in/ayush-prajapati-b9042424a/';
@@ -196,15 +274,10 @@ export function AboutPage() {
         >
           {p.aboutEyebrow || p.eyebrow || 'Computer Science Student · Developer · Builder'}
         </ScrollWriteText>
-        <ScrollWriteText
-          as="h1"
-          className="page-title"
-          mode="mask"
-          stagger={0.05}
-          highlightWords={['Prajapati']}
-        >
-          {p.name || 'Ayush Prajapati'}
-        </ScrollWriteText>
+        <h1 className="name-heading" id="mainName">
+          <span className="word-wrapper" id="word1">Ayush</span>
+          <span className="word-wrapper gold-text" id="word2">Prajapati</span>
+        </h1>
         <div className="page-contact-info">
           <a
             href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}

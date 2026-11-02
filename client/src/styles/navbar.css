@@ -1423,3 +1423,560 @@ a.btn-primary:hover {
   background: rgba(212, 175, 55, 0.2) !important;
   border-color: #d4af37 !important;
 }
+
+
+/* =========================================================================
+   Navbar Architecture Exactly Matching User Reference Image 1
+   ========================================================================= */
+
+/* Eliminate outer double-halo container */
+.nav-beam-container {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.nav-beam-clip, .nav-beam {
+  display: none !important;
+}
+
+/* 1. Floating Nav Wrapper */
+.nav-wrapper {
+  position: fixed !important;
+  top: 18px !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 auto !important;
+  width: auto !important;
+  max-width: min(1080px, 94vw) !important;
+  z-index: 99999 !important;
+  pointer-events: none !important;
+}
+
+/* 2. Main Navbar Glass Bar */
+.navbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: rgba(10, 12, 16, 0.8) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border-radius: 9999px !important;
+  padding: 5px 8px 5px 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.85) !important;
+  pointer-events: auto !important;
+}
+
+/* 3. Left Brand: Monogram Box + Serif Name */
+.nav-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+}
+
+.nav-logo-box {
+  width: 32px !important;
+  height: 32px !important;
+  background: rgba(18, 18, 24, 0.9) !important;
+  border: 1px solid rgba(212, 175, 55, 0.45) !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.05em !important;
+  color: #fcd34d !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6) !important;
+  transition: transform 0.25s ease, border-color 0.25s !important;
+  flex-shrink: 0 !important;
+}
+
+.nav-left:hover .nav-logo-box {
+  transform: scale(1.05) !important;
+  border-color: rgba(252, 211, 77, 0.7) !important;
+}
+
+.nav-logo-text {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 16.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  color: #ffffff !important;
+  white-space: nowrap !important;
+}
+
+/* 4. Center: Distinct Rounded Floating Nav Capsule */
+.nav-center {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  background: rgba(18, 18, 22, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  padding: 3px 5px !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  gap: 2px !important;
+  z-index: 2 !important;
+}
+
+/* Active Highlight Pill */
+.active-pill {
+  position: absolute !important;
+  top: 3px !important;
+  height: calc(100% - 6px) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  z-index: 1 !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+
+/* Nav Links */
+.nav-link {
+  position: relative !important;
+  z-index: 2 !important;
+  text-decoration: none !important;
+  color: #9ca3af !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  padding: 6px 13px !important;
+  border-radius: 9999px !important;
+  transition: color 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+  outline: none !important;
+}
+
+.nav-link i {
+  font-size: 12px !important;
+  color: #9ca3af !important;
+  transition: color 0.2s ease !important;
+}
+
+.nav-link:hover {
+  color: #ffffff !important;
+}
+
+.nav-link:hover i {
+  color: #ffffff !important;
+}
+
+.nav-link.active {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.nav-link.active i {
+  color: #fcd34d !important; /* Yellow/Gold icon for active link */
+}
+
+.nav-active-dot {
+  display: none !important;
+}
+
+/* 5. Right Actions Bar */
+.nav-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Terminal Button (>_ Terminal Ctrl + K) */
+.navbar .btn-outline.font-mono,
+.nav-terminal-btn {
+  background: transparent !important;
+  border: none !important;
+  color: #9ca3af !important;
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.navbar .btn-outline.font-mono:hover,
+.nav-terminal-btn:hover {
+  color: #ffffff !important;
+  background: transparent !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.navbar .btn-outline.font-mono .cmd-kbd,
+.nav-terminal-btn .cmd-kbd,
+.cmd-kbd {
+  font-size: 10px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 1.5px 5px !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  color: #94a3b8 !important;
+}
+
+/* Resume Button (Glass Pill with Arrow) */
+.navbar .btn-outline.nav-resume-btn,
+.nav-resume-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.navbar .btn-outline.nav-resume-btn:hover,
+.nav-resume-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: none !important;
+}
+
+/* Let's talk CTA: Solid White Rounded Pill with Bold Black Text (Exact Reference) */
+.navbar .btn-primary,
+.nav-talk-btn {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  padding: 7px 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.14) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.navbar .btn-primary:hover,
+.nav-talk-btn:hover {
+  background: #f1f5f9 !important;
+  color: #000000 !important;
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.24) !important;
+}
+
+.navbar .btn-primary span,
+.navbar .btn-primary i,
+.nav-talk-btn span,
+.nav-talk-btn i {
+  color: #000000 !important;
+}
+
+
+/* =========================================================================
+   DEFINITIVE OVERRIDES: EXACT REFERENCE NAVBAR (MATCHING REFERENCE IMAGE)
+   ========================================================================= */
+
+/* 1. Neutralize outer beam container completely - zero outer glow, zero halo */
+.nav-beam-container,
+#navWrapper .nav-beam-container {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 9999px !important;
+}
+
+.nav-beam-clip,
+.nav-beam {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* 2. Floating Navbar Bar: Clean Obsidian Glass Capsule */
+.navbar,
+#navbar,
+#navWrapper .navbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: rgba(12, 14, 18, 0.85) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 9999px !important;
+  padding: 5px 8px 5px 14px !important;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.85) !important;
+  pointer-events: auto !important;
+  transform: none !important;
+}
+
+.navbar::before {
+  display: none !important;
+}
+
+/* 3. Left Brand: Squircle [ AP ] + Serif Name */
+.nav-left,
+#navWrapper .nav-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+.nav-logo-box,
+#navWrapper .nav-logo-box {
+  width: 32px !important;
+  height: 32px !important;
+  background: rgba(20, 20, 26, 0.9) !important;
+  border: 1px solid rgba(212, 175, 55, 0.5) !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.04em !important;
+  color: #fcd34d !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  transition: transform 0.25s ease, border-color 0.25s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.nav-left:hover .nav-logo-box {
+  transform: scale(1.06) !important;
+  border-color: rgba(252, 211, 77, 0.8) !important;
+}
+
+.nav-logo-text,
+#navWrapper .nav-logo-text {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 16.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  color: #ffffff !important;
+  white-space: nowrap !important;
+}
+
+/* 4. Center Navigation Capsule */
+.nav-center,
+#navWrapper .nav-center {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  background: rgba(18, 18, 24, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  padding: 3px 5px !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  gap: 2px !important;
+  z-index: 2 !important;
+}
+
+/* Sliding active pill indicator */
+.active-pill,
+#navWrapper .active-pill {
+  position: absolute !important;
+  top: 3px !important;
+  height: calc(100% - 6px) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  z-index: 1 !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+
+/* Nav Link Items */
+.nav-link,
+#navWrapper .nav-link {
+  position: relative !important;
+  z-index: 2 !important;
+  text-decoration: none !important;
+  color: #9ca3af !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+  transition: color 0.2s ease, background 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+  outline: none !important;
+}
+
+.nav-link i,
+#navWrapper .nav-link i {
+  font-size: 12px !important;
+  color: #9ca3af !important;
+  transition: color 0.2s ease !important;
+}
+
+.nav-link:hover,
+#navWrapper .nav-link:hover {
+  color: #ffffff !important;
+}
+
+.nav-link:hover i,
+#navWrapper .nav-link:hover i {
+  color: #ffffff !important;
+}
+
+.nav-link.active,
+#navWrapper .nav-link.active {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* Yellow Home Icon */
+.nav-link[href="/"] i,
+.nav-link.active[href="/"] i,
+.nav-link .fa-house,
+#navWrapper .nav-link.active i.fa-house {
+  color: #facc15 !important;
+}
+
+.nav-active-dot {
+  display: none !important;
+}
+
+/* 5. Right Action Controls */
+.nav-right,
+#navWrapper .nav-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* >_ Terminal Ctrl + K Button */
+.nav-terminal-btn,
+.navbar .btn-outline.font-mono,
+#navWrapper .btn-outline.font-mono {
+  background: transparent !important;
+  border: none !important;
+  color: #9ca3af !important;
+  padding: 6px 10px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.nav-terminal-btn:hover,
+.navbar .btn-outline.font-mono:hover,
+#navWrapper .btn-outline.font-mono:hover {
+  color: #ffffff !important;
+  background: transparent !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.nav-terminal-btn .cmd-kbd,
+.cmd-kbd,
+#navWrapper .cmd-kbd {
+  font-size: 10px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  color: #9ca3af !important;
+}
+
+/* Resume Glass Pill */
+.nav-resume-btn,
+.navbar .btn-outline.nav-resume-btn,
+#navWrapper .btn-outline.nav-resume-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.nav-resume-btn:hover,
+.navbar .btn-outline.nav-resume-btn:hover,
+#navWrapper .btn-outline.nav-resume-btn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: none !important;
+}
+
+/* Let's talk CTA: SOLID WHITE PILL with BLACK TEXT */
+.nav-talk-btn,
+.navbar .btn-primary,
+#navWrapper .btn-primary,
+#navWrapper .nav-talk-btn {
+  background: #ffffff !important;
+  color: #000000 !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  padding: 7px 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.18) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.nav-talk-btn:hover,
+.navbar .btn-primary:hover,
+#navWrapper .btn-primary:hover,
+#navWrapper .nav-talk-btn:hover {
+  background: #f1f5f9 !important;
+  color: #000000 !important;
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.28) !important;
+}
+
+.nav-talk-btn span,
+.nav-talk-btn i,
+.navbar .btn-primary span,
+.navbar .btn-primary i,
+#navWrapper .btn-primary span,
+#navWrapper .btn-primary i {
+  color: #000000 !important;
+}

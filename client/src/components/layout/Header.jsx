@@ -626,7 +626,7 @@ export function Header() {
                         >
                           <i className="fa-solid fa-terminal text-xs text-yellow-400" />
                           <span>Developer Terminal</span>
-                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">Ctrl+~</kbd>
+                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">Ctrl + K</kbd>
                         </button>
                         <button
                           type="button"
@@ -672,16 +672,16 @@ export function Header() {
                 <div className="magnetic hidden lg:inline-block">
                   <button
                     type="button"
-                    className="btn-outline font-mono"
+                    className="btn-outline font-mono nav-terminal-btn"
                     onClick={() => {
                       playTick('click');
                       window.dispatchEvent(new CustomEvent('ams-open-terminal'));
                     }}
-                    title="Open Retro Developer Terminal (Ctrl + ~)"
+                    title="Open Developer Terminal (Ctrl + K)"
                   >
                     <i className="fa-solid fa-terminal text-yellow-400" style={{ fontSize: '10px' }} />
                     <span className="hidden sm:inline">&gt;_ Terminal</span>
-                    <span className="cmd-kbd hidden xl:inline">Ctrl+~</span>
+                    <span className="cmd-kbd hidden sm:inline-flex">Ctrl + K</span>
                   </button>
                 </div>
               )}
@@ -713,7 +713,7 @@ export function Header() {
                 <div className="magnetic">
                   <Link
                     to="/contact"
-                    className="btn-primary"
+                    className="btn-primary nav-talk-btn"
                     onClick={() => playTick()}
                   >
                     <span>{ui.hireConnect || "Let's talk"}</span>

@@ -1,56 +1,161 @@
-
-// Map skill names to official vibrant brand colors for Awwwards dynamic underglow
-export const getSkillBrandColor = (name) => {
-  const n = String(name || '').toLowerCase().trim();
-  if (n.includes('react')) return { color: '#61dafb', shadow: 'rgba(97, 218, 251, 0.35)', glow: 'rgba(97, 218, 251, 0.2)' };
-  if (n.includes('node')) return { color: '#68a063', shadow: 'rgba(104, 160, 99, 0.35)', glow: 'rgba(104, 160, 99, 0.2)' };
-  if (n.includes('mongo')) return { color: '#47a248', shadow: 'rgba(71, 162, 72, 0.35)', glow: 'rgba(71, 162, 72, 0.2)' };
-  if (n.includes('python')) return { color: '#3776ab', shadow: 'rgba(55, 118, 171, 0.35)', glow: 'rgba(55, 118, 171, 0.2)' };
-  if (n.includes('typescript') || n === 'ts') return { color: '#3178c6', shadow: 'rgba(49, 120, 198, 0.35)', glow: 'rgba(49, 120, 198, 0.2)' };
-  if (n.includes('javascript') || n === 'js') return { color: '#f7df1e', shadow: 'rgba(247, 223, 30, 0.35)', glow: 'rgba(247, 223, 30, 0.2)' };
-  if (n.includes('tailwind')) return { color: '#06b6d4', shadow: 'rgba(6, 182, 212, 0.35)', glow: 'rgba(6, 182, 212, 0.2)' };
-  if (n.includes('docker')) return { color: '#2496ed', shadow: 'rgba(36, 150, 237, 0.35)', glow: 'rgba(36, 150, 237, 0.2)' };
-  if (n.includes('git')) return { color: '#f05032', shadow: 'rgba(240, 80, 50, 0.35)', glow: 'rgba(240, 80, 50, 0.2)' };
-  if (n.includes('postman')) return { color: '#ff6c37', shadow: 'rgba(255, 108, 55, 0.35)', glow: 'rgba(255, 108, 55, 0.2)' };
-  if (n.includes('html')) return { color: '#e34f26', shadow: 'rgba(227, 79, 38, 0.35)', glow: 'rgba(227, 79, 38, 0.2)' };
-  if (n.includes('css')) return { color: '#1572b6', shadow: 'rgba(21, 114, 182, 0.35)', glow: 'rgba(21, 114, 182, 0.2)' };
-  if (n.includes('mysql')) return { color: '#00758f', shadow: 'rgba(0, 117, 143, 0.35)', glow: 'rgba(0, 117, 143, 0.2)' };
-  if (n.includes('postgres')) return { color: '#336791', shadow: 'rgba(51, 103, 145, 0.35)', glow: 'rgba(51, 103, 145, 0.2)' };
-  if (n.includes('java')) return { color: '#e76f51', shadow: 'rgba(231, 111, 81, 0.35)', glow: 'rgba(231, 111, 81, 0.2)' };
-  if (n.includes('c++') || n === 'c') return { color: '#659ad2', shadow: 'rgba(101, 154, 210, 0.35)', glow: 'rgba(101, 154, 210, 0.2)' };
-  return { color: '#d4af37', shadow: 'rgba(212, 175, 55, 0.35)', glow: 'rgba(212, 175, 55, 0.2)' };
-};
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 import { ScrollWriteText } from '../common/ScrollWriteText';
+import { TechLogo } from '../common/TechLogos';
 
-// Reference Baseline Skills Dataset with High-Res Brand SVGs
+// SVG Icon Render Map from deepseek_html_20261102_24e765.html
+const SKILL_SVGS = {
+  c: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="#A8B9CC" strokeWidth="2" aria-hidden="true">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+    </svg>
+  ),
+  java: (
+    <svg viewBox="0 0 24 24" fill="#f89820" aria-hidden="true">
+      <path d="M12 2s-3 3-3 6c0 2.5 2 4 2 6.5 0 2-1.5 3.5-1.5 3.5h5s-1.5-1.5-1.5-3.5c0-2.5 2-4 2-6.5 0-3-3-6-3-6z" />
+    </svg>
+  ),
+  python: (
+    <svg viewBox="0 0 24 24" fill="#3776AB" aria-hidden="true">
+      <path d="M12 2c-5.5 0-5 2.5-5 2.5v3h5v1H5.5S2 9 2 14.5c0 5.5 3 5.5 3 5.5h2.5v-3.5s0-2.5 2.5-2.5h5s2.5 0 2.5-2.5V4.5S18 2 12 2zm-2.5 2.5a1 1 0 110 2 1 1 0 010-2z" />
+    </svg>
+  ),
+  js: (
+    <svg viewBox="0 0 24 24" fill="#F7DF1E" aria-hidden="true">
+      <rect width="24" height="24" rx="3" />
+      <path d="M12 18.5c0 2-1.5 3.5-3.5 3.5S5 20.5 5 18.5h3c0 .5.5 1 1 1s1-.5 1-1v-4h2v4zm5.5 2c-2 0-3.5-1.5-3.5-3.5h3c0 .5.5 1 1 1s1-.5 1-1c0-1-1.5-1.5-2.5-2-1.5-.5-2.5-1.5-2.5-3 0-2 1.5-3.5 3.5-3.5s3.5 1.5 3.5 3.5h-3c0-.5-.5-1-1-1s-1 .5-1 1c0 1 1.5 1.5 2.5 2 1.5.5 2.5 1.5 2.5 3 0 2-1.5 3.5-3.5 3.5z" fill="#000" />
+    </svg>
+  ),
+  ts: (
+    <svg viewBox="0 0 24 24" fill="#3178C6" aria-hidden="true">
+      <rect width="24" height="24" rx="3" />
+      <path d="M18.5 12v2.5c0 2-1.5 3.5-3.5 3.5s-3.5-1.5-3.5-3.5h3c0 .5.5 1 1 1s1-.5 1-1c0-1-1.5-1.5-2.5-2-1.5-.5-2.5-1.5-2.5-3 0-2 1.5-3.5 3.5-3.5s3.5 1.5 3.5 3.5h-3c0-.5-.5-1-1-1s-1 .5-1 1c0 1 1.5 1.5 2.5 2 1.5.5 2.5 1.5 2.5 3zM5.5 7.5h7v3h-2v7h-3v-7h-2v-3z" fill="#fff" />
+    </svg>
+  ),
+  html: (
+    <svg viewBox="0 0 24 24" fill="#E34F26" aria-hidden="true">
+      <path d="M2 2l2 18 8 2 8-2 2-18H2zm14 6H8v2h8v-2zM8 12h8v2H8v-2zm8 4H8v2h8v-2z" />
+    </svg>
+  ),
+  css: (
+    <svg viewBox="0 0 24 24" fill="#1572B6" aria-hidden="true">
+      <path d="M2 2l2 18 8 2 8-2 2-18H2zm14 6H8v2h8v-2zM8 12h8v2H8v-2zm8 4H8v2h8v-2z" />
+    </svg>
+  ),
+  react: (
+    <svg viewBox="0 0 24 24" fill="#61DAFB" aria-hidden="true">
+      <circle cx="12" cy="12" r="2.2" />
+      <ellipse cx="12" cy="12" rx="10" ry="4" stroke="#61DAFB" strokeWidth="1.2" fill="none" />
+      <ellipse cx="12" cy="12" rx="10" ry="4" stroke="#61DAFB" strokeWidth="1.2" fill="none" transform="rotate(60 12 12)" />
+      <ellipse cx="12" cy="12" rx="10" ry="4" stroke="#61DAFB" strokeWidth="1.2" fill="none" transform="rotate(120 12 12)" />
+    </svg>
+  ),
+  tailwind: (
+    <svg viewBox="0 0 24 24" fill="#38BDF8" aria-hidden="true">
+      <path d="M12 6c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5 1.13.28 2.13 1.28 2.5 2.5 1.5 1.5 3 2 5 2 2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-1.13-.28-2.13-1.28-2.5-2.5-1.5-1.5-3-2-5-2zM7 12c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5 1.13.28 2.13 1.28 2.5 2.5 1.5 1.5 3 2 5 2 2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-1.13-.28-2.13-1.28-2.5-2.5-1.5-1.5-3-2-5-2z" />
+    </svg>
+  ),
+  responsive: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" aria-hidden="true">
+      <rect x="2" y="4" width="20" height="14" rx="2" />
+      <line x1="8" y1="22" x2="16" y2="22" />
+      <line x1="12" y1="18" x2="12" y2="22" />
+    </svg>
+  ),
+  node: (
+    <svg viewBox="0 0 24 24" fill="#339933" aria-hidden="true">
+      <path d="M12 2L2 7.5v9L12 22l10-5.5v-9L12 2zm0 2.5l7.5 4.5L12 13.5 4.5 9 12 4.5zm-7.5 6l7.5 4.5v7.5l-7.5-4.5V10.5zm15 0v7.5l-7.5 4.5V15l7.5-4.5z" />
+    </svg>
+  ),
+  express: (
+    <svg viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
+      <text x="3" y="17" fontFamily="monospace" fontSize="12" fontWeight="bold" fill="#ffffff">EX</text>
+    </svg>
+  ),
+  api: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  ),
+  mongo: (
+    <svg viewBox="0 0 24 24" fill="#47A248" aria-hidden="true">
+      <path d="M12 2c-2 3-5 8-5 12 0 4 2.5 8 5 8s5-4 5-8c0-4-3-9-5-12z" />
+    </svg>
+  ),
+  mysql: (
+    <svg viewBox="0 0 24 24" fill="#00758F" aria-hidden="true">
+      <path d="M2 16c2-2 5-2 8-1 2 .5 3-1 5-1 3 0 4 2 7 1-2 2-5 2-8 1-2-.5-3 1-5 1-3 0-4-2-7-1z" />
+    </svg>
+  ),
+  postgres: (
+    <svg viewBox="0 0 24 24" fill="#336791" aria-hidden="true">
+      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+    </svg>
+  ),
+  git: (
+    <svg viewBox="0 0 24 24" fill="#F05032" aria-hidden="true">
+      <path d="M12 2L2 12l10 10 10-10L12 2z" />
+    </svg>
+  ),
+  github: (
+    <svg viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true">
+      <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+    </svg>
+  ),
+  postman: (
+    <svg viewBox="0 0 24 24" fill="#FF6C37" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M8 16l4-8 4 8H8z" fill="#fff" />
+    </svg>
+  ),
+  docker: (
+    <svg viewBox="0 0 24 24" fill="#2496ED" aria-hidden="true">
+      <path d="M22 11h-3V8h-2v3h-3V8h-2v3H9V8H7v3H4V8H2v3H1v2h1v3h2v2h12c3 0 5-2 5-5v-2h1v-2zM5 11h2v2H5v-2z" />
+    </svg>
+  ),
+  cpp: (
+    <svg viewBox="0 0 24 24" fill="#00599C" aria-hidden="true">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+    </svg>
+  ),
+  dsa: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  )
+};
+
+// 22 Reference Baseline Skills Dataset (matching deepseek_html_20261102_24e765.html)
 const REFERENCE_SKILLS = [
-  { name: 'C', category: 'languages', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg', level: 'Core' },
-  { name: 'Java', category: 'languages', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg', level: 'OOP' },
-  { name: 'Python', category: 'languages', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', level: 'Advanced' },
-  { name: 'JavaScript', category: 'languages', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg', level: 'ES6+' },
-  { name: 'TypeScript', category: 'languages', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', level: 'Typed' },
-  { name: 'HTML5', category: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg', level: 'Semantic' },
-  { name: 'CSS3', category: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg', level: 'Modern' },
-  { name: 'React.js', category: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', level: 'V18/Hooks' },
-  { name: 'Tailwind CSS', category: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg', level: 'Utility' },
-  { name: 'Node.js', category: 'backend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', level: 'Runtime' },
-  { name: 'Express.js', category: 'backend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', invert: true, level: 'REST APIs' },
-  { name: 'REST APIs', category: 'backend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg', level: 'Architecture' },
-  { name: 'MongoDB', category: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', level: 'NoSQL' },
-  { name: 'MySQL', category: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', level: 'RDBMS' },
-  { name: 'PostgreSQL', category: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', level: 'SQL' },
-  { name: 'Git', category: 'tools', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', level: 'VCS' },
-  { name: 'GitHub', category: 'tools', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', invert: true, level: 'CI/CD' },
-  { name: 'Postman', category: 'tools', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg', level: 'API Testing' },
-  { name: 'Docker', category: 'tools', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', level: 'DevOps' }
+  { name: 'C', category: 'languages', iconKey: 'c', color: '#A8B9CC' },
+  { name: 'Java', category: 'languages', iconKey: 'java', color: '#f89820' },
+  { name: 'Python', category: 'languages', iconKey: 'python', color: '#3776AB' },
+  { name: 'JavaScript', category: 'languages', iconKey: 'js', color: '#F7DF1E' },
+  { name: 'TypeScript', category: 'languages', iconKey: 'ts', color: '#3178C6' },
+  { name: 'HTML5', category: 'frontend', iconKey: 'html', color: '#E34F26' },
+  { name: 'CSS3', category: 'frontend', iconKey: 'css', color: '#1572B6' },
+  { name: 'React.js', category: 'frontend', iconKey: 'react', color: '#61DAFB' },
+  { name: 'Tailwind CSS', category: 'frontend', iconKey: 'tailwind', color: '#38BDF8' },
+  { name: 'Responsive UI', category: 'frontend', iconKey: 'responsive', color: '#ffffff' },
+  { name: 'Node.js', category: 'backend', iconKey: 'node', color: '#339933' },
+  { name: 'Express.js', category: 'backend', iconKey: 'express', color: '#ffffff' },
+  { name: 'REST APIs', category: 'backend', iconKey: 'api', color: '#fbbf24' },
+  { name: 'MongoDB', category: 'databases', iconKey: 'mongo', color: '#47A248' },
+  { name: 'MySQL', category: 'databases', iconKey: 'mysql', color: '#00758F' },
+  { name: 'PostgreSQL', category: 'databases', iconKey: 'postgres', color: '#336791' },
+  { name: 'Git', category: 'tools', iconKey: 'git', color: '#F05032' },
+  { name: 'GitHub', category: 'tools', iconKey: 'github', color: '#ffffff' },
+  { name: 'Postman', category: 'tools', iconKey: 'postman', color: '#FF6C37' },
+  { name: 'Docker', category: 'tools', iconKey: 'docker', color: '#2496ED' },
+  { name: 'C++', category: 'languages', iconKey: 'cpp', color: '#00599C' },
+  { name: 'Data Structures', category: 'languages', iconKey: 'dsa', color: '#ffffff' }
 ];
 
-// Helper to normalize skill names and avoid duplicate alias cards
+// Normalize skill name to match reference dataset
 const normalizeSkillKey = (name) => {
   const lower = (name || '').toLowerCase().trim();
   if (lower === 'html' || lower === 'html5') return 'html5';
@@ -58,273 +163,188 @@ const normalizeSkillKey = (name) => {
   if (lower === 'js' || lower === 'javascript' || lower === 'es6') return 'javascript';
   if (lower === 'ts' || lower === 'typescript') return 'typescript';
   if (lower === 'react' || lower === 'react.js' || lower === 'reactjs') return 'react.js';
-  if (lower === 'node' || lower === 'node.js' || lower === 'nodejs') return 'node.js';
-  if (lower === 'express' || lower === 'express.js' || lower === 'expressjs') return 'express.js';
-  if (lower === 'tailwind' || lower === 'tailwindcss' || lower === 'tailwind css') return 'tailwind css';
-  if (lower.includes('rest api')) return 'rest apis';
+  if (lower === 'node' || lower === 'nodejs' || lower === 'node.js') return 'node.js';
+  if (lower === 'express' || lower === 'expressjs' || lower === 'express.js') return 'express.js';
+  if (lower === 'tailwindcss' || lower === 'tailwind css' || lower === 'tailwind') return 'tailwind css';
+  if (lower.includes('rest api') || lower === 'api' || lower === 'rest') return 'rest apis';
   if (lower === 'mongo' || lower === 'mongodb') return 'mongodb';
+  if (lower === 'postgres' || lower === 'postgresql') return 'postgresql';
+  if (lower === 'cpp' || lower === 'c++') return 'c++';
+  if (lower === 'c') return 'c';
+  if (lower.includes('data struct') || lower === 'dsa') return 'data structures';
+  if (lower.includes('responsive')) return 'responsive ui';
   return lower;
 };
 
-// Helper to map dynamic Database / CMS skill name to official Devicon SVG
-export const getSkillVisuals = (skillObj) => {
-  const rawName = (typeof skillObj === 'string' ? skillObj : skillObj?.name || skillObj?.title || '').toLowerCase().trim();
-  const customDbIcon = typeof skillObj === 'object' ? (skillObj?.icon || skillObj?.image || skillObj?.logo || skillObj?.logoKey) : null;
-
-  const brandMap = [
-    { match: ['javascript', 'js', 'es6'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg', devicon: 'devicon-javascript-plain' },
-    { match: ['typescript', 'ts'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', devicon: 'devicon-typescript-plain' },
-    { match: ['react', 'reactjs', 'react.js', 'react js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', devicon: 'devicon-react-original' },
-    { match: ['next', 'nextjs', 'next.js', 'next js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg', invert: true, devicon: 'devicon-nextjs-original' },
-    { match: ['node', 'nodejs', 'node.js', 'node js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', devicon: 'devicon-nodejs-plain' },
-    { match: ['express', 'expressjs', 'express.js', 'express js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg', invert: true, devicon: 'devicon-express-original' },
-    { match: ['mongo', 'mongodb'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', devicon: 'devicon-mongodb-plain' },
-    { match: ['java', 'core java'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg', devicon: 'devicon-java-plain' },
-    { match: ['spring', 'spring boot', 'springboot'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg', devicon: 'devicon-spring-plain' },
-    { match: ['tailwind', 'tailwindcss', 'tailwind css'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg', devicon: 'devicon-tailwindcss-original' },
-    { match: ['python'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', devicon: 'devicon-python-plain' },
-    { match: ['git'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg', devicon: 'devicon-git-plain' },
-    { match: ['github'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', invert: true, devicon: 'devicon-github-original' },
-    { match: ['postman'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg', devicon: 'devicon-postman-plain' },
-    { match: ['docker'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', devicon: 'devicon-docker-plain' },
-    { match: ['html', 'html5'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg', devicon: 'devicon-html5-plain' },
-    { match: ['css', 'css3'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg', devicon: 'devicon-css3-plain' },
-    { match: ['mysql'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg', devicon: 'devicon-mysql-plain' },
-    { match: ['postgres', 'postgresql'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', devicon: 'devicon-postgresql-plain' },
-    { match: ['redux'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg', devicon: 'devicon-redux-original' },
-    { match: ['c++', 'cpp', 'cplusplus'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg', devicon: 'devicon-cplusplus-plain' },
-    { match: ['c', 'c language'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg', devicon: 'devicon-c-plain' },
-    { match: ['bootstrap'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg', devicon: 'devicon-bootstrap-plain' },
-    { match: ['vite', 'vitejs', 'vite js'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg', devicon: 'devicon-vitejs-plain' },
-    { match: ['vscode', 'vs code'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg', devicon: 'devicon-vscode-plain' },
-    { match: ['dsa', 'data structures', 'algorithms', 'problem solving'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg', devicon: 'fa-solid fa-brain' },
-    { match: ['rest', 'api', 'apis', 'rest api', 'rest apis'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg', devicon: 'devicon-fastapi-plain' },
-    { match: ['cloudinary'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg', devicon: 'devicon-googlecloud-plain' },
-    { match: ['responsive', 'ui', 'interface'], icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg', devicon: 'devicon-figma-plain' }
-  ];
-
-  const deviconMatch = (typeof customDbIcon === 'string' && customDbIcon.startsWith('devicon-'))
-    ? customDbIcon.replace('devicon-', '').replace('-plain', '').replace('-original', '').replace('-wordmark', '')
-    : '';
-
-  const found = brandMap.find((b) =>
-    b.match.some((keyword) => {
-      if (keyword === 'c') {
-        return rawName === 'c' || rawName.split(/[\s,./\-_]+/).includes('c') || deviconMatch === 'c';
-      }
-      return rawName.includes(keyword) || (deviconMatch && deviconMatch.includes(keyword));
-    })
-  );
-
-  const hasHttpUrl = customDbIcon && typeof customDbIcon === 'string' && (customDbIcon.startsWith('http') || customDbIcon.startsWith('/') || customDbIcon.startsWith('data:'));
-
-  return {
-    iconUrl: hasHttpUrl
-      ? customDbIcon
-      : found?.icon || 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg',
-    invertIcon: found?.invert || false,
-    deviconClass: (typeof customDbIcon === 'string' && customDbIcon.startsWith('devicon-'))
-      ? customDbIcon
-      : (found?.devicon || null)
-  };
+// Skill icon mapper to key
+const getSkillKeyFromItem = (item) => {
+  const n = normalizeSkillKey(item.name || item.title || '');
+  if (n === 'c') return 'c';
+  if (n === 'c++') return 'cpp';
+  if (n === 'java') return 'java';
+  if (n === 'python') return 'python';
+  if (n === 'javascript') return 'js';
+  if (n === 'typescript') return 'ts';
+  if (n === 'html5') return 'html';
+  if (n === 'css3') return 'css';
+  if (n === 'react.js') return 'react';
+  if (n === 'tailwind css') return 'tailwind';
+  if (n === 'responsive ui') return 'responsive';
+  if (n === 'node.js') return 'node';
+  if (n === 'express.js') return 'express';
+  if (n === 'rest apis') return 'api';
+  if (n === 'mongodb') return 'mongo';
+  if (n === 'mysql') return 'mysql';
+  if (n === 'postgresql') return 'postgres';
+  if (n === 'git') return 'git';
+  if (n === 'github') return 'github';
+  if (n === 'postman') return 'postman';
+  if (n === 'docker') return 'docker';
+  if (n === 'data structures') return 'dsa';
+  return null;
 };
 
-export function SkillsSection({
-  dbSkills = null,
-  showCta = false,
-  onCtaClick = null,
-  isStandalonePage = false,
-}) {
+export function SkillsSection({ isStandalonePage = false, showCta = false, onCtaClick = null }) {
   const { appState } = usePortfolio();
-  const ui = appState.uiLabels || {};
-
+  const ui = appState?.uiLabels || {};
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const gridRef = useRef(null);
-  const filterContainerRef = useRef(null);
 
-  // 1. Merge baseline skills with any dynamic CMS database skills
+  // Signature brand colors for dynamic skill ambient underglow
+const SKILL_BRAND_COLORS = {
+  javascript: '#F7DF1E',
+  typescript: '#3178C6',
+  react: '#61DAFB',
+  'react.js': '#61DAFB',
+  python: '#3776AB',
+  java: '#f89820',
+  c: '#A8B9CC',
+  'c++': '#00599C',
+  cpp: '#00599C',
+  html: '#E34F26',
+  html5: '#E34F26',
+  css: '#1572B6',
+  css3: '#1572B6',
+  tailwind: '#38BDF8',
+  'tailwind css': '#38BDF8',
+  nodejs: '#339933',
+  'node.js': '#339933',
+  express: '#ffffff',
+  'express.js': '#ffffff',
+  mongodb: '#47A248',
+  mysql: '#00758F',
+  postgresql: '#336791',
+  git: '#F05032',
+  github: '#ffffff',
+  postman: '#FF6C37',
+  docker: '#2496ED',
+  'rest apis': '#fbbf24',
+  'rest api development': '#fbbf24',
+  'data structures': '#ffffff',
+  'data structures & algorithms': '#ffffff',
+  'responsive ui': '#38BDF8',
+  'responsive ui development': '#38BDF8'
+};
+
+const getSkillBrandColor = (name, logoKey) => {
+  const n = (name || '').toLowerCase().trim();
+  const k = (logoKey || '').toLowerCase().trim();
+  if (SKILL_BRAND_COLORS[n]) return SKILL_BRAND_COLORS[n];
+  if (SKILL_BRAND_COLORS[k]) return SKILL_BRAND_COLORS[k];
+  for (const [key, color] of Object.entries(SKILL_BRAND_COLORS)) {
+    if (n.includes(key) || key.includes(n)) return color;
+  }
+  return '#fcd34d';
+};
+
+  // Extract real skills dynamically from Admin CMS categories (honoring isVisible & custom icons)
   const allSkills = useMemo(() => {
-    const customList = (dbSkills && Array.isArray(dbSkills) && dbSkills.length > 0)
-      ? dbSkills
-      : (appState.skills || []);
+    const rawSkills = appState?.skills || [];
+    const list = [];
 
-    if (!customList || customList.length === 0) {
-      return REFERENCE_SKILLS;
-    }
+    if (Array.isArray(rawSkills) && rawSkills.length > 0) {
+      rawSkills.forEach((catGroup) => {
+        if (catGroup && Array.isArray(catGroup.items)) {
+          const categoryName = (catGroup.category || 'tools').toLowerCase();
+          let catKey = 'tools';
+          if (categoryName.includes('lang') || categoryName.includes('problem')) catKey = 'languages';
+          else if (categoryName.includes('front') || categoryName.includes('ui')) catKey = 'frontend';
+          else if (categoryName.includes('back') || categoryName.includes('api') || categoryName.includes('server')) catKey = 'backend';
+          else if (categoryName.includes('data') || categoryName.includes('sql') || categoryName.includes('db')) catKey = 'databases';
+          else if (categoryName.includes('tool') || categoryName.includes('devops') || categoryName.includes('workflow')) catKey = 'tools';
 
-    // Flatten if grouped by category
-    let flattened = [];
-    if (customList.length > 0 && Array.isArray(customList[0]?.items)) {
-      flattened = customList.flatMap((cat) =>
-        (cat.items || []).map((item) => ({
-          ...item,
-          category: (cat.category || 'tools').toLowerCase()
-        }))
-      );
-    } else {
-      flattened = customList.map((s) => ({
-        ...(typeof s === 'string' ? { name: s } : s),
-        category: (s.category || 'tools').toLowerCase()
-      }));
-    }
-
-    // Combine unique skills by normalized alias
-    const map = new Map();
-    REFERENCE_SKILLS.forEach((s) => map.set(normalizeSkillKey(s.name), s));
-
-    flattened.forEach((item) => {
-      const name = item.name || item.title || '';
-      if (!name) return;
-      const key = normalizeSkillKey(name);
-      const existing = map.get(key);
-      const visuals = getSkillVisuals(item);
-
-      const validIconUrl =
-        typeof item.icon === 'string' &&
-        (item.icon.startsWith('http') || item.icon.startsWith('/') || item.icon.startsWith('data:'))
-          ? item.icon
-          : typeof existing?.icon === 'string' &&
-            (existing.icon.startsWith('http') || existing.icon.startsWith('/'))
-          ? existing.icon
-          : visuals.iconUrl;
-
-      const deviconCls =
-        typeof item.icon === 'string' && item.icon.startsWith('devicon-')
-          ? item.icon
-          : visuals.deviconClass;
-
-      const canonicalName = existing?.name || name;
-
-      map.set(key, {
-        name: canonicalName,
-        category: item.category || existing?.category || 'tools',
-        icon: validIconUrl,
-        deviconClass: deviconCls,
-        invert: item.invert !== undefined ? item.invert : (existing?.invert ?? visuals.invertIcon),
-        level: item.level || existing?.level || 'Core'
+          catGroup.items.forEach((item) => {
+            if (item && item.isVisible !== false) {
+              const name = item.name || '';
+              list.push({
+                id: item.id || name,
+                name: name,
+                category: catKey,
+                categoryName: catGroup.category || 'Tools',
+                icon: item.icon,
+                logoKey: item.logoKey,
+                color: item.color || getSkillBrandColor(name, item.logoKey)
+              });
+            }
+          });
+        }
       });
-    });
+    }
 
-    return Array.from(map.values());
-  }, [dbSkills, appState.skills]);
+    if (list.length > 0) {
+      return list;
+    }
 
-  // Compute category counts for user-friendly filter badges
+    return REFERENCE_SKILLS;
+  }, [appState?.skills]);
+
+  // Dynamic category counts
   const categoryCounts = useMemo(() => {
-    const counts = { all: allSkills.length, languages: 0, frontend: 0, backend: 0, database: 0, tools: 0 };
+    const counts = { all: allSkills.length, languages: 0, frontend: 0, backend: 0, databases: 0, tools: 0 };
     allSkills.forEach((s) => {
       const cat = (s.category || '').toLowerCase();
-      if (cat.includes('lang')) counts.languages++;
-      else if (cat.includes('front') || cat.includes('ui')) counts.frontend++;
-      else if (cat.includes('back') || cat.includes('api')) counts.backend++;
-      else if (cat.includes('data') || cat.includes('sql') || cat.includes('db')) counts.database++;
+      if (cat === 'languages' || cat.includes('lang')) counts.languages++;
+      else if (cat === 'frontend') counts.frontend++;
+      else if (cat === 'backend') counts.backend++;
+      else if (cat === 'databases' || cat.includes('data') || cat.includes('sql')) counts.databases++;
       else counts.tools++;
     });
     return counts;
   }, [allSkills]);
 
-  // Standard category tabs with dynamic counts
   const filterOptions = [
-    { id: 'all', label: 'All Stack', count: categoryCounts.all },
+    { id: 'all', label: 'All', count: categoryCounts.all },
     { id: 'languages', label: 'Languages', count: categoryCounts.languages },
     { id: 'frontend', label: 'Frontend', count: categoryCounts.frontend },
     { id: 'backend', label: 'Backend', count: categoryCounts.backend },
-    { id: 'database', label: 'Databases', count: categoryCounts.database },
+    { id: 'databases', label: 'Databases', count: categoryCounts.databases },
     { id: 'tools', label: 'Tools', count: categoryCounts.tools }
   ];
 
-  // Filter skills based on category and live search query
+  // Live filter & search
   const filteredSkills = useMemo(() => {
     return allSkills.filter((s) => {
-      // Category check
       if (selectedFilter !== 'all') {
         const cat = (s.category || '').toLowerCase();
-        if (selectedFilter === 'database') {
-          if (!cat.includes('data') && !cat.includes('sql') && !cat.includes('db')) return false;
-        } else if (!cat.includes(selectedFilter)) {
+        if (selectedFilter === 'databases') {
+          if (cat !== 'databases' && !cat.includes('data') && !cat.includes('sql') && !cat.includes('db')) return false;
+        } else if (selectedFilter === 'languages') {
+          if (cat !== 'languages' && !cat.includes('lang')) return false;
+        } else if (cat !== selectedFilter && !cat.includes(selectedFilter)) {
           return false;
         }
       }
-      // Search query check
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const n = (s.name || '').toLowerCase();
-        const c = (s.category || '').toLowerCase();
-        return n.includes(q) || c.includes(q);
+        return n.includes(q);
       }
       return true;
     });
   }, [selectedFilter, searchQuery, allSkills]);
 
-  // Magnetic button physics
-  useEffect(() => {
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion || !filterContainerRef.current) return;
-
-    const btns = filterContainerRef.current.querySelectorAll('.filter-btn');
-    const cleanups = [];
-
-    btns.forEach((el) => {
-      const onMove = (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        gsap.to(el, {
-          x: (x - rect.width / 2) * 0.2,
-          y: (y - rect.height / 2) * 0.2,
-          duration: 0.35,
-          ease: 'power2.out'
-        });
-      };
-      const onLeave = () => {
-        gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.3)' });
-      };
-      el.addEventListener('mousemove', onMove);
-      el.addEventListener('mouseleave', onLeave);
-      cleanups.push(() => {
-        el.removeEventListener('mousemove', onMove);
-        el.removeEventListener('mouseleave', onLeave);
-      });
-    });
-
-    return () => cleanups.forEach((fn) => fn());
-  }, [filterOptions.length]);
-
-  // 3D Card Hover Physics
-  const handleCardMouseMove = (e) => {
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const rotateX = ((y - rect.height / 2) / rect.height) * -8;
-    const rotateY = ((x - rect.width / 2) / rect.width) * 8;
-
-    gsap.to(card, {
-      rotateX,
-      rotateY,
-      transformPerspective: 1000,
-      duration: 0.35,
-      ease: 'power2.out'
-    });
-    card.style.setProperty('--mouse-x', `${x}px`);
-    card.style.setProperty('--mouse-y', `${y}px`);
-  };
-
-  const handleCardMouseLeave = (e) => {
-    const card = e.currentTarget;
-    gsap.to(card, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 0.8,
-      ease: 'elastic.out(1, 0.4)'
-    });
-  };
-
-  // Staggered Cascade Entrance Animation for Skill Cards (One-by-One Reveal)
+  // Smooth entrance animation with guarantee that elements remain visible
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !gridRef.current) return;
@@ -335,52 +355,63 @@ export function SkillsSection({
     gsap.killTweensOf(cards);
 
     const animateIn = () => {
-      gsap.set(cards, {
-        y: 42,
-        rotateX: 28,
-        scale: 0.86,
+      gsap.from(cards, {
         opacity: 0,
-        transformPerspective: 900
-      });
-      gsap.to(cards, {
-        y: 0,
-        rotateX: 0,
-        scale: 1,
-        opacity: 1,
-        duration: 0.52,
-        stagger: {
-          each: 0.045, // Visibly distinct one-by-one waterfall cascade
-          from: 'start',
-          ease: 'power2.out'
-        },
-        ease: 'back.out(1.35)',
-        clearProps: 'transform,opacity'
+        y: 16,
+        scale: 0.95,
+        duration: 0.4,
+        stagger: 0.02,
+        ease: 'power2.out',
+        clearProps: 'opacity,transform'
       });
     };
 
     if (isStandalonePage) {
-      // Standalone /skills page: trigger immediately with clean stagger
-      const timer = setTimeout(animateIn, 50);
-      return () => clearTimeout(timer);
+      animateIn();
     } else {
-      // Home page embedded view: trigger on scroll via ScrollTrigger
+      let triggered = false;
       try {
         gsap.registerPlugin(ScrollTrigger);
-      } catch (_e) {}
+        const st = ScrollTrigger.create({
+          trigger: gridRef.current,
+          start: 'top 92%',
+          once: true,
+          onEnter: () => {
+            if (!triggered) {
+              triggered = true;
+              animateIn();
+            }
+          }
+        });
 
-      const st = ScrollTrigger.create({
-        trigger: gridRef.current,
-        start: 'top 85%',
-        once: true,
-        onEnter: animateIn
-      });
-      return () => st.kill();
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && !triggered) {
+                triggered = true;
+                animateIn();
+                observer.disconnect();
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        observer.observe(gridRef.current);
+
+        return () => {
+          st.kill();
+          observer.disconnect();
+        };
+      } catch (_e) {
+        animateIn();
+      }
     }
   }, [selectedFilter, searchQuery, isStandalonePage, filteredSkills.length]);
 
   return (
-    <section className={`skills-section ${isStandalonePage ? 'standalone' : 'home-embedded'}`}>
-      {/* Header - Matching Section 02 & Section 04 Showcase Standard */}
+    <div className={`skills-section ${isStandalonePage ? 'standalone' : 'home-embedded'}`}>
+      {/* Home Header - Only displayed when embedded on Home Page */}
       {!isStandalonePage && (
         <div className="showcase-header mb-8">
           <div>
@@ -390,7 +421,7 @@ export function SkillsSection({
               mode="scramble"
               scrambleDuration={20}
             >
-              {ui.homeSkillsEyebrow || '03 · TECHNICAL CAPABILITIES'}
+              {(ui.homeSkillsEyebrow || '02 · TECHNICAL CAPABILITIES').replace(/^03\b/, '02')}
             </ScrollWriteText>
             <ScrollWriteText
               as="h2"
@@ -407,143 +438,114 @@ export function SkillsSection({
             {showCta && onCtaClick && (
               <button
                 type="button"
-                onClick={onCtaClick}
+                onClick={() => {
+                  playTick('click');
+                  onCtaClick();
+                }}
                 className="showcase-view-all"
               >
-                View Full Skills Directory ({allSkills.length}) ↗
+                <span>View Full Skills Directory ({allSkills.length})</span>
+                <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '10px' }} />
               </button>
             )}
           </div>
         </div>
       )}
 
-      {/* Filter Buttons & Live Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-7">
-        <div className="filter-container !mb-0" ref={filterContainerRef}>
+      {/* Controls Area: Filter Scroll + Rounded Search Pill */}
+      <div className="skills-controls-area">
+        <div className="filter-scroll">
           {filterOptions.map((opt) => (
             <button
               key={opt.id}
               type="button"
               className={`filter-btn ${selectedFilter === opt.id ? 'active' : ''}`}
               onClick={() => {
-                playTick();
+                playTick('click');
                 setSelectedFilter(opt.id);
               }}
             >
               <span>{opt.label}</span>
-              <span className="filter-count">{opt.count}</span>
+              <span className="count">{opt.count}</span>
             </button>
           ))}
-
-          {showCta && onCtaClick && (
-            <button
-              type="button"
-              onClick={() => {
-                playTick();
-                onCtaClick();
-              }}
-              className="filter-btn"
-              style={{ borderColor: 'rgba(212, 175, 55, 0.35)', color: '#d4af37' }}
-            >
-              Full View →
-            </button>
-          )}
         </div>
 
-        {/* Live Search Input */}
-        <div className="relative w-full sm:w-64">
-          <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none" />
+        <div className="skills-search-wrapper">
+          <i className="fa-solid fa-magnifying-glass" />
           <input
             type="text"
-            placeholder="Search skills..."
+            className="skills-search-input"
+            placeholder="Search stack..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/10 hover:border-white/20 focus:border-gold/50 rounded-full pl-9 pr-8 py-1.5 text-xs text-white placeholder-slate-400 outline-none transition-all duration-200"
           />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
-              aria-label="Clear search"
-            >
-              ✕
-            </button>
-          )}
         </div>
       </div>
 
-      {/* Uniform High-End Skills Grid */}
-      <div className="skills-grid" id="skillsGrid" ref={gridRef}>
+      {/* Skills Grid: Sleek Inline Horizontal Chips with Guaranteed Inline SVGs */}
+      <div className="skills-grid" ref={gridRef}>
         {filteredSkills.length === 0 ? (
-          <div className="col-span-full py-12 text-center text-slate-400 text-sm border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
-            <p className="text-amber-300 font-mono text-xs mb-1">✦ NO MATCHING SKILLS</p>
-            <p>No technologies found matching &ldquo;{searchQuery}&rdquo; in this category.</p>
+          <div className="skills-empty-state">
+            No technologies found matching &ldquo;{searchQuery}&rdquo;.
           </div>
         ) : (
           filteredSkills.map((skill, index) => (
-            <SkillCardItem
-              key={skill._id || skill.name || skill.title || index}
+            <SkillChipItem
+              key={skill.name || index}
               skill={skill}
-              onMouseMove={handleCardMouseMove}
-              onMouseLeave={handleCardMouseLeave}
             />
           ))
         )}
       </div>
-    </section>
+    </div>
   );
 }
 
-// Resilient SkillCardItem component
-function SkillCardItem({ skill, onMouseMove, onMouseLeave }) {
-  const [imgFailed, setImgFailed] = useState(false);
-  const skillName = skill.name || skill.title || '';
-  const visuals = getSkillVisuals(skill);
-  const brand = getSkillBrandColor(skillName);
-  const hasHttpIcon =
-    typeof skill.icon === 'string' &&
-    (skill.icon.startsWith('http') || skill.icon.startsWith('/') || skill.icon.startsWith('data:'));
-  const iconSrc = hasHttpIcon ? skill.icon : visuals.iconUrl;
-  const deviconCls = skill.deviconClass || visuals.deviconClass;
-  const invert = skill.invert !== undefined ? skill.invert : visuals.invertIcon;
+// Inline Chip Component with 34x34 Icon Pod & Admin Icon Prioritization
+function SkillChipItem({ skill }) {
+  const color = skill.color || '#fcd34d';
+
+  // Render the exact icon chosen/managed in Admin
+  const renderIcon = () => {
+    // 1. If admin provided an image URL (http, /, data:)
+    if (typeof skill.icon === 'string' && (skill.icon.startsWith('http') || skill.icon.startsWith('/') || skill.icon.startsWith('data:'))) {
+      return <img src={skill.icon} alt={skill.name} className="w-[18px] h-[18px] object-contain" />;
+    }
+
+    // 2. If admin specified an icon class (Devicon or FontAwesome)
+    if (typeof skill.icon === 'string' && skill.icon.trim()) {
+      let iconClass = skill.icon.trim();
+      if (iconClass.includes('devicon-') && !iconClass.includes('colored')) {
+        iconClass = `${iconClass} colored`;
+      }
+      return <i className={`${iconClass} text-[19px] leading-none`} aria-hidden="true" />;
+    }
+
+    // 3. Fallback to built-in SVG map if available
+    const key = skill.logoKey || skill.iconKey || getSkillKeyFromItem(skill);
+    if (key && SKILL_SVGS[key]) {
+      return SKILL_SVGS[key];
+    }
+
+    // 4. Try TechLogo component
+    return <TechLogo name={skill.name} className="w-[18px] h-[18px]" />;
+  };
 
   return (
     <div
-      className="skill-card group"
+      className="skill-card"
       style={{
-        '--brand-color': brand.color,
-        '--brand-shadow': brand.shadow,
-        '--brand-glow': brand.glow
+        '--brand-color': color,
+        '--icon-color': color
       }}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
     >
-      <div className="skill-icon-wrapper">
-        {!imgFailed && iconSrc ? (
-          <img
-            src={iconSrc}
-            alt={skillName}
-            className={`${invert ? 'invert-icon' : ''} transition-transform duration-300 group-hover:scale-110`}
-            loading="lazy"
-            onError={() => setImgFailed(true)}
-          />
-        ) : deviconCls ? (
-          deviconCls.startsWith('fa-') ? (
-            <i className={`${deviconCls} text-2xl transition-transform duration-300 group-hover:scale-110`} style={{ color: '#d4af37' }} />
-          ) : (
-            <i className={`${deviconCls} colored text-2xl transition-transform duration-300 group-hover:scale-110`} />
-          )
-        ) : (
-          <span className="font-mono font-bold text-sm text-gold">
-            {skillName.slice(0, 2).toUpperCase()}
-          </span>
-        )}
+      <div className="icon-container skill-icon-wrapper">
+        {renderIcon()}
       </div>
       <div className="skill-text">
-        <span className="skill-name" title={skillName}>{skillName}</span>
+        <span className="skill-name">{skill.name}</span>
       </div>
-      <div className="skill-accent-bar" aria-hidden="true" />
     </div>
   );
 }

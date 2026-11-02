@@ -81,13 +81,13 @@ const waveFragmentShader = `
 
     // Interactive radiant cursor aura (gentle warm glow)
     float mouseGlow = smoothstep(10.0, 0.0, vDistToMouse);
-    color += vec3(0.85, 0.72, 0.4) * mouseGlow * 0.45;
+    color += vec3(0.55, 0.50, 0.40) * mouseGlow * 0.25;
 
     // Edge distance vignette fade
     float edgeFade = smoothstep(0.0, 0.14, vUv.x) * smoothstep(1.0, 0.86, vUv.x) *
                      smoothstep(0.0, 0.14, vUv.y) * smoothstep(1.0, 0.86, vUv.y);
 
-    float finalAlpha = (uIsPoints > 0.5 ? alpha * 0.85 : 0.35 + normElevation * 0.35) * edgeFade;
+    float finalAlpha = (uIsPoints > 0.5 ? alpha * 0.45 : 0.22 + normElevation * 0.28) * edgeFade;
 
     gl_FragColor = vec4(color, finalAlpha);
   }
@@ -142,8 +142,8 @@ export function InteractiveMeshWave({ className = '' }) {
       uMouse: { value: new THREE.Vector2(-999, -999) },
       uMouseSpeed: { value: 0 },
       uColorAbyss: { value: new THREE.Color('#090a0f') },  // deep obsidian-slate
-      uColorGold:  { value: new THREE.Color('#d4af37') },  // classic 24k champagne gold
-      uColorCrest: { value: new THREE.Color('#f5e6b3') },  // soft warm ivory-gold crest
+      uColorGold:  { value: new THREE.Color('#8a7e63') },  // classic 24k champagne gold
+      uColorCrest: { value: new THREE.Color('#dcd5c2') },  // soft warm ivory-gold crest
       uIsPoints:   { value: 0.0 }
     };
 
