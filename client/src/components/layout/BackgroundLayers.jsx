@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { VantaBirdsBackground } from '../ui/VantaBirdsBackground';
+import { useSmoothScroll } from '../common/SmoothScrollProvider';
 
 // Deterministic cosmic starfield coordinates to ensure zero SSR/hydration mismatch
 const COSMIC_STARS = [
@@ -53,9 +54,25 @@ export function BackgroundLayers() {
     (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
   );
 
-  // Scroll Progress Tracking for Hairline Progress Bar & Subtle Parallax
+  const lenis = useSmoothScroll();
+
+  // Scroll Progress Tracking for Hairline Progress Bar & Subtle Parallax (Frame-locked with Lenis)
   useEffect(() => {
     if (typeof window === 'undefined' || isAdmin) return;
+
+    if (lenis) {
+      const onLenisScroll = (e) => {
+        if (typeof e.progress === 'number') {
+          setScrollProgress(e.progress);
+        }
+      };
+      lenis.on('scroll', onLenisScroll);
+      return () => {
+        if (typeof lenis.off === 'function') {
+          lenis.off('scroll', onLenisScroll);
+        }
+      };
+    }
 
     const handleScroll = () => {
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -66,7 +83,7 @@ export function BackgroundLayers() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isAdmin]);
+  }, [isAdmin, lenis]);
 
   // Cursor Spotlight Tracking with GSAP QuickTo
   useEffect(() => {

@@ -3922,3 +3922,69 @@ button[style*="38bdf8"] {
   transform: translateY(-1px) scale(1.02) !important;
   box-shadow: 0 6px 24px rgba(255, 255, 255, 0.3) !important;
 }
+
+
+/* =========================================================================
+   Top 1% Luxury SaaS Craft (Admin Dashboard & CMS)
+   ========================================================================= */
+
+/* Tabular & Crisp KPI Typography */
+.stat-value,
+.stat-value.cyan,
+.stat-value.purple,
+.stat-value.orange,
+.stat-value.green {
+  font-family: 'JetBrains Mono', -apple-system, monospace !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.03em !important;
+  font-weight: 700 !important;
+}
+
+/* Polished Floating Bulk Action Dock */
+.floating-bulk-bar {
+  background: rgba(12, 14, 20, 0.95) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.14) !important;
+  border-radius: 16px !important;
+  z-index: 99999 !important;
+  animation: bulkDockEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes bulkDockEntrance {
+  from {
+    transform: translate(-50%, 24px) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Polished Table Rows & Cards */
+.milestone-admin-card,
+.project-admin-card,
+.cert-admin-card,
+.admin-card-row {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.milestone-admin-card:hover,
+.project-admin-card:hover,
+.cert-admin-card:hover,
+.admin-card-row:hover {
+  border-color: rgba(212, 175, 55, 0.35) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 20px rgba(212, 175, 55, 0.08) !important;
+}
+
+/* Smooth Input Focus Rings */
+.admin-card input:focus,
+.admin-card textarea:focus,
+.admin-card select:focus,
+.admin-sidebar input:focus {
+  border-color: rgba(212, 175, 55, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.16), 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+  outline: none !important;
+}

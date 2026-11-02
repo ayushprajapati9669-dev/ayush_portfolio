@@ -43,12 +43,12 @@
       {
         "id": "li-1793592919780-1",
         "title": "Apna College Delta Full-Stack Web Development",
-        "metaLabel": "LinkedIn · Certification",
+        "desc": "<h3>Certification Verification</h3><p>Successfully completed comprehensive full-stack training covering frontend engineering, Node.js backend systems, relational & NoSQL databases, and cloud deployments.</p>",
         "year": "Year 2",
         "status": "completed",
+        "metaLabel": "LinkedIn · Certification",
         "progress": 100,
         "rating": 5,
-        "desc": "<h3>Certification Verification</h3><p>Successfully completed comprehensive full-stack training covering frontend engineering, Node.js backend systems, relational & NoSQL databases, and cloud deployments.</p>",
         "tags": [
           "MERN",
           "React",
@@ -56,20 +56,36 @@
           "MongoDB"
         ],
         "icon": "fa-certificate",
+        "image": null,
+        "images": [],
+        "hdImages": [],
+        "imageAlt": "",
+        "link": "",
+        "metric": "",
+        "badgeText": "",
+        "badgeIcon": "",
+        "challenge": "",
+        "solution": "",
+        "outcome": "",
+        "metrics": [],
+        "links": [],
+        "deepdive": "",
+        "proofs": [],
         "published": true,
         "pinned": false,
+        "spotlight": false,
         "views": 110,
         "createdAt": "2026-11-02T04:15:19.780Z"
       },
       {
         "id": "li-1793592919780-2",
         "title": "College Website Making Competition (1st Place)",
-        "metaLabel": "LinkedIn · Award",
+        "desc": "<h3>First Place Award</h3><p>Awarded 1st place in college-wide website creation competition recognized on professional LinkedIn profile.</p>",
         "year": "Year 2",
         "status": "completed",
+        "metaLabel": "LinkedIn · Award",
         "progress": 100,
         "rating": 5,
-        "desc": "<h3>First Place Award</h3><p>Awarded 1st place in college-wide website creation competition recognized on professional LinkedIn profile.</p>",
         "tags": [
           "UI/UX",
           "HTML5",
@@ -77,8 +93,24 @@
           "JavaScript"
         ],
         "icon": "fa-trophy",
+        "image": null,
+        "images": [],
+        "hdImages": [],
+        "imageAlt": "",
+        "link": "",
+        "metric": "",
+        "badgeText": "",
+        "badgeIcon": "",
+        "challenge": "",
+        "solution": "",
+        "outcome": "",
+        "metrics": [],
+        "links": [],
+        "deepdive": "",
+        "proofs": [],
         "published": true,
         "pinned": false,
+        "spotlight": false,
         "views": 95,
         "createdAt": "2026-11-02T04:15:19.780Z"
       },
@@ -157,6 +189,68 @@
         "createdAt": "2026-11-02T04:15:05.629Z"
       },
       {
+        "id": "m-1792870162021",
+        "title": "🏆 1st Place Winner: State Web Innovation Hackathon",
+        "desc": "<h3>Challenge &amp; Problem</h3><p>Designed and built a scalable real-time solution tackling student learning and resource-sharing bottlenecks under strict 36-hour sprint constraints.</p><h3>Architecture</h3><p>Leveraged MERN stack with WebSocket event-driven communication, Redis-backed pub/sub, and intuitive responsive UI.</p><h3>Outcome</h3><p>Awarded 1st place among 40+ participating engineering teams.</p>",
+        "year": "Year 3",
+        "status": "completed",
+        "metaLabel": "Hackathon · 1st Place Achievement",
+        "progress": 100,
+        "rating": 5,
+        "tags": [
+          "Hackathon",
+          "React",
+          "NodeJS",
+          "Socket.io",
+          "MongoDB"
+        ],
+        "icon": "fa-trophy",
+        "image": "/uploads/journey_3_0_1793438989767_504.jpg",
+        "images": [
+          "/uploads/journey_3_0_1793438989767_504.jpg",
+          "/uploads/journey_3_1_1793438989768_800.jpg"
+        ],
+        "hdImages": [],
+        "imageAlt": "Hackathon 1st place award celebration and project demo",
+        "link": "https://github.com/ayushprajapati9669-dev",
+        "metric": "Rank #1 / 40+ Competing Teams",
+        "badgeText": "STATE CHAMPION",
+        "badgeIcon": "fa-award",
+        "challenge": "Construct a fault-tolerant collaborative workspace under a rigid 36-hour sprint deadline.",
+        "solution": "Engineered real-time state synchronization using WebSocket channels and optimistic UI updates.",
+        "outcome": "Secured unanimous 1st place recognition from industry judging panel.",
+        "metrics": [
+          {
+            "value": "1st",
+            "label": "Overall Rank"
+          },
+          {
+            "value": "40+",
+            "label": "Colleges Competed"
+          },
+          {
+            "value": "36 Hrs",
+            "label": "Sprint Duration"
+          }
+        ],
+        "links": [
+          {
+            "type": "demo",
+            "label": "Live Demo",
+            "icon": "fa-solid fa-arrow-up-right-from-square",
+            "url": "https://github.com/ayushprajapati9669-dev"
+          }
+        ],
+        "deepdive": "Architected end-to-end full-stack prototype with real-time notifications and JWT authentication.",
+        "proofs": [],
+        "published": true,
+        "pinned": true,
+        "spotlight": true,
+        "views": 290,
+        "createdAt": "2026-10-24T19:29:22.021Z",
+        "updatedAt": "2026-11-02T11:20:38.243Z"
+      },
+      {
         "id": "m-workshop-mern-lead",
         "title": "🎤 Lead Speaker & Instructor: MERN Stack & Cloud Architecture Workshop",
         "desc": "<h3>Hands-on Architecture Workshop</h3><p>Organized and conducted a flagship 2-day technical bootcamp on <strong>MERN Stack Engineering and Cloud Deployment</strong> at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.</p><h3>Live Demo & Lab Outcomes</h3><ul><li>Live-coded a full-stack real-time collaboration app with Socket.io on stage.</li><li>Guided students through Git branching workflows and live cloud deployment on Render and Vercel.</li><li>Rated 4.9/5 across attendee feedback surveys.</li></ul>",
@@ -217,65 +311,6 @@
         "spotlight": true,
         "views": 450,
         "createdAt": "2026-10-24T19:30:00.000Z"
-      },
-      {
-        "id": "m-1792870162021",
-        "title": "🏆 1st Place Winner: State Web Innovation Hackathon",
-        "desc": "<h3>Challenge & Problem</h3><p>Designed and built a scalable real-time solution tackling student learning and resource-sharing bottlenecks under strict 36-hour sprint constraints.</p><h3>Architecture</h3><p>Leveraged MERN stack with WebSocket event-driven communication, Redis-backed pub/sub, and intuitive responsive UI.</p><h3>Outcome</h3><p>Awarded 1st place among 40+ participating engineering teams.</p>",
-        "year": "Year 3",
-        "status": "completed",
-        "metaLabel": "Hackathon · 1st Place Achievement",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "Hackathon",
-          "React",
-          "NodeJS",
-          "Socket.io",
-          "MongoDB"
-        ],
-        "icon": "fa-trophy",
-        "image": "/uploads/journey_3_1793438989765_854.jpg",
-        "images": [
-          "/uploads/journey_3_0_1793438989767_504.jpg",
-          "/uploads/journey_3_1_1793438989768_800.jpg"
-        ],
-        "hdImages": [],
-        "imageAlt": "Hackathon 1st place award celebration and project demo",
-        "link": "https://github.com/ayushprajapati9669-dev",
-        "metric": "Rank #1 / 40+ Competing Teams",
-        "badgeText": "STATE CHAMPION",
-        "badgeIcon": "fa-award",
-        "challenge": "Construct a fault-tolerant collaborative workspace under a rigid 36-hour sprint deadline.",
-        "solution": "Engineered real-time state synchronization using WebSocket channels and optimistic UI updates.",
-        "outcome": "Secured unanimous 1st place recognition from industry judging panel.",
-        "metrics": [
-          {
-            "value": "1st",
-            "label": "Overall Rank"
-          },
-          {
-            "value": "40+",
-            "label": "Colleges Competed"
-          },
-          {
-            "value": "36 Hrs",
-            "label": "Sprint Duration"
-          }
-        ],
-        "links": [
-          {
-            "url": "https://github.com/ayushprajapati9669-dev",
-            "label": "View Source Code"
-          }
-        ],
-        "deepdive": "Architected end-to-end full-stack prototype with real-time notifications and JWT authentication.",
-        "proofs": [],
-        "published": true,
-        "pinned": true,
-        "spotlight": true,
-        "views": 290,
-        "createdAt": "2026-10-24T19:29:22.021Z"
       },
       {
         "id": "m-1792870175334",
@@ -642,40 +677,12 @@
   },
   "projects": [
     {
-      "id": "proj-1792430568297",
-      "approachArchitecture": "",
-      "category": "Full-Stack Web App",
-      "createdAt": "2026-10-31T08:13:37.186Z",
-      "disclaimer": "",
-      "displayOrder": 1,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
-      "problemContext": "",
-      "shortDescription": "this is a airbnb clone",
-      "slug": "airbnb-clone-1",
-      "status": "published",
-      "technologies": [
-        "React JS",
-        "Node.js",
-        "Express.js",
-        "MongoDB"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
-      "title": "Airbnb clone 1",
-      "updatedAt": "2026-11-01T21:06:55.797Z"
-    },
-    {
       "id": "proj-1792430599188",
       "approachArchitecture": "",
       "category": "Full-Stack Web App",
       "createdAt": "2026-10-31T08:13:37.215Z",
       "disclaimer": "",
-      "displayOrder": 2,
+      "displayOrder": 1,
       "featured": true,
       "galleryImages": [],
       "githubUrl": "https://github.com/ayushprajapati9669-dev",
@@ -696,6 +703,34 @@
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
       "updatedAt": "2026-11-01T21:06:55.861Z"
+    },
+    {
+      "id": "proj-1792430568297",
+      "approachArchitecture": "",
+      "category": "Full-Stack Web App",
+      "createdAt": "2026-10-31T08:13:37.186Z",
+      "disclaimer": "",
+      "displayOrder": 2,
+      "featured": true,
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "implementedFeatures": [],
+      "lessonsLearned": "",
+      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
+      "problemContext": "",
+      "shortDescription": "this is a airbnb clone",
+      "slug": "airbnb-clone-1",
+      "status": "published",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
+      "title": "Airbnb clone 1",
+      "updatedAt": "2026-11-01T21:06:55.797Z"
     },
     {
       "id": "proj-1792496192331",
@@ -1082,13 +1117,40 @@
   "media": [],
   "messages": [
     {
-      "id": "msg-1793615762371",
+      "id": "msg-1792813214696",
+      "name": "ajit kumar",
+      "email": "ajit@gmail.com",
+      "subject": "help",
+      "message": "i need some help from you please support me",
+      "status": "read",
+      "createdAt": "2026-10-24T03:40:14.696Z"
+    },
+    {
+      "id": "msg-1792776034240",
+      "name": "ajay prajapati",
+      "email": "ajay@gmail.com",
+      "subject": "personal",
+      "message": "you can aaply for the tcs",
+      "status": "read",
+      "createdAt": "2026-10-23T17:20:34.240Z"
+    },
+    {
+      "id": "msg-1792775992794",
+      "name": "sonali prajapati",
+      "email": "sonali@gmail.com",
+      "subject": "connect",
+      "message": "i am connect to you",
+      "status": "read",
+      "createdAt": "2026-10-23T17:19:52.794Z"
+    },
+    {
+      "id": "msg-1792775905527",
       "name": "rohit prajapati",
-      "email": "ayushprajapati9669@gmail.com",
-      "subject": "Hiring",
-      "message": "this is a testing message",
-      "status": "unread",
-      "createdAt": "2026-11-02T10:36:02.371Z"
+      "email": "rohti626861@gmail.com",
+      "subject": "hiring",
+      "message": "i hired you",
+      "status": "read",
+      "createdAt": "2026-10-23T17:18:25.527Z"
     }
   ],
   "settings": {

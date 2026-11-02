@@ -229,3 +229,20 @@ h4, h5, h6 {
   background: rgba(212, 175, 55, 0.6) !important;
   box-shadow: 0 0 8px rgba(212, 175, 55, 0.4) !important;
 }
+
+/* =========================================================================
+   Top 1% Global Interactive & Surface Fidelity
+   ========================================================================= */
+:focus-visible {
+  outline: 2px solid #d4af37 !important;
+  outline-offset: 3px !important;
+}
+
+img {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.35) !important;
+  color: #ffffff !important;
+}

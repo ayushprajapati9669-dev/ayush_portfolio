@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
+import { useSmoothScroll } from '../../components/common/SmoothScrollProvider';
 import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
 import { HeroCosmosCanvas } from '../../components/ui/HeroCosmosCanvas';
 import { InteractiveMeshWave } from '../../components/ui/InteractiveMeshWave';
@@ -61,11 +62,19 @@ export function HomePage() {
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
+  const lenis = useSmoothScroll();
+
   const scrollToSection = (id) => {
     playTick();
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+    const targetEl = document.getElementById(id) || document.querySelector(`.${id}`);
+    if (lenis && targetEl) {
+      lenis.scrollTo(targetEl, {
+        offset: -70,
+        duration: 1.35,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+      });
+    } else if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth' });
     } else {
       goTo('/projects');
     }
@@ -588,7 +597,7 @@ export function HomePage() {
         {/* =========================================================================
             SECTION 01: Bento Introduction & Focus Areas
             ========================================================================= */}
-        <section className="bento-section space-y-10 border-t hairline-border pt-16">
+        <section id="bento-section" className="bento-section space-y-10 border-t hairline-border pt-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="bento-header lg:col-span-6 space-y-4">
               <ScrollWriteText
