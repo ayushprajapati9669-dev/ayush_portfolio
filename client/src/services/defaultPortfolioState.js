@@ -352,7 +352,7 @@ export function getDefaultPortfolioState() {
         items: [
           { name: 'Node.js', logoKey: 'nodejs' },
           { name: 'Express.js', logoKey: 'express' },
-          { name: 'REST APIs', logoKey: 'postman' }
+          { name: 'REST APIs', logoKey: 'api' }
         ]
       },
       {

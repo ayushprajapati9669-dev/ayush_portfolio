@@ -311,6 +311,30 @@
   display: block !important;
 }
 
+/* High-Contrast Visibility for naturally black or dark Devicons on Obsidian Glass */
+.skill-card i,
+.skill-icon-wrapper i {
+  font-size: 19px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.skill-card i.devicon-github-original,
+.skill-card i.devicon-github-plain,
+.skill-card i.devicon-express-original,
+.skill-card i.devicon-nextjs-original,
+.skill-card i.devicon-nextjs-plain,
+.skill-card i.devicon-apple-original,
+.skill-icon-box i.devicon-github-original,
+.skill-icon-box i.devicon-github-plain,
+.skill-icon-box i.devicon-express-original,
+.skill-icon-box i.devicon-nextjs-original {
+  color: #ffffff !important;
+  filter: brightness(2) contrast(1.2) drop-shadow(0 0 4px rgba(255, 255, 255, 0.6)) !important;
+}
+
 /* Skill Name */
 .skill-text {
   display: flex !important;
