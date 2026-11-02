@@ -26,7 +26,7 @@
 }
 
 .projects-page .page-title {
-  font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
   font-weight: 700 !important;
   letter-spacing: -0.025em !important;

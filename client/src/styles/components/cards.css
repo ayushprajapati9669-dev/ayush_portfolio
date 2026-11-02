@@ -335,7 +335,7 @@ input::placeholder, textarea::placeholder {
 }
 
 .project-title {
-  font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 1.25rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
@@ -647,7 +647,7 @@ article.project-card {
 .project-title,
 h2.project-title,
 h3.project-title {
-  font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
   font-size: 1.3rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;

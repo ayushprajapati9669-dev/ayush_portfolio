@@ -39,7 +39,7 @@ export default {
         // VSLFlow: Cormorant Garamond (display) + Jost (UI/body)
         display: ['Cormorant Garamond', 'Georgia', 'Times New Roman', 'serif'],
         serif: ['Cormorant Garamond', 'Georgia', 'serif'],
-        sans: ['Jost', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Jost', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace']
       }
     }

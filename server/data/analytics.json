@@ -1,5 +1,5 @@
 {
-  "totalPageViews": 2702,
+  "totalPageViews": 2707,
   "uniqueVisitors": 486,
   "resumeDownloads": 89,
   "cliLaunches": 142,
@@ -12,7 +12,7 @@
     "Google / Search": 140,
     "Twitter / X": 84,
     "LeetCode": 76,
-    "Direct / External": 1434
+    "Direct / External": 1439
   },
   "topProjects": {
     "wanderlust-airbnb-clone": {
@@ -74,9 +74,59 @@
     "2026-10-30": 125,
     "2026-10-31": 239,
     "2026-11-01": 720,
-    "2026-11-02": 347
+    "2026-11-02": 352
   },
   "recentEvents": [
+    {
+      "id": "ev-1793619988264-doui",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/",
+      "timestamp": "2026-11-02T11:46:28.264Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793619829003-tcv3",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/",
+      "timestamp": "2026-11-02T11:43:49.003Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793619713784-ndwv",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/",
+      "timestamp": "2026-11-02T11:41:53.784Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793619671571-6rvu",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/",
+      "timestamp": "2026-11-02T11:41:11.571Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793619413209-z8u6",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/",
+      "timestamp": "2026-11-02T11:36:53.209Z",
+      "country": "Direct",
+      "city": "Global"
+    },
     {
       "id": "ev-1793619231977-w729",
       "type": "pageview",
@@ -524,56 +574,6 @@
       "title": "About & Academic Milestones | Ayush Prajapati",
       "referrer": "http://localhost:5175/admin?tab=media",
       "timestamp": "2026-11-02T10:43:16.425Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793616164500-rtjk",
-      "type": "pageview",
-      "path": "/about",
-      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5175/admin?tab=media",
-      "timestamp": "2026-11-02T10:42:44.500Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793616158439-mtut",
-      "type": "pageview",
-      "path": "/about",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5175/about",
-      "timestamp": "2026-11-02T10:42:38.439Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793616112637-351z",
-      "type": "pageview",
-      "path": "/",
-      "title": "About & Academic Milestones | Ayush Prajapati",
-      "referrer": "http://localhost:5175/admin?tab=media",
-      "timestamp": "2026-11-02T10:41:52.637Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793616108817-auj4",
-      "type": "pageview",
-      "path": "/about",
-      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5175/admin?tab=media",
-      "timestamp": "2026-11-02T10:41:48.817Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793616101202-3jh5",
-      "type": "pageview",
-      "path": "/",
-      "title": "About & Academic Milestones | Ayush Prajapati",
-      "referrer": "http://localhost:5175/admin?tab=media",
-      "timestamp": "2026-11-02T10:41:41.203Z",
       "country": "Direct",
       "city": "Global"
     }
