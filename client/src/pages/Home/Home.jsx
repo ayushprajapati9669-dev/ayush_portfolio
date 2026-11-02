@@ -567,41 +567,6 @@ export function HomePage() {
               </svg>
             </button>
           </div>
-
-          {/* Floating Stage Container Card (The "Welcome back" card in reference photo) */}
-          <div className="hero-stage-card-wrap">
-            <div className="hero-stage-card">
-              <div className="hero-stage-header">
-                <div className="stage-logo-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <rect x="12" y="2" width="14" height="14" rx="2" transform="rotate(45 12 2)" fill="#ffffff" />
-                  </svg>
-                </div>
-                <div className="stage-badge">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>GLSL LIVE TERRAIN ENGINE</span>
-                </div>
-                <div className="stage-menu-icon" onClick={() => goTo('/about')} title="Explore Details">
-                  <span />
-                  <span />
-                </div>
-              </div>
-
-              <div className="hero-stage-content">
-                <ScrollWriteText as="h3" className="hero-stage-title" mode="mask" stagger={0.03} delay={0.32}>
-                  Welcome to the Portfolio Architecture
-                </ScrollWriteText>
-                <ScrollWriteText as="p" className="hero-stage-subtitle" mode="words" stagger={0.018} delay={0.42}>
-                  Interactive Three.js 3D Wave Displacement · Full-Stack MERN Architecture · Verified Milestones
-                </ScrollWriteText>
-              </div>
-
-              {/* The 3D Mesh Wave inside the stage card */}
-              <div className="hero-stage-canvas-wrap">
-                <InteractiveMeshWave className="w-full h-full" />
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Bottom Hero Footer Strip */}
@@ -656,25 +621,14 @@ export function HomePage() {
               </ScrollWriteText>
             </div>
 
-            {/* Interactive 3D Three.js GLSL Undulating Wave Mesh */}
-            <div className="lg:col-span-6 h-[340px] sm:h-[400px] rounded-3xl border border-white/10 hover:border-gold/50 bg-gradient-to-b from-[#13131c]/90 via-[#0a0a0f]/95 to-[#060608] backdrop-blur-xl p-5 relative overflow-hidden flex flex-col justify-between group shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] transition-all duration-500">
-              {/* Warm gold ambient spotlight behind 3D terrain */}
+            {/* Interactive 3D Three.js GLSL Undulating Wave Displacement */}
+            <div className="lg:col-span-6 h-[340px] sm:h-[400px] rounded-3xl border border-white/10 hover:border-gold/40 bg-gradient-to-b from-[#13131c]/90 via-[#0a0a0f]/95 to-[#060608] backdrop-blur-xl relative overflow-hidden group shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] transition-all duration-500">
+              {/* Warm gold ambient spotlight behind 3D wave */}
               <div
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_65%,rgba(223,183,64,0.18),transparent_72%)]"
                 aria-hidden="true"
               />
-              <div className="flex items-center justify-between text-[11px] font-mono text-stone-300 uppercase tracking-widest z-10 px-2 pt-1 pointer-events-none">
-                <span className="text-amber-300/90 font-medium">01 / 03 · WAVE DISPLACEMENT</span>
-                <span className="text-emerald-400 flex items-center gap-1.5 font-medium">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
-                  GLSL LIVE
-                </span>
-              </div>
               <InteractiveMeshWave className="absolute inset-0" />
-              <div className="flex items-center justify-between text-[10.5px] font-mono text-stone-400 uppercase tracking-wider z-10 px-2 pb-1 pointer-events-none">
-                <span className="text-stone-300">THREE.JS DUAL MESH</span>
-                <span className="text-amber-400/90 font-medium">INTERACTIVE · HOVER TO RIPPLE ↗</span>
-              </div>
             </div>
           </div>
 
