@@ -109,59 +109,65 @@ export function BackgroundLayers() {
           className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
           aria-hidden="true"
         >
-          {/* Layer 0: Base Ambient Twilight Deep Sky Canvas */}
+          {/* Layer 0: Base Ambient Twilight Deep Obsidian Sky Canvas */}
           <div
             className="absolute inset-0"
             style={{
-              background: 'radial-gradient(ellipse 130% 90% at 50% -5%, #181a29 0%, #0d0f19 35%, #07080b 100%)'
+              background: 'radial-gradient(ellipse 140% 90% at 50% -10%, #121422 0%, #08090f 40%, #040507 100%)'
             }}
           />
 
-          {/* Layer 1: High-Resolution Cinematic Dusk Landscape (Matches Uploaded Reference Photo) */}
+          {/* Layer 1: High-Resolution Cinematic Dusk Landscape (Matches Uploaded Reference Photo)
+              Softly dissolves on scroll so content sections rest on pure high-contrast obsidian */}
           <img
             src="/images/cinematic-dusk-landscape.jpg"
             alt=""
-            className="w-full h-full object-cover object-bottom opacity-95 transition-transform duration-700 ease-out"
+            className="w-full h-full object-cover object-bottom transition-all duration-700 ease-out"
             style={{
-              transform: `translate3d(0, ${Math.min(130, scrollProgress * 150)}px, 0) scale(1.02)`,
-              filter: 'contrast(106%) brightness(98%) saturate(106%)'
+              transform: `translate3d(0, ${Math.min(100, scrollProgress * 120)}px, 0) scale(1.02)`,
+              filter: 'contrast(112%) brightness(92%) saturate(108%)',
+              opacity: Math.max(0.08, 0.92 - scrollProgress * 2.8)
             }}
             loading="eager"
             fetchpriority="high"
           />
 
           {/* Layer 2: Dynamic Living Horizon Warmth Breath */}
-          <div className="dusk-horizon-breath pointer-events-none" aria-hidden="true" />
-
-          {/* Layer 3: Precision Readability Scrim on Landscape
-              Softens center background so foreground text and 3D constellation are razor-crisp */}
           <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse 75% 60% at 50% 40%, rgba(7, 8, 12, 0.72) 0%, rgba(7, 8, 12, 0.45) 55%, rgba(7, 8, 12, 0.05) 88%, transparent 100%)'
-            }}
+            className="dusk-horizon-breath pointer-events-none transition-opacity duration-500"
+            style={{ opacity: Math.max(0, 1 - scrollProgress * 3.5) }}
+            aria-hidden="true"
           />
 
-          {/* Layer 4: Official Vanta.js BIRDS 3D Background Engine
+          {/* Layer 3: Official Vanta.js BIRDS 3D Background Engine
               - Matching https://www.vantajs.com/ VANTA.BIRDS as uploaded by user
-              - 3D Boids Flocking Simulation with Real-Time Dynamic Flapping Wings
-              - Dual Variance Gradient Colors (Sunset Coral Pink + Cyan Sky Blue + Gold Shimmer)
+              - Craig Reynolds' 3D Boids Flocking Simulation with Dynamic Murmuration
+              - Dual Variance Gradient Colors (Sunset Coral Pink + Cyan Sky Blue + 24k Gold)
               - Interactive Mouse Deflection & Parallax Camera Tracking */}
           <VantaBirdsBackground scrollProgress={scrollProgress} />
 
+          {/* Layer 4: Precision Readability Veil
+              Softens center area so foreground typography and 3D UI cards pop with WCAG AAA clarity */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse 75% 62% at 50% 38%, rgba(4, 5, 8, 0.78) 0%, rgba(4, 5, 8, 0.48) 50%, rgba(4, 5, 8, 0.12) 80%, transparent 100%)'
+            }}
+          />
+
           {/* Layer 5: Top Navbar Scrim for crisp header readability */}
           <div
-            className="absolute inset-x-0 top-0 h-36 pointer-events-none"
+            className="absolute inset-x-0 top-0 h-40 pointer-events-none"
             style={{
-              background: 'linear-gradient(to bottom, rgba(6, 7, 10, 0.75) 0%, rgba(6, 7, 10, 0.28) 60%, transparent 100%)'
+              background: 'linear-gradient(to bottom, rgba(4, 5, 7, 0.88) 0%, rgba(4, 5, 7, 0.4) 60%, transparent 100%)'
             }}
           />
 
           {/* Layer 6: Smooth Horizon Blend into Subsequent Content Sections */}
           <div
-            className="absolute inset-x-0 bottom-0 h-48 pointer-events-none"
+            className="absolute inset-x-0 bottom-0 h-56 pointer-events-none"
             style={{
-              background: 'linear-gradient(to bottom, transparent 0%, rgba(7, 8, 11, 0.45) 50%, #07080b 100%)'
+              background: 'linear-gradient(to bottom, transparent 0%, rgba(4, 5, 7, 0.6) 45%, #040507 100%)'
             }}
           />
         </div>
@@ -169,9 +175,10 @@ export function BackgroundLayers() {
 
       {/* Gold Radial Horizon Ambient Base Glow */}
       <div
-        className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] max-w-[100vw] h-[400px] z-0"
+        className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] max-w-[100vw] h-[360px] z-0 transition-opacity duration-500"
         style={{
-          background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.02) 55%, transparent 75%)'
+          opacity: Math.max(0, 1 - scrollProgress * 3.2),
+          background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(212, 175, 55, 0.06), rgba(212, 175, 55, 0.015) 55%, transparent 75%)'
         }}
         aria-hidden="true"
       />
