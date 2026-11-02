@@ -7,6 +7,7 @@ import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { contactPageSchema } from '../../utils/seo';
+import { InteractiveGlobe3D } from '../../components/ui/InteractiveGlobe3D';
 
 export function ContactPage() {
   const { appState, updateAppState, showToast } = usePortfolio();
@@ -205,157 +206,219 @@ export function ContactPage() {
       </div>
 
       <div className="contact-grid">
-        {/* LEFT: FORM */}
-        <div
-          ref={formCardRef}
-          className="glass-card"
-          onMouseMove={handleCardMouseMove}
-          onMouseLeave={handleCardMouseLeave}
-        >
-          <h3 className="card-title">Send a Message</h3>
+        {/* LEFT COLUMN: FORM & AVAILABILITY / SOCIALS */}
+        <div className="contact-col left-col space-y-6">
+          <div
+            ref={formCardRef}
+            className="glass-card"
+            onMouseMove={handleCardMouseMove}
+            onMouseLeave={handleCardMouseLeave}
+          >
+            <h3 className="card-title">Send a Message</h3>
 
-          {/* Top Status Alert Banners */}
-          {success && (
-            <div className="contact-status-banner success">
-              <div className="banner-icon">
-                <i className="fa-solid fa-circle-check" />
+            {/* Top Status Alert Banners */}
+            {success && (
+              <div className="contact-status-banner success">
+                <div className="banner-icon">
+                  <i className="fa-solid fa-circle-check" />
+                </div>
+                <div className="banner-content">
+                  <h4>Message Sent Successfully!</h4>
+                  <p>Thank you for reaching out. Ayush has received your message and will respond within 24 hours.</p>
+                </div>
               </div>
-              <div className="banner-content">
-                <h4>Message Sent Successfully!</h4>
-                <p>Thank you for reaching out. Ayush has received your message and will respond within 24 hours.</p>
-              </div>
-            </div>
-          )}
+            )}
 
-          {!success && Object.keys(errors).length > 0 && (
-            <div className="contact-status-banner error">
-              <div className="banner-icon">
-                <i className="fa-solid fa-triangle-exclamation" />
+            {!success && Object.keys(errors).length > 0 && (
+              <div className="contact-status-banner error">
+                <div className="banner-icon">
+                  <i className="fa-solid fa-triangle-exclamation" />
+                </div>
+                <div className="banner-content">
+                  <h4>Please Complete All Required Fields</h4>
+                  <p>Check the highlighted red fields below with details and try sending again.</p>
+                </div>
               </div>
-              <div className="banner-content">
-                <h4>Please Complete All Required Fields</h4>
-                <p>Check the highlighted red fields below with details and try sending again.</p>
-              </div>
-            </div>
-          )}
+            )}
 
-          <form className="contact-form" id="contactForm" onSubmit={handleSubmit} noValidate>
-            <div className="form-row">
+            <form className="contact-form" id="contactForm" onSubmit={handleSubmit} noValidate>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="name" className="form-label">
+                    <span>Your Name</span>
+                    <span className="label-req">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className={`form-control ${errors.name ? 'error' : ''}`}
+                    id="name"
+                    placeholder="e.g. Ayush Prajapati"
+                    value={formData.name}
+                    onChange={(e) => handleChange('name', e.target.value)}
+                    required
+                  />
+                  {errors.name && (
+                    <div className="field-error-message">
+                      <i className="fa-solid fa-circle-exclamation" />
+                      <span>{errors.name}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
+                    <span>Your Email</span>
+                    <span className="label-req">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    className={`form-control ${errors.email ? 'error' : ''}`}
+                    id="email"
+                    placeholder="name@example.com"
+                    value={formData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    required
+                  />
+                  {errors.email && (
+                    <div className="field-error-message">
+                      <i className="fa-solid fa-circle-exclamation" />
+                      <span>{errors.email}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="form-group">
-                <label htmlFor="name" className="form-label">
-                  <span>Your Name</span>
+                <label htmlFor="subject" className="form-label">
+                  <span>Subject</span>
                   <span className="label-req">*</span>
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${errors.name ? 'error' : ''}`}
-                  id="name"
-                  placeholder="e.g. Ayush Prajapati"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
+                  className={`form-control ${errors.subject ? 'error' : ''}`}
+                  id="subject"
+                  placeholder="e.g. Hiring / Full-Stack Project Collaboration"
+                  value={formData.subject}
+                  onChange={(e) => handleChange('subject', e.target.value)}
                   required
                 />
-                {errors.name && (
+                {errors.subject && (
                   <div className="field-error-message">
                     <i className="fa-solid fa-circle-exclamation" />
-                    <span>{errors.name}</span>
+                    <span>{errors.subject}</span>
                   </div>
                 )}
               </div>
 
               <div className="form-group">
-                <label htmlFor="email" className="form-label">
-                  <span>Your Email</span>
+                <label htmlFor="message" className="form-label">
+                  <span>Message</span>
                   <span className="label-req">*</span>
                 </label>
-                <input
-                  type="email"
-                  className={`form-control ${errors.email ? 'error' : ''}`}
-                  id="email"
-                  placeholder="name@example.com"
-                  value={formData.email}
-                  onChange={(e) => handleChange('email', e.target.value)}
+                <textarea
+                  className={`form-control ${errors.message ? 'error' : ''}`}
+                  id="message"
+                  placeholder="Describe your project, role, timeline or inquiry..."
+                  value={formData.message}
+                  onChange={(e) => handleChange('message', e.target.value)}
                   required
                 />
-                {errors.email && (
-                  <div className="field-error-message">
-                    <i className="fa-solid fa-circle-exclamation" />
-                    <span>{errors.email}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="subject" className="form-label">
-                <span>Subject</span>
-                <span className="label-req">*</span>
-              </label>
-              <input
-                type="text"
-                className={`form-control ${errors.subject ? 'error' : ''}`}
-                id="subject"
-                placeholder="e.g. Hiring / Full-Stack Project Collaboration"
-                value={formData.subject}
-                onChange={(e) => handleChange('subject', e.target.value)}
-                required
-              />
-              {errors.subject && (
-                <div className="field-error-message">
-                  <i className="fa-solid fa-circle-exclamation" />
-                  <span>{errors.subject}</span>
+                <div className="field-meta">
+                  {errors.message ? (
+                    <div className="field-error-message !mt-0">
+                      <i className="fa-solid fa-circle-exclamation" />
+                      <span>{errors.message}</span>
+                    </div>
+                  ) : (
+                    <span className="field-hint">Minimum 10 characters</span>
+                  )}
+                  <span className="char-count">{formData.message.length} chars</span>
                 </div>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="message" className="form-label">
-                <span>Message</span>
-                <span className="label-req">*</span>
-              </label>
-              <textarea
-                className={`form-control ${errors.message ? 'error' : ''}`}
-                id="message"
-                placeholder="Describe your project, role, timeline or inquiry..."
-                value={formData.message}
-                onChange={(e) => handleChange('message', e.target.value)}
-                required
-              />
-              <div className="field-meta">
-                {errors.message ? (
-                  <div className="field-error-message !mt-0">
-                    <i className="fa-solid fa-circle-exclamation" />
-                    <span>{errors.message}</span>
-                  </div>
-                ) : (
-                  <span className="field-hint">Minimum 10 characters</span>
-                )}
-                <span className="char-count">{formData.message.length} chars</span>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              className={`btn-send magnetic ${loading ? 'loading' : ''} ${success ? 'success' : ''}`}
-              id="submitBtn"
-              onMouseMove={handleMagneticMouseMove}
-              onMouseLeave={handleMagneticMouseLeave}
-            >
-              {success ? (
-                <>
-                  <i className="fa-solid fa-check" /> Message Sent!
-                </>
-              ) : (
-                <>
-                  Send Message <i className="fa-solid fa-arrow-right" />
-                </>
-              )}
-            </button>
-          </form>
+              <button
+                type="submit"
+                className={`btn-send magnetic ${loading ? 'loading' : ''} ${success ? 'success' : ''}`}
+                id="submitBtn"
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+              >
+                {success ? (
+                  <>
+                    <i className="fa-solid fa-check" /> Message Sent!
+                  </>
+                ) : (
+                  <>
+                    Send Message <i className="fa-solid fa-arrow-right" />
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+
+          {/* Quick Connect & Availability Card */}
+          <div
+            className="glass-card social-card"
+            onMouseMove={handleCardMouseMove}
+            onMouseLeave={handleCardMouseLeave}
+          >
+            <div className="social-header">
+              <h4>
+                <span className="relative flex h-2 w-2 mr-2 inline-flex">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                DIRECT REACH & PROFILES
+              </h4>
+              <span className="text-emerald-400 font-mono text-[10px] uppercase font-semibold">Open to Work</span>
+            </div>
+            <p className="social-desc">
+              Available for full-stack engineering roles, SDE internships, and technical consulting. Typical turnaround within 24 hours:
+            </p>
+
+            <div className="social-links">
+              <a
+                href={p.socialLinks?.github || 'https://github.com/ayushprajapati9669-dev'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn magnetic"
+                aria-label="GitHub"
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+              >
+                <i className="fab fa-github" />
+              </a>
+              <a
+                href={p.socialLinks?.linkedin || 'https://www.linkedin.com/in/ayush-prajapati-b9042424a/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn magnetic"
+                aria-label="LinkedIn"
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+              >
+                <i className="fab fa-linkedin-in" />
+              </a>
+              <a
+                href={p.socialLinks?.instagram || 'https://www.instagram.com/ayush7162/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn magnetic"
+                aria-label="Instagram"
+                onMouseMove={handleMagneticMouseMove}
+                onMouseLeave={handleMagneticMouseLeave}
+              >
+                <i className="fab fa-instagram" />
+              </a>
+            </div>
+          </div>
         </div>
 
-        {/* RIGHT: DIRECT CONTACT & SOCIAL */}
-        <div>
+        {/* RIGHT COLUMN: 3D GLOBE & DIRECT CONTACT */}
+        <div className="contact-col right-col space-y-6">
+          {/* Awwwards-Tier 3D Interactive Telemetry Globe */}
+          <InteractiveGlobe3D />
+
           <div
             className="glass-card"
             onMouseMove={handleCardMouseMove}
@@ -442,59 +505,6 @@ export function ContactPage() {
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Social Card */}
-          <div
-            className="glass-card social-card"
-            onMouseMove={handleCardMouseMove}
-            onMouseLeave={handleCardMouseLeave}
-          >
-            <div className="social-header">
-              <h4>
-                <i className="fa-solid fa-circle" style={{ fontSize: '6px', marginRight: '4px', color: '#f87171' }} /> SOCIAL & PROFILES
-              </h4>
-              <span>Direct Links</span>
-            </div>
-            <p className="social-desc">
-              Click any profile icon below to view my projects, repositories, or connect professionally:
-            </p>
-
-            <div className="social-links">
-              <a
-                href={p.socialLinks?.github || 'https://github.com/ayushprajapati9669-dev'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-btn magnetic"
-                aria-label="GitHub"
-                onMouseMove={handleMagneticMouseMove}
-                onMouseLeave={handleMagneticMouseLeave}
-              >
-                <i className="fab fa-github" />
-              </a>
-              <a
-                href={p.socialLinks?.linkedin || 'https://www.linkedin.com/in/ayush-prajapati-b9042424a/'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-btn magnetic"
-                aria-label="LinkedIn"
-                onMouseMove={handleMagneticMouseMove}
-                onMouseLeave={handleMagneticMouseLeave}
-              >
-                <i className="fab fa-linkedin-in" />
-              </a>
-              <a
-                href={p.socialLinks?.instagram || 'https://www.instagram.com/ayush7162/'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-btn magnetic"
-                aria-label="Instagram"
-                onMouseMove={handleMagneticMouseMove}
-                onMouseLeave={handleMagneticMouseLeave}
-              >
-                <i className="fab fa-instagram" />
-              </a>
             </div>
           </div>
         </div>

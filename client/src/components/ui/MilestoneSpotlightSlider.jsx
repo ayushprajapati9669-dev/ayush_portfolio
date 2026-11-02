@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
@@ -277,6 +278,22 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
     cardRef.current.style.setProperty('--ry', '0deg');
     cardRef.current.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
   };
+
+
+  // Awwwards 3D Coverflow Perspective Transition on Slide Switch
+  useEffect(() => {
+    if (!cardRef.current) return;
+    const contentEl = cardRef.current.querySelector('.card-content');
+    if (!contentEl) return;
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    gsap.fromTo(
+      contentEl,
+      { opacity: 0.3, scale: 0.97, y: 8 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: 'power2.out', clearProps: 'transform,opacity' }
+    );
+  }, [currentIndex]);
 
   const handleMouseEnterTilt = () => {
     if (!cardRef.current) return;

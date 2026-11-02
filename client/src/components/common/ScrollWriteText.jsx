@@ -275,20 +275,22 @@ export function ScrollWriteText({
           );
           const isItalic = tokenObj.isItalic;
 
-          return (
-            <span key={index} className="scroll-token-mask">
-              <span
-                className={`scroll-write-token ${mode === 'chars' ? 'token-char' : 'token-word'} ${
-                  isHighlighted ? 'token-highlight' : ''
-                } ${isItalic ? 'token-italic' : ''}`}
-                style={{
-                  transitionDelay: isRevealed ? `${delay + index * stagger}s` : '0s'
-                }}
-              >
-                {tokenText}
-                {index < parsedTokens.length - 1 ? '\u00A0' : ''}
+                    return (
+            <React.Fragment key={index}>
+              <span className="scroll-token-mask">
+                <span
+                  className={`scroll-write-token ${mode === 'chars' ? 'token-char' : 'token-word'} ${
+                    isHighlighted ? 'token-highlight' : ''
+                  } ${isItalic ? 'token-italic' : ''}`}
+                  style={{
+                    transitionDelay: isRevealed ? `${delay + index * stagger}s` : '0s'
+                  }}
+                >
+                  {tokenText}
+                </span>
               </span>
-            </span>
+              {index < parsedTokens.length - 1 ? ' ' : ''}
+            </React.Fragment>
           );
         })}
       </span>

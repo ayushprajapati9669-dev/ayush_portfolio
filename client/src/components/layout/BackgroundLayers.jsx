@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
-import { VantaBirdsBackground } from '../ui/VantaBirdsBackground';
 import { useSmoothScroll } from '../common/SmoothScrollProvider';
+import { VantaBirdsBackground } from '../ui/VantaBirdsBackground';
 
 // Deterministic cosmic starfield coordinates to ensure zero SSR/hydration mismatch
 const COSMIC_STARS = [
@@ -37,7 +37,7 @@ const COSMIC_STARS = [
 ];
 
 export function BackgroundLayers() {
-  const mouseLightRef = useRef(null);
+  
   const location = useLocation();
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -84,27 +84,6 @@ export function BackgroundLayers() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isAdmin, lenis]);
-
-  // Cursor Spotlight Tracking with GSAP QuickTo
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-
-    const el = mouseLightRef.current;
-    if (!el) return;
-
-    const xTo = gsap.quickTo(el, 'left', { duration: 0.38, ease: 'power2.out' });
-    const yTo = gsap.quickTo(el, 'top',  { duration: 0.38, ease: 'power2.out' });
-
-    const handleMouseMove = (e) => {
-      xTo(e.clientX);
-      yTo(e.clientY);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   return (
     <>
@@ -156,13 +135,16 @@ export function BackgroundLayers() {
             aria-hidden="true"
           />
 
-          {/* Layer 3: Official Vanta.js BIRDS 3D Background Engine
-              - Matching https://www.vantajs.com/ VANTA.BIRDS as uploaded by user
-              - Craig Reynolds' 3D Boids Flocking Simulation with Dynamic Murmuration
-              - Dual Variance Gradient Colors (Sunset Coral Pink + Cyan Sky Blue + 24k Gold)
-              - Interactive Mouse Deflection & Parallax Camera Tracking */}
-          <VantaBirdsBackground scrollProgress={scrollProgress} />
+          {/* Layer 3: Peaceful Twilight Birds Flocking Engine */}
+          <div
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+            style={{ opacity: Math.max(0, 1 - scrollProgress * 3.2) }}
+            aria-hidden="true"
+          >
+            <VantaBirdsBackground scrollProgress={scrollProgress} />
+          </div>
 
+          
           {/* Layer 4: Precision Readability Veil
               Softens center area so foreground typography and 3D UI cards pop with WCAG AAA clarity */}
           <div
@@ -231,8 +213,6 @@ export function BackgroundLayers() {
       {/* High-End Micro-Film Grain Overlay */}
       <div className="bg-noise" aria-hidden="true" />
 
-      {/* Dual-Stage Luxury Chromatic Cursor Spotlight */}
-      <div className="mouse-light" id="mouseLight" ref={mouseLightRef} aria-hidden="true" />
     </>
   );
 }

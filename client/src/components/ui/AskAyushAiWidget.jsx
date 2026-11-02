@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { playTick } from '../../utils/audio';
+import { useSmoothScroll } from '../common/SmoothScrollProvider';
 
 const SUGGESTIONS = [
   "What is Ayush's experience with MongoDB indexing?",
@@ -12,6 +13,28 @@ const SUGGESTIONS = [
 export function AskAyushAiWidget() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+  const lenis = useSmoothScroll();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 80);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    playTick('click');
+    if (lenis) {
+      lenis.scrollTo(0, {
+        duration: 1.25,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -96,15 +119,15 @@ export function AskAyushAiWidget() {
 
   return (
     <>
-      {/* Floating Trigger Button (Bottom-Right) */}
+      {/* Floating Trigger Controls (Bottom-Right: Ask Ayush AI + Back to Top) */}
       {!isOpen && (
-        <div className="fixed bottom-6 right-6 z-[990] flex items-center gap-3">
+        <div className="fixed bottom-6 right-6 z-[990] flex items-center gap-2.5">
           <button
             onClick={() => {
               playTick('click');
               setIsOpen(true);
             }}
-            className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,240,255,0.25)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95"
+            className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95"
             aria-label="Open Ask Ayush AI Assistant"
           >
             {/* Pulsing indicator */}
@@ -117,6 +140,19 @@ export function AskAyushAiWidget() {
               <i className="fa-solid fa-wand-magic-sparkles text-xs text-yellow-400 group-hover:rotate-12 transition-transform" />
               <span className="font-mono text-xs font-semibold tracking-wide hidden sm:inline">Ask Ayush AI</span>
             </div>
+          </button>
+
+          {/* Back to Top Button to the right of Ask Ayush AI */}
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className={`group relative flex items-center justify-center w-11 h-11 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-yellow-400 hover:text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 ${
+              showScrollTop ? 'opacity-100 shadow-[0_0_20px_rgba(234,179,8,0.25)]' : 'opacity-85'
+            }`}
+            title="Back to Top"
+            aria-label="Back to top"
+          >
+            <i className="fa-solid fa-arrow-up text-xs transition-transform duration-300 group-hover:-translate-y-0.5" />
           </button>
         </div>
       )}

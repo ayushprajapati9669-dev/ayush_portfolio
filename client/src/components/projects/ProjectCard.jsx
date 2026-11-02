@@ -157,13 +157,29 @@ export function ProjectCard({
     card.style.setProperty('--mouse-x', `${x}px`);
     card.style.setProperty('--mouse-y', `${y}px`);
     if (!reduceMotion) {
+      const normX = (x / rect.width - 0.5) * 2;
+      const normY = (y / rect.height - 0.5) * 2;
+
+      // 3D Card tilt
       gsap.to(card, {
-        rotateX: ((y - rect.height / 2) / rect.height) * -3,
-        rotateY: ((x - rect.width / 2) / rect.width) * 3,
+        rotateX: normY * -4,
+        rotateY: normX * 4,
         transformPerspective: 1200,
         duration: 0.35,
         ease: 'power2.out'
       });
+
+      // Awwwards 3D Window Parallax: Image shifts counter-angle
+      const img = card.querySelector('.project-img-wrap img');
+      if (img) {
+        gsap.to(img, {
+          x: normX * -12,
+          y: normY * -8,
+          scale: 1.06,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      }
     }
   };
 
@@ -182,6 +198,17 @@ export function ProjectCard({
         duration: 0.8,
         ease: 'elastic.out(1, 0.4)'
       });
+
+      const img = card.querySelector('.project-img-wrap img');
+      if (img) {
+        gsap.to(img, {
+          x: 0,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          ease: 'power2.out'
+        });
+      }
     }
   };
 

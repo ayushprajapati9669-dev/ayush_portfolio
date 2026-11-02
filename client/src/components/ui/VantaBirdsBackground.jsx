@@ -138,7 +138,7 @@ class Boid {
     this._height = 380;
     this._depth = 300;
 
-    this._maxSpeed = options.speedLimit || 3.6;
+    this._maxSpeed = options.speedLimit || 2.2;
     this._maxSteerForce = 0.14;
 
     // Vanta.js Balanced Flocking Distances
@@ -350,9 +350,10 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
     container.appendChild(renderer.domElement);
 
     // ── Vanta Birds Configuration (Optimal 80 Boids Swarm) ───────────────────
-    const NUM_BIRDS = 80; // High-density murmuration without visual occlusion
-    const birdSize = 1.25;
-    const wingSpan = 28;
+    // ── Vanta Birds Configuration (Subtle & Peaceful Flocking, 12 Birds) ────────
+    const NUM_BIRDS = 12; // Tuned for tranquil, non-intrusive background ambience
+    const birdSize = 1.35;
+    const wingSpan = 30;
 
     // Vanta.js Dual Variance Gradient Palette Harmonized with Dark & Gold Obsidian
     const cCoral  = new THREE.Color('#ff3366'); // Sunset Coral Flame
@@ -376,7 +377,7 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
 
     for (let i = 0; i < NUM_BIRDS; i++) {
       const boid = new Boid({
-        speedLimit: 3.6
+        speedLimit: 2.2
       });
 
       // Scatter naturally across upper sky (Y between -40 and +55)
@@ -435,7 +436,7 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
 
     // ── Dynamic Stardust Flight Wake Particle System (Soft Circular Motes) ───
     const circleTexture = createSoftCircleTexture();
-    const WAKE_PARTICLES = 180;
+    const WAKE_PARTICLES = 36;
     const wakePositions = new Float32Array(WAKE_PARTICLES * 3);
     const wakeColors = new Float32Array(WAKE_PARTICLES * 3);
     const wakeAges = new Float32Array(WAKE_PARTICLES);
@@ -556,7 +557,7 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
         }
 
         // Synchronous Wing Flapping (Both wings 4 and 5 flap up & down together)
-        bird.phase = (bird.phase + (Math.max(0, bird.rotation.z) + 0.16) * 1.8) % 62.83;
+        bird.phase = (bird.phase + (Math.max(0, bird.rotation.z) + 0.1) * 1.1) % 62.83;
         const flapOffset = Math.sin(bird.phase) * (4.8 * birdSize);
 
         const posAttr = bird.geometry.attributes.position;

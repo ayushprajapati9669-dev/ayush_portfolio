@@ -680,18 +680,69 @@
   color: #ffffff !important;
 }
 
-/* Modern Headline */
+/* Modern Hero Headline with Refined Executive Display Typography & Metallic Shimmer */
 .hero-modern-title {
-  font-family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  font-size: clamp(2.8rem, 6.2vw, 4.8rem) !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.035em !important;
-  line-height: 1.12 !important;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.18 !important;
   color: #ffffff !important;
   margin: 0 auto !important;
   text-align: center !important;
-  max-width: 900px !important;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.65) !important;
+  max-width: 840px !important;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Kinetic Mask Split-Text Reveal for Hero Headline (Natural Paragraph Wrapping) */
+.hero-modern-title .scroll-write-inner {
+  display: inline !important;
+}
+
+.hero-modern-title .scroll-token-mask {
+  display: inline-block !important;
+  overflow: hidden !important;
+  vertical-align: baseline !important;
+  line-height: 1.16 !important;
+  padding-bottom: 2px !important;
+}
+
+.hero-modern-title .scroll-write-token {
+  display: inline-block !important;
+  transform: translateY(110%) !important;
+  opacity: 0 !important;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform, opacity !important;
+}
+
+.hero-modern-title.is-revealed .scroll-write-token,
+.scroll-write-container.is-revealed .hero-modern-title .scroll-write-token,
+.hero-modern-title .is-revealed .scroll-write-token {
+  transform: translateY(0%) !important;
+  opacity: 1 !important;
+}
+
+/* Clean Golden Highlight Words (engineering, software) - Zero Rectangular Artifacts */
+.hero-modern-title .token-highlight {
+  color: #f5d77f !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #f5d77f !important;
+  text-shadow: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  animation: none !important;
+  font-weight: 700 !important;
+  display: inline !important;
+}
+
+.hero-modern-title.is-revealed .scroll-token-mask,
+.scroll-write-container.is-revealed .hero-modern-title .scroll-token-mask {
+  overflow: visible !important;
 }
 
 /* Modern Description */

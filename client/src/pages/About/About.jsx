@@ -288,7 +288,7 @@ export function AboutPage() {
           )}
         </div>
 
-        {/* Profile Card with Animated Ring */}
+        {/* Profile Card */}
         <div
           className="about-card profile-card"
           onMouseMove={handleCardMouseMove}

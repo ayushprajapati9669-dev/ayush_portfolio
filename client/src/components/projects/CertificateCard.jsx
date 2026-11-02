@@ -52,13 +52,27 @@ export function CertificateCard({
     card.style.setProperty('--mouse-x', `${x}px`);
     card.style.setProperty('--mouse-y', `${y}px`);
     if (!reduceMotion) {
+      const normX = (x / rect.width - 0.5) * 2;
+      const normY = (y / rect.height - 0.5) * 2;
+
       gsap.to(card, {
-        rotateX: ((y - rect.height / 2) / rect.height) * -4,
-        rotateY: ((x - rect.width / 2) / rect.width) * 4,
-        transformPerspective: 1500,
-        duration: 0.4,
+        rotateX: normY * -4.5,
+        rotateY: normX * 4.5,
+        transformPerspective: 1200,
+        duration: 0.35,
         ease: 'power2.out'
       });
+
+      const img = card.querySelector('.cert-img-wrap img');
+      if (img) {
+        gsap.to(img, {
+          x: normX * -10,
+          y: normY * -8,
+          scale: 1.05,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      }
     }
   };
 
@@ -74,9 +88,20 @@ export function CertificateCard({
       gsap.to(card, {
         rotateX: 0,
         rotateY: 0,
-        duration: 1,
-        ease: 'elastic.out(1, 0.3)'
+        duration: 0.8,
+        ease: 'elastic.out(1, 0.4)'
       });
+
+      const img = card.querySelector('.cert-img-wrap img');
+      if (img) {
+        gsap.to(img, {
+          x: 0,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          ease: 'power2.out'
+        });
+      }
     }
   };
 
@@ -91,6 +116,10 @@ export function CertificateCard({
         <img src={imgSrc} alt={cert.title} loading="lazy" />
         <div className="cert-overlay">
           <i className="fa-solid fa-expand" />
+        </div>
+        <div className="cert-3d-seal">
+          <i className="fa-solid fa-award text-[10px]" />
+          <span>OFFICIAL CREDENTIAL</span>
         </div>
       </div>
 

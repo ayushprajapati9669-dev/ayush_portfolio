@@ -143,18 +143,7 @@
 
 /* 5. Dual-Stage Luxury Mouse Spotlight */
 .mouse-light {
-  position: fixed;
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(circle 140px at center, rgba(212, 175, 55, 0.055) 0%, rgba(212, 175, 55, 0.02) 40%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  top: 0;
-  left: 0;
-  transition: opacity 0.3s ease;
-  box-shadow: 0 0 140px rgba(212, 175, 55, 0.025);
+  display: none !important;
 }
 
 /* 6. Cosmic Starlight Twinkle System */
@@ -266,8 +255,11 @@ span.scroll-write-container {
 /* Radiant Gold Highlight Keywords */
 .scroll-write-token.token-highlight {
   color: #f7e096 !important;
-  font-weight: 500;
-  text-shadow: 0 0 24px rgba(223, 183, 64, 0.5), 0 0 8px rgba(223, 183, 64, 0.3);
+  font-weight: 600;
+  text-shadow: none !important;
+  background: none !important;
+  filter: none !important;
+  box-shadow: none !important;
 }
 
 .scroll-write-token.token-italic {
@@ -490,18 +482,7 @@ button.btn-outline:hover {
 
 /* Dual-Stage Luxury Chromatic Mouse Spotlight */
 .mouse-light {
-  position: fixed;
-  width: 720px;
-  height: 720px;
-  background: radial-gradient(circle 160px at center, rgba(235, 195, 85, 0.065) 0%, rgba(175, 115, 215, 0.02) 42%, transparent 72%) !important;
-  border-radius: 50% !important;
-  pointer-events: none !important;
-  transform: translate(-50%, -50%) !important;
-  z-index: 2 !important;
-  top: 0;
-  left: 0;
-  transition: opacity 0.3s ease !important;
-  mix-blend-mode: screen !important;
+  display: none !important;
 }
 
 /* High-End Micro-Film Grain — Subtle Luxury Tactile Feel Without Washing Out Blacks */

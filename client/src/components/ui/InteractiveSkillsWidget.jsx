@@ -1,8 +1,31 @@
+
+// Map skill names to official vibrant brand colors for Awwwards dynamic underglow
+export const getSkillBrandColor = (name) => {
+  const n = String(name || '').toLowerCase().trim();
+  if (n.includes('react')) return { color: '#61dafb', shadow: 'rgba(97, 218, 251, 0.35)', glow: 'rgba(97, 218, 251, 0.2)' };
+  if (n.includes('node')) return { color: '#68a063', shadow: 'rgba(104, 160, 99, 0.35)', glow: 'rgba(104, 160, 99, 0.2)' };
+  if (n.includes('mongo')) return { color: '#47a248', shadow: 'rgba(71, 162, 72, 0.35)', glow: 'rgba(71, 162, 72, 0.2)' };
+  if (n.includes('python')) return { color: '#3776ab', shadow: 'rgba(55, 118, 171, 0.35)', glow: 'rgba(55, 118, 171, 0.2)' };
+  if (n.includes('typescript') || n === 'ts') return { color: '#3178c6', shadow: 'rgba(49, 120, 198, 0.35)', glow: 'rgba(49, 120, 198, 0.2)' };
+  if (n.includes('javascript') || n === 'js') return { color: '#f7df1e', shadow: 'rgba(247, 223, 30, 0.35)', glow: 'rgba(247, 223, 30, 0.2)' };
+  if (n.includes('tailwind')) return { color: '#06b6d4', shadow: 'rgba(6, 182, 212, 0.35)', glow: 'rgba(6, 182, 212, 0.2)' };
+  if (n.includes('docker')) return { color: '#2496ed', shadow: 'rgba(36, 150, 237, 0.35)', glow: 'rgba(36, 150, 237, 0.2)' };
+  if (n.includes('git')) return { color: '#f05032', shadow: 'rgba(240, 80, 50, 0.35)', glow: 'rgba(240, 80, 50, 0.2)' };
+  if (n.includes('postman')) return { color: '#ff6c37', shadow: 'rgba(255, 108, 55, 0.35)', glow: 'rgba(255, 108, 55, 0.2)' };
+  if (n.includes('html')) return { color: '#e34f26', shadow: 'rgba(227, 79, 38, 0.35)', glow: 'rgba(227, 79, 38, 0.2)' };
+  if (n.includes('css')) return { color: '#1572b6', shadow: 'rgba(21, 114, 182, 0.35)', glow: 'rgba(21, 114, 182, 0.2)' };
+  if (n.includes('mysql')) return { color: '#00758f', shadow: 'rgba(0, 117, 143, 0.35)', glow: 'rgba(0, 117, 143, 0.2)' };
+  if (n.includes('postgres')) return { color: '#336791', shadow: 'rgba(51, 103, 145, 0.35)', glow: 'rgba(51, 103, 145, 0.2)' };
+  if (n.includes('java')) return { color: '#e76f51', shadow: 'rgba(231, 111, 81, 0.35)', glow: 'rgba(231, 111, 81, 0.2)' };
+  if (n.includes('c++') || n === 'c') return { color: '#659ad2', shadow: 'rgba(101, 154, 210, 0.35)', glow: 'rgba(101, 154, 210, 0.2)' };
+  return { color: '#d4af37', shadow: 'rgba(212, 175, 55, 0.35)', glow: 'rgba(212, 175, 55, 0.2)' };
+};
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
+import { ScrollWriteText } from '../common/ScrollWriteText';
 
 // Reference Baseline Skills Dataset with High-Res Brand SVGs
 const REFERENCE_SKILLS = [
@@ -312,29 +335,27 @@ export function SkillsSection({
     gsap.killTweensOf(cards);
 
     const animateIn = () => {
-      gsap.fromTo(
-        cards,
-        {
-          y: 28,
-          opacity: 0,
-          scale: 0.88,
-          filter: 'blur(4px)'
+      gsap.set(cards, {
+        y: 42,
+        rotateX: 28,
+        scale: 0.86,
+        opacity: 0,
+        transformPerspective: 900
+      });
+      gsap.to(cards, {
+        y: 0,
+        rotateX: 0,
+        scale: 1,
+        opacity: 1,
+        duration: 0.52,
+        stagger: {
+          each: 0.045, // Visibly distinct one-by-one waterfall cascade
+          from: 'start',
+          ease: 'power2.out'
         },
-        {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: 0.45,
-          stagger: {
-            each: 0.035, // One by one cascading sequence
-            from: 'start',
-            ease: 'power2.out'
-          },
-          ease: 'back.out(1.25)',
-          clearProps: 'transform,filter,opacity'
-        }
-      );
+        ease: 'back.out(1.35)',
+        clearProps: 'transform,opacity'
+      });
     };
 
     if (isStandalonePage) {
@@ -359,15 +380,40 @@ export function SkillsSection({
 
   return (
     <section className={`skills-section ${isStandalonePage ? 'standalone' : 'home-embedded'}`}>
-      {/* Header - Only render on embedded home view */}
+      {/* Header - Matching Section 02 & Section 04 Showcase Standard */}
       {!isStandalonePage && (
-        <div className="skills-header mb-8">
-          <span className="skills-subtitle">
-            {ui.homeSkillsEyebrow || '03 · Technical Capabilities'}
-          </span>
-          <h2 className="skills-title">
-            Interactive Skills & Tech Stack
-          </h2>
+        <div className="showcase-header mb-8">
+          <div>
+            <ScrollWriteText
+              as="p"
+              className="showcase-eyebrow"
+              mode="scramble"
+              scrambleDuration={20}
+            >
+              {ui.homeSkillsEyebrow || '03 · TECHNICAL CAPABILITIES'}
+            </ScrollWriteText>
+            <ScrollWriteText
+              as="h2"
+              className="showcase-title"
+              mode="mask"
+              stagger={0.038}
+              highlightWords={['Skills', 'Tech Stack']}
+            >
+              Interactive Skills & Tech Stack
+            </ScrollWriteText>
+          </div>
+
+          <div className="showcase-controls">
+            {showCta && onCtaClick && (
+              <button
+                type="button"
+                onClick={onCtaClick}
+                className="showcase-view-all"
+              >
+                View Full Skills Directory ({allSkills.length}) ↗
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -454,6 +500,7 @@ function SkillCardItem({ skill, onMouseMove, onMouseLeave }) {
   const [imgFailed, setImgFailed] = useState(false);
   const skillName = skill.name || skill.title || '';
   const visuals = getSkillVisuals(skill);
+  const brand = getSkillBrandColor(skillName);
   const hasHttpIcon =
     typeof skill.icon === 'string' &&
     (skill.icon.startsWith('http') || skill.icon.startsWith('/') || skill.icon.startsWith('data:'));
@@ -464,6 +511,11 @@ function SkillCardItem({ skill, onMouseMove, onMouseLeave }) {
   return (
     <div
       className="skill-card group"
+      style={{
+        '--brand-color': brand.color,
+        '--brand-shadow': brand.shadow,
+        '--brand-glow': brand.glow
+      }}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
@@ -489,9 +541,9 @@ function SkillCardItem({ skill, onMouseMove, onMouseLeave }) {
         )}
       </div>
       <div className="skill-text">
-        <div className="skill-name" title={skillName}>{skillName}</div>
-        <span className="skill-badge-level">{skill.level || 'Core'}</span>
+        <span className="skill-name" title={skillName}>{skillName}</span>
       </div>
+      <div className="skill-accent-bar" aria-hidden="true" />
     </div>
   );
 }

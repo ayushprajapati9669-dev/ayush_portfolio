@@ -19,7 +19,7 @@ import { SEO } from '../../components/SEO';
 import { personSchema, websiteSchema } from '../../utils/seo';
 
 export function HomePage() {
-  const { appState } = usePortfolio();
+  const { appState, openResumeModal } = usePortfolio();
   const navigate = useNavigate();
   const [highlightedProjectId, setHighlightedProjectId] = useState(null);
 
@@ -426,7 +426,33 @@ export function HomePage() {
         });
       }
 
-      // 4. Section 03: Certificates Horizontal Track Entrance
+      // 3.5 Section 03: Skills Showcase Entrance
+      gsap.from('.skills-home-section .showcase-header > *', {
+        scrollTrigger: {
+          trigger: '.skills-home-section',
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        },
+        y: 25,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.7,
+        ease: 'power3.out'
+      });
+
+      gsap.from('.skills-home-section .filter-container, .skills-home-section input', {
+        scrollTrigger: {
+          trigger: '.skills-home-section',
+          start: 'top 82%',
+          toggleActions: 'play none none none'
+        },
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out'
+      });
+
+      // 4. Section 04: Certificates Horizontal Track Entrance
       gsap.from('.certs-home-section .showcase-header > *', {
         scrollTrigger: {
           trigger: '.certs-home-section',
@@ -563,14 +589,15 @@ export function HomePage() {
 
             <button
               type="button"
-              onClick={() => openResumeModal()}
+              onClick={() => {
+                playTick();
+                if (openResumeModal) openResumeModal();
+              }}
               className="hero-btn-play-circle"
               title="Open Interactive Resume"
               aria-label="Open Interactive Resume"
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="6 4 20 12 6 20 6 4" />
-              </svg>
+              <i className="fa-regular fa-file-lines text-sm" />
             </button>
           </div>
         </div>
@@ -782,7 +809,14 @@ export function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 03: Horizontal Scrollable Verified Certificates Track
+            SECTION 03: Technical Capabilities / Skills Matrix
+            ========================================================================= */}
+        <section id="technical-capabilities" className="skills-home-section horizontal-showcase-section border-t hairline-border pt-16">
+          <InteractiveSkillsWidget showCta={true} onCtaClick={() => goTo('/skills')} />
+        </section>
+
+        {/* =========================================================================
+            SECTION 04: Horizontal Scrollable Verified Certificates Track
             ========================================================================= */}
         <section className="certs-home-section horizontal-showcase-section border-t hairline-border pt-16">
           <div className="showcase-header">
@@ -793,7 +827,7 @@ export function HomePage() {
                 mode="scramble"
                 scrambleDuration={20}
               >
-                {ui.homeCertsEyebrow || '03 · VERIFIED CREDENTIALS'}
+                {ui.homeCertsEyebrow || '04 · VERIFIED CREDENTIALS'}
               </ScrollWriteText>
               <ScrollWriteText
                 as="h2"

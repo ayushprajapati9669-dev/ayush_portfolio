@@ -836,3 +836,150 @@ p.project-desc {
   opacity: 1;
 }
 
+
+/* ==========================================================================
+   Awwwards-Tier 3D Spatial Stacking & Parallax Layer Depth
+   ========================================================================== */
+.project-card,
+.cert-card {
+  perspective: 1200px !important;
+  transform-style: preserve-3d !important;
+}
+
+.project-card .project-img-wrap {
+  transform: translateZ(24px) !important;
+  transform-style: preserve-3d !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.project-card:hover .project-img-wrap {
+  transform: translateZ(32px) !important;
+}
+
+.project-card .project-badges {
+  transform: translateZ(42px) !important;
+}
+
+.project-card .project-title {
+  transform: translateZ(26px) !important;
+}
+
+.project-card .tech-tag {
+  transform: translateZ(22px) !important;
+  transition: transform 0.25s ease, background-color 0.25s ease !important;
+}
+
+.project-card .tech-tag:hover {
+  transform: translateZ(36px) scale(1.08) !important;
+}
+
+.project-card .project-actions {
+  transform: translateZ(34px) !important;
+}
+
+.cert-card .cert-img-wrap {
+  transform: translateZ(24px) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.cert-card:hover .cert-img-wrap {
+  transform: translateZ(32px) !important;
+}
+
+.cert-card .cert-badge {
+  transform: translateZ(40px) !important;
+}
+
+.cert-card .cert-actions {
+  transform: translateZ(32px) !important;
+}
+
+/* 3D Holographic Refraction Ribbon for Certificates & Projects */
+.cert-card::after,
+.project-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 38%,
+    rgba(212, 175, 55, 0.06) 48%,
+    rgba(97, 218, 251, 0.10) 50%,
+    rgba(255, 255, 255, 0.16) 52%,
+    rgba(212, 175, 55, 0.06) 54%,
+    transparent 64%
+  );
+  transform: rotate(-35deg) translateY(-100%);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+}
+
+.cert-card:hover::after,
+.project-card:hover::after {
+  transform: rotate(-35deg) translateY(100%);
+  opacity: 1;
+}
+
+.cert-3d-seal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(10, 12, 18, 0.88) !important;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  border-radius: 9999px !important;
+  padding: 3px 9px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  color: #ffd700 !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(212, 175, 55, 0.15) !important;
+  transform: translateZ(36px) !important;
+  transition: all 0.3s ease !important;
+  z-index: 3 !important;
+  pointer-events: none !important;
+}
+
+.cert-card:hover .cert-3d-seal {
+  border-color: rgba(212, 175, 55, 0.75) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5), 0 0 16px rgba(212, 175, 55, 0.3) !important;
+  transform: translateZ(44px) scale(1.05) !important;
+}
+
+/* ==========================================================================
+   Awwwards Skill Card 3D Depth & Signature Brand Underglow
+   ========================================================================== */
+.skill-card {
+  perspective: 900px !important;
+  transform-style: preserve-3d !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.35s ease, background 0.3s ease !important;
+}
+
+.skill-card:hover {
+  border-color: var(--brand-color, rgba(212, 175, 55, 0.6)) !important;
+  box-shadow: 0 12px 28px -8px var(--brand-shadow, rgba(212, 175, 55, 0.25)), 0 0 18px var(--brand-glow, rgba(212, 175, 55, 0.15)), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.skill-card .skill-icon-wrapper {
+  transform: translateZ(22px) !important;
+  transform-style: preserve-3d !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.skill-card:hover .skill-icon-wrapper {
+  transform: translateZ(32px) scale(1.14) !important;
+}
+
+.skill-card .skill-text {
+  transform: translateZ(16px) !important;
+}
