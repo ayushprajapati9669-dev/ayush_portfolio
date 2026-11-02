@@ -49,12 +49,12 @@ export function SkillsPage() {
           </ScrollWriteText>
           <ScrollWriteText
             as="h1"
-            className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-alabaster leading-tight font-normal"
-            mode="mask"
-            stagger={0.05}
-            highlightWords={['Skills', 'Tech', 'Stack']}
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight"
+            mode="words"
+            stagger={0.04}
+            highlightWords={['Tech', 'Stack']}
           >
-            Skills & *Tech Stack*
+            Skills & Tech Stack
           </ScrollWriteText>
           <ScrollWriteText
             as="p"

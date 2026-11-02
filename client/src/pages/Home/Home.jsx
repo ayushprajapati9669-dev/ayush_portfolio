@@ -619,12 +619,20 @@ export function HomePage() {
             </div>
 
             {/* Interactive 3D Three.js GLSL Undulating Wave Displacement */}
-            <div className="lg:col-span-6 h-[340px] sm:h-[400px] rounded-3xl border border-white/10 hover:border-gold/40 bg-gradient-to-b from-[#13131c]/90 via-[#0a0a0f]/95 to-[#060608] backdrop-blur-xl relative overflow-hidden group shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] transition-all duration-500">
-              {/* Warm gold ambient spotlight behind 3D wave */}
+            <div className="lg:col-span-6 h-[270px] sm:h-[310px] rounded-3xl border border-white/10 hover:border-gold/40 bg-gradient-to-b from-[#13131c]/95 via-[#0a0a0f]/98 to-[#060608] backdrop-blur-xl relative overflow-hidden group shadow-[0_20px_50px_-15px_rgba(0,0,0,0.9)] transition-all duration-500">
+              {/* Subtle ambient warm gold glow behind 3D wave */}
               <div
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_65%,rgba(223,183,64,0.18),transparent_72%)]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_65%,rgba(212,175,55,0.09),transparent_72%)]"
                 aria-hidden="true"
               />
+              {/* Minimalist Micro-Badge: User-friendly indicator */}
+              <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 backdrop-blur-md pointer-events-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span className="font-mono text-[10px] font-medium text-slate-300 uppercase tracking-wider">3D Topography</span>
+              </div>
+              <div className="absolute bottom-3 right-4 z-10 font-mono text-[9.5px] text-slate-400 pointer-events-none">
+                Hover to ripple
+              </div>
               <InteractiveMeshWave className="absolute inset-0" />
             </div>
           </div>

@@ -26,12 +26,12 @@
 }
 
 .projects-page .page-title {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-size: clamp(3rem, 7vw, 6rem) !important;
-  font-weight: 300 !important;
+  font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
+  font-weight: 700 !important;
   letter-spacing: -0.025em !important;
   color: #ffffff !important;
-  line-height: 0.95 !important;
+  line-height: 1.05 !important;
   margin-bottom: 20px !important;
 }
 
@@ -56,13 +56,13 @@
 }
 
 .filter-btn {
-  font-family: 'Jost', sans-serif !important;
-  font-size: 12px !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 12.5px !important;
   font-weight: 500 !important;
-  letter-spacing: 0.05em !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  color: #666666 !important;
+  letter-spacing: 0.02em !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
   border-radius: 9999px !important;
   padding: 7px 18px !important;
   cursor: pointer !important;
@@ -71,9 +71,10 @@
 }
 
 .filter-btn:hover {
-  border-color: rgba(212, 175, 55, 0.25) !important;
-  color: #cccccc !important;
-  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.15) !important;
 }
 
 .filter-btn.active {
@@ -311,11 +312,11 @@
 
 .projects-page .search-wrap i {
   position: absolute !important;
-  left: 12px !important;
+  left: 14px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  color: #444444 !important;
-  font-size: 12px !important;
+  color: #94a3b8 !important;
+  font-size: 13px !important;
   pointer-events: none !important;
 }
 
@@ -336,7 +337,7 @@
   border-color: rgba(212,175,55,0.3) !important;
 }
 
-.projects-page .search-input::placeholder { color: #333333 !important; }
+.projects-page .search-input::placeholder { color: #64748b !important; }
 
 /* Project grid */
 .project-grid {

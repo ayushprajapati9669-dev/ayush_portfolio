@@ -419,7 +419,7 @@ export function ContactPage() {
                       {p.education?.cgpa ? `${p.education.cgpa} CGPA` : '8.42 CGPA'}
                     </span>
                   </span>
-                  <span style={{ fontSize: '12px', color: 'var(--text-muted, #94a3b8)', marginTop: '4px' }}>
+                  <span className="sub-info">
                     {p.education?.degree || 'B.Tech in Computer Science and Engineering'}
                   </span>
                 </div>

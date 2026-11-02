@@ -195,13 +195,7 @@ export function ProjectsPage({ viewMode = 'projects' }) {
     if (reduceMotion) return;
 
     const ctx = gsap.context(() => {
-      gsap.from('.page-header > *', {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out'
-      });
+      // Let ScrollWriteText handle header typography cleanly without double-transform conflict
 
       gsap.from(".project-card:not(:first-child)", {
         y: 20,
@@ -284,8 +278,8 @@ export function ProjectsPage({ viewMode = 'projects' }) {
           as="h1"
           className="page-title"
           mode="mask"
-          stagger={0.05}
-          highlightWords={['Live', 'Projects']}
+          stagger={0.04}
+          highlightWords={['Projects']}
         >
           Live Deployed Projects
         </ScrollWriteText>
