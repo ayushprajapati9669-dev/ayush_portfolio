@@ -492,29 +492,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
               </div>
             )}
 
-            {/* Quick External Links Row */}
-            {Array.isArray(currentSlide.links) && currentSlide.links.length > 0 && (
-              <div className="quick-links">
-                {currentSlide.links.map((link, lIdx) => (
-                  <a
-                    key={lIdx}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="q-link"
-                    onClick={(e) => {
-                      if (link.url === '#') {
-                        e.preventDefault();
-                        addToast(`Access: ${link.label}`, 'info');
-                      }
-                    }}
-                  >
-                    <i className={link.icon} />
-                    <span>{link.label}</span>
-                  </a>
-                ))}
-              </div>
-            )}
+            
           </div>
 
           {/* RIGHT COLUMN */}
@@ -713,18 +691,21 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
                 <span>View Full Photo (HD)</span>
               </button>
 
-              {currentSlide.links && currentSlide.links.length > 0 && currentSlide.links[0]?.url && currentSlide.links[0].url !== '#' && (
-                <a
-                  href={currentSlide.links[0].url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="spotlight-btn-secondary"
-                  onClick={() => playTick()}
-                >
-                  <i className="fa-solid fa-arrow-up-right-from-square" />
-                  <span>{currentSlide.links[0].label || 'View Resource'}</span>
-                </a>
-              )}
+              {Array.isArray(currentSlide.links) && currentSlide.links.map((link, lIdx) => (
+                link && link.url && link.url !== '#' ? (
+                  <a
+                    key={lIdx}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="spotlight-btn-secondary"
+                    onClick={() => playTick()}
+                  >
+                    <i className={link.icon || "fa-solid fa-arrow-up-right-from-square"} />
+                    <span>{link.label || 'View Resource'}</span>
+                  </a>
+                ) : null
+              ))}
             </div>
           </div>
         </div>

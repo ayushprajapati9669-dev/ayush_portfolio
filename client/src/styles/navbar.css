@@ -632,6 +632,8 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 .btn-primary {
+  position: relative !important;
+  overflow: hidden !important;
   background: #f4f1ec !important;
   color: #030303 !important;
   font-weight: 600 !important;
@@ -656,6 +658,12 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
   transition: left 0.5s;
+  pointer-events: none !important;
+}
+
+.nav-resume-btn {
+  position: relative !important;
+  z-index: 10 !important;
 }
 
 .btn-primary:hover::after {

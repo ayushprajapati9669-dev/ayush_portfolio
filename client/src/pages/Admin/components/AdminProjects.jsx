@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, {  useState, useRef, useEffect, useMemo  } from 'react';
+import { createPortal } from 'react-dom';
 import { uploadImageViaCloudinary } from '../../../services/api';
 import { validateProjectForm } from '../../../utils/validation';
 import { playTick } from '../../../utils/audio';
@@ -648,6 +649,20 @@ export function AdminProjects({
       )
     }), session.token);
     showToast(`Project "${proj.title}" restored!`, 'fa-rotate-left');
+  };
+
+    // Bulk feature selected projects
+  const handleBulkToggleFeatured = (targetFeatured) => {
+    if (selectedIds.length === 0) return;
+    playTick();
+    updateAppState((prev) => ({
+      ...prev,
+      projects: prev.projects.map((p) =>
+        selectedIds.includes(p.id) ? { ...p, featured: targetFeatured, updatedAt: new Date().toISOString() } : p
+      )
+    }), session.token);
+    showToast(targetFeatured ? `Marked ${selectedIds.length} projects as Featured.` : `Unmarked ${selectedIds.length} projects.`, 'fa-star');
+    setSelectedIds([]);
   };
 
   // Batch delete selected projects
@@ -2675,30 +2690,40 @@ export function AdminProjects({
           </div>
         </div>
 
-        {/* Action Controls when selected */}
-        {selectedIds.length > 0 && (
-          <div className="flex items-center justify-between p-3 rounded-xl bg-yellow-500/10 border border-yellow-400/30">
-            <span className="text-xs text-yellow-300 font-semibold flex items-center gap-2">
-              <i className="fa-solid fa-check-circle" /> {selectedIds.length} projects selected
+        {/* FLOATING MULTI-SELECT BOTTOM DOCK — Matching Image 4 */}
+        {selectedIds.length > 0 && typeof document !== 'undefined' && createPortal(
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#091120]/95 backdrop-blur-xl border border-white/20 shadow-2xl animate-fade-in shadow-black/80">
+            <span className="text-xs font-bold text-white px-2">
+              {selectedIds.length} selected
             </span>
-            <div className="flex items-center gap-2">
+            {activeTab !== 'trash' && (
               <button
                 type="button"
-                onClick={handleBatchDelete}
-                className="btn-batch-delete text-xs px-3 py-1.5"
+                onClick={() => handleBulkToggleFeatured(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-500/40 text-xs font-medium text-emerald-400 transition-all"
+                title="Mark selected projects as Featured"
               >
-                <i className="fa-solid fa-trash-can" />
-                <span>Delete Selected</span>
+                <i className="fa-solid fa-check text-xs" /> Feature
               </button>
-              <button
-                type="button"
-                onClick={() => setSelectedIds([])}
-                className="text-xs text-slate-400 hover:text-white px-2 py-1"
-              >
-                Clear Selection
-              </button>
-            </div>
-          </div>
+            )}
+            <button
+              type="button"
+              onClick={handleBatchDelete}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-xs font-medium text-rose-400 transition-all"
+              title={activeTab === 'trash' ? 'Permanently Delete Selected' : 'Move Selected to Trash'}
+            >
+              <i className="fa-solid fa-trash-can text-xs" /> Delete
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedIds([])}
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors ml-1"
+              title="Clear Selection"
+            >
+              <i className="fa-solid fa-xmark text-xs" />
+            </button>
+          </div>,
+          document.body
         )}
 
         {/* Project Cards Grid (Matching Image 3) */}
@@ -2756,22 +2781,34 @@ export function AdminProjects({
                       </div>
                     )}
 
-                    {/* Top-Left Drag Handle Badge (Matching Photos 2 & 3) */}
-                    <div
-                      draggable={true}
-                      onDragStart={(e) => {
-                        e.stopPropagation();
-                        handleProjDragStart(e, idx);
-                      }}
-                      onDragEnd={() => {
-                        setDraggedProjIndex(null);
-                        setDragOverProjIndex(null);
-                      }}
-                      className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#050a14]/80 backdrop-blur-md border border-white/10 text-white text-xs font-semibold cursor-grab active:cursor-grabbing hover:border-yellow-400/40 transition-all select-none shadow-sm"
-                      title="Drag handle to reorder project"
-                    >
-                      <i className="fa-solid fa-grip-vertical text-slate-400 text-xs pointer-events-none" />
-                      <span className="truncate max-w-[130px] pointer-events-none">{proj.title}</span>
+                    {/* Top-Left Drag Handle Badge & Checkbox (Matching Milestone Multi-Select) */}
+                    <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          handleToggleSelect(proj.id);
+                        }}
+                        className="w-4 h-4 rounded bg-[#070d18] border-white/20 text-yellow-500 focus:ring-0 cursor-pointer accent-yellow-400 shadow-sm"
+                        aria-label={`Select ${proj.title}`}
+                      />
+                      <div
+                        draggable={true}
+                        onDragStart={(e) => {
+                          e.stopPropagation();
+                          handleProjDragStart(e, idx);
+                        }}
+                        onDragEnd={() => {
+                          setDraggedProjIndex(null);
+                          setDragOverProjIndex(null);
+                        }}
+                        className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-[#050a14]/80 backdrop-blur-md border border-white/10 text-white text-xs font-semibold cursor-grab active:cursor-grabbing hover:border-yellow-400/40 transition-all select-none shadow-sm"
+                        title="Drag handle to reorder project"
+                      >
+                        <i className="fa-solid fa-grip-vertical text-slate-400 text-xs pointer-events-none" />
+                        <span className="truncate max-w-[105px] pointer-events-none">{proj.title}</span>
+                      </div>
                     </div>
 
                     {/* Top-Right Actions & Dropdown (Matching Photos 2 & 3) */}

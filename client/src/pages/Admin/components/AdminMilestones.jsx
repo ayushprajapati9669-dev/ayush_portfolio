@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, {  useState, useEffect, useRef, useMemo, useCallback  } from 'react';
+import { createPortal } from 'react-dom';
 import DOMPurify from 'dompurify';
 import { playTick } from '../../../utils/audio';
 import {
@@ -1910,7 +1911,7 @@ export function AdminMilestones({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
               TOTAL MILESTONES
             </div>
-            <div className="text-3xl font-bold font-display text-white">
+            <div className="text-3xl font-bold font-mono tracking-tight text-white">
               {totalCount}
             </div>
           </div>
@@ -1925,7 +1926,7 @@ export function AdminMilestones({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
               COMPLETED
             </div>
-            <div className="text-3xl font-bold font-display text-emerald-400">
+            <div className="text-3xl font-bold font-mono tracking-tight text-emerald-400">
               {completedCount}
             </div>
           </div>
@@ -1940,7 +1941,7 @@ export function AdminMilestones({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
               ACTIVE FOCUS
             </div>
-            <div className="text-3xl font-bold font-display text-yellow-400">
+            <div className="text-3xl font-bold font-mono tracking-tight text-yellow-400">
               {focusCount}
             </div>
           </div>
@@ -1955,7 +1956,7 @@ export function AdminMilestones({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-amber-400/80 transition-colors">
               FEATURED SPOTLIGHT
             </div>
-            <div className="text-3xl font-bold font-display text-amber-400">
+            <div className="text-3xl font-bold font-mono tracking-tight text-amber-400">
               {spotlightCount}
             </div>
           </div>
@@ -2507,9 +2508,9 @@ export function AdminMilestones({
         </div>
       </div>
 
-      {/* FLOATING MULTI-SELECT BOTTOM DOCK — Matching Photo 2 */}
-      {selectedIds.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#091120]/95 backdrop-blur-xl border border-white/15 shadow-2xl animate-fade-in">
+      {/* FLOATING MULTI-SELECT BOTTOM DOCK — Matching Image 4 */}
+      {selectedIds.size > 0 && typeof document !== 'undefined' && createPortal(
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#091120]/95 backdrop-blur-xl border border-white/20 shadow-2xl animate-fade-in shadow-black/80">
           <span className="text-xs font-bold text-white px-2">
             {selectedIds.size} selected
           </span>
@@ -2518,14 +2519,14 @@ export function AdminMilestones({
             onClick={handleBulkComplete}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-500/40 text-xs font-medium text-emerald-400 transition-all"
           >
-            <i className="fa-solid fa-check" /> Complete
+            <i className="fa-solid fa-check text-xs" /> Complete
           </button>
           <button
             type="button"
             onClick={handleBulkDeletePrompt}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-xs font-medium text-rose-400 transition-all"
           >
-            <i className="fa-solid fa-trash-can" /> Delete
+            <i className="fa-solid fa-trash-can text-xs" /> Delete
           </button>
           <button
             type="button"
@@ -2539,7 +2540,7 @@ export function AdminMilestones({
             }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-xs font-medium text-slate-200 transition-all"
           >
-            <i className="fa-solid fa-columns" /> Compare
+            <i className="fa-solid fa-columns text-xs" /> Compare
           </button>
           <button
             type="button"
@@ -2547,9 +2548,10 @@ export function AdminMilestones({
             className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors ml-1"
             title="Clear Selection"
           >
-            <i className="fa-solid fa-xmark" />
+            <i className="fa-solid fa-xmark text-xs" />
           </button>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* 4-STEP WIZARD MODAL */}

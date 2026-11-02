@@ -651,8 +651,7 @@ export function Header() {
                 <div className="magnetic mr-1 shrink-0">
                   <button
                     type="button"
-                    className="btn-outline nav-resume-btn"
-                    data-action="open-resume"
+                    className="btn-outline nav-search-btn"
                     onClick={() => {
                       playTick();
                       setCmdOpen(true);

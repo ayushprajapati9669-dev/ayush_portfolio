@@ -1080,7 +1080,17 @@
     }
   ],
   "media": [],
-  "messages": [],
+  "messages": [
+    {
+      "id": "msg-1793615762371",
+      "name": "rohit prajapati",
+      "email": "ayushprajapati9669@gmail.com",
+      "subject": "Hiring",
+      "message": "this is a testing message",
+      "status": "unread",
+      "createdAt": "2026-11-02T10:36:02.371Z"
+    }
+  ],
   "settings": {
     "siteTitle": "Ayush Prajapati — Developer Portfolio",
     "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",

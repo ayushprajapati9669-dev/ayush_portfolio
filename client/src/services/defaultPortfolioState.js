@@ -392,8 +392,49 @@ export function getDefaultPortfolioState() {
       }
     ],
     certificates: [],
-    resumes: [],
-    messages: [],
+    resumes: [],    messages: [
+      {
+        id: 'msg-recruiter-stripe',
+        name: 'Sarah Jenkins',
+        email: 'sjenkins.recruiting@stripe.com',
+        subject: 'Full-Stack Software Engineering Role (MERN / Distributed Systems)',
+        message: 'Hi Ayush,\n\nI came across your portfolio and was thoroughly impressed by your Wanderlust distributed architecture and full-stack systems work. Our engineering team at Stripe is expanding our platform integrations group and your background in React, Node.js, and high-performance cloud architectures stands out.\n\nWould you be open to an introductory call this week to discuss potential engineering roles?\n\nBest regards,\nSarah Jenkins',
+        status: 'unread',
+        starred: true,
+        createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+        replies: []
+      },
+      {
+        id: 'msg-founder-agentic',
+        name: 'Michael Chang',
+        email: 'michael@hyperscale-ai.io',
+        subject: 'Autonomous Multi-Agent Workspace Collaboration',
+        message: 'Hello Ayush,\n\nWe saw your live case study for the Autonomous Multi-Agent Workspace and were really impressed by your task decomposition and multi-agent coordination architecture.\n\nWe are building next-generation agent harnesses for enterprise engineers and would love to consult with you or explore a collaborative engagement.\n\nLooking forward to speaking,\nMichael Chang',
+        status: 'read',
+        starred: false,
+        createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+        replies: [
+          {
+            id: 'reply-founder-1',
+            sender: 'You (Admin)',
+            text: 'Hi Michael,\n\nThank you for reaching out! The multi-agent workspace was an exciting system to architect, particularly ensuring reliable inter-agent messaging and state synchronization.\n\nI would be very happy to connect and discuss your team\'s work. Feel free to book a convenient slot on my calendar.\n\nBest regards,\nAyush Prajapati',
+            time: '11:30 AM',
+            date: new Date(Date.now() - 3600000 * 20).toLocaleDateString()
+          }
+        ]
+      },
+      {
+        id: 'msg-speaker-conclave',
+        name: 'Dr. Rajiv Sharma',
+        email: 'rajiv.sharma@techconclave.org',
+        subject: 'Keynote Speaker Invitation: Modern Cloud Architecture Workshop',
+        message: 'Dear Ayush,\n\nFollowing your successful workshop mentoring 120+ engineers at SISTec on MERN and Cloud Architecture, the organizing committee would like to invite you as a keynote guest speaker for the upcoming Central India Tech Innovation Conclave.\n\nPlease let us know if your schedule allows for a 45-minute technical keynote in December.\n\nWarm regards,\nDr. Rajiv Sharma',
+        status: 'read',
+        starred: true,
+        createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
+        replies: []
+      }
+    ],
     settings: {
       siteTitle: 'Ayush Prajapati — Full-Stack Developer Portfolio',
       seoDescription: 'Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB.',

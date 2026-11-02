@@ -407,7 +407,7 @@ export function AdminMessages({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-yellow-400/80 transition-colors">
               TOTAL INQUIRIES
             </div>
-            <div className="text-3xl font-bold font-display text-white">
+            <div className="text-3xl font-bold font-mono tracking-tight text-white">
               {totalCount}
             </div>
           </div>
@@ -422,7 +422,7 @@ export function AdminMessages({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-amber-400/80 transition-colors">
               ACTION REQUIRED
             </div>
-            <div className="text-3xl font-bold font-display text-amber-400 flex items-center gap-2">
+            <div className="text-3xl font-bold font-mono tracking-tight text-amber-400 flex items-center gap-2">
               <span>{unreadCount}</span>
               {unreadCount > 0 && <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping inline-block" />}
             </div>
@@ -438,7 +438,7 @@ export function AdminMessages({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-emerald-400/80 transition-colors">
               REPLIED THREADS
             </div>
-            <div className="text-3xl font-bold font-display text-emerald-400">
+            <div className="text-3xl font-bold font-mono tracking-tight text-emerald-400">
               {repliedCount}
             </div>
           </div>
@@ -453,7 +453,7 @@ export function AdminMessages({
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-purple-400/80 transition-colors">
               RESPONSE RATE
             </div>
-            <div className="text-3xl font-bold font-display text-purple-400">
+            <div className="text-3xl font-bold font-mono tracking-tight text-purple-400">
               {responseRate}%
             </div>
           </div>

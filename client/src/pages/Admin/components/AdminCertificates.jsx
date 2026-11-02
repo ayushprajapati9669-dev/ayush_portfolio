@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, {  useState, useMemo, useRef, useEffect  } from 'react';
+import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { uploadImageViaCloudinary } from '../../../services/api';
 import { validateCertificateForm, isValidUrl } from '../../../utils/validation';
@@ -2168,74 +2169,46 @@ export function AdminCertificates({
           </div>
         </div>
 
-        {/* ========================================================
-            STICKY / FLOATING BATCH ACTIONS TOOLBAR (Requirement 1)
-           ======================================================== */}
-        {selectedCertIds.length > 0 && (
-          <div className="sticky top-28 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-yellow-400/40 bg-[#090d14]/95 p-3.5 shadow-2xl shadow-cyan-500/20 backdrop-blur-2xl animate-in slide-in-from-top-2 duration-200">
-            <div className="flex items-center gap-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-yellow-400 text-black font-extrabold text-xs shadow-md shadow-cyan-400/50">
-                {selectedCertIds.length}
-              </span>
-              <div>
-                <p className="text-xs font-bold text-white">
-                  {selectedCertIds.length} of {filteredCertificates.length} Certificates Selected
-                </p>
-                <p className="text-[10px] font-mono text-slate-400">Perform bulk batch operations</p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={() => handleBatchFeature(true)}
-                className="flex items-center gap-1.5 rounded-xl border border-amber-400/30 bg-amber-500/10 px-3 py-1.5 font-mono text-xs font-bold text-amber-300 hover:bg-amber-500/20 transition-all"
-                title="Mark all selected as featured"
-              >
-                <i className="fa-solid fa-star text-[10px]" />
-                <span>Feature</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleBatchVerify}
-                className="flex items-center gap-1.5 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-xs font-bold text-emerald-300 hover:bg-emerald-500/20 transition-all"
-                title="Mark all selected as verified"
-              >
-                <i className="fa-solid fa-circle-check text-[10px]" />
-                <span>Verify</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleBatchExport}
-                className="flex items-center gap-1.5 rounded-xl border border-indigo-400/30 bg-indigo-500/10 px-3 py-1.5 font-mono text-xs font-bold text-indigo-300 hover:bg-indigo-500/20 transition-all"
-                title="Export selected credentials to JSON"
-              >
-                <i className="fa-solid fa-download text-[10px]" />
-                <span>Export JSON</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleBatchDelete}
-                className="flex items-center gap-1.5 rounded-xl border border-red-500/40 bg-red-500/15 px-3 py-1.5 font-mono text-xs font-bold text-red-300 hover:bg-red-500/25 transition-all"
-                title="Delete selected credentials"
-              >
-                <i className="fa-solid fa-trash text-[10px]" />
-                <span>Delete ({selectedCertIds.length})</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedCertIds([])}
-                className="rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 font-mono text-xs text-slate-400 hover:text-white transition-all ml-1"
-                title="Cancel selection"
-              >
-                Clear
-              </button>
-            </div>
-          </div>
+        {/* FLOATING MULTI-SELECT BOTTOM DOCK — Matching Image 4 */}
+        {selectedCertIds.length > 0 && typeof document !== 'undefined' && createPortal(
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#091120]/95 backdrop-blur-xl border border-white/20 shadow-2xl animate-fade-in shadow-black/80">
+            <span className="text-xs font-bold text-white px-2">
+              {selectedCertIds.length} selected
+            </span>
+            <button
+              type="button"
+              onClick={() => handleBatchFeature(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-amber-500/20 border border-white/10 hover:border-amber-500/40 text-xs font-medium text-amber-400 transition-all"
+              title="Mark selected credentials as Featured"
+            >
+              <i className="fa-solid fa-star text-xs" /> Feature
+            </button>
+            <button
+              type="button"
+              onClick={handleBatchVerify}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-500/40 text-xs font-medium text-emerald-400 transition-all"
+              title="Mark selected credentials as Verified"
+            >
+              <i className="fa-solid fa-check text-xs" /> Verify
+            </button>
+            <button
+              type="button"
+              onClick={handleBatchDelete}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-xs font-medium text-rose-400 transition-all"
+              title="Delete Selected Credentials"
+            >
+              <i className="fa-solid fa-trash-can text-xs" /> Delete
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedCertIds([])}
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors ml-1"
+              title="Clear Selection"
+            >
+              <i className="fa-solid fa-xmark text-xs" />
+            </button>
+          </div>,
+          document.body
         )}
 
         {/* Certificates Grid with Drag & Drop Reordering (Requirement 1) */}

@@ -68,14 +68,17 @@
   color: #d4af37 !important;
 }
 
-/* Sections Containers */
+/* Sections Containers: Max width and generous horizontal padding */
 .about-page > .top-section,
 .about-page > .spotlight-section,
-.about-page > .bottom-section,
-.about-page > div:not(.page-header) {
+.about-page > .leetcode-section,
+.about-page > .bottom-section {
   max-width: 1280px !important;
-  margin: 0 auto !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   padding: 0 clamp(20px, 5vw, 64px) !important;
+  box-sizing: border-box !important;
 }
 
 /* ── Top Section: 2-Column Grid (Bio Card + Profile Card) ── */
@@ -84,7 +87,7 @@
   grid-template-columns: 1.4fr 0.9fr !important;
   gap: 28px !important;
   align-items: stretch !important;
-  margin-bottom: 40px !important;
+  margin: 0 auto 52px auto !important;
 }
 
 @media (max-width: 960px) {
@@ -251,9 +254,14 @@
   transform: translateY(-2px) !important;
 }
 
-/* ── Spotlight Section ── */
+/* ── Spotlight Section with Generous Vertical Rhythm ── */
 .about-page .spotlight-section {
-  margin: 40px auto !important;
+  margin: 52px auto !important;
+}
+
+/* ── LeetCode Section with Dedicated Spacing ── */
+.about-page .leetcode-section {
+  margin: 52px auto !important;
 }
 
 /* ── Bottom Section: 2-Column Grid (Education + Achievements) ── */
@@ -262,7 +270,7 @@
   grid-template-columns: 1fr 1fr !important;
   gap: 28px !important;
   align-items: start !important;
-  margin-top: 40px !important;
+  margin: 52px auto 60px auto !important;
 }
 
 @media (max-width: 960px) {
@@ -337,9 +345,36 @@
 .about-page .timeline-list {
   display: flex !important;
   flex-direction: column !important;
-  gap: 20px !important;
+  gap: 16px !important;
   margin-top: 16px !important;
   position: relative !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  padding-right: 12px !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(212, 175, 55, 0.4) rgba(0, 0, 0, 0.2) !important;
+}
+
+.about-page .timeline-list::-webkit-scrollbar {
+  width: 5px !important;
+}
+
+.about-page .timeline-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-radius: 9999px !important;
+}
+
+.about-page .timeline-list::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.35) !important;
+  border-radius: 9999px !important;
+  transition: background 0.2s ease !important;
+}
+
+.about-page .timeline-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.7) !important;
 }
 
 .about-page .timeline-item {
@@ -496,9 +531,9 @@
 /* Card Content: 2 Columns */
 .spotlight-card .card-content {
   display: grid !important;
-  grid-template-columns: 380px 1fr !important;
-  gap: 26px !important;
-  padding: 22px 26px !important;
+  grid-template-columns: 330px 1fr !important;
+  gap: 20px !important;
+  padding: 16px 22px !important;
   align-items: start !important;
 }
 
@@ -519,9 +554,9 @@
 
 .spotlight-card .image-wrapper {
   width: 100% !important;
-  height: 235px !important;
-  max-height: 235px !important;
-  border-radius: 14px !important;
+  height: 205px !important;
+  max-height: 205px !important;
+  border-radius: 12px !important;
   overflow: hidden !important;
   position: relative !important;
   background: #000000 !important;
@@ -578,9 +613,9 @@
 }
 
 .spotlight-card .thumb {
-  width: 72px !important;
-  height: 48px !important;
-  border-radius: 8px !important;
+  width: 58px !important;
+  height: 38px !important;
+  border-radius: 6px !important;
   overflow: hidden !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   cursor: pointer !important;
@@ -634,7 +669,7 @@
 .spotlight-card .right-col {
   display: flex !important;
   flex-direction: column !important;
-  gap: 16px !important;
+  gap: 10px !important;
   min-width: 0 !important;
 }
 
@@ -702,7 +737,7 @@
 
 .spotlight-card .content-title {
   font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 1.65rem !important;
+  font-size: 1.4rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   line-height: 1.25 !important;
@@ -713,13 +748,13 @@
 .spotlight-card .verified-badge {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 7px !important;
-  padding: 4px 12px !important;
+  gap: 6px !important;
+  padding: 3px 10px !important;
   border-radius: 9999px !important;
   background: rgba(16, 185, 129, 0.1) !important;
   border: 1px solid rgba(16, 185, 129, 0.25) !important;
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 11px !important;
+  font-size: 10px !important;
   font-weight: 500 !important;
   color: #34d399 !important;
   letter-spacing: 0.05em !important;
@@ -738,11 +773,11 @@
 .spotlight-card .metric {
   background: rgba(255, 255, 255, 0.03) !important;
   border: 1px solid rgba(212, 175, 55, 0.2) !important;
-  border-radius: 10px !important;
-  padding: 7px 12px !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 2px !important;
+  gap: 1px !important;
   transition: all 0.2s ease !important;
 }
 
@@ -753,7 +788,7 @@
 
 .spotlight-card .metric-value {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 15px !important;
+  font-size: 14px !important;
   font-weight: 700 !important;
   color: #d4af37 !important;
   line-height: 1.2 !important;
@@ -761,7 +796,7 @@
 
 .spotlight-card .metric-label {
   font-family: 'Jost', sans-serif !important;
-  font-size: 11px !important;
+  font-size: 10.5px !important;
   color: #94a3b8 !important;
   line-height: 1.2 !important;
   white-space: nowrap !important;
@@ -772,10 +807,10 @@
 /* Clean Executive Summary */
 .spotlight-card .spotlight-summary-text {
   font-family: 'Jost', sans-serif !important;
-  font-size: 13.5px !important;
-  line-height: 1.55 !important;
+  font-size: 12.5px !important;
+  line-height: 1.45 !important;
   color: #a0aec0 !important;
-  margin: 2px 0 !important;
+  margin: 0 !important;
 }
 
 /* Skills container & tags with official brand logos */
@@ -920,8 +955,8 @@
 .spotlight-card .action-row {
   display: flex !important;
   align-items: center !important;
-  gap: 14px !important;
-  margin-top: 18px !important;
+  gap: 10px !important;
+  margin-top: 8px !important;
   flex-wrap: wrap !important;
   position: relative !important;
   z-index: 5 !important;
@@ -930,13 +965,13 @@
 .spotlight-card .spotlight-btn-primary {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 8px !important;
-  padding: 10px 22px !important;
+  gap: 6px !important;
+  padding: 8px 18px !important;
   background: #d4af37 !important;
   color: #000000 !important;
   border-radius: 9999px !important;
   font-family: 'Jost', sans-serif !important;
-  font-size: 13px !important;
+  font-size: 12px !important;
   font-weight: 600 !important;
   letter-spacing: 0.03em !important;
   border: 1px solid #d4af37 !important;
@@ -955,19 +990,19 @@
 .spotlight-card .spotlight-btn-secondary {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 8px !important;
-  padding: 10px 20px !important;
+  gap: 6px !important;
+  padding: 8px 18px !important;
   background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(212, 175, 55, 0.3) !important;
-  color: #f1f5f9 !important;
+  color: #ffffff !important;
   border-radius: 9999px !important;
   font-family: 'Jost', sans-serif !important;
-  font-size: 13px !important;
+  font-size: 12px !important;
   font-weight: 500 !important;
-  letter-spacing: 0.03em !important;
+  letter-spacing: 0.02em !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   cursor: pointer !important;
   transition: all 0.25s ease !important;
-  backdrop-filter: blur(8px) !important;
+  text-decoration: none !important;
 }
 
 .spotlight-card .spotlight-btn-secondary:hover {

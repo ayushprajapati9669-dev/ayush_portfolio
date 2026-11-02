@@ -369,8 +369,8 @@ export function AboutPage() {
         />
       </div>
 
-      {/* LeetCode & Problem Solving Metrics */}
-      <div className="max-w-6xl mx-auto px-4 my-8">
+      {/* LeetCode & Problem Solving Metrics with Generous Spacing */}
+      <div className="leetcode-section">
         <LeetCodeMetricsBadge />
       </div>
 
@@ -435,7 +435,16 @@ export function AboutPage() {
             </ScrollWriteText>
           </h3>
 
-          <div className="timeline-list">
+          <div
+            className="timeline-list"
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            tabIndex={0}
+            onWheel={(e) => {
+              e.stopPropagation();
+              e.currentTarget.scrollTop += e.deltaY;
+            }}
+          >
             {timelineMilestones.map((item, idx) => {
               const cleanPhase = (item.phase || '').replace(/\s*·\s*Year\s*[\d–-]+/i, '').trim();
               const showYear = item.yearBadge && !cleanPhase.toLowerCase().includes(item.yearBadge.toLowerCase());

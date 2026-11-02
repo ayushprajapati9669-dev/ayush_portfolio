@@ -201,3 +201,31 @@ h4, h5, h6 {
   scrollbar-color: rgba(255, 255, 255, 0.16) rgba(9, 10, 15, 0.95);
 }
 
+
+
+/* Custom Scrollbar Utility */
+.custom-scrollbar {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(212, 175, 55, 0.3) rgba(7, 12, 20, 0.95) !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px !important;
+  height: 5px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(7, 12, 20, 0.95) !important;
+  border-radius: 999px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3) !important;
+  border-radius: 999px !important;
+  transition: background 0.2s ease !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.6) !important;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.4) !important;
+}
