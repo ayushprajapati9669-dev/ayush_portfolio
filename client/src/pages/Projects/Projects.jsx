@@ -226,22 +226,24 @@ export function ProjectsPage({ viewMode = 'projects' }) {
 
     const visibleCards = gridRef.current.querySelectorAll('.project-card');
     if (visibleCards.length > 0) {
+      gsap.killTweensOf(visibleCards);
       gsap.fromTo(
         visibleCards,
-        { y: 30, opacity: 0, scale: 0.98 },
+        { y: 35, opacity: 0, scale: 0.93, filter: 'blur(4px)' },
         {
           y: 0,
           opacity: 1,
           scale: 1,
-          duration: 0.6,
-          stagger: 0.08,
+          filter: 'blur(0px)',
+          duration: 0.55,
+          stagger: {
+            each: 0.075,
+            from: 'start',
+            ease: 'power2.out'
+          },
           ease: 'back.out(1.2)',
           overwrite: true,
-          onComplete: () => {
-            visibleCards.forEach((c) => {
-              c.style.transform = '';
-            });
-          }
+          clearProps: 'transform,filter,opacity'
         }
       );
     }

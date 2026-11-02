@@ -764,3 +764,50 @@ p.project-desc {
   transform: translateY(-1px) !important;
 }
 
+/* ==========================================================================
+   Top 1% Interactive Mouse Spotlight & Specular Sheen System
+   Uses component-computed --mouse-x & --mouse-y for cursor-following luxury sheen
+   ========================================================================== */
+.project-card,
+.skill-card,
+.cert-card,
+.about-card,
+.glass-card,
+.bento-focus-card,
+.bento-bio-card {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.project-card::before,
+.skill-card::before,
+.cert-card::before,
+.about-card::before,
+.glass-card::before,
+.bento-focus-card::before,
+.bento-bio-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    380px circle at var(--mouse-x, -300px) var(--mouse-y, -300px),
+    rgba(212, 175, 55, 0.08),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.project-card:hover::before,
+.skill-card:hover::before,
+.cert-card:hover::before,
+.about-card:hover::before,
+.glass-card:hover::before,
+.bento-focus-card:hover::before,
+.bento-bio-card:hover::before {
+  opacity: 1;
+}
+

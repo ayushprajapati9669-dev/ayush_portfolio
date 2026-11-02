@@ -246,13 +246,19 @@ export function CertificatesPage() {
       );
 
       gsap.fromTo('.cert-card', 
-        { y: 30, opacity: 0 }, 
+        { y: 35, opacity: 0, scale: 0.93, filter: 'blur(4px)' }, 
         { 
           y: 0, 
           opacity: 1, 
-          duration: 0.5, 
-          stagger: 0.05, 
-          ease: 'power2.out', 
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 0.55, 
+          stagger: {
+            each: 0.07,
+            from: 'start',
+            ease: 'power2.out'
+          }, 
+          ease: 'back.out(1.2)', 
           clearProps: 'all' 
         }
       );

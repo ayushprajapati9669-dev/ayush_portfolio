@@ -173,3 +173,31 @@ h4, h5, h6 {
 .text-\[10px\] {
   font-size: 12px !important;
 }
+
+/* Sleek Obsidian-Gold Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(9, 10, 15, 0.95);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) rgba(9, 10, 15, 0.95);
+}
+

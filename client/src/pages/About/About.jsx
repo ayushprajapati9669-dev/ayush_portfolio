@@ -160,8 +160,14 @@ export function AboutPage() {
       );
 
       gsap.fromTo('.bottom-section .about-card', 
-        { y: 30, opacity: 0 }, 
-        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out', delay: 0.1, clearProps: 'all' }
+        { y: 35, opacity: 0, scale: 0.95 }, 
+        { y: 0, opacity: 1, scale: 1, duration: 0.65, stagger: 0.12, ease: 'back.out(1.2)', delay: 0.15, clearProps: 'all' }
+      );
+
+      // Timeline items staggered slide-in
+      gsap.fromTo('.timeline-item',
+        { x: -20, opacity: 0 },
+        { y: 0, x: 0, opacity: 1, duration: 0.5, stagger: 0.07, delay: 0.25, ease: 'power2.out', clearProps: 'all' }
       );
     }, containerRef);
 

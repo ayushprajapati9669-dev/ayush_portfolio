@@ -30,12 +30,12 @@
 }
 
 .about-page .page-title {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-size: clamp(3.2rem, 7.5vw, 6.5rem) !important;
-  font-weight: 300 !important;
-  letter-spacing: -0.03em !important;
+  font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
   color: #ffffff !important;
-  line-height: 0.95 !important;
+  line-height: 1.05 !important;
   margin: 0 0 24px 0 !important;
 }
 
@@ -701,9 +701,9 @@
 }
 
 .spotlight-card .content-title {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-size: 1.85rem !important;
-  font-weight: 500 !important;
+  font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 1.65rem !important;
+  font-weight: 700 !important;
   color: #ffffff !important;
   line-height: 1.25 !important;
   letter-spacing: -0.015em !important;

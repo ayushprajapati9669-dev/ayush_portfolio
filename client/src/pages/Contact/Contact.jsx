@@ -172,6 +172,11 @@ export function ContactPage() {
           });
         }
       });
+
+      gsap.fromTo('.info-block', 
+        { y: 20, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, delay: 0.45, ease: 'power2.out', clearProps: 'all' }
+      );
     }, containerRef);
 
     return () => ctx.revert();

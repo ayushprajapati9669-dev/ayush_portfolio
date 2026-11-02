@@ -30,19 +30,19 @@
 }
 
 .certificates-page .page-title {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-size: clamp(3.2rem, 7.5vw, 6.5rem) !important;
-  font-weight: 300 !important;
-  letter-spacing: -0.03em !important;
+  font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
   color: #ffffff !important;
-  line-height: 0.95 !important;
+  line-height: 1.05 !important;
   margin: 0 0 20px 0 !important;
 }
 
 .certificates-page .page-desc {
-  font-family: 'Jost', sans-serif !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 15px !important;
-  color: #777777 !important;
+  color: #cbd5e1 !important;
   line-height: 1.7 !important;
   max-width: 600px !important;
 }
@@ -59,19 +59,23 @@
 
 /* ── Certificate Card ── */
 .cert-card {
-  background: rgba(255, 255, 255, 0.02) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  border-radius: 18px !important;
+  background: linear-gradient(145deg, rgba(16, 17, 24, 0.94) 0%, rgba(9, 10, 15, 0.98) 100%) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
   overflow: hidden !important;
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
   display: flex !important;
   flex-direction: column !important;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
 .cert-card:hover {
-  border-color: rgba(212, 175, 55, 0.32) !important;
+  border-color: rgba(212, 175, 55, 0.45) !important;
   transform: translateY(-4px) !important;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(212, 175, 55, 0.12) !important;
+  background: linear-gradient(145deg, rgba(22, 23, 32, 0.96) 0%, rgba(13, 14, 20, 0.99) 100%) !important;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.95), 0 0 28px rgba(212, 175, 55, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
 }
 
 /* Image Wrap */
@@ -143,7 +147,7 @@
 .cert-year {
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 10.5px !important;
-  color: #666666 !important;
+  color: #94a3b8 !important;
 }
 
 .cert-category-badge {
@@ -158,19 +162,25 @@
 }
 
 .cert-title {
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-size: 1.4rem !important;
-  font-weight: 400 !important;
+  font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
   color: #ffffff !important;
-  letter-spacing: -0.01em !important;
+  text-transform: capitalize !important;
+  letter-spacing: -0.015em !important;
   line-height: 1.25 !important;
   margin: 0 !important;
+  transition: color 0.2s ease !important;
+}
+
+.cert-card:hover .cert-title {
+  color: #f5d77f !important;
 }
 
 .cert-desc {
-  font-family: 'Jost', sans-serif !important;
-  font-size: 12.5px !important;
-  color: #777777 !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  color: #cbd5e1 !important;
   line-height: 1.6 !important;
   flex: 1 !important;
 }

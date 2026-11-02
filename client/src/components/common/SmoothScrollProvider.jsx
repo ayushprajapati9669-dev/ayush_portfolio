@@ -44,7 +44,7 @@ export function SmoothScrollProvider({ children }) {
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.95,
+      wheelMultiplier: 1.0,
       touchMultiplier: 1.5,
       infinite: false
     });
@@ -68,13 +68,21 @@ export function SmoothScrollProvider({ children }) {
     };
   }, [isAdmin]);
 
-  // Route transition scroll reset
+    // Route transition scroll reset & ScrollTrigger recalculation
   useEffect(() => {
     if (lenisRef.current) {
       lenisRef.current.scrollTo(0, { immediate: true });
     } else {
       window.scrollTo(0, 0);
     }
+
+    const timer = setTimeout(() => {
+      try {
+        ScrollTrigger.refresh();
+      } catch (_e) {}
+    }, 120);
+
+    return () => clearTimeout(timer);
   }, [location.pathname]);
 
   return (

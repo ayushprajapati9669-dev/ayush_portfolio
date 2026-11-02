@@ -301,6 +301,62 @@ export function SkillsSection({
     });
   };
 
+  // Staggered Cascade Entrance Animation for Skill Cards (One-by-One Reveal)
+  useEffect(() => {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !gridRef.current) return;
+
+    const cards = gridRef.current.querySelectorAll('.skill-card');
+    if (!cards || cards.length === 0) return;
+
+    gsap.killTweensOf(cards);
+
+    const animateIn = () => {
+      gsap.fromTo(
+        cards,
+        {
+          y: 28,
+          opacity: 0,
+          scale: 0.88,
+          filter: 'blur(4px)'
+        },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 0.45,
+          stagger: {
+            each: 0.035, // One by one cascading sequence
+            from: 'start',
+            ease: 'power2.out'
+          },
+          ease: 'back.out(1.25)',
+          clearProps: 'transform,filter,opacity'
+        }
+      );
+    };
+
+    if (isStandalonePage) {
+      // Standalone /skills page: trigger immediately with clean stagger
+      const timer = setTimeout(animateIn, 50);
+      return () => clearTimeout(timer);
+    } else {
+      // Home page embedded view: trigger on scroll via ScrollTrigger
+      try {
+        gsap.registerPlugin(ScrollTrigger);
+      } catch (_e) {}
+
+      const st = ScrollTrigger.create({
+        trigger: gridRef.current,
+        start: 'top 85%',
+        once: true,
+        onEnter: animateIn
+      });
+      return () => st.kill();
+    }
+  }, [selectedFilter, searchQuery, isStandalonePage, filteredSkills.length]);
+
   return (
     <section className={`skills-section ${isStandalonePage ? 'standalone' : 'home-embedded'}`}>
       {/* Header - Only render on embedded home view */}
