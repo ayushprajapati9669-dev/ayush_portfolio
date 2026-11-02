@@ -484,9 +484,6 @@ export function HomePage() {
           HERO SECTION (Image 1 Sarthak Sharma Composition + Image 4 Photo)
           ========================================================================= */}
       <section ref={heroRef} className="hero-editorial-stage">
-        {/* Interactive 3D WebGL Particle Cosmos Canvas */}
-        <HeroCosmosCanvas />
-
         {/* Architectural 4-column guide lines */}
         <div className="hero-editorial-guides" aria-hidden="true">
           <div />

@@ -1,5 +1,5 @@
 {
-  "totalPageViews": 2436,
+  "totalPageViews": 2458,
   "uniqueVisitors": 486,
   "resumeDownloads": 89,
   "cliLaunches": 142,
@@ -12,7 +12,7 @@
     "Google / Search": 140,
     "Twitter / X": 84,
     "LeetCode": 76,
-    "Direct / External": 1168
+    "Direct / External": 1190
   },
   "topProjects": {
     "wanderlust-airbnb-clone": {
@@ -70,9 +70,229 @@
     "2026-10-30": 125,
     "2026-10-31": 239,
     "2026-11-01": 720,
-    "2026-11-02": 81
+    "2026-11-02": 103
   },
   "recentEvents": [
+    {
+      "id": "ev-1793603209609-jpzz",
+      "type": "pageview",
+      "path": "/",
+      "title": "About & Academic Milestones | Ayush Prajapati",
+      "referrer": "http://localhost:5175/",
+      "timestamp": "2026-11-02T07:06:49.609Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793603204669-tbc9",
+      "type": "pageview",
+      "path": "/about",
+      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5175/about",
+      "timestamp": "2026-11-02T07:06:44.669Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793603109214-owjn",
+      "type": "pageview",
+      "path": "/projects",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/projects",
+      "timestamp": "2026-11-02T07:05:09.214Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793603101657-9fvh",
+      "type": "pageview",
+      "path": "/about",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/about",
+      "timestamp": "2026-11-02T07:05:01.657Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793603088452-b2fe",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/",
+      "timestamp": "2026-11-02T07:04:48.452Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793603030606-3c3j",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5175/",
+      "timestamp": "2026-11-02T07:03:50.606Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793602978187-jm1x",
+      "type": "pageview",
+      "path": "/",
+      "title": "About & Academic Milestones | Ayush Prajapati",
+      "referrer": "http://localhost:5175/",
+      "timestamp": "2026-11-02T07:02:58.187Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793602969588-eh4x",
+      "type": "pageview",
+      "path": "/about",
+      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5175/about",
+      "timestamp": "2026-11-02T07:02:49.588Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793602821451-f3z4",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5175/",
+      "timestamp": "2026-11-02T07:00:21.451Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793602553075-p2ou",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5175/",
+      "timestamp": "2026-11-02T06:55:53.075Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793602520773-v2aw",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5175/",
+      "timestamp": "2026-11-02T06:55:20.773Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793602197183-dnfr",
+      "type": "pageview",
+      "path": "/about",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/about",
+      "timestamp": "2026-11-02T06:49:57.183Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793602182915-vcgm",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/",
+      "timestamp": "2026-11-02T06:49:42.915Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601862228-qeqt",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5175/",
+      "timestamp": "2026-11-02T06:44:22.228Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601705554-4zcu",
+      "type": "pageview",
+      "path": "/about",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/about",
+      "timestamp": "2026-11-02T06:41:45.554Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601689500-m7ca",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/",
+      "timestamp": "2026-11-02T06:41:29.500Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601515311-ed81",
+      "type": "pageview",
+      "path": "/about",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/about",
+      "timestamp": "2026-11-02T06:38:35.311Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601500544-igih",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/",
+      "timestamp": "2026-11-02T06:38:20.544Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601397502-errs",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/",
+      "timestamp": "2026-11-02T06:36:37.502Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601259750-w25f",
+      "type": "pageview",
+      "path": "/about",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/about",
+      "timestamp": "2026-11-02T06:34:19.751Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601245676-s7r7",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/",
+      "timestamp": "2026-11-02T06:34:05.676Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793601107661-kn8q",
+      "type": "pageview",
+      "path": "/",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://127.0.0.1:5175/",
+      "timestamp": "2026-11-02T06:31:47.661Z",
+      "country": "Direct",
+      "city": "Global"
+    },
     {
       "id": "ev-1793600868739-os97",
       "type": "pageview",
@@ -350,226 +570,6 @@
       "title": "About & Academic Milestones | Ayush Prajapati",
       "referrer": "http://localhost:5174/",
       "timestamp": "2026-11-02T05:33:37.018Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793597605506-eoih",
-      "type": "pageview",
-      "path": "/about",
-      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:33:25.506Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793597408761-cunw",
-      "type": "pageview",
-      "path": "/projects",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/projects",
-      "timestamp": "2026-11-02T05:30:08.761Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793597393434-gsr4",
-      "type": "pageview",
-      "path": "/about",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/about",
-      "timestamp": "2026-11-02T05:29:53.434Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793597373511-7dez",
-      "type": "pageview",
-      "path": "/",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/",
-      "timestamp": "2026-11-02T05:29:33.511Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793597266096-phvm",
-      "type": "pageview",
-      "path": "/",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:27:46.096Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793597090038-e6ds",
-      "type": "pageview",
-      "path": "/",
-      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:24:50.038Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793597058348-uax0",
-      "type": "pageview",
-      "path": "/",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:24:18.348Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596683908-vb0t",
-      "type": "pageview",
-      "path": "/",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:18:03.908Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596600518-tv4d",
-      "type": "pageview",
-      "path": "/login",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/login",
-      "timestamp": "2026-11-02T05:16:40.518Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596511918-2sn5",
-      "type": "pageview",
-      "path": "/login",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/login",
-      "timestamp": "2026-11-02T05:15:11.918Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596408068-5dja",
-      "type": "pageview",
-      "path": "/admin",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/admin",
-      "timestamp": "2026-11-02T05:13:28.068Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596402773-vc4s",
-      "type": "pageview",
-      "path": "/projects",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/projects",
-      "timestamp": "2026-11-02T05:13:22.773Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596396460-j8ey",
-      "type": "pageview",
-      "path": "/about",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/about",
-      "timestamp": "2026-11-02T05:13:16.460Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596385059-zrfs",
-      "type": "pageview",
-      "path": "/",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/",
-      "timestamp": "2026-11-02T05:13:05.059Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596334772-edgj",
-      "type": "pageview",
-      "path": "/",
-      "title": "Featured Projects & Live Software | Ayush Prajapati",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:12:14.772Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596321614-75hw",
-      "type": "pageview",
-      "path": "/projects",
-      "title": "About & Academic Milestones | Ayush Prajapati",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:12:01.614Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596316085-7enf",
-      "type": "pageview",
-      "path": "/about",
-      "title": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:11:56.085Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596073086-y0vu",
-      "type": "pageview",
-      "path": "/admin",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/admin",
-      "timestamp": "2026-11-02T05:07:53.086Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596068031-4au5",
-      "type": "pageview",
-      "path": "/projects",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/projects",
-      "timestamp": "2026-11-02T05:07:48.031Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596062604-hoa9",
-      "type": "pageview",
-      "path": "/about",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/about",
-      "timestamp": "2026-11-02T05:07:42.604Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596050932-i3cl",
-      "type": "pageview",
-      "path": "/",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://127.0.0.1:5175/",
-      "timestamp": "2026-11-02T05:07:30.932Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793596011343-ujh1",
-      "type": "pageview",
-      "path": "/",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/",
-      "timestamp": "2026-11-02T05:06:51.343Z",
       "country": "Direct",
       "city": "Global"
     }
