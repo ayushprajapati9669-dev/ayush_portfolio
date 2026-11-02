@@ -21,7 +21,7 @@
   height: 0 !important;
 }
 
-/* 2. Pure Black Canvas */
+/* 2. Atmospheric Ambient Light Canvas (Transparent for Living Composite Depth) */
 .liquid-bg,
 .aurora-bg {
   position: fixed;
@@ -29,7 +29,7 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: #000000 !important;
+  background: transparent !important;
 }
 
 /* Subtle dot grid — very faint */
@@ -457,4 +457,59 @@ button.btn-outline:hover {
     transform: none !important;
     filter: none !important;
   }
+}
+
+
+/* ==========================================================================
+   Top 1% Cinematic Dusk Horizon & Atmospheric Lighting System
+   ========================================================================== */
+
+/* Living Dusk Horizon Breathing Glow (Between the Golden Dunes) */
+.dusk-horizon-breath {
+  position: absolute;
+  inset-x: 0;
+  bottom: 10%;
+  height: 280px;
+  background: radial-gradient(ellipse 90% 48% at 50% 88%, rgba(235, 145, 55, 0.14) 0%, rgba(185, 95, 110, 0.06) 45%, transparent 75%);
+  pointer-events: none;
+  animation: duskHorizonPulse 18s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+@keyframes duskHorizonPulse {
+  0%, 100% {
+    opacity: 0.65;
+    transform: scale3d(1, 1, 1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale3d(1.04, 1.16, 1);
+  }
+}
+
+/* Dual-Stage Luxury Chromatic Mouse Spotlight */
+.mouse-light {
+  position: fixed;
+  width: 720px;
+  height: 720px;
+  background: radial-gradient(circle 160px at center, rgba(235, 195, 85, 0.065) 0%, rgba(175, 115, 215, 0.02) 42%, transparent 72%) !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 2 !important;
+  top: 0;
+  left: 0;
+  transition: opacity 0.3s ease !important;
+  mix-blend-mode: screen !important;
+}
+
+/* High-End Micro-Film Grain */
+.bg-noise {
+  position: fixed !important;
+  inset: 0 !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E") !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  opacity: 0.45 !important;
+  mix-blend-mode: overlay !important;
 }

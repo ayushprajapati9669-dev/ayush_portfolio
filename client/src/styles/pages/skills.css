@@ -4,7 +4,7 @@
 
 .skills-page {
   min-height: 100vh;
-  background: #000000;
+  background: transparent !important;
   padding-top: 120px;
 }
 

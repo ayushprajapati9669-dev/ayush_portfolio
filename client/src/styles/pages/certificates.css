@@ -6,7 +6,7 @@
 
 .certificates-page {
   min-height: 100vh !important;
-  background: #000000 !important;
+  background: transparent !important;
   padding-top: 130px !important;
   padding-bottom: 120px !important;
   color: #ffffff !important;

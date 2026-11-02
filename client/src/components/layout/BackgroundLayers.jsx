@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 
@@ -39,7 +39,7 @@ export function BackgroundLayers() {
   const location = useLocation();
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Detect individual project case study page (e.g. /projects/airbnb-clone)
+  // Detect individual project case study page
   const isCaseStudy = Boolean(
     location.pathname &&
     location.pathname.startsWith('/projects/') &&
@@ -52,7 +52,7 @@ export function BackgroundLayers() {
     (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
   );
 
-  // Scroll Progress Tracking for Hairline Progress Bar
+  // Scroll Progress Tracking for Hairline Progress Bar & Subtle Parallax
   useEffect(() => {
     if (typeof window === 'undefined' || isAdmin) return;
 
@@ -76,9 +76,8 @@ export function BackgroundLayers() {
     const el = mouseLightRef.current;
     if (!el) return;
 
-    // Smooth cursor interpolation with quickTo
-    const xTo = gsap.quickTo(el, 'left', { duration: 0.35, ease: 'power2.out' });
-    const yTo = gsap.quickTo(el, 'top', { duration: 0.35, ease: 'power2.out' });
+    const xTo = gsap.quickTo(el, 'left', { duration: 0.38, ease: 'power2.out' });
+    const yTo = gsap.quickTo(el, 'top', { duration: 0.38, ease: 'power2.out' });
 
     const handleMouseMove = (e) => {
       xTo(e.clientX);
@@ -86,10 +85,7 @@ export function BackgroundLayers() {
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   return (
@@ -103,28 +99,57 @@ export function BackgroundLayers() {
         />
       )}
 
-      {/* Cinematic Dusk Landscape Wallpaper (Matching Uploaded Reference Photo) */}
+      {/* Cinematic Dusk Landscape & Dunes (Matching Uploaded Reference Photo) */}
       {!isAdmin && (
-        <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-          <img
-            src="/images/cinematic-dusk-landscape.jpg"
-            alt=""
-            className="w-full h-full object-cover object-bottom opacity-85"
-            loading="eager"
-            fetchpriority="high"
-          />
-          {/* Ambient Central Dark Vignette so all typography remains 100% crisp & readable */}
+        <div
+          className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
+          aria-hidden="true"
+        >
+          {/* Base Ambient Twilight Deep Sky Canvas */}
           <div
             className="absolute inset-0"
             style={{
-              background: 'radial-gradient(ellipse 75% 65% at 50% 36%, rgba(14, 16, 22, 0.62) 0%, rgba(11, 12, 17, 0.82) 55%, rgba(7, 8, 10, 0.96) 100%)'
+              background: 'radial-gradient(ellipse 130% 90% at 50% -5%, #181a29 0%, #0d0f19 35%, #07080b 100%)'
             }}
           />
-          {/* Bottom Horizon Gradient to blend cleanly into subsequent content sections */}
-          <div
-            className="absolute inset-x-0 bottom-0 h-80"
+
+          {/* The High-Resolution Cinematic Dusk Landscape with Smooth Scroll Parallax */}
+          <img
+            src="/images/cinematic-dusk-landscape.jpg"
+            alt=""
+            className="w-full h-full object-cover object-bottom opacity-95 transition-transform duration-700 ease-out"
             style={{
-              background: 'linear-gradient(to top, #090a0d 0%, rgba(9, 10, 13, 0.8) 50%, transparent 100%)'
+              transform: `translate3d(0, ${Math.min(130, scrollProgress * 150)}px, 0) scale(1.02)`,
+              filter: 'contrast(105%) brightness(98%) saturate(106%)'
+            }}
+            loading="eager"
+            fetchpriority="high"
+          />
+
+          {/* Dynamic Living Horizon Warmth Breath */}
+          <div className="dusk-horizon-breath pointer-events-none" aria-hidden="true" />
+
+          {/* Precision Readability Scrim: Darkens the center for AAA text contrast while allowing the dunes on left & right to shine */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse 62% 50% at 50% 34%, rgba(7, 8, 12, 0.72) 0%, rgba(7, 8, 12, 0.48) 50%, rgba(7, 8, 12, 0.08) 82%, transparent 100%)'
+            }}
+          />
+
+          {/* Top Navbar Scrim for pristine header readability */}
+          <div
+            className="absolute inset-x-0 top-0 h-36 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to bottom, rgba(6, 7, 10, 0.75) 0%, rgba(6, 7, 10, 0.28) 60%, transparent 100%)'
+            }}
+          />
+
+          {/* Smooth Horizon Blend into Subsequent Content Sections */}
+          <div
+            className="absolute inset-x-0 bottom-0 h-48 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to bottom, transparent 0%, rgba(7, 8, 11, 0.45) 50%, #07080b 100%)'
             }}
           />
         </div>
@@ -139,22 +164,13 @@ export function BackgroundLayers() {
         aria-hidden="true"
       />
 
-      {/* Very subtle gold top ambient */}
-      <div
-        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[700px] max-w-[90vw] h-[300px] z-0"
-        style={{
-          background: 'radial-gradient(ellipse 55% 40% at 50% 0%, rgba(212, 175, 55, 0.05), transparent 70%)'
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Pure Black Canvas with Living Breathing Nebulae */}
+      {/* Living Atmospheric Aurora Nebulae */}
       <div className={`liquid-bg ${isCaseStudy ? 'liquid-bg-case-study' : ''}`} aria-hidden="true">
-        {/* Living breathing gold aurora blob bottom-left */}
+        {/* Warm champagne gold aurora blob bottom-left */}
         <div className="aurora-blob aurora-1" />
-        {/* Living breathing gold aurora blob top-right */}
+        {/* Twilight indigo/amethyst aurora blob top-right */}
         <div className="aurora-blob aurora-2" />
-        {/* Celestial center-top subtle platinum nebula */}
+        {/* Luminous platinum nebula core center */}
         <div className="aurora-blob aurora-3" />
       </div>
 
@@ -179,10 +195,10 @@ export function BackgroundLayers() {
       {/* Architectural 4-Column Hairline Guides */}
       <div className="editorial-grid-guides" aria-hidden="true" />
 
-      {/* Film Grain Noise Texture Overlay */}
+      {/* High-End Micro-Film Grain Overlay */}
       <div className="bg-noise" aria-hidden="true" />
 
-      {/* Dual-Stage Gold-Tinted Cursor Spotlight */}
+      {/* Dual-Stage Luxury Chromatic Cursor Spotlight */}
       <div className="mouse-light" id="mouseLight" ref={mouseLightRef} aria-hidden="true" />
     </>
   );

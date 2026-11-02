@@ -41,6 +41,122 @@
     "heroDescription": "I’m a Computer Science student exploring the intersection of web engineering, problem solving, and intelligent applications. I enjoy turning ideas into useful digital products and continuously improving how I build them.",
     "learningJourney": [
       {
+        "id": "li-1793592919780-1",
+        "title": "Apna College Delta Full-Stack Web Development",
+        "metaLabel": "LinkedIn · Certification",
+        "year": "Year 2",
+        "status": "completed",
+        "progress": 100,
+        "rating": 5,
+        "desc": "<h3>Certification Verification</h3><p>Successfully completed comprehensive full-stack training covering frontend engineering, Node.js backend systems, relational & NoSQL databases, and cloud deployments.</p>",
+        "tags": [
+          "MERN",
+          "React",
+          "NodeJS",
+          "MongoDB"
+        ],
+        "icon": "fa-certificate",
+        "published": true,
+        "pinned": false,
+        "views": 110,
+        "createdAt": "2026-11-02T04:15:19.780Z"
+      },
+      {
+        "id": "li-1793592919780-2",
+        "title": "College Website Making Competition (1st Place)",
+        "metaLabel": "LinkedIn · Award",
+        "year": "Year 2",
+        "status": "completed",
+        "progress": 100,
+        "rating": 5,
+        "desc": "<h3>First Place Award</h3><p>Awarded 1st place in college-wide website creation competition recognized on professional LinkedIn profile.</p>",
+        "tags": [
+          "UI/UX",
+          "HTML5",
+          "CSS3",
+          "JavaScript"
+        ],
+        "icon": "fa-trophy",
+        "published": true,
+        "pinned": false,
+        "views": 95,
+        "createdAt": "2026-11-02T04:15:19.780Z"
+      },
+      {
+        "id": "li-1793592905629-1",
+        "title": "Apna College Delta Full-Stack Web Development",
+        "desc": "<h3>Certification Verification</h3><p>Successfully completed comprehensive full-stack training covering frontend engineering, Node.js backend systems, relational & NoSQL databases, and cloud deployments.</p>",
+        "year": "Year 2",
+        "status": "completed",
+        "metaLabel": "LinkedIn · Certification",
+        "progress": 100,
+        "rating": 5,
+        "tags": [
+          "MERN",
+          "React",
+          "NodeJS",
+          "MongoDB"
+        ],
+        "icon": "fa-certificate",
+        "image": null,
+        "images": [],
+        "hdImages": [],
+        "imageAlt": "",
+        "link": "",
+        "metric": "",
+        "badgeText": "",
+        "badgeIcon": "",
+        "challenge": "",
+        "solution": "",
+        "outcome": "",
+        "metrics": [],
+        "links": [],
+        "deepdive": "",
+        "proofs": [],
+        "published": true,
+        "pinned": false,
+        "spotlight": false,
+        "views": 110,
+        "createdAt": "2026-11-02T04:15:05.629Z"
+      },
+      {
+        "id": "li-1793592905629-2",
+        "title": "College Website Making Competition (1st Place)",
+        "desc": "<h3>First Place Award</h3><p>Awarded 1st place in college-wide website creation competition recognized on professional LinkedIn profile.</p>",
+        "year": "Year 2",
+        "status": "completed",
+        "metaLabel": "LinkedIn · Award",
+        "progress": 100,
+        "rating": 5,
+        "tags": [
+          "UI/UX",
+          "HTML5",
+          "CSS3",
+          "JavaScript"
+        ],
+        "icon": "fa-trophy",
+        "image": null,
+        "images": [],
+        "hdImages": [],
+        "imageAlt": "",
+        "link": "",
+        "metric": "",
+        "badgeText": "",
+        "badgeIcon": "",
+        "challenge": "",
+        "solution": "",
+        "outcome": "",
+        "metrics": [],
+        "links": [],
+        "deepdive": "",
+        "proofs": [],
+        "published": true,
+        "pinned": false,
+        "spotlight": false,
+        "views": 95,
+        "createdAt": "2026-11-02T04:15:05.629Z"
+      },
+      {
         "id": "m-workshop-mern-lead",
         "title": "🎤 Lead Speaker & Instructor: MERN Stack & Cloud Architecture Workshop",
         "desc": "<h3>Hands-on Architecture Workshop</h3><p>Organized and conducted a flagship 2-day technical bootcamp on <strong>MERN Stack Engineering and Cloud Deployment</strong> at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.</p><h3>Live Demo & Lab Outcomes</h3><ul><li>Live-coded a full-stack real-time collaboration app with Socket.io on stage.</li><li>Guided students through Git branching workflows and live cloud deployment on Render and Vercel.</li><li>Rated 4.9/5 across attendee feedback surveys.</li></ul>",
@@ -49,7 +165,6 @@
         "metaLabel": "Workshop · Technical Leadership",
         "progress": 100,
         "rating": 5,
-        "metric": "120+ Attendees · SISTec Bhopal",
         "tags": [
           "React JS",
           "Node.js",
@@ -69,6 +184,7 @@
         "hdImages": [],
         "imageAlt": "Ayush Prajapati delivering MERN Stack Workshop on stage in front of students",
         "link": "https://github.com/ayushprajapati9669-dev",
+        "metric": "120+ Attendees · SISTec Bhopal",
         "badgeText": "FLAGSHIP MILESTONE",
         "badgeIcon": "fa-trophy",
         "challenge": "Deliver production full-stack engineering paradigms to 120+ students within a fast-paced 48-hour hands-on curriculum.",
@@ -471,7 +587,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "Full-Stack MERN Developer & Systems Builder.",
-    "updatedAt": "2026-11-01T20:01:03.066Z",
+    "updatedAt": "2026-11-01T21:06:56.999Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -551,7 +667,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-11-01T20:00:58.946Z"
+      "updatedAt": "2026-11-01T21:06:55.797Z"
     },
     {
       "id": "proj-1792430599188",
@@ -579,7 +695,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
-      "updatedAt": "2026-11-01T20:00:59.528Z"
+      "updatedAt": "2026-11-01T21:06:55.861Z"
     },
     {
       "id": "proj-1792496192331",
@@ -604,7 +720,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80",
       "title": "ai chat boat",
-      "updatedAt": "2026-11-01T20:00:59.586Z"
+      "updatedAt": "2026-11-01T21:06:55.914Z"
     },
     {
       "id": "proj-1792781601076",
@@ -632,7 +748,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
-      "updatedAt": "2026-11-01T20:00:59.644Z"
+      "updatedAt": "2026-11-01T21:06:55.970Z"
     },
     {
       "id": "proj-1792669669594",
@@ -660,7 +776,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-11-01T20:00:59.711Z"
+      "updatedAt": "2026-11-01T21:06:56.021Z"
     }
   ],
   "skills": [
@@ -720,7 +836,7 @@
           "createdAt": 1792600863119
         }
       ],
-      "updatedAt": "2026-11-01T20:01:00.697Z"
+      "updatedAt": "2026-11-01T21:06:56.584Z"
     },
     {
       "id": "skill-cat-frontend",
@@ -762,7 +878,7 @@
           "createdAt": 1792600868119
         }
       ],
-      "updatedAt": "2026-11-01T20:01:00.960Z"
+      "updatedAt": "2026-11-01T21:06:56.636Z"
     },
     {
       "id": "skill-cat-backend",
@@ -796,7 +912,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-11-01T20:01:01.018Z"
+      "updatedAt": "2026-11-01T21:06:56.686Z"
     },
     {
       "id": "skill-cat-databases",
@@ -822,7 +938,7 @@
           "createdAt": 1792600878119
         }
       ],
-      "updatedAt": "2026-11-01T20:01:01.265Z"
+      "updatedAt": "2026-11-01T21:06:56.736Z"
     },
     {
       "id": "skill-cat-tools",
@@ -856,7 +972,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-11-01T20:01:01.492Z"
+      "updatedAt": "2026-11-01T21:06:56.788Z"
     },
     {
       "id": "skill-cat-dsa",
@@ -874,7 +990,7 @@
           "createdAt": 1792600883119
         }
       ],
-      "updatedAt": "2026-11-01T20:01:02.278Z"
+      "updatedAt": "2026-11-01T21:06:56.846Z"
     }
   ],
   "certificates": [
@@ -888,7 +1004,7 @@
       "issuer": "apna college",
       "skillsCovered": "HTML,CSS,JAVASCRIPT,NODEJS,EXPRESS",
       "title": "mern stack certificate ",
-      "updatedAt": "2026-11-01T20:00:59.833Z"
+      "updatedAt": "2026-11-01T21:06:56.129Z"
     },
     {
       "id": "cert-1792434116249",
@@ -900,7 +1016,7 @@
       "issuer": "code with harry",
       "skillsCovered": "",
       "title": "ai-ml certificate",
-      "updatedAt": "2026-11-01T20:00:59.911Z"
+      "updatedAt": "2026-11-01T21:06:56.181Z"
     },
     {
       "id": "cert-1792578230937",
@@ -912,7 +1028,7 @@
       "issuer": "Apna college",
       "skillsCovered": "html, css, javasript, nodejs, react, mongodb, express",
       "title": "Full Stack Development (Copy)",
-      "updatedAt": "2026-11-01T20:00:59.966Z"
+      "updatedAt": "2026-11-01T21:06:56.231Z"
     },
     {
       "id": "cert-1792588849135",
@@ -924,7 +1040,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, GraphQL",
       "title": "mern stack",
-      "updatedAt": "2026-11-01T20:01:00.032Z"
+      "updatedAt": "2026-11-01T21:06:56.290Z"
     },
     {
       "id": "cert-1792595305806",
@@ -936,7 +1052,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "cyber security",
-      "updatedAt": "2026-11-01T20:01:00.102Z"
+      "updatedAt": "2026-11-01T21:06:56.359Z"
     },
     {
       "id": "cert-1792663342696",
@@ -948,7 +1064,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "mern stack",
-      "updatedAt": "2026-11-01T20:01:00.167Z"
+      "updatedAt": "2026-11-01T21:06:56.432Z"
     },
     {
       "id": "cert-1793434886240",
@@ -960,17 +1076,54 @@
       "issuer": "Coursera",
       "skillsCovered": "",
       "title": "cloud certificate",
-      "updatedAt": "2026-11-01T20:01:00.452Z"
+      "updatedAt": "2026-11-01T21:06:56.476Z"
     }
   ],
   "media": [],
-  "messages": [],
+  "messages": [
+    {
+      "id": "msg-1792813214696",
+      "name": "ajit kumar",
+      "email": "ajit@gmail.com",
+      "subject": "help",
+      "message": "i need some help from you please support me",
+      "status": "read",
+      "createdAt": "2026-10-24T03:40:14.696Z"
+    },
+    {
+      "id": "msg-1792776034240",
+      "name": "ajay prajapati",
+      "email": "ajay@gmail.com",
+      "subject": "personal",
+      "message": "you can aaply for the tcs",
+      "status": "read",
+      "createdAt": "2026-10-23T17:20:34.240Z"
+    },
+    {
+      "id": "msg-1792775992794",
+      "name": "sonali prajapati",
+      "email": "sonali@gmail.com",
+      "subject": "connect",
+      "message": "i am connect to you",
+      "status": "read",
+      "createdAt": "2026-10-23T17:19:52.794Z"
+    },
+    {
+      "id": "msg-1792775905527",
+      "name": "rohit prajapati",
+      "email": "rohti626861@gmail.com",
+      "subject": "hiring",
+      "message": "i hired you",
+      "status": "read",
+      "createdAt": "2026-10-23T17:18:25.527Z"
+    }
+  ],
   "settings": {
     "siteTitle": "Ayush Prajapati — Developer Portfolio",
     "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",
     "particlesEnabled": true,
     "contactNote": "Messages submitted through the contact form are validated on the server and persisted directly to the portfolio database for review in the Admin CMS. No third-party SMTP relay is fabricated; a direct mailto fallback is also available.",
-    "updatedAt": "2026-11-01T20:01:04.920Z",
+    "updatedAt": "2026-11-01T21:06:58.079Z",
     "mongodbUri": "mongodb://127.0.0.1:27017/ayush_portfolio",
     "cloudinaryCloudName": "",
     "cloudinaryUploadPreset": "",
@@ -985,7 +1138,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$8079eae36683965ac68a774eecff6c6d$51fdb0557578d31a815b7607a8c1a04a46a99bb22cd4e897cc57ec5abac4e23ed4d1191be7c3491bf041503c84a616bfc8479acb099d45d3ff1013c5dbe1e92f",
       "role": "admin",
-      "updatedAt": "2026-11-01T20:01:05.068Z"
+      "updatedAt": "2026-11-01T21:06:58.191Z"
     },
     {
       "username": "ayush",
@@ -994,7 +1147,7 @@
       "lastLoginAt": "2026-10-31T08:17:56.241Z",
       "passwordHash": "scrypt$16384$8$1$6c3bc64212cd8edca9910ed897608eb4$f774e89408d62a5e0d8d7bcdab65c9fa2b9203eab3b8ed19b0656cebfb23c0646c02d82f4f1ebd71374d31d696a9cc84341702a6800d2271900d0ee25c94235e",
       "role": "admin",
-      "updatedAt": "2026-11-01T20:01:05.123Z"
+      "updatedAt": "2026-11-01T21:06:58.253Z"
     }
   ],
   "resumes": [],
