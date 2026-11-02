@@ -502,9 +502,26 @@ const getSkillBrandColor = (name, logoKey) => {
   );
 }
 
-// Inline Chip Component with 34x34 Icon Pod & Admin Icon Prioritization
+// Inline Chip Component with 34x34 Circular Lens Pod & 3D Tilt Physics
 function SkillChipItem({ skill }) {
   const color = skill.color || '#fcd34d';
+
+  const handleMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+    const tiltX = ((y - rect.height / 2) / (rect.height / 2)) * -6;
+    const tiltY = ((x - rect.width / 2) / (rect.width / 2)) * 6;
+    card.style.transform = `perspective(600px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px) scale(1.035)`;
+  };
+
+  const handleMouseLeave = (e) => {
+    const card = e.currentTarget;
+    card.style.transform = '';
+  };
 
   // Render the exact icon chosen/managed in Admin
   const renderIcon = () => {
@@ -535,6 +552,8 @@ function SkillChipItem({ skill }) {
   return (
     <div
       className="skill-card"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       style={{
         '--brand-color': color,
         '--icon-color': color

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { ProjectCard } from '../../components/projects/ProjectCard';
-import { CertificatesPage } from '../Certificates/Certificates';
+const LazyCertificatesPage = React.lazy(() => import('../Certificates/Certificates').then(m => ({ default: m.CertificatesPage })));
 import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
@@ -96,7 +96,7 @@ export function ProjectsPage({ viewMode = 'projects' }) {
 
   // If in certificates view mode, render the dedicated CertificatesPage
   if (viewMode === 'certificates') {
-    return <CertificatesPage />;
+    return <React.Suspense fallback={null}><LazyCertificatesPage /></React.Suspense>;
   }
 
   // Projects View Mode: read CMS published projects or fallback to reference baseline
