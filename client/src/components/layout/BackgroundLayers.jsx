@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
-import { CosmicAurora3D } from '../ui/CosmicAurora3D';
+import { VantaBirdsBackground } from '../ui/VantaBirdsBackground';
 
 // Deterministic cosmic starfield coordinates to ensure zero SSR/hydration mismatch
 const COSMIC_STARS = [
@@ -133,21 +133,21 @@ export function BackgroundLayers() {
           {/* Layer 2: Dynamic Living Horizon Warmth Breath */}
           <div className="dusk-horizon-breath pointer-events-none" aria-hidden="true" />
 
-          {/* Layer 3: GPU-Accelerated Top 1% Cosmic Aurora & 3D Stardust River
-              - 1,600 Luminous Stardust Particles in 3D Orbital River Flow
-              - Volumetric Flowing Aurora Curtains across the Deep Upper Atmosphere
-              - Interactive Mouse Gravitational Swirl Vortex Physics
-              - Completely Unobstructed, Velvet Photographic Landscape Dunes */}
-          <CosmicAurora3D scrollProgress={scrollProgress} />
-
-          {/* Layer 4: Precision Readability Scrim
-              Keeps center text WCAG AAA contrast while dunes & 3D shimmer on left/right/horizon */}
+          {/* Layer 3: Precision Readability Scrim on Landscape
+              Softens center background so foreground text and 3D constellation are razor-crisp */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(ellipse 68% 54% at 50% 36%, rgba(7, 8, 12, 0.78) 0%, rgba(7, 8, 12, 0.50) 48%, rgba(7, 8, 12, 0.04) 84%, transparent 100%)'
+              background: 'radial-gradient(ellipse 75% 60% at 50% 40%, rgba(7, 8, 12, 0.72) 0%, rgba(7, 8, 12, 0.45) 55%, rgba(7, 8, 12, 0.05) 88%, transparent 100%)'
             }}
           />
+
+          {/* Layer 4: Official Vanta.js BIRDS 3D Background Engine
+              - Matching https://www.vantajs.com/ VANTA.BIRDS as uploaded by user
+              - 3D Boids Flocking Simulation with Real-Time Dynamic Flapping Wings
+              - Dual Variance Gradient Colors (Sunset Coral Pink + Cyan Sky Blue + Gold Shimmer)
+              - Interactive Mouse Deflection & Parallax Camera Tracking */}
+          <VantaBirdsBackground scrollProgress={scrollProgress} />
 
           {/* Layer 5: Top Navbar Scrim for crisp header readability */}
           <div
