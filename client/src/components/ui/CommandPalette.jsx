@@ -36,6 +36,13 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
         action: () => navigate('/about')
       },
       {
+        id: 'nav-journey',
+        title: 'Journey, Hackathons & LeetCode Milestones',
+        icon: 'fa-trophy',
+        category: 'Navigation',
+        action: () => navigate('/journey')
+      },
+      {
         id: 'nav-skills',
         title: 'Skills & Tech Stack',
         icon: 'fa-code',

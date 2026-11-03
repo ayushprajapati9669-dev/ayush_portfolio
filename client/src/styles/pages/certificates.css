@@ -21,7 +21,7 @@
 
 .certificates-page .page-tagline {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10px !important;
+  font-size: 12.5px !important;
   color: #d4af37 !important;
   letter-spacing: 2.5px !important;
   text-transform: uppercase !important;
@@ -138,7 +138,7 @@
 
 .cert-issuer {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10.5px !important;
+  font-size: 12.5px !important;
   color: #d4af37 !important;
   letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
@@ -146,13 +146,13 @@
 
 .cert-year {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10.5px !important;
+  font-size: 12.5px !important;
   color: #94a3b8 !important;
 }
 
 .cert-category-badge {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 9px !important;
+  font-size: 11.5px !important;
   padding: 2px 7px !important;
   background: rgba(212, 175, 55, 0.08) !important;
   border: 1px solid rgba(212, 175, 55, 0.2) !important;
@@ -179,7 +179,7 @@
 
 .cert-desc {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 13px !important;
+  font-size: 14.5px !important;
   color: #cbd5e1 !important;
   line-height: 1.6 !important;
   flex: 1 !important;
@@ -206,7 +206,7 @@
   border: 1px solid #d4af37 !important;
   border-radius: 8px !important;
   font-family: 'Jost', sans-serif !important;
-  font-size: 12px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   letter-spacing: 0.04em !important;
   cursor: pointer !important;
@@ -225,7 +225,7 @@
   align-items: center !important;
   gap: 5px !important;
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10px !important;
+  font-size: 12px !important;
   color: #4ade80 !important;
   background: rgba(74, 222, 128, 0.08) !important;
   border: 1px solid rgba(74, 222, 128, 0.2) !important;

@@ -89,12 +89,12 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
               <h3 className="text-white font-['Jost',sans-serif] font-medium text-base sm:text-lg tracking-tight">
                 LeetCode &amp; Algorithmic Mastery
               </h3>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-mono text-[11px] font-medium uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-mono text-xs font-semibold uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Live Sync
               </span>
             </div>
-            <p className="text-slate-400 text-xs sm:text-[13px] font-mono mt-0.5 flex items-center gap-2 flex-wrap">
+            <p className="text-slate-300 text-sm font-mono mt-0.5 flex items-center gap-2 flex-wrap">
               <span className="text-[#d4af37]">@{stats.username || 'ayush7162'}</span>
               <span className="text-white/20">•</span>
               <span>Global Rank #{Number(stats.ranking || 2350736).toLocaleString()}</span>
@@ -113,7 +113,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
           title="Inspect verified live LeetCode profile"
         >
           <span>Inspect Live Profile</span>
-          <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
+          <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
         </a>
       </div>
 
@@ -159,10 +159,10 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
               <span className="text-3xl font-['Cormorant_Garamond',Georgia,serif] font-medium text-white tracking-tight">
                 {total}
               </span>
-              <span className="text-[10px] text-[#d4af37] uppercase tracking-widest font-mono font-semibold">
+              <span className="text-xs text-[#d4af37] uppercase tracking-widest font-mono font-bold">
                 SOLVED
               </span>
-              <span className="text-[9.5px] text-slate-400 font-mono mt-0.5">
+              <span className="text-xs text-slate-300 font-mono mt-0.5">
                 Target: {targetMilestone}
               </span>
             </div>
@@ -183,7 +183,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
                   <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]" />
                   Easy
                 </span>
-                <span className="text-white/60 text-[11px] font-semibold">{easyPct}%</span>
+                <span className="text-white/60 text-xs font-bold text-slate-200">{easyPct}%</span>
               </div>
               <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden mb-2">
                 <div
@@ -191,7 +191,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
                   style={{ width: `${easyPct}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-[11.5px] font-mono text-slate-400">
+              <div className="flex items-center justify-between text-xs sm:text-[13px] font-mono text-slate-300">
                 <span className="text-white font-semibold">{easy}</span>
                 <span>/ {stats.totalEasy || 974}</span>
               </div>
@@ -204,7 +204,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
                   <span className="w-2 h-2 rounded-full bg-[#d4af37] shadow-[0_0_8px_#d4af37]" />
                   Medium
                 </span>
-                <span className="text-white/60 text-[11px] font-semibold">{medPct}%</span>
+                <span className="text-white/60 text-xs font-bold text-slate-200">{medPct}%</span>
               </div>
               <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden mb-2">
                 <div
@@ -212,7 +212,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
                   style={{ width: `${medPct}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-[11.5px] font-mono text-slate-400">
+              <div className="flex items-center justify-between text-xs sm:text-[13px] font-mono text-slate-300">
                 <span className="text-white font-semibold">{medium}</span>
                 <span>/ {stats.totalMedium || 2136}</span>
               </div>
@@ -225,7 +225,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
                   <span className="w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_8px_#f43f5e]" />
                   Hard
                 </span>
-                <span className="text-white/60 text-[11px] font-semibold">{hardPct}%</span>
+                <span className="text-white/60 text-xs font-bold text-slate-200">{hardPct}%</span>
               </div>
               <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden mb-2">
                 <div
@@ -233,7 +233,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
                   style={{ width: `${hardPct}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-[11.5px] font-mono text-slate-400">
+              <div className="flex items-center justify-between text-xs sm:text-[13px] font-mono text-slate-300">
                 <span className="text-white font-semibold">{hard}</span>
                 <span>/ {stats.totalHard || 986}</span>
               </div>
@@ -247,7 +247,7 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
                 <i className="fa-brands fa-java text-amber-400 text-sm" />
                 Recent Verified Submissions:
               </span>
-              <span className="text-[11px] font-mono text-slate-500">Automated Sync</span>
+              <span className="text-xs font-mono text-slate-400">Automated Sync</span>
             </div>
             <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
               {(stats.recentSubmissions || []).slice(0, 4).map((sub, idx) => {
@@ -263,9 +263,9 @@ export function LeetCodeMetricsBadge({ variant = 'card', className = '' }) {
                     key={idx}
                     className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all text-slate-300"
                   >
-                    <i className="fa-solid fa-circle-check text-emerald-400 text-[11px]" />
+                    <i className="fa-solid fa-circle-check text-emerald-400 text-xs" />
                     <span className="font-['Jost',sans-serif] text-xs font-medium text-white">{sub.title}</span>
-                    <span className={`text-[10px] px-1.5 py-0.2 rounded border font-mono ${diffColor}`}>
+                    <span className={`text-[11.5px] px-2 py-0.5 rounded border font-mono font-medium ${diffColor}`}>
                       {sub.difficulty}
                     </span>
                   </div>

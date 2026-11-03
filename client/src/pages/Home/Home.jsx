@@ -640,9 +640,9 @@ export function HomePage() {
               {/* Minimalist Micro-Badge: User-friendly indicator */}
               <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 backdrop-blur-md pointer-events-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="font-mono text-[10px] font-medium text-slate-300 uppercase tracking-wider">3D Topography</span>
+                <span className="font-mono text-xs font-semibold text-slate-200 uppercase tracking-wider">3D Topography</span>
               </div>
-              <div className="absolute bottom-3 right-4 z-10 font-mono text-[9.5px] text-slate-400 pointer-events-none">
+              <div className="absolute bottom-3 right-4 z-10 font-mono text-xs text-slate-400 pointer-events-none">
                 Hover to ripple
               </div>
               <InteractiveMeshWave className="absolute inset-0" />

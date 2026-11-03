@@ -455,7 +455,7 @@ const getSkillBrandColor = (name, logoKey) => {
                 className="showcase-view-all"
               >
                 <span>View Full Skills Directory ({allSkills.length})</span>
-                <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '10px' }} />
+                <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '12px' }} />
               </button>
             )}
           </div>

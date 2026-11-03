@@ -87,7 +87,7 @@
 /* Column Title / Eyebrow */
 .footer-col-title {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10px !important;
+  font-size: 12px !important;
   color: #d4af37 !important;
   letter-spacing: 2px !important;
   text-transform: uppercase !important;
@@ -150,7 +150,7 @@
   align-items: center !important;
   gap: 10px !important;
   font-family: 'Jost', sans-serif !important;
-  font-size: 12.5px !important;
+  font-size: 14px !important;
   color: #a0a0a0 !important;
   text-decoration: none !important;
   transition: color 0.2s ease !important;
@@ -162,7 +162,7 @@
 
 .footer-contact-item i {
   color: #d4af37 !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
   width: 14px !important;
   text-align: center !important;
 }
@@ -177,7 +177,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 9999px !important;
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10.5px !important;
+  font-size: 12.5px !important;
   color: #cbd5e1 !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
@@ -216,7 +216,7 @@
   align-items: center !important;
   gap: 8px !important;
   font-family: 'Jost', sans-serif !important;
-  font-size: 13.5px !important;
+  font-size: 14.5px !important;
   color: #999999 !important;
   background: transparent !important;
   border: none !important;
@@ -233,7 +233,7 @@
 }
 
 .footer-nav-link i {
-  font-size: 9px !important;
+  font-size: 11.5px !important;
   color: #d4af37 !important;
   transition: transform 0.2s ease !important;
 }
@@ -264,7 +264,7 @@
   border: none !important;
   padding: 8px 12px !important;
   font-family: 'Jost', sans-serif !important;
-  font-size: 12.5px !important;
+  font-size: 13.5px !important;
   color: #ffffff !important;
   outline: none !important;
 }
@@ -283,7 +283,7 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
 }
@@ -349,7 +349,7 @@
 
 .footer-bottom-links a {
   font-family: 'Jost', sans-serif !important;
-  font-size: 12px !important;
+  font-size: 13.5px !important;
   color: #777777 !important;
   text-decoration: none !important;
   transition: color 0.2s ease !important;
@@ -369,7 +369,7 @@
   border-radius: 9999px !important;
   color: #cbd5e1 !important;
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10.5px !important;
+  font-size: 12.5px !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
 }

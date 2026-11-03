@@ -181,6 +181,7 @@ export function Header() {
   const navItems = [
     { name: ui.navHome || 'Home', path: '/', icon: 'fa-solid fa-house' },
     { name: ui.navAbout || 'About', path: '/about', icon: 'fa-regular fa-user' },
+    { name: ui.navJourney || 'Journey', path: '/journey', icon: 'fa-solid fa-trophy' },
     { name: ui.navSkills || 'Skills', path: '/skills', icon: 'fa-solid fa-code' },
     { name: ui.navProjects || 'Projects', path: '/projects', icon: 'fa-solid fa-layer-group' },
     { name: isAdmin ? 'Certs' : (ui.navCertificates || 'Certificates'), path: '/certificates', icon: 'fa-solid fa-certificate' }

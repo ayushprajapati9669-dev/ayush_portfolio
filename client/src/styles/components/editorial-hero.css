@@ -55,7 +55,7 @@
   justify-content: space-between;
   align-items: center;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 13px;
   letter-spacing: 1.8px;
   text-transform: uppercase;
   color: #92929e;
@@ -85,7 +85,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-    font-size: 11px;
+    font-size: 12px;
   }
 }
 
@@ -113,7 +113,7 @@
   align-items: flex-start;
   gap: 60px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 13px;
   letter-spacing: 1.5px;
   line-height: 1.8;
   color: #848492;
@@ -193,7 +193,7 @@
   border: 1px solid rgba(212, 175, 55, 0.4);
   border-radius: 9999px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 600;
   letter-spacing: 1.4px;
   color: #f1f5f9;
@@ -278,7 +278,7 @@
 .hero-sub-eyebrow {
   position: relative;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 2.6px;
   text-transform: uppercase;
@@ -503,7 +503,7 @@
 
 .showcase-counter {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   color: #555555;
   letter-spacing: 0.1em;
 }
@@ -518,7 +518,7 @@
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #888888;
-  font-size: 11px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.22s ease;
   padding: 0;
@@ -533,10 +533,10 @@
 
 .showcase-view-all {
   font-family: 'Jost', sans-serif;
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 500;
   letter-spacing: 0.04em;
-  color: #666666;
+  color: #a1a1aa;
   background: none;
   border: none;
   cursor: pointer;

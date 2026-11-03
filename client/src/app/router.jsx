@@ -6,6 +6,7 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 // Route-level code splitting for top-tier Lighthouse performance
 const AboutPage = React.lazy(() => import('../pages/About/About').then(m => ({ default: m.AboutPage })));
+const JourneyPage = React.lazy(() => import('../pages/Journey/Journey').then(m => ({ default: m.JourneyPage })));
 const SkillsPage = React.lazy(() => import('../pages/Skills/Skills').then(m => ({ default: m.SkillsPage })));
 const ProjectDetail = React.lazy(() => import('../pages/Projects/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
 const CertificatesPage = React.lazy(() => import('../pages/Certificates/Certificates').then(m => ({ default: m.CertificatesPage })));
@@ -35,6 +36,8 @@ export function AppRouter() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/journey" element={<JourneyPage />} />
+        <Route path="/achievements" element={<JourneyPage />} />
         <Route path="/skills" element={<SkillsPage />} />
         <Route path="/projects" element={<ProjectsPage viewMode="projects" />} />
         <Route path="/projects/:slug" element={<ProjectDetail />} />

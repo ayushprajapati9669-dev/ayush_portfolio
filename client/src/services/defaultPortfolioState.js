@@ -6,6 +6,7 @@ export function getDefaultPortfolioState() {
     uiLabels: {
       navHome: 'Home',
       navAbout: 'About',
+      navJourney: 'Journey',
       navSkills: 'Skills',
       navProjects: 'Projects',
       navCertificates: 'Certificates',

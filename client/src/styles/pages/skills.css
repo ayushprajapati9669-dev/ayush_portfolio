@@ -20,7 +20,7 @@
 .skills-page .page-eyebrow,
 .skills-page .page-tagline {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10px !important;
+  font-size: 12.5px !important;
   color: #d4af37 !important;
   letter-spacing: 2px !important;
   text-transform: uppercase !important;
@@ -103,7 +103,7 @@
   padding: 0.5rem 1.2rem !important;
   border-radius: 100px !important;
   font-family: 'Inter', system-ui, sans-serif !important;
-  font-size: 0.85rem !important;
+  font-size: 0.92rem !important;
   font-weight: 500 !important;
   cursor: pointer !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -126,7 +126,7 @@
 
 .filter-btn .count,
 .filter-btn .filter-count {
-  font-size: 0.72rem !important;
+  font-size: 0.8rem !important;
   padding: 0.15rem 0.5rem !important;
   border-radius: 100px !important;
   background: rgba(255, 255, 255, 0.12) !important;
@@ -152,7 +152,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: #71717a;
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   pointer-events: none;
   transition: color 0.25s;
 }
@@ -165,7 +165,7 @@
   padding: 0.65rem 1rem 0.65rem 2.45rem !important;
   border-radius: 100px !important;
   font-family: 'Inter', system-ui, sans-serif !important;
-  font-size: 0.85rem !important;
+  font-size: 0.92rem !important;
   outline: none !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
   backdrop-filter: blur(14px) !important;
@@ -345,7 +345,7 @@
 
 .skill-name {
   font-family: 'Inter', system-ui, sans-serif !important;
-  font-size: 0.88rem !important;
+  font-size: 0.95rem !important;
   font-weight: 500 !important;
   color: #d4d4d8 !important;
   transition: color 0.25s ease, text-shadow 0.25s ease !important;

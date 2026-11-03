@@ -222,6 +222,10 @@ export function Footer() {
                 <i className="fa-solid fa-chevron-right" />
                 <span>About & Milestones</span>
               </button>
+              <button type="button" className="footer-nav-link" onClick={() => handleNav('/journey')}>
+                <i className="fa-solid fa-chevron-right" />
+                <span>Journey & Milestones</span>
+              </button>
               <button type="button" className="footer-nav-link" onClick={() => handleNav('/skills')}>
                 <i className="fa-solid fa-chevron-right" />
                 <span>Skills & Tech Stack</span>
@@ -366,6 +370,7 @@ export function Footer() {
 
           <div className="footer-bottom-links">
             <Link to="/about" onClick={() => playTick()}>About</Link>
+            <Link to="/journey" onClick={() => playTick()}>Journey</Link>
             <Link to="/projects" onClick={() => playTick()}>Projects</Link>
             <Link to="/contact" onClick={() => playTick()}>Contact</Link>
             <button type="button" className="footer-btn-top" onClick={handleScrollToTop}>
