@@ -295,6 +295,18 @@ function formatTimeAgo(timestamp) {
   return new Date(parsed).toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
 
+function formatEventType(type) {
+  const labels = {
+    page_view: 'Page view',
+    project_view: 'Project view',
+    resume_download: 'Resume download',
+    cli_launch: 'Terminal launch',
+    api_sandbox: 'API sandbox',
+    chat_query: 'AI assistant'
+  };
+  return labels[type] || String(type || 'visitor activity').replace(/[_-]+/g, ' ');
+}
+
 function formatReferrer(referrer) {
   const value = String(referrer || '').trim();
   if (!value) return 'Direct';
@@ -454,6 +466,7 @@ export function AdminAnalytics({ showToast }) {
   const interactions = (Number(analytics.cliLaunches) || 0)
     + (Number(analytics.apiSandboxExecutions) || 0)
     + (Number(analytics.chatQueries) || 0);
+  const totalProjectViews = topProjects.reduce((sum, project) => sum + project.views, 0);
   const topReferrer = referrers[0]?.source;
   const topProject = topProjects[0]?.title;
   const smartInsight = topReferrer && topProject
@@ -466,25 +479,25 @@ export function AdminAnalytics({ showToast }) {
 
   const metricCards = [
     {
-      label: 'Unique Visitors',
-      value: formatNumber(analytics.uniqueVisitors),
-      description: 'Recorded visitor sessions',
-      icon: 'users',
+      label: 'Tracked events',
+      value: formatNumber(analytics.totalPageViews),
+      description: 'Cumulative activity received by the telemetry service.',
+      icon: 'broadcast',
       accent: 'text-blue-300',
       iconBackground: 'bg-blue-400/10 border-blue-300/20',
       hover: 'hover:border-blue-300/40'
     },
     {
-      label: 'Total Page Views',
-      value: formatNumber(analytics.totalPageViews),
-      description: 'Across public pages and routes',
-      icon: 'eye',
+      label: 'Project views',
+      value: formatNumber(totalProjectViews),
+      description: `${formatNumber(topProjects.length)} projects with tracked views.`,
+      icon: 'project',
       accent: 'text-[#d4af37]',
       iconBackground: 'bg-[#d4af37]/10 border-[#d4af37]/20',
       hover: 'hover:border-[#d4af37]/40'
     },
     {
-      label: 'Resume Downloads',
+      label: 'Resume downloads',
       value: formatNumber(analytics.resumeDownloads),
       description: 'Tracked resume downloads',
       icon: 'file',
@@ -493,9 +506,10 @@ export function AdminAnalytics({ showToast }) {
       hover: 'hover:border-emerald-300/40'
     },
     {
-      label: 'Interactive Engagements',
+      label: 'Interactive actions',
       value: formatNumber(interactions),
-      description: `CLI ${formatNumber(analytics.cliLaunches)} · Sandbox ${formatNumber(analytics.apiSandboxExecutions)} · AI ${formatNumber(analytics.chatQueries)}`,
+      description: 'Terminal, API sandbox, and AI assistant activity.',
+      detail: `Terminal ${formatNumber(analytics.cliLaunches)} · API ${formatNumber(analytics.apiSandboxExecutions)} · AI ${formatNumber(analytics.chatQueries)}`,
       icon: 'terminal',
       accent: 'text-violet-300',
       iconBackground: 'bg-violet-400/10 border-violet-300/20',
@@ -519,17 +533,17 @@ export function AdminAnalytics({ showToast }) {
               <span className={`h-1.5 w-1.5 rounded-full ${
                 usingDemoData ? 'bg-amber-300' : streamPaused ? 'bg-amber-300' : 'bg-emerald-300 animate-pulse'
               }`} />
-              {usingDemoData ? 'Demo data' : streamPaused ? 'Stream paused' : 'System live'}
+              {usingDemoData ? 'Demo data' : streamPaused ? 'Updates paused' : 'Auto-refresh on'}
             </span>
           </div>
           <p className="mt-1.5 text-sm text-slate-400">
-            Visitor activity, traffic sources, project interest, and device sessions.
+            Cumulative activity, tracked referrals, project interest, and device mix.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {analytics.serverTime && (
             <span className="text-[11px] text-slate-500">
-              Updated {new Date(analytics.serverTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              Last synced {new Date(analytics.serverTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
           <button
@@ -570,7 +584,7 @@ export function AdminAnalytics({ showToast }) {
           <Icon name="sparkles" className="h-4 w-4" />
         </span>
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-white">Telemetry insight</h3>
+          <h3 className="text-sm font-semibold text-white">Quick read</h3>
           <p className="mt-1 text-xs leading-relaxed text-slate-400">{smartInsight}</p>
         </div>
       </div>
@@ -592,12 +606,19 @@ export function AdminAnalytics({ showToast }) {
                 <Icon name={metric.icon} className="h-[18px] w-[18px]" />
               </span>
             </div>
-            <p className="relative mt-2 truncate text-[11px] text-slate-500" title={metric.description}>
+            <p className="relative mt-2 text-[11px] leading-relaxed text-slate-400">
               {metric.description}
             </p>
+            {metric.detail && (
+              <p className="relative mt-1.5 text-[10px] text-slate-500">{metric.detail}</p>
+            )}
           </article>
         ))}
       </div>
+
+      <p className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-3.5 py-2.5 text-[11px] leading-relaxed text-slate-400">
+        Totals are cumulative, not date-filtered. Visitor identities are not deduplicated, so event counts should not be read as unique people.
+      </p>
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
         <div className="space-y-5 xl:col-span-3">
@@ -608,9 +629,10 @@ export function AdminAnalytics({ showToast }) {
                 Traffic sources
               </h3>
               <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] text-slate-400">
-                {formatNumber(referralTotal)} total
+                {formatNumber(referralTotal)} tracked referrals
               </span>
             </div>
+            <p className="mb-4 -mt-2 text-[10px] text-slate-500">Share of tracked referral traffic</p>
             {referrers.length > 0 ? (
               <div className="space-y-4">
                 {referrers.map(({ source, count }) => {
@@ -707,13 +729,16 @@ export function AdminAnalytics({ showToast }) {
           className={`telemetry-scroll-panel relative flex min-h-0 flex-col overflow-hidden rounded-xl border bg-[#080c12]/90 shadow-lg shadow-black/20 transition-colors xl:col-span-5 ${
             streamPaused ? 'border-amber-300/20' : 'border-emerald-300/20'
           }`}
-          aria-labelledby="live-stream-title"
+          aria-labelledby="recent-activity-title"
         >
           <div className={`absolute inset-x-0 top-0 h-px ${streamPaused ? 'bg-amber-300/50' : 'bg-emerald-300/50'}`} />
           <div className="flex items-center justify-between gap-3 border-b border-white/[0.07] px-4 py-3.5">
             <div className="flex items-center gap-2">
               <Icon name="broadcast" className={`h-4 w-4 ${streamPaused ? 'text-amber-300' : 'text-emerald-300'}`} />
-              <h3 id="live-stream-title" className="text-sm font-semibold text-white">Live event stream</h3>
+              <div>
+                <h3 id="recent-activity-title" className="text-sm font-semibold text-white">Recent activity</h3>
+                <p className="mt-0.5 text-[10px] text-slate-500">Latest events received by the site</p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -763,8 +788,10 @@ export function AdminAnalytics({ showToast }) {
                     <Icon name={eventIcon} className="h-4 w-4" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="truncate text-xs font-medium text-slate-100">{event.title || event.path || 'Visitor activity'}</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="rounded border border-white/[0.08] bg-white/[0.035] px-1.5 py-0.5 text-[9px] font-medium capitalize text-slate-400">
+                        {formatEventType(event.type)}
+                      </span>
                       <time
                         className="shrink-0 text-[10px] text-slate-500"
                         dateTime={timestamp || undefined}
@@ -773,6 +800,9 @@ export function AdminAnalytics({ showToast }) {
                         {timestamp ? formatTimeAgo(timestamp) : 'Time unavailable'}
                       </time>
                     </div>
+                    <p className="mt-1.5 truncate text-xs font-medium text-slate-100" title={event.title || event.path}>
+                      {event.title || event.path || 'Visitor activity'}
+                    </p>
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-slate-500">
                       <span className="inline-flex items-center gap-1">
                         <Icon name="location" className="h-3 w-3" />
@@ -791,13 +821,13 @@ export function AdminAnalytics({ showToast }) {
                 </span>
                 <p className="mt-3 text-sm font-medium text-slate-300">No visitor events yet</p>
                 <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-500">
-                  Events recorded by the portfolio will appear here. This feed refreshes automatically while live.
+                  Events recorded by the portfolio will appear here. Updates are checked every 15 seconds.
                 </p>
               </div>
             )}
           </div>
           <div className="flex items-center justify-between border-t border-white/[0.07] px-4 py-2.5 text-[10px] text-slate-500">
-            <span>{formatNumber(recentEvents.length)} recorded events</span>
+            <span>{formatNumber(recentEvents.length)} recent events</span>
             <span>{streamPaused ? 'Automatic updates paused' : 'Refreshes every 15 seconds'}</span>
           </div>
         </section>

@@ -1,5 +1,5 @@
 {
-  "totalPageViews": 3330,
+  "totalPageViews": 3332,
   "uniqueVisitors": 486,
   "resumeDownloads": 89,
   "cliLaunches": 142,
@@ -12,7 +12,7 @@
     "Google / Search": 140,
     "Twitter / X": 84,
     "LeetCode": 76,
-    "Direct / External": 2061
+    "Direct / External": 2063
   },
   "topProjects": {
     "wanderlust-airbnb-clone": {
@@ -75,9 +75,29 @@
     "2026-10-31": 239,
     "2026-11-01": 720,
     "2026-11-02": 802,
-    "2026-11-03": 173
+    "2026-11-03": 175
   },
   "recentEvents": [
+    {
+      "id": "ev-1793730134200-ta9o",
+      "type": "pageview",
+      "path": "/admin",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/",
+      "timestamp": "2026-11-03T18:22:14.200Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1793730084811-z9s4",
+      "type": "pageview",
+      "path": "/admin",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/",
+      "timestamp": "2026-11-03T18:21:24.811Z",
+      "country": "Direct",
+      "city": "Global"
+    },
     {
       "id": "ev-1793729758565-sdve",
       "type": "pageview",
@@ -555,26 +575,6 @@
       "title": "Featured Projects & Live Software | Ayush Prajapati",
       "referrer": "http://localhost:5174/certificates",
       "timestamp": "2026-11-03T17:23:26.458Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793726602053-7jzt",
-      "type": "pageview",
-      "path": "/projects",
-      "title": "Technical Skills & Stack | Ayush Prajapati",
-      "referrer": "http://localhost:5174/projects",
-      "timestamp": "2026-11-03T17:23:22.053Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1793726598432-7tx6",
-      "type": "pageview",
-      "path": "/skills",
-      "title": "About & Academic Profile | Ayush Prajapati",
-      "referrer": "http://localhost:5174/skills",
-      "timestamp": "2026-11-03T17:23:18.432Z",
       "country": "Direct",
       "city": "Global"
     }
