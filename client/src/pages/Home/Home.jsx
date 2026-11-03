@@ -5,10 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useSmoothScroll } from '../../components/common/SmoothScrollProvider';
 import { HeroCosmosCanvas } from '../../components/ui/HeroCosmosCanvas';
-import { InteractiveMeshWave } from '../../components/ui/InteractiveMeshWave';
 import { MagneticButton } from '../../components/ui/MagneticButton';
 import { TiltCard } from '../../components/ui/TiltCard';
-import { CinematicParticleCard } from '../../components/ui/CinematicParticleCard';
 import { ZeroToOneJourneyCard } from '../../components/ui/ZeroToOneJourneyCard';
 
 import { ProjectCard } from '../../components/projects/ProjectCard';
@@ -18,6 +16,47 @@ import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { personSchema, websiteSchema } from '../../utils/seo';
+
+const InteractiveMeshWave = React.lazy(() =>
+  import('../../components/ui/InteractiveMeshWave').then((module) => ({ default: module.InteractiveMeshWave }))
+);
+const CinematicParticleCard = React.lazy(() =>
+  import('../../components/ui/CinematicParticleCard').then((module) => ({ default: module.CinematicParticleCard }))
+);
+
+function DeferredVisual({ Component, className = '' }) {
+  const containerRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return undefined;
+    if (!('IntersectionObserver' in window)) {
+      setShouldLoad(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setShouldLoad(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '80px 0px' });
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className={className}>
+      {shouldLoad && (
+        <React.Suspense fallback={null}>
+          <Component className="absolute inset-0" />
+        </React.Suspense>
+      )}
+    </div>
+  );
+}
 
 export function HomePage() {
   const { appState, openResumeModal } = usePortfolio();
@@ -161,52 +200,23 @@ export function HomePage() {
     gsap.to(el, { x: 0, y: 0, duration: 0.75, ease: 'elastic.out(1, 0.3)' });
   };
 
-  // Keep the hero entrance and section reveals on one restrained motion system.
+  // GSAP Entrance Timeline & ScrollTrigger Animations
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !containerRef.current) return;
 
-    gsap.registerPlugin(ScrollTrigger);
-    let disposed = false;
-    let refreshOnLayout = () => {};
+    try {
+      gsap.registerPlugin(ScrollTrigger);
+    } catch (_e) {}
 
     const ctx = gsap.context(() => {
-      const revealOnScroll = (targets, trigger, options = {}) => {
-        const elements = gsap.utils.toArray(targets, containerRef.current);
-        if (elements.length === 0) return;
-
-        gsap.fromTo(
-          elements,
-          {
-            autoAlpha: 0,
-            y: options.y ?? 20,
-            scale: options.scale ?? 0.99
-          },
-          {
-            autoAlpha: 1,
-            y: 0,
-            scale: 1,
-            duration: options.duration ?? 0.62,
-            stagger: options.stagger ?? 0,
-            ease: 'power3.out',
-            clearProps: 'opacity,transform,visibility',
-            scrollTrigger: {
-              trigger,
-              start: 'top 88%',
-              once: true,
-              fastScrollEnd: true,
-              invalidateOnRefresh: true
-            }
-          }
-        );
-      };
-
-      const heroTimeline = gsap.timeline({
+      // Animate the elements used by the current editorial hero markup.
+      const heroTl = gsap.timeline({
         delay: 0.08,
         defaults: { ease: 'power3.out' }
       });
 
-      heroTimeline
+      heroTl
         .fromTo('.hero-top-meta', { autoAlpha: 0, y: -12 }, {
           autoAlpha: 1,
           y: 0,
@@ -248,36 +258,87 @@ export function HomePage() {
           clearProps: 'opacity,transform,visibility'
         }, '-=0.2');
 
-      revealOnScroll(
-        '.bento-section .home-scroll-visual, .bento-section .bento-bio-card, .bento-section .particle-container',
-        '.bento-section',
-        { stagger: 0.08 }
-      );
-      revealOnScroll('.zero-to-one-journey-card', '.zero-to-one-journey-card');
-      revealOnScroll(
-        '#portfolio-directories .showcase-eyebrow, #portfolio-directories h2, #portfolio-directories .max-w-xl',
-        '#portfolio-directories',
-        { stagger: 0.06, y: 16 }
-      );
-      revealOnScroll(
-        '#portfolio-directories .home-nav-executive-btn, #portfolio-directories .home-nav-btn',
-        '#portfolio-directories',
-        { stagger: 0.08, y: 18 }
-      );
-      revealOnScroll('.home-cta-banner', '.home-cta-banner', { y: 18 });
-
-      refreshOnLayout = () => ScrollTrigger.refresh();
-      window.addEventListener('load', refreshOnLayout, { once: true });
-      document.fonts?.ready.then(() => {
-        if (!disposed) refreshOnLayout();
+      // 2. Section 01: Bento Intro & Focus Areas ScrollTrigger
+      gsap.from('.bento-section .bento-header > *', {
+        scrollTrigger: {
+          trigger: '.bento-section',
+          start: 'top 92%',
+          once: true
+        },
+        y: 20,
+        opacity: 0,
+        stagger: 0.08,
+        duration: 0.6,
+        ease: 'power2.out',
+        clearProps: 'all'
       });
+
+      gsap.from('.bento-bio-card', {
+        scrollTrigger: {
+          trigger: '.bento-section',
+          start: 'top 90%',
+          once: true
+        },
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        clearProps: 'all'
+      });
+
+      const particleCard = containerRef.current.querySelector('.particle-container');
+      if (particleCard) {
+        gsap.from(particleCard, {
+          scrollTrigger: {
+            trigger: '.bento-section',
+            start: 'top 90%',
+            once: true
+          },
+          y: 20,
+          opacity: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          clearProps: 'all'
+        });
+      }
+
+      // 3. Section 02: Directory Navigation Buttons Entrance
+      const navBtns = containerRef.current.querySelectorAll('.home-nav-executive-btn, .home-nav-btn');
+      if (navBtns.length > 0) {
+        gsap.from(navBtns, {
+          scrollTrigger: {
+            trigger: '#portfolio-directories',
+            start: 'top 92%',
+            once: true
+          },
+          y: 16,
+          opacity: 0,
+          stagger: 0.08,
+          duration: 0.5,
+          ease: 'power2.out',
+          clearProps: 'all'
+        });
+      }
+
+      // 5. Section 04: CTA Banner ScrollTrigger
+      gsap.from('.home-cta-banner', {
+        scrollTrigger: {
+          trigger: '.home-cta-banner',
+          start: 'top 92%',
+          once: true
+        },
+        scale: 0.98,
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        ease: 'power2.out',
+        clearProps: 'all'
+      });
+
+      ScrollTrigger.refresh();
     }, containerRef);
 
-    return () => {
-      disposed = true;
-      window.removeEventListener('load', refreshOnLayout);
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
   const heroPhotoSrc = '/images/ayush-editorial-portrait.png';
@@ -432,7 +493,10 @@ export function HomePage() {
               <div className="absolute bottom-3 right-4 z-10 font-mono text-xs text-slate-400 pointer-events-none">
                 Hover to ripple
               </div>
-              <InteractiveMeshWave className="absolute inset-0" />
+              <DeferredVisual
+                Component={InteractiveMeshWave}
+                className="home-mesh-visual absolute inset-0"
+              />
             </div>
           </div>
 
@@ -454,7 +518,10 @@ export function HomePage() {
             </TiltCard>
 
             <div className="lg:col-span-6 flex items-stretch">
-              <CinematicParticleCard className="h-full min-h-[380px]" />
+              <DeferredVisual
+                Component={CinematicParticleCard}
+                className="home-particle-visual relative h-[400px] w-full sm:h-[440px]"
+              />
             </div>
           </div>
         </section>

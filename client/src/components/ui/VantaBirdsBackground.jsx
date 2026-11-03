@@ -307,10 +307,10 @@ class Boid {
 }
 
 // ── 5. Main React Component ──────────────────────────────────────────────────
-export function VantaBirdsBackground({ scrollProgress = 0 }) {
+export function VantaBirdsBackground({ scrollProgressRef }) {
   const mountRef = useRef(null);
-  const scrollRef = useRef(scrollProgress);
-  scrollRef.current = scrollProgress;
+  const fallbackScrollRef = useRef(0);
+  const scrollRef = scrollProgressRef || fallbackScrollRef;
 
   useEffect(() => {
     const container = mountRef.current;
@@ -619,7 +619,7 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
     <div
       ref={mountRef}
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none transition-opacity duration-500 ease-out"
-      style={{ opacity: Math.max(0.22, 0.98 - scrollProgress * 1.6) }}
+      style={{ opacity: 1 }}
       aria-hidden="true"
     />
   );
