@@ -1,543 +1,862 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { getCsrfToken } from '../../../services/api';
 import { playTick } from '../../../utils/audio';
 
-// Realistic live edge telemetry stream entries if API data has empty recentEvents
-const FALLBACK_LIVE_EVENTS = [
-  {
-    id: 'ev-1',
-    type: 'project_view',
-    title: 'Wanderlust — Distributed Airbnb Platform',
-    city: 'San Francisco',
-    country: 'United States',
-    countryCode: 'US',
-    referrer: 'LinkedIn',
-    browser: 'Chrome 122',
-    device: 'Desktop',
-    timeAgo: 'Just now'
-  },
-  {
-    id: 'ev-2',
-    type: 'resume_download',
-    title: 'Downloaded Full-Stack Resume (ATS PDF)',
-    city: 'London',
-    country: 'United Kingdom',
-    countryCode: 'GB',
-    referrer: 'GitHub',
-    browser: 'Safari 17.3',
-    device: 'MacBook',
-    timeAgo: '3m ago'
-  },
-  {
-    id: 'ev-3',
-    type: 'api_sandbox',
-    title: 'Terminal CLI Session / Interactive Query',
-    city: 'Bengaluru',
-    country: 'India',
-    countryCode: 'IN',
-    referrer: 'Direct / URL',
-    browser: 'Chrome 122',
-    device: 'Desktop',
-    timeAgo: '7m ago'
-  },
-  {
-    id: 'ev-4',
-    type: 'project_view',
-    title: 'Autonomous Multi-Agent Workspace',
-    city: 'Berlin',
-    country: 'Germany',
-    countryCode: 'DE',
-    referrer: 'Twitter / X',
-    browser: 'Firefox 123',
-    device: 'Desktop',
-    timeAgo: '14m ago'
-  },
-  {
-    id: 'ev-5',
-    type: 'page_view',
-    title: 'Public About & Milestone Spotlight',
-    city: 'Seattle',
-    country: 'United States',
-    countryCode: 'US',
-    referrer: 'Google / Search',
-    browser: 'Edge 121',
-    device: 'Desktop',
-    timeAgo: '21m ago'
-  },
-  {
-    id: 'ev-6',
-    type: 'project_view',
-    title: 'AI Mock Interview Platform',
-    city: 'Toronto',
-    country: 'Canada',
-    countryCode: 'CA',
-    referrer: 'LinkedIn',
-    browser: 'Chrome 121',
-    device: 'Mobile',
-    timeAgo: '34m ago'
-  },
-  {
-    id: 'ev-7',
-    type: 'resume_download',
-    title: 'Downloaded MERN Engineering Resume PDF',
-    city: 'Singapore',
-    country: 'Singapore',
-    countryCode: 'SG',
-    referrer: 'LeetCode',
-    browser: 'Chrome Mobile',
-    device: 'Mobile',
-    timeAgo: '48m ago'
-  }
-];
+const createDemoTimestamp = (minutesAgo) => new Date(Date.now() - minutesAgo * 60_000).toISOString();
 
-const REFERRER_ICONS = {
-  LinkedIn: { icon: 'fa-brands fa-linkedin', color: '#0a66c2', bg: 'rgba(10, 102, 194, 0.15)' },
-  GitHub: { icon: 'fa-brands fa-github', color: '#ffffff', bg: 'rgba(255, 255, 255, 0.12)' },
-  'Direct / URL': { icon: 'fa-solid fa-link', color: '#eab308', bg: 'rgba(234, 179, 8, 0.15)' },
-  'Google / Search': { icon: 'fa-brands fa-google', color: '#4285f4', bg: 'rgba(66, 133, 244, 0.15)' },
-  'Twitter / X': { icon: 'fa-brands fa-x-twitter', color: '#cbd5e1', bg: 'rgba(203, 213, 225, 0.12)' },
-  LeetCode: { icon: 'fa-solid fa-code', color: '#ffa116', bg: 'rgba(255, 161, 22, 0.15)' }
+const DEMO_ANALYTICS = {
+  totalPageViews: 1248,
+  uniqueVisitors: 486,
+  resumeDownloads: 89,
+  cliLaunches: 142,
+  apiSandboxExecutions: 67,
+  chatQueries: 53,
+  referrers: {
+    LinkedIn: 342,
+    GitHub: 285,
+    'Direct / URL': 198,
+    'Google / Search': 140,
+    'Twitter / X': 84,
+    LeetCode: 76
+  },
+  topProjects: {
+    'wanderlust-airbnb-clone': { views: 324, title: 'Wanderlust — Distributed Airbnb Platform' },
+    'agentic-workspace': { views: 289, title: 'Autonomous Multi-Agent Workspace' },
+    'ai-mock-interview-platform': { views: 245, title: 'AI Mock Interview Platform' },
+    'developer-portfolio-v9': { views: 198, title: 'Developer Portfolio' },
+    'real-time-chat-platform': { views: 176, title: 'Real-Time Chat Platform' },
+    'ecommerce-dashboard': { views: 154, title: 'E-commerce Analytics Dashboard' },
+    'task-management-app': { views: 132, title: 'Collaborative Task Manager' },
+    'weather-insights': { views: 108, title: 'Weather Insights Dashboard' },
+    'expense-tracker': { views: 86, title: 'Personal Finance Tracker' },
+    'recipe-discovery': { views: 64, title: 'Recipe Discovery App' }
+  },
+  devices: { desktop: 780, mobile: 412, tablet: 56 },
+  browsers: { Chrome: 620, Firefox: 240, Safari: 210, Edge: 130, Other: 48 },
+  recentEvents: [
+    {
+      id: 'demo-1',
+      type: 'project_view',
+      title: 'Viewed Wanderlust — Distributed Airbnb Platform',
+      path: '/projects/wanderlust-airbnb-clone',
+      city: 'San Francisco',
+      country: 'United States',
+      referrer: 'LinkedIn',
+      timestamp: createDemoTimestamp(2)
+    },
+    {
+      id: 'demo-2',
+      type: 'resume_download',
+      title: 'Downloaded Full-Stack Resume',
+      path: '/resume',
+      city: 'London',
+      country: 'United Kingdom',
+      referrer: 'GitHub',
+      timestamp: createDemoTimestamp(8)
+    },
+    {
+      id: 'demo-3',
+      type: 'api_sandbox',
+      title: 'Ran an API sandbox request',
+      path: '/api/v1/properties/search',
+      city: 'Bengaluru',
+      country: 'India',
+      referrer: 'Direct / URL',
+      timestamp: createDemoTimestamp(16)
+    },
+    {
+      id: 'demo-4',
+      type: 'project_view',
+      title: 'Viewed Autonomous Multi-Agent Workspace',
+      path: '/projects/agentic-workspace',
+      city: 'Berlin',
+      country: 'Germany',
+      referrer: 'Google / Search',
+      timestamp: createDemoTimestamp(31)
+    },
+    {
+      id: 'demo-5',
+      type: 'page_view',
+      title: 'Visited About & Academic Profile',
+      path: '/about',
+      city: 'Seattle',
+      country: 'United States',
+      referrer: 'LinkedIn',
+      timestamp: createDemoTimestamp(48)
+    },
+    {
+      id: 'demo-6',
+      type: 'project_view',
+      title: 'Viewed AI Mock Interview Platform',
+      path: '/projects/ai-mock-interview-platform',
+      city: 'Toronto',
+      country: 'Canada',
+      referrer: 'GitHub',
+      timestamp: createDemoTimestamp(66)
+    },
+    {
+      id: 'demo-7',
+      type: 'chat_query',
+      title: 'Started a portfolio assistant conversation',
+      path: '/ai-chat',
+      city: 'Singapore',
+      country: 'Singapore',
+      referrer: 'Google / Search',
+      timestamp: createDemoTimestamp(83)
+    },
+    {
+      id: 'demo-8',
+      type: 'project_view',
+      title: 'Viewed Real-Time Chat Platform',
+      path: '/projects/real-time-chat-platform',
+      city: 'Amsterdam',
+      country: 'Netherlands',
+      referrer: 'Twitter / X',
+      timestamp: createDemoTimestamp(104)
+    },
+    {
+      id: 'demo-9',
+      type: 'resume_download',
+      title: 'Downloaded Full-Stack Resume',
+      path: '/resume',
+      city: 'Mumbai',
+      country: 'India',
+      referrer: 'LeetCode',
+      timestamp: createDemoTimestamp(128)
+    },
+    {
+      id: 'demo-10',
+      type: 'page_view',
+      title: 'Browsed technical skills',
+      path: '/skills',
+      city: 'Melbourne',
+      country: 'Australia',
+      referrer: 'Direct / URL',
+      timestamp: createDemoTimestamp(151)
+    },
+    {
+      id: 'demo-11',
+      type: 'project_view',
+      title: 'Viewed E-commerce Analytics Dashboard',
+      path: '/projects/ecommerce-dashboard',
+      city: 'New York',
+      country: 'United States',
+      referrer: 'Google / Search',
+      timestamp: createDemoTimestamp(179)
+    },
+    {
+      id: 'demo-12',
+      type: 'cli_launch',
+      title: 'Opened the interactive developer terminal',
+      path: '/terminal',
+      city: 'Pune',
+      country: 'India',
+      referrer: 'Direct / URL',
+      timestamp: createDemoTimestamp(206)
+    }
+  ]
 };
 
-export function AdminAnalytics() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+const REFERRER_PRESENTATION = {
+  LinkedIn: { icon: 'fa-brands fa-linkedin', color: '#60a5fa', background: 'rgba(96, 165, 250, 0.12)' },
+  GitHub: { icon: 'fa-brands fa-github', color: '#e2e8f0', background: 'rgba(226, 232, 240, 0.1)' },
+  'Direct / URL': { icon: 'fa-solid fa-link', color: '#d4af37', background: 'rgba(212, 175, 55, 0.12)' },
+  'Direct / External': { icon: 'fa-solid fa-arrow-up-right-from-square', color: '#d4af37', background: 'rgba(212, 175, 55, 0.12)' },
+  'Google / Search': { icon: 'fa-brands fa-google', color: '#60a5fa', background: 'rgba(96, 165, 250, 0.12)' },
+  'Twitter / X': { icon: 'fa-brands fa-x-twitter', color: '#cbd5e1', background: 'rgba(203, 213, 225, 0.1)' },
+  LeetCode: { icon: 'fa-solid fa-code', color: '#fb923c', background: 'rgba(251, 146, 60, 0.12)' }
+};
 
-  const fetchAnalytics = async () => {
-    try {
-      const res = await fetch('/api/admin/analytics');
-      if (res.ok) {
-        const json = await res.json();
-        if (json?.analytics) {
-          setData(json.analytics);
-        }
-      }
-    } catch (_err) {
-      // Fallback
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+const ICON_PATHS = {
+  users: (
+    <>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="10" cy="7" r="4" />
+      <path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+    </>
+  ),
+  eye: (
+    <>
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  file: (
+    <>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6M8 13h8M8 17h8" />
+    </>
+  ),
+  terminal: (
+    <>
+      <path d="m4 17 6-5-6-5M12 19h8" />
+    </>
+  ),
+  refresh: (
+    <>
+      <path d="M20 7v5h-5M4 17v-5h5" />
+      <path d="M5.6 9a7 7 0 0 1 11.6-2L20 12M4 12l2.8 5a7 7 0 0 0 11.6-2" />
+    </>
+  ),
+  sparkles: (
+    <>
+      <path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z" />
+      <path d="m19 14 1.1 2.9L23 18l-2.9 1.1L19 22l-1.1-2.9L15 18l2.9-1.1L19 14ZM5 2l.8 2.2L8 5l-2.2.8L5 8l-.8-2.2L2 5l2.2-.8L5 2Z" />
+    </>
+  ),
+  route: (
+    <>
+      <circle cx="6" cy="19" r="2" />
+      <circle cx="18" cy="5" r="2" />
+      <path d="M8 19h4a4 4 0 0 0 4-4V9a4 4 0 0 1 4-4M6 17V7a2 2 0 0 1 2-2h8" />
+    </>
+  ),
+  device: (
+    <>
+      <rect x="3" y="4" width="18" height="13" rx="2" />
+      <path d="M8 21h8M12 17v4" />
+    </>
+  ),
+  mobile: (
+    <>
+      <rect x="7" y="2" width="10" height="20" rx="2" />
+      <path d="M11 18h2" />
+    </>
+  ),
+  tablet: (
+    <>
+      <rect x="4" y="2" width="16" height="20" rx="2" />
+      <path d="M11 18h2" />
+    </>
+  ),
+  broadcast: (
+    <>
+      <path d="M5 8.5a10 10 0 0 0 0 7M8 10.5a6 6 0 0 0 0 3M19 8.5a10 10 0 0 1 0 7M16 10.5a6 6 0 0 1 0 3" />
+      <circle cx="12" cy="12" r="2" />
+    </>
+  ),
+  pause: <path d="M8 5v14M16 5v14" />,
+  play: <path d="m8 5 12 7-12 7V5Z" />,
+  location: (
+    <>
+      <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </>
+  ),
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20" />
+    </>
+  ),
+  project: (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 9h18M8 4v5" />
+    </>
+  ),
+  arrow: (
+    <>
+      <path d="M7 17 17 7M7 7h10v10" />
+    </>
+  )
+};
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, []);
+function Icon({ name, className = '' }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.7"
+      viewBox="0 0 24 24"
+    >
+      {ICON_PATHS[name] || ICON_PATHS.globe}
+    </svg>
+  );
+}
 
-  const handleRefresh = () => {
-    playTick('click');
-    setRefreshing(true);
-    fetchAnalytics();
-  };
+function formatNumber(value) {
+  const count = Number(value);
+  return (Number.isFinite(count) ? count : 0).toLocaleString();
+}
 
-  const d = data || {
-    totalPageViews: 1248,
-    uniqueVisitors: 486,
-    resumeDownloads: 89,
-    cliLaunches: 142,
-    apiSandboxExecutions: 67,
-    chatQueries: 53,
-    referrers: {
-      LinkedIn: 342,
-      GitHub: 285,
-      'Direct / URL': 198,
-      'Google / Search': 140,
-      'Twitter / X': 84,
-      LeetCode: 76
-    },
-    topProjects: {
-      'wanderlust-airbnb-clone': { views: 324, title: 'Wanderlust — Distributed Airbnb Platform' },
-      'agentic-workspace': { views: 289, title: 'Autonomous Multi-Agent Workspace' },
-      'ai-mock-interview-platform': { views: 245, title: 'AI Mock Interview Platform' },
-      'developer-portfolio-v9': { views: 198, title: 'Obsidian Liquid Portfolio' }
-    },
-    devices: { desktop: 780, mobile: 412, tablet: 56 },
-    browsers: { Chrome: 620, Firefox: 240, Safari: 210, Edge: 130, Other: 48 },
-    recentEvents: []
-  };
+function formatTimeAgo(timestamp) {
+  const parsed = new Date(timestamp).getTime();
+  if (!Number.isFinite(parsed)) return 'Time unavailable';
 
-  const totalReferrals = useMemo(() => {
-    return Object.values(d.referrers || {}).reduce((a, b) => a + b, 0) || 1;
-  }, [d.referrers]);
+  const elapsed = Math.max(0, Date.now() - parsed);
+  if (elapsed < 60_000) return 'Just now';
+  if (elapsed < 3_600_000) return `${Math.floor(elapsed / 60_000)}m ago`;
+  if (elapsed < 86_400_000) return `${Math.floor(elapsed / 3_600_000)}h ago`;
+  return new Date(parsed).toLocaleDateString([], { month: 'short', day: 'numeric' });
+}
 
-  const topProjectsList = useMemo(() => {
-    return Object.entries(d.topProjects || {})
-      .map(([slug, info]) => ({
-        slug,
-        title: info.title || slug,
-        views: info.views || 0
-      }))
-      .sort((a, b) => b.views - a.views);
-  }, [d.topProjects]);
+function formatReferrer(referrer) {
+  const value = String(referrer || '').trim();
+  if (!value) return 'Direct';
 
-  const maxProjectViews = topProjectsList[0]?.views || 1;
+  try {
+    const url = new URL(value);
+    const hostname = url.hostname.replace(/^www\./, '').toLowerCase();
+    if (hostname === window.location.hostname.toLowerCase()) return 'Direct / Local';
+    if (hostname.includes('linkedin')) return 'LinkedIn';
+    if (hostname.includes('github')) return 'GitHub';
+    if (hostname.includes('google')) return 'Google / Search';
+    if (hostname === 'x.com' || hostname.includes('twitter') || hostname === 't.co') return 'Twitter / X';
+    if (hostname.includes('leetcode')) return 'LeetCode';
+    return hostname;
+  } catch {
+    return value.length > 32 ? `${value.slice(0, 29)}…` : value;
+  }
+}
 
-  // Active events stream
-  const activeEvents = (d.recentEvents && d.recentEvents.length > 0)
-    ? d.recentEvents
-    : FALLBACK_LIVE_EVENTS;
-
-  // Device calculations
-  const totalDevices = (d.devices?.desktop || 780) + (d.devices?.mobile || 412) + (d.devices?.tablet || 56);
-  const desktopPct = Math.round(((d.devices?.desktop || 780) / totalDevices) * 100);
-  const mobilePct = Math.round(((d.devices?.mobile || 412) / totalDevices) * 100);
-  const tabletPct = 100 - desktopPct - mobilePct;
+function DeviceDonut({ desktop, mobile, tablet, total }) {
+  const circumference = 2 * Math.PI * 35;
+  const devices = [
+    { key: 'desktop', value: desktop, color: '#60a5fa' },
+    { key: 'mobile', value: mobile, color: '#d4af37' },
+    { key: 'tablet', value: tablet, color: '#a78bfa' }
+  ];
+  let offset = 0;
 
   return (
-    <div className="space-y-6">
-      {/* Top Banner / Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h2 className="text-xl font-bold text-white tracking-tight">Visitor Analytics &amp; Edge Telemetry</h2>
-            <span className="flex items-center gap-1.5 text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Live Telemetry Active
-            </span>
-          </div>
-          <p className="text-slate-400 text-xs mt-1">
-            Real-time recruiter interactions, ATS downloads, device sessions, and project demo engagement.
-          </p>
-        </div>
-
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing}
-          className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white text-xs font-mono transition-all flex items-center gap-2 self-start sm:self-auto disabled:opacity-50"
-        >
-          <i className={`fa-solid fa-arrows-rotate ${refreshing ? 'animate-spin text-yellow-400' : ''}`} />
-          <span>{refreshing ? 'Syncing...' : 'Refresh Metrics'}</span>
-        </button>
-      </div>
-
-      {/* 4 Primary Modern KPI Cards (No Antique Roman Numeral Rendering) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Page Views */}
-        <div className="rounded-2xl bg-[#090f1a]/90 border border-yellow-500/20 p-5 backdrop-blur-xl relative overflow-hidden group hover:border-yellow-500/40 transition-all shadow-lg shadow-black/40">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">Total Page Views</span>
-            <div className="w-9 h-9 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 group-hover:scale-105 transition-transform">
-              <i className="fa-solid fa-eye text-sm" />
-            </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2.5">
-            <span className="text-3xl font-extrabold font-mono text-white tracking-tight">
-              {d.totalPageViews.toLocaleString()}
-            </span>
-            <span className="text-[11px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
-              +14.2%
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1.5">Across all public routes &amp; portfolio pages</p>
-        </div>
-
-        {/* Card 2: Unique Visitors */}
-        <div className="rounded-2xl bg-[#090f1a]/90 border border-purple-500/20 p-5 backdrop-blur-xl relative overflow-hidden group hover:border-purple-500/40 transition-all shadow-lg shadow-black/40">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">Unique Visitors</span>
-            <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
-              <i className="fa-solid fa-users text-sm" />
-            </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2.5">
-            <span className="text-3xl font-extrabold font-mono text-white tracking-tight">
-              {d.uniqueVisitors.toLocaleString()}
-            </span>
-            <span className="text-[11px] font-mono font-bold text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">
-              Verified
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1.5">Unique client sessions recorded</p>
-        </div>
-
-        {/* Card 3: Resume Downloads */}
-        <div className="rounded-2xl bg-[#090f1a]/90 border border-amber-500/20 p-5 backdrop-blur-xl relative overflow-hidden group hover:border-amber-500/40 transition-all shadow-lg shadow-black/40">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">Resume Downloads</span>
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
-              <i className="fa-solid fa-file-pdf text-sm" />
-            </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2.5">
-            <span className="text-3xl font-extrabold font-mono text-white tracking-tight">
-              {d.resumeDownloads.toLocaleString()}
-            </span>
-            <span className="text-[11px] font-mono font-bold text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
-              ATS PDFs
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1.5">Recruiter-tailored downloads</p>
-        </div>
-
-        {/* Card 4: Interactive CLI / Terminal */}
-        <div className="rounded-2xl bg-[#090f1a]/90 border border-emerald-500/20 p-5 backdrop-blur-xl relative overflow-hidden group hover:border-emerald-500/40 transition-all shadow-lg shadow-black/40">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">Interactive Sessions</span>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
-              <i className="fa-solid fa-terminal text-sm" />
-            </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2.5">
-            <span className="text-3xl font-extrabold font-mono text-white tracking-tight">
-              {(d.cliLaunches + d.apiSandboxExecutions).toLocaleString()}
-            </span>
-            <span className="text-[11px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
-              Live
-            </span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1.5">CLI launches ({d.cliLaunches}) + Sandbox ({d.apiSandboxExecutions})</p>
-        </div>
-      </div>
-
-      {/* Main Grid: Left Column (Leaderboard & Traffic) | Right Column (Live Event Stream & Device Breakdown) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column (7 cols): Top Projects Leaderboard & Referrers */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Top Projects Leaderboard */}
-          <div className="rounded-2xl bg-[#080d17] border border-white/10 p-5 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
-              <h4 className="text-white font-semibold text-sm flex items-center gap-2">
-                <i className="fa-solid fa-ranking-star text-amber-400" />
-                <span>Most Viewed Project Case Studies</span>
-              </h4>
-              <span className="text-[10px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
-                Ranked by Recruiter Views
-              </span>
-            </div>
-
-            <div className="space-y-4">
-              {topProjectsList.map((p, i) => {
-                const pct = Math.round((p.views / maxProjectViews) * 100);
-                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
-                return (
-                  <div key={p.slug} className="group p-2 rounded-xl hover:bg-white/[0.02] transition-colors">
-                    <div className="flex items-center justify-between text-xs font-mono mb-1.5">
-                      <div className="flex items-center gap-2.5 truncate">
-                        <span className="w-6 text-center text-sm font-bold shrink-0">{medal}</span>
-                        <span className="text-white font-medium group-hover:text-yellow-400 transition-colors truncate">
-                          {p.title}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 ml-2 shrink-0">
-                        <span className="text-yellow-400 font-bold">{p.views} views</span>
-                        <span className="text-[10px] text-slate-500 font-mono">({pct}%)</span>
-                      </div>
-                    </div>
-                    <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden p-0.5 border border-white/5">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-yellow-500 via-amber-400 to-emerald-400 transition-all duration-700"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Traffic Referrer Channels */}
-          <div className="rounded-2xl bg-[#080d17] border border-white/10 p-5 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
-              <h4 className="text-white font-semibold text-sm flex items-center gap-2">
-                <i className="fa-solid fa-share-nodes text-yellow-400" />
-                <span>Traffic Referrer Sources</span>
-              </h4>
-              <span className="text-[10px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
-                Total: {totalReferrals.toLocaleString()}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {Object.entries(d.referrers || {}).map(([channel, count]) => {
-                const pct = Math.round((count / totalReferrals) * 100);
-                const info = REFERRER_ICONS[channel] || { icon: 'fa-solid fa-globe', color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.15)' };
-                return (
-                  <div key={channel} className="p-3.5 rounded-xl bg-white/[0.025] hover:bg-white/[0.045] border border-white/5 transition-all">
-                    <div className="flex items-center justify-between text-xs font-mono mb-2">
-                      <span className="flex items-center gap-2 font-medium text-slate-200">
-                        <span
-                          className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-xs"
-                          style={{ backgroundColor: info.bg, color: info.color }}
-                        >
-                          <i className={info.icon} />
-                        </span>
-                        <span>{channel}</span>
-                      </span>
-                      <span className="font-bold" style={{ color: info.color }}>
-                        {count} <span className="text-[10px] text-slate-500">({pct}%)</span>
-                      </span>
-                    </div>
-                    <div className="h-1.5 w-full rounded-full bg-white/5 overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all duration-700"
-                        style={{ width: `${pct}%`, backgroundColor: info.color }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column (5 cols): Live Telemetry Event Stream & Device / Browser Breakdown */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Live Visitor Event Feed */}
-          <div className="rounded-2xl bg-[#080d17] border border-white/10 p-5 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3.5">
-              <h4 className="text-white font-semibold text-sm flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Live Event Stream</span>
-              </h4>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                Active Edge Feeds
-              </span>
-            </div>
-
-            <div
-              className="space-y-2.5 max-h-[380px] overflow-y-auto pr-1"
-              style={{
-                scrollbarWidth: 'thin',
-                scrollbarColor: 'rgba(212, 175, 55, 0.3) rgba(0, 0, 0, 0.2)'
-              }}
-            >
-              {activeEvents.map((ev, eIdx) => {
-                const isDownload = ev.type === 'resume_download';
-                const isProject = ev.type === 'project_view';
-                const isSandbox = ev.type === 'api_sandbox';
-                return (
-                  <div
-                    key={ev.id || eIdx}
-                    className="p-3 rounded-xl bg-white/[0.025] hover:bg-white/[0.05] border border-white/5 text-xs font-mono transition-all flex items-start gap-3"
-                  >
-                    <div
-                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
-                        isDownload
-                          ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                          : isProject
-                          ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
-                          : isSandbox
-                          ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30'
-                          : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                      }`}
-                    >
-                      <i
-                        className={`fa-solid ${
-                          isDownload
-                            ? 'fa-file-pdf text-xs'
-                            : isProject
-                            ? 'fa-layer-group text-xs'
-                            : isSandbox
-                            ? 'fa-terminal text-xs'
-                            : 'fa-globe text-xs'
-                        }`}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1 mb-0.5">
-                        <span className="text-white font-medium truncate">{ev.title || ev.path}</span>
-                        <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-1">
-                          {ev.timeAgo || (ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now')}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-[10px] text-slate-400">
-                        <span className="flex items-center gap-1">
-                          <i className="fa-solid fa-location-dot text-slate-500" />
-                          <span>{ev.city ? `${ev.city}, ${ev.country}` : 'Global Visitor'}</span>
-                        </span>
-                        <span>•</span>
-                        <span className="text-yellow-400/80">{ev.referrer || 'Direct'}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Device & Browser Platform Breakdown */}
-          <div className="rounded-2xl bg-[#080d17] border border-white/10 p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-white/5">
-              <h4 className="text-white font-semibold text-sm flex items-center gap-2">
-                <i className="fa-solid fa-chart-pie text-cyan-400" />
-                <span>Device &amp; Platform Breakdown</span>
-              </h4>
-              <span className="text-[10px] font-mono text-slate-400">
-                {totalDevices.toLocaleString()} Sessions
-              </span>
-            </div>
-
-            {/* Multi-segment stacked visual bar */}
-            <div className="space-y-2">
-              <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden flex p-0.5 border border-white/5">
-                <div
-                  className="h-full bg-cyan-400 rounded-l-full transition-all duration-700"
-                  style={{ width: `${desktopPct}%` }}
-                  title={`Desktop: ${desktopPct}%`}
-                />
-                <div
-                  className="h-full bg-yellow-400 transition-all duration-700"
-                  style={{ width: `${mobilePct}%` }}
-                  title={`Mobile: ${mobilePct}%`}
-                />
-                <div
-                  className="h-full bg-purple-400 rounded-r-full transition-all duration-700"
-                  style={{ width: `${tabletPct}%` }}
-                  title={`Tablet: ${tabletPct}%`}
-                />
-              </div>
-
-              {/* Legend with percentages */}
-              <div className="grid grid-cols-3 gap-2 pt-1 text-center font-mono">
-                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
-                  <div className="text-[10px] text-cyan-400 flex items-center justify-center gap-1">
-                    <i className="fa-solid fa-laptop" /> Desktop
-                  </div>
-                  <div className="text-sm font-bold text-white mt-0.5">{desktopPct}%</div>
-                  <div className="text-[9px] text-slate-500">{d.devices?.desktop || 780}</div>
-                </div>
-
-                <div className="p-2 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
-                  <div className="text-[10px] text-yellow-400 flex items-center justify-center gap-1">
-                    <i className="fa-solid fa-mobile-screen" /> Mobile
-                  </div>
-                  <div className="text-sm font-bold text-white mt-0.5">{mobilePct}%</div>
-                  <div className="text-[9px] text-slate-500">{d.devices?.mobile || 412}</div>
-                </div>
-
-                <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                  <div className="text-[10px] text-purple-400 flex items-center justify-center gap-1">
-                    <i className="fa-solid fa-tablet-screen-button" /> Tablet
-                  </div>
-                  <div className="text-sm font-bold text-white mt-0.5">{tabletPct}%</div>
-                  <div className="text-[9px] text-slate-500">{d.devices?.tablet || 56}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Browser Breakdown Chips */}
-            <div className="pt-2 border-t border-white/5">
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-2 font-semibold">
-                Client Browsers
-              </span>
-              <div className="flex flex-wrap gap-2 text-[11px] font-mono">
-                <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-slate-300 flex items-center gap-1.5">
-                  <i className="fa-brands fa-chrome text-amber-400" /> Chrome 50%
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-slate-300 flex items-center gap-1.5">
-                  <i className="fa-brands fa-firefox-browser text-orange-400" /> Firefox 19%
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-slate-300 flex items-center gap-1.5">
-                  <i className="fa-brands fa-safari text-blue-400" /> Safari 17%
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-slate-300 flex items-center gap-1.5">
-                  <i className="fa-brands fa-edge text-cyan-400" /> Edge 10%
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="relative h-28 w-28 shrink-0" role="img" aria-label={`${formatNumber(total)} device sessions`}>
+      <svg className="h-full w-full -rotate-90" viewBox="0 0 96 96">
+        <circle cx="48" cy="48" r="35" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="9" />
+        {total > 0 && devices.map((device) => {
+          const length = (device.value / total) * circumference;
+          const currentOffset = offset;
+          offset += length;
+          return (
+            <circle
+              key={device.key}
+              cx="48"
+              cy="48"
+              r="35"
+              fill="none"
+              stroke={device.color}
+              strokeDasharray={`${length} ${circumference - length}`}
+              strokeDashoffset={-currentOffset}
+              strokeWidth="9"
+              className="transition-all duration-700"
+            />
+          );
+        })}
+      </svg>
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-lg font-bold leading-none text-white">{formatNumber(total)}</span>
+        <span className="mt-1 text-[9px] uppercase tracking-wider text-slate-500">sessions</span>
       </div>
     </div>
   );
 }
+
+export function AdminAnalytics({ showToast }) {
+  const [data, setData] = useState(DEMO_ANALYTICS);
+  const [usingDemoData, setUsingDemoData] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [streamPaused, setStreamPaused] = useState(false);
+  const [error, setError] = useState('');
+
+  const fetchAnalytics = useCallback(async ({ silent = false } = {}) => {
+    if (!silent) setRefreshing(true);
+
+    try {
+      const sessionToken = getCsrfToken();
+      const response = await fetch('/api/admin/analytics', {
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
+        }
+      });
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(result?.error || `Telemetry request failed (${response.status}).`);
+      }
+      if (!result?.analytics || typeof result.analytics !== 'object') {
+        throw new Error('The telemetry response did not contain analytics data.');
+      }
+
+      setData(result.analytics);
+      setUsingDemoData(false);
+      setError('');
+      return true;
+    } catch (requestError) {
+      setUsingDemoData(true);
+      setError(requestError instanceof Error ? requestError.message : 'Unable to load visitor telemetry.');
+      return false;
+    } finally {
+      if (!silent) setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
+
+  useEffect(() => {
+    if (streamPaused) return undefined;
+    const intervalId = window.setInterval(() => {
+      fetchAnalytics({ silent: true });
+    }, 15_000);
+    return () => window.clearInterval(intervalId);
+  }, [fetchAnalytics, streamPaused]);
+
+  const handleRefresh = async () => {
+    playTick('click');
+    const succeeded = await fetchAnalytics();
+    if (succeeded) showToast?.('Visitor telemetry synced successfully.', 'fa-circle-check');
+  };
+
+  const analytics = data || DEMO_ANALYTICS;
+  const referrers = useMemo(
+    () => Object.entries(analytics.referrers || {})
+      .map(([source, count]) => ({ source, count: Number(count) || 0 }))
+      .filter((source) => source.count > 0)
+      .sort((a, b) => b.count - a.count),
+    [analytics.referrers]
+  );
+  const referralTotal = referrers.reduce((sum, source) => sum + source.count, 0);
+
+  const topProjects = useMemo(
+    () => Object.entries(analytics.topProjects || {})
+      .map(([slug, project]) => ({
+        slug,
+        title: project?.title || slug,
+        views: Number(project?.views) || 0
+      }))
+      .filter((project) => project.views > 0)
+      .sort((a, b) => b.views - a.views),
+    [analytics.topProjects]
+  );
+  const maxProjectViews = topProjects[0]?.views || 0;
+
+  const devices = analytics.devices || EMPTY_ANALYTICS.devices;
+  const desktop = Number(devices.desktop) || 0;
+  const mobile = Number(devices.mobile) || 0;
+  const tablet = Number(devices.tablet) || 0;
+  const totalDevices = desktop + mobile + tablet;
+  const desktopPercent = totalDevices ? Math.round((desktop / totalDevices) * 100) : 0;
+  const mobilePercent = totalDevices ? Math.round((mobile / totalDevices) * 100) : 0;
+  const tabletPercent = totalDevices ? 100 - desktopPercent - mobilePercent : 0;
+  const browsers = Object.entries(analytics.browsers || {})
+    .map(([name, count]) => ({ name, count: Number(count) || 0 }))
+    .filter((browser) => browser.count > 0)
+    .sort((a, b) => b.count - a.count);
+  const browserTotal = browsers.reduce((sum, browser) => sum + browser.count, 0);
+  const recentEvents = Array.isArray(analytics.recentEvents) ? analytics.recentEvents.filter(Boolean) : [];
+  const interactions = (Number(analytics.cliLaunches) || 0)
+    + (Number(analytics.apiSandboxExecutions) || 0)
+    + (Number(analytics.chatQueries) || 0);
+  const topReferrer = referrers[0]?.source;
+  const topProject = topProjects[0]?.title;
+  const smartInsight = topReferrer && topProject
+    ? `${topReferrer} is currently your leading referral source, and ${topProject} is your most-viewed case study.`
+    : topReferrer
+      ? `${topReferrer} is currently your leading referral source.`
+      : topProject
+        ? `${topProject} is currently your most-viewed case study.`
+        : 'Engagement insights will appear here as visitor activity is recorded.';
+
+  const metricCards = [
+    {
+      label: 'Unique Visitors',
+      value: formatNumber(analytics.uniqueVisitors),
+      description: 'Recorded visitor sessions',
+      icon: 'users',
+      accent: 'text-blue-300',
+      iconBackground: 'bg-blue-400/10 border-blue-300/20',
+      hover: 'hover:border-blue-300/40'
+    },
+    {
+      label: 'Total Page Views',
+      value: formatNumber(analytics.totalPageViews),
+      description: 'Across public pages and routes',
+      icon: 'eye',
+      accent: 'text-[#d4af37]',
+      iconBackground: 'bg-[#d4af37]/10 border-[#d4af37]/20',
+      hover: 'hover:border-[#d4af37]/40'
+    },
+    {
+      label: 'Resume Downloads',
+      value: formatNumber(analytics.resumeDownloads),
+      description: 'Tracked resume downloads',
+      icon: 'file',
+      accent: 'text-emerald-300',
+      iconBackground: 'bg-emerald-400/10 border-emerald-300/20',
+      hover: 'hover:border-emerald-300/40'
+    },
+    {
+      label: 'Interactive Engagements',
+      value: formatNumber(interactions),
+      description: `CLI ${formatNumber(analytics.cliLaunches)} · Sandbox ${formatNumber(analytics.apiSandboxExecutions)} · AI ${formatNumber(analytics.chatQueries)}`,
+      icon: 'terminal',
+      accent: 'text-violet-300',
+      iconBackground: 'bg-violet-400/10 border-violet-300/20',
+      hover: 'hover:border-violet-300/40'
+    }
+  ];
+
+  return (
+    <section className="space-y-5" aria-labelledby="telemetry-title">
+      <header className="flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 id="telemetry-title" className="text-2xl font-semibold tracking-tight text-white">
+              Visitor Telemetry
+            </h2>
+            <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-mono font-semibold uppercase tracking-wider ${
+              usingDemoData
+                ? 'border-amber-300/20 bg-amber-300/[0.07] text-amber-200'
+                : 'border-emerald-400/20 bg-emerald-400/10 text-emerald-300'
+            }`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${
+                usingDemoData ? 'bg-amber-300' : streamPaused ? 'bg-amber-300' : 'bg-emerald-300 animate-pulse'
+              }`} />
+              {usingDemoData ? 'Demo data' : streamPaused ? 'Stream paused' : 'System live'}
+            </span>
+          </div>
+          <p className="mt-1.5 text-sm text-slate-400">
+            Visitor activity, traffic sources, project interest, and device sessions.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          {analytics.serverTime && (
+            <span className="text-[11px] text-slate-500">
+              Updated {new Date(analytics.serverTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-slate-200 transition hover:border-[#d4af37]/40 hover:bg-white/[0.08] disabled:cursor-wait disabled:opacity-60"
+            aria-label="Sync visitor telemetry"
+          >
+            <Icon name="refresh" className={`h-4 w-4 text-[#d4af37] ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? 'Syncing…' : 'Sync data'}
+          </button>
+        </div>
+      </header>
+
+      {error && (
+        <div
+          className="flex flex-col gap-3 rounded-xl border border-amber-300/15 bg-amber-300/[0.035] px-4 py-3 text-xs text-slate-300 sm:flex-row sm:items-center sm:justify-between"
+          role="alert"
+        >
+          <span className="leading-relaxed">
+            <Icon name="sparkles" className="mr-2 inline h-4 w-4 text-amber-200" />
+            Showing illustrative demo data while live telemetry is unavailable: {error}
+          </span>
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="shrink-0 rounded-lg border border-amber-200/15 px-3 py-1.5 text-xs font-medium text-amber-100 transition hover:bg-amber-200/[0.07] disabled:opacity-60"
+          >
+            Try again
+          </button>
+        </div>
+      )}
+
+      <div className="flex items-start gap-3 rounded-xl border border-[#d4af37]/15 bg-gradient-to-r from-[#d4af37]/[0.08] to-transparent p-4">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#d4af37]/15 bg-[#d4af37]/10 text-[#d4af37]">
+          <Icon name="sparkles" className="h-4 w-4" />
+        </span>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-white">Telemetry insight</h3>
+          <p className="mt-1 text-xs leading-relaxed text-slate-400">{smartInsight}</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">
+        {metricCards.map((metric) => (
+          <article
+            key={metric.label}
+            className={`group relative overflow-hidden rounded-xl border border-white/[0.09] bg-gradient-to-br from-[#0c111a] to-[#080c12] p-4 shadow-lg shadow-black/20 transition duration-300 ${metric.hover}`}
+          >
+            <div className="relative flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">{metric.label}</p>
+                <p className="mt-3 text-3xl font-semibold tracking-tight text-white">
+                  {metric.value}
+                </p>
+              </div>
+              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border ${metric.iconBackground} ${metric.accent}`}>
+                <Icon name={metric.icon} className="h-[18px] w-[18px]" />
+              </span>
+            </div>
+            <p className="relative mt-2 truncate text-[11px] text-slate-500" title={metric.description}>
+              {metric.description}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
+        <div className="space-y-5 xl:col-span-3">
+          <section className="rounded-xl border border-white/10 bg-[#080c12]/90 p-4 shadow-lg shadow-black/20" aria-labelledby="traffic-sources-title">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 id="traffic-sources-title" className="flex items-center gap-2 text-sm font-semibold text-white">
+                <Icon name="route" className="h-4 w-4 text-[#d4af37]" />
+                Traffic sources
+              </h3>
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] text-slate-400">
+                {formatNumber(referralTotal)} total
+              </span>
+            </div>
+            {referrers.length > 0 ? (
+              <div className="space-y-4">
+                {referrers.map(({ source, count }) => {
+                  const percentage = referralTotal ? Math.round((count / referralTotal) * 100) : 0;
+                  const presentation = REFERRER_PRESENTATION[source] || {
+                    icon: 'fa-solid fa-globe',
+                    color: '#94a3b8',
+                    background: 'rgba(148, 163, 184, 0.1)'
+                  };
+                  return (
+                    <div key={source} className="group">
+                      <div className="mb-1.5 flex items-center justify-between gap-2 text-xs">
+                        <span className="flex min-w-0 items-center gap-2 text-slate-300 transition-colors group-hover:text-white">
+                          <span
+                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs"
+                            style={{ color: presentation.color, backgroundColor: presentation.background }}
+                          >
+                            <i className={presentation.icon} aria-hidden="true" />
+                          </span>
+                          <span className="truncate">{source}</span>
+                        </span>
+                        <span className="shrink-0 font-medium text-white">
+                          {formatNumber(count)} <span className="text-[10px] text-slate-500">({percentage}%)</span>
+                        </span>
+                      </div>
+                      <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+                        <div
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{ width: `${percentage}%`, backgroundColor: presentation.color }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="rounded-lg border border-dashed border-white/10 px-3 py-6 text-center text-xs text-slate-500">
+                Referral data will appear when visitors arrive from tracked sources.
+              </p>
+            )}
+          </section>
+
+          <section className="rounded-xl border border-white/10 bg-[#080c12]/90 p-4 shadow-lg shadow-black/20" aria-labelledby="device-breakdown-title">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 id="device-breakdown-title" className="flex items-center gap-2 text-sm font-semibold text-white">
+                <Icon name="device" className="h-4 w-4 text-blue-300" />
+                Devices
+              </h3>
+              <span className="text-[10px] text-slate-500">Session breakdown</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <DeviceDonut desktop={desktop} mobile={mobile} tablet={tablet} total={totalDevices} />
+              <div className="min-w-0 flex-1 space-y-3">
+                {[
+                  { label: 'Desktop', value: desktop, percent: desktopPercent, icon: 'device', color: 'bg-blue-300' },
+                  { label: 'Mobile', value: mobile, percent: mobilePercent, icon: 'mobile', color: 'bg-[#d4af37]' },
+                  { label: 'Tablet', value: tablet, percent: tabletPercent, icon: 'tablet', color: 'bg-violet-300' }
+                ].map((device) => (
+                  <div key={device.label} className="flex items-center justify-between gap-2 text-xs">
+                    <span className="flex items-center gap-2 text-slate-400">
+                      <span className={`h-2 w-2 rounded-full ${device.color}`} />
+                      {device.label}
+                    </span>
+                    <span className="font-medium text-white">
+                      {device.percent}% <span className="text-[10px] text-slate-500">({formatNumber(device.value)})</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {browsers.length > 0 && (
+              <div className="mt-4 border-t border-white/[0.07] pt-3">
+                <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Browsers</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {browsers.map((browser) => {
+                    const percentage = browserTotal ? Math.round((browser.count / browserTotal) * 100) : 0;
+                    return (
+                      <span
+                        key={browser.name}
+                        className="rounded-md border border-white/[0.07] bg-white/[0.03] px-2 py-1 text-[10px] text-slate-300"
+                        title={`${formatNumber(browser.count)} sessions`}
+                      >
+                        {browser.name} <span className="text-slate-500">{percentage}%</span>
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </section>
+        </div>
+
+        <section
+          className={`telemetry-scroll-panel relative flex min-h-0 flex-col overflow-hidden rounded-xl border bg-[#080c12]/90 shadow-lg shadow-black/20 transition-colors xl:col-span-5 ${
+            streamPaused ? 'border-amber-300/20' : 'border-emerald-300/20'
+          }`}
+          aria-labelledby="live-stream-title"
+        >
+          <div className={`absolute inset-x-0 top-0 h-px ${streamPaused ? 'bg-amber-300/50' : 'bg-emerald-300/50'}`} />
+          <div className="flex items-center justify-between gap-3 border-b border-white/[0.07] px-4 py-3.5">
+            <div className="flex items-center gap-2">
+              <Icon name="broadcast" className={`h-4 w-4 ${streamPaused ? 'text-amber-300' : 'text-emerald-300'}`} />
+              <h3 id="live-stream-title" className="text-sm font-semibold text-white">Live event stream</h3>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setStreamPaused((paused) => !paused)}
+                className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[10px] transition ${
+                  streamPaused
+                    ? 'border-amber-300/20 bg-amber-300/[0.06] text-amber-200 hover:bg-amber-300/10'
+                    : 'border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.08] hover:text-white'
+                }`}
+                aria-pressed={streamPaused}
+                aria-label={streamPaused ? 'Resume live event updates' : 'Pause live event updates'}
+              >
+                <Icon name={streamPaused ? 'play' : 'pause'} className="h-3 w-3" />
+                {streamPaused ? 'Resume' : 'Pause'}
+              </button>
+              <span className={`rounded-full border px-2 py-1 text-[9px] font-bold tracking-wider ${
+                streamPaused
+                  ? 'border-amber-300/20 bg-amber-300/[0.06] text-amber-200'
+                  : 'border-emerald-300/20 bg-emerald-300/[0.06] text-emerald-200'
+              }`}>
+                {streamPaused ? 'PAUSED' : 'LIVE'}
+              </span>
+            </div>
+          </div>
+          <div className="telemetry-scroll-area min-h-0 flex-1 space-y-2 overflow-y-auto p-3" aria-live={streamPaused ? 'off' : 'polite'}>
+            {recentEvents.length > 0 ? recentEvents.map((event, index) => {
+              const isDownload = event.type === 'resume_download';
+              const isProject = event.type === 'project_view';
+              const isInteractive = ['api_sandbox', 'cli_launch', 'chat_query'].includes(event.type);
+              const eventIcon = isDownload ? 'file' : isProject ? 'project' : isInteractive ? 'terminal' : 'globe';
+              const iconStyle = isDownload
+                ? 'border-emerald-300/20 bg-emerald-300/[0.07] text-emerald-200'
+                : isProject
+                  ? 'border-[#d4af37]/20 bg-[#d4af37]/[0.07] text-[#d4af37]'
+                  : isInteractive
+                    ? 'border-violet-300/20 bg-violet-300/[0.07] text-violet-200'
+                    : 'border-blue-300/20 bg-blue-300/[0.07] text-blue-200';
+              const timestamp = event.timestamp || event.time;
+              const location = [event.city, event.country].filter(Boolean).join(', ') || 'Location unavailable';
+              return (
+                <article
+                  key={event.id || `${event.type}-${timestamp || index}`}
+                  className="flex items-start gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition hover:border-white/10 hover:bg-white/[0.04]"
+                >
+                  <span className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border ${iconStyle}`}>
+                    <Icon name={eventIcon} className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="truncate text-xs font-medium text-slate-100">{event.title || event.path || 'Visitor activity'}</p>
+                      <time
+                        className="shrink-0 text-[10px] text-slate-500"
+                        dateTime={timestamp || undefined}
+                        title={timestamp ? new Date(timestamp).toLocaleString() : undefined}
+                      >
+                        {timestamp ? formatTimeAgo(timestamp) : 'Time unavailable'}
+                      </time>
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-slate-500">
+                      <span className="inline-flex items-center gap-1">
+                        <Icon name="location" className="h-3 w-3" />
+                        {location}
+                      </span>
+                      <span aria-hidden="true">·</span>
+                      <span className="truncate text-[#d4af37]/80">{formatReferrer(event.referrer)}</span>
+                    </div>
+                  </div>
+                </article>
+              );
+            }) : (
+              <div className="flex min-h-[240px] flex-col items-center justify-center px-6 text-center">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-slate-500">
+                  <Icon name="broadcast" className="h-5 w-5" />
+                </span>
+                <p className="mt-3 text-sm font-medium text-slate-300">No visitor events yet</p>
+                <p className="mt-1 max-w-xs text-xs leading-relaxed text-slate-500">
+                  Events recorded by the portfolio will appear here. This feed refreshes automatically while live.
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="flex items-center justify-between border-t border-white/[0.07] px-4 py-2.5 text-[10px] text-slate-500">
+            <span>{formatNumber(recentEvents.length)} recorded events</span>
+            <span>{streamPaused ? 'Automatic updates paused' : 'Refreshes every 15 seconds'}</span>
+          </div>
+        </section>
+
+        <section className="telemetry-scroll-panel flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#080c12]/90 p-4 shadow-lg shadow-black/20 xl:col-span-4" aria-labelledby="top-projects-title">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h3 id="top-projects-title" className="flex items-center gap-2 text-sm font-semibold text-white">
+              <Icon name="project" className="h-4 w-4 text-violet-300" />
+              Top projects
+            </h3>
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-500">Project views</span>
+          </div>
+          {topProjects.length > 0 ? (
+            <>
+              <div className="telemetry-scroll-area min-h-0 flex-1 space-y-4 overflow-y-auto pr-2">
+                {topProjects.map((project, index) => {
+                  const percentage = maxProjectViews ? Math.round((project.views / maxProjectViews) * 100) : 0;
+                  const rank = index < 3 ? `0${index + 1}` : `#${index + 1}`;
+                  return (
+                    <article key={project.slug} className="group">
+                      <div className="mb-1.5 flex items-center gap-2">
+                        <span className={`w-6 shrink-0 text-[10px] font-bold ${index === 0 ? 'text-[#d4af37]' : 'text-slate-600'}`}>
+                          {rank}
+                        </span>
+                        <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-300 transition-colors group-hover:text-white" title={project.title}>
+                          {project.title}
+                        </span>
+                        <span className="shrink-0 text-xs font-semibold text-white">{formatNumber(project.views)}</span>
+                      </div>
+                      <div className="ml-8 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+                        <div
+                          className={`h-full rounded-full transition-all duration-700 ${index === 0 ? 'bg-gradient-to-r from-[#d4af37] to-amber-300' : 'bg-gradient-to-r from-emerald-500/80 to-cyan-400/80'}`}
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+              <div className="mt-4 flex items-center justify-between border-t border-white/[0.07] pt-3 text-[10px] text-slate-500">
+                <span>{formatNumber(topProjects.length)} projects with tracked views</span>
+                <span className="inline-flex items-center gap-1 text-[#d4af37]">
+                  Ranked by views <Icon name="arrow" className="h-3 w-3" />
+                </span>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-1 flex-col items-center justify-center px-4 py-10 text-center">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-slate-500">
+                <Icon name="project" className="h-5 w-5" />
+              </span>
+              <p className="mt-3 text-sm font-medium text-slate-300">No project views recorded</p>
+              <p className="mt-1 text-xs text-slate-500">Published project activity will be ranked here.</p>
+            </div>
+          )}
+        </section>
+      </div>
+    </section>
+  );
+}
+
+export default AdminAnalytics;

@@ -159,10 +159,23 @@ async function runTests() {
       body: { siteTitle: 'Updated Title' }
     });
     assert.strictEqual(missingCsrf.status, 403, 'Mutating admin request without CSRF token must return 403');
-    console.log('✓ [6/9] Admin HttpOnly session cookie & CSRF enforcement verified');
+    console.log('✓ [6/10] Admin HttpOnly session cookie & CSRF enforcement verified');
     passed++;
 
-    // Test 7: Full Draft -> Preview -> Publish -> Delete project lifecycle
+    // Test 7: Authenticated visitor telemetry returns the analytics summary
+    const analyticsRes = await requestJson(baseUrl, '/api/admin/analytics', {
+      headers: { Authorization: `Bearer ${csrfToken}` }
+    });
+    assert.strictEqual(analyticsRes.status, 200, 'Authenticated telemetry request must succeed');
+    assert.ok(analyticsRes.data.analytics, 'Telemetry response must include analytics data');
+    assert.ok(
+      Number.isFinite(analyticsRes.data.analytics.totalPageViews),
+      'Telemetry summary must include page view metrics'
+    );
+    console.log('✓ [7/10] Authenticated visitor telemetry API returns analytics data');
+    passed++;
+
+    // Test 8: Full Draft -> Preview -> Publish -> Delete project lifecycle
     const createDraftRes = await requestJson(baseUrl, '/api/admin/projects', {
       method: 'POST',
       headers: { Cookie: cookieHeader, 'X-CSRF-Token': csrfToken },
@@ -212,10 +225,10 @@ async function runTests() {
       headers: { Cookie: cookieHeader, 'X-CSRF-Token': csrfToken }
     });
     assert.strictEqual(delRes.status, 200);
-    console.log('✓ [7/9] Project CRUD & Draft -> Preview -> Publish workflow verified');
+    console.log('✓ [8/10] Project CRUD & Draft -> Preview -> Publish workflow verified');
     passed++;
 
-    // Test 8: Media upload validation (reject path traversal & spoofed non-image bytes)
+    // Test 9: Media upload validation (reject path traversal & spoofed non-image bytes)
     const traversalUpload = await requestJson(baseUrl, '/api/admin/media', {
       method: 'POST',
       headers: { Cookie: cookieHeader, 'X-CSRF-Token': csrfToken },
@@ -226,10 +239,10 @@ async function runTests() {
       }
     });
     assert.strictEqual(traversalUpload.status, 400, 'Path traversal & fake MIME bytes must be rejected');
-    console.log('✓ [8/9] Media upload magic-byte & path-traversal protection verified');
+    console.log('✓ [9/10] Media upload magic-byte & path-traversal protection verified');
     passed++;
 
-    // Test 9: Login rate limiting enforcement
+    // Test 10: Login rate limiting enforcement
     loginLimiter.reset();
     for (let i = 0; i < 5; i++) {
       await requestJson(baseUrl, '/api/auth/login', {
@@ -242,10 +255,10 @@ async function runTests() {
       body: { username: 'ayush_admin', password: 'WrongPassword' }
     });
     assert.strictEqual(rateLimitedLogin.status, 429, '6th login attempt within window must return 429');
-    console.log('✓ [9/9] Login brute-force rate limiting (HTTP 429) verified');
+    console.log('✓ [10/10] Login brute-force rate limiting (HTTP 429) verified');
     passed++;
 
-    console.log(`\nALL ${passed}/9 BACKEND & SECURITY TESTS PASSED.`);
+    console.log(`\nALL ${passed}/10 BACKEND & SECURITY TESTS PASSED.`);
   } finally {
     server.close();
     if (fs.existsSync(TEST_DB_PATH)) fs.unlinkSync(TEST_DB_PATH);

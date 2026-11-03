@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-11-03T23:22:00+05:30",
+  "generatedOnPlatform": "win32",
+  "projectType": "webapp",
+  "devServer": {
+    "command": "npm",
+    "args": ["run", "dev"],
+    "cwd": "client",
+    "url": "http://localhost:5174/",
+    "readyTimeoutSeconds": 120
+  },
+  "setup": [],
+  "assertions": [
+    {
+      "name": "client-production-build",
+      "kind": "process",
+      "command": "npm",
+      "args": ["run", "build:client"],
+      "verificationMethod": "exit-code",
+      "expected": "0",
+      "timeoutSeconds": 180
+    },
+    {
+      "name": "tests-pass",
+      "kind": "process",
+      "command": "npm",
+      "args": ["test"],
+      "verificationMethod": "test-results",
+      "expected": "0",
+      "timeoutSeconds": 300
+    },
+    {
+      "name": "client-dev-server-home",
+      "kind": "http-probe",
+      "startCommand": "npm",
+      "startArgs": ["run", "dev"],
+      "cwd": "client",
+      "url": "http://localhost:5174/",
+      "verificationMethod": "http-status",
+      "expected": "200",
+      "timeoutSeconds": 120
+    }
+  ]
+}

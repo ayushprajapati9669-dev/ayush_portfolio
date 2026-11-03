@@ -233,7 +233,7 @@ export function AdminPage() {
           )}
 
           {activeTab === 'analytics' && (
-            <AdminAnalytics />
+            <AdminAnalytics showToast={showToast} />
           )}
 
           {activeTab === 'projects' && (

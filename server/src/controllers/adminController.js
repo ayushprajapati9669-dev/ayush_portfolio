@@ -16,7 +16,7 @@ function createAdminController({ store, config }) {
     },
 
     getAnalytics(req, res) {
-      return sendJson(res, 200, { analytics: analyticsService.getDashboardData() });
+      return sendJson(res, 200, { analytics: analyticsService.getSummary() });
     },
 
     async generateAiCaseStudy(req, res) {
