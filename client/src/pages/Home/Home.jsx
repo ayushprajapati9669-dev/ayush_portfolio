@@ -161,181 +161,123 @@ export function HomePage() {
     gsap.to(el, { x: 0, y: 0, duration: 0.75, ease: 'elastic.out(1, 0.3)' });
   };
 
-  // GSAP Entrance Timeline & ScrollTrigger Animations
+  // Keep the hero entrance and section reveals on one restrained motion system.
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !containerRef.current) return;
 
-    try {
-      gsap.registerPlugin(ScrollTrigger);
-    } catch (_e) {}
+    gsap.registerPlugin(ScrollTrigger);
+    let disposed = false;
+    let refreshOnLayout = () => {};
 
     const ctx = gsap.context(() => {
-      // 1. Sarthak Sharma-Style Hero Entrance
-      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      const revealOnScroll = (targets, trigger, options = {}) => {
+        const elements = gsap.utils.toArray(targets, containerRef.current);
+        if (elements.length === 0) return;
 
-      heroTl
-        .from('.hero-top-meta', {
-          y: -20,
-          opacity: 0,
-          duration: 0.8,
-          delay: 0.1
-        })
-        .from(
-          '.hero-presence-strip',
+        gsap.fromTo(
+          elements,
           {
-            x: -25,
-            opacity: 0,
-            duration: 0.8
+            autoAlpha: 0,
+            y: options.y ?? 20,
+            scale: options.scale ?? 0.99
           },
-          '-=0.5'
-        )
-        .from(
-          '.hero-portrait-stage',
           {
-            scale: 0.92,
-            opacity: 0,
-            y: 20,
-            duration: 1,
-            ease: 'power2.out'
-          },
-          '-=0.6'
-        )
-        .from(
-          '.hero-sub-eyebrow',
-          {
-            y: 15,
-            opacity: 0,
-            duration: 0.6
-          },
-          '-=0.5'
-        )
-        .from(
-          '.hero-name-editorial',
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.9,
-            ease: 'power3.out'
-          },
-          '-=0.45'
-        )
-        .from(
-          '.hero-narrative-editorial',
-          {
-            y: 20,
-            opacity: 0,
-            duration: 0.7
-          },
-          '-=0.4'
-        )
-        .fromTo(
-          '.hero-actions-editorial > *',
-          { y: 15, opacity: 0 },
-          {
+            autoAlpha: 1,
             y: 0,
-            opacity: 1,
-            stagger: 0.1,
-            duration: 0.6,
-            ease: 'power2.out',
-            clearProps: 'all'
-          },
-          '-=0.3'
-        )
-        .fromTo(
-          '.hero-bottom-footer',
-          { y: 20, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            ease: 'power2.out',
-            clearProps: 'all'
-          },
-          '-=0.3'
+            scale: 1,
+            duration: options.duration ?? 0.62,
+            stagger: options.stagger ?? 0,
+            ease: 'power3.out',
+            clearProps: 'opacity,transform,visibility',
+            scrollTrigger: {
+              trigger,
+              start: 'top 88%',
+              once: true,
+              fastScrollEnd: true,
+              invalidateOnRefresh: true
+            }
+          }
         );
+      };
 
-      // 2. Section 01: Bento Intro & Focus Areas ScrollTrigger
-      gsap.from('.bento-section .bento-header > *', {
-        scrollTrigger: {
-          trigger: '.bento-section',
-          start: 'top 92%',
-          once: true
-        },
-        y: 20,
-        opacity: 0,
-        stagger: 0.08,
-        duration: 0.6,
-        ease: 'power2.out',
-        clearProps: 'all'
+      const heroTimeline = gsap.timeline({
+        delay: 0.08,
+        defaults: { ease: 'power3.out' }
       });
 
-      gsap.from('.bento-bio-card', {
-        scrollTrigger: {
-          trigger: '.bento-section',
-          start: 'top 90%',
-          once: true
-        },
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-        clearProps: 'all'
-      });
-
-      const particleCard = containerRef.current.querySelector('.particle-container');
-      if (particleCard) {
-        gsap.from(particleCard, {
-          scrollTrigger: {
-            trigger: '.bento-section',
-            start: 'top 90%',
-            once: true
-          },
-          y: 20,
-          opacity: 0,
+      heroTimeline
+        .fromTo('.hero-top-meta', { autoAlpha: 0, y: -12 }, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.55,
+          clearProps: 'opacity,transform,visibility'
+        })
+        .fromTo('.hero-announcement-capsule', { autoAlpha: 0, y: 14 }, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.55,
+          clearProps: 'opacity,transform,visibility'
+        }, '-=0.3')
+        .fromTo('.hero-title-line', { autoAlpha: 0, y: 22 }, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.68,
+          stagger: 0.09,
+          clearProps: 'opacity,transform,visibility'
+        }, '-=0.25')
+        .fromTo('.hero-modern-desc', { autoAlpha: 0, y: 18 }, {
+          autoAlpha: 1,
+          y: 0,
           duration: 0.6,
-          ease: 'power2.out',
-          clearProps: 'all'
-        });
-      }
-
-      // 3. Section 02: Directory Navigation Buttons Entrance
-      const navBtns = containerRef.current.querySelectorAll('.home-nav-executive-btn, .home-nav-btn');
-      if (navBtns.length > 0) {
-        gsap.from(navBtns, {
-          scrollTrigger: {
-            trigger: '#portfolio-directories',
-            start: 'top 92%',
-            once: true
-          },
-          y: 16,
-          opacity: 0,
+          clearProps: 'opacity,transform,visibility'
+        }, '-=0.3')
+        .fromTo('.hero-modern-actions > *', { autoAlpha: 0, y: 14, scale: 0.98 }, {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.55,
           stagger: 0.08,
+          clearProps: 'opacity,transform,visibility'
+        }, '-=0.3')
+        .fromTo('.hero-bottom-footer > *', { autoAlpha: 0, y: 14 }, {
+          autoAlpha: 1,
+          y: 0,
           duration: 0.5,
-          ease: 'power2.out',
-          clearProps: 'all'
-        });
-      }
+          stagger: 0.06,
+          clearProps: 'opacity,transform,visibility'
+        }, '-=0.2');
 
-      // 5. Section 04: CTA Banner ScrollTrigger
-      gsap.from('.home-cta-banner', {
-        scrollTrigger: {
-          trigger: '.home-cta-banner',
-          start: 'top 92%',
-          once: true
-        },
-        scale: 0.98,
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: 'power2.out',
-        clearProps: 'all'
+      revealOnScroll(
+        '.bento-section .home-scroll-visual, .bento-section .bento-bio-card, .bento-section .particle-container',
+        '.bento-section',
+        { stagger: 0.08 }
+      );
+      revealOnScroll('.zero-to-one-journey-card', '.zero-to-one-journey-card');
+      revealOnScroll(
+        '#portfolio-directories .showcase-eyebrow, #portfolio-directories h2, #portfolio-directories .max-w-xl',
+        '#portfolio-directories',
+        { stagger: 0.06, y: 16 }
+      );
+      revealOnScroll(
+        '#portfolio-directories .home-nav-executive-btn, #portfolio-directories .home-nav-btn',
+        '#portfolio-directories',
+        { stagger: 0.08, y: 18 }
+      );
+      revealOnScroll('.home-cta-banner', '.home-cta-banner', { y: 18 });
+
+      refreshOnLayout = () => ScrollTrigger.refresh();
+      window.addEventListener('load', refreshOnLayout, { once: true });
+      document.fonts?.ready.then(() => {
+        if (!disposed) refreshOnLayout();
       });
-
-      ScrollTrigger.refresh();
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      disposed = true;
+      window.removeEventListener('load', refreshOnLayout);
+      ctx.revert();
+    };
   }, []);
 
   const heroPhotoSrc = '/images/ayush-editorial-portrait.png';

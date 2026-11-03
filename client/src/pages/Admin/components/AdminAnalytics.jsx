@@ -326,47 +326,6 @@ function formatReferrer(referrer) {
   }
 }
 
-function DeviceDonut({ desktop, mobile, tablet, total }) {
-  const circumference = 2 * Math.PI * 35;
-  const devices = [
-    { key: 'desktop', value: desktop, color: '#60a5fa' },
-    { key: 'mobile', value: mobile, color: '#d4af37' },
-    { key: 'tablet', value: tablet, color: '#a78bfa' }
-  ];
-  let offset = 0;
-
-  return (
-    <div className="relative h-28 w-28 shrink-0" role="img" aria-label={`${formatNumber(total)} device sessions`}>
-      <svg className="h-full w-full -rotate-90" viewBox="0 0 96 96">
-        <circle cx="48" cy="48" r="35" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="9" />
-        {total > 0 && devices.map((device) => {
-          const length = (device.value / total) * circumference;
-          const currentOffset = offset;
-          offset += length;
-          return (
-            <circle
-              key={device.key}
-              cx="48"
-              cy="48"
-              r="35"
-              fill="none"
-              stroke={device.color}
-              strokeDasharray={`${length} ${circumference - length}`}
-              strokeDashoffset={-currentOffset}
-              strokeWidth="9"
-              className="transition-all duration-700"
-            />
-          );
-        })}
-      </svg>
-      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-lg font-bold leading-none text-white">{formatNumber(total)}</span>
-        <span className="mt-1 text-[9px] uppercase tracking-wider text-slate-500">sessions</span>
-      </div>
-    </div>
-  );
-}
-
 export function AdminAnalytics({ showToast }) {
   const [data, setData] = useState(DEMO_ANALYTICS);
   const [usingDemoData, setUsingDemoData] = useState(true);
@@ -462,6 +421,11 @@ export function AdminAnalytics({ showToast }) {
   const desktopPercent = totalDevices ? Math.round((desktop / totalDevices) * 100) : 0;
   const mobilePercent = totalDevices ? Math.round((mobile / totalDevices) * 100) : 0;
   const tabletPercent = totalDevices ? 100 - desktopPercent - mobilePercent : 0;
+  const deviceBreakdown = [
+    { label: 'Desktop', value: desktop, percent: desktopPercent, icon: 'device', color: '#60a5fa', tint: 'bg-blue-300' },
+    { label: 'Mobile', value: mobile, percent: mobilePercent, icon: 'mobile', color: '#d4af37', tint: 'bg-[#d4af37]' },
+    { label: 'Tablet', value: tablet, percent: tabletPercent, icon: 'tablet', color: '#a78bfa', tint: 'bg-violet-300' }
+  ];
   const browsers = Object.entries(analytics.browsers || {})
     .map(([name, count]) => ({ name, count: Number(count) || 0 }))
     .filter((browser) => browser.count > 0)
@@ -705,47 +669,66 @@ export function AdminAnalytics({ showToast }) {
           </section>
 
           <section className="rounded-2xl border border-white/[0.085] bg-[#0b0e13] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.16)] sm:p-5" aria-labelledby="device-breakdown-title">
-            <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="mb-5 flex items-center justify-between gap-3">
               <h3 id="device-breakdown-title" className="flex items-center gap-2 text-sm font-semibold text-white">
                 <Icon name="device" className="h-4 w-4 text-blue-300" />
                 Devices
               </h3>
-              <span className="text-[10px] text-slate-500">By device</span>
+              <span className="rounded-md border border-white/[0.08] bg-white/[0.025] px-2 py-1 text-[10px] tabular-nums text-slate-400">
+                {formatNumber(totalDevices)} sessions
+              </span>
             </div>
-            <div className="flex items-center gap-4">
-              <DeviceDonut desktop={desktop} mobile={mobile} tablet={tablet} total={totalDevices} />
-              <div className="min-w-0 flex-1 space-y-3">
-                {[
-                  { label: 'Desktop', value: desktop, percent: desktopPercent, icon: 'device', color: 'bg-blue-300' },
-                  { label: 'Mobile', value: mobile, percent: mobilePercent, icon: 'mobile', color: 'bg-[#d4af37]' },
-                  { label: 'Tablet', value: tablet, percent: tabletPercent, icon: 'tablet', color: 'bg-violet-300' }
-                ].map((device) => (
-                  <div key={device.label} className="flex items-center justify-between gap-2 text-xs">
-                    <span className="flex items-center gap-2 text-slate-400">
-                      <span className={`h-2 w-2 rounded-full ${device.color}`} />
+            <div
+              className="flex h-2.5 w-full overflow-hidden rounded-full bg-white/[0.06]"
+              role="img"
+              aria-label={`Device distribution: ${deviceBreakdown.map((device) => `${device.label} ${device.percent}%`).join(', ')}`}
+            >
+              {deviceBreakdown.map((device) => (
+                <span
+                  key={device.label}
+                  className="h-full transition-[width] duration-500"
+                  style={{ width: `${device.percent}%`, backgroundColor: device.color }}
+                />
+              ))}
+            </div>
+            <div className="mt-4 space-y-4">
+              {deviceBreakdown.map((device) => (
+                <div key={device.label}>
+                  <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
+                    <span className="flex items-center gap-2 text-slate-300">
+                      <Icon name={device.icon} className="h-3.5 w-3.5" style={{ color: device.color }} />
                       {device.label}
                     </span>
-                    <span className="font-medium text-white">
-                      {device.percent}% <span className="text-[10px] text-slate-500">({formatNumber(device.value)})</span>
+                    <span className="shrink-0 font-medium tabular-nums text-slate-200">
+                      {formatNumber(device.value)}
+                      <span className="ml-1.5 text-[10px] font-normal text-slate-500">{device.percent}%</span>
                     </span>
                   </div>
-                ))}
-              </div>
+                  <div className="h-1 overflow-hidden rounded-full bg-white/[0.055]">
+                    <div className={`h-full rounded-full ${device.tint}`} style={{ width: `${device.percent}%` }} />
+                  </div>
+                </div>
+              ))}
             </div>
             {browsers.length > 0 && (
-              <div className="mt-4 border-t border-white/[0.07] pt-3">
-                <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Browsers</p>
-                <div className="flex flex-wrap gap-1.5">
+              <div className="mt-5 border-t border-white/[0.07] pt-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">Browsers</p>
+                  <span className="text-[10px] tabular-nums text-slate-500">{formatNumber(browserTotal)} sessions</span>
+                </div>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                   {browsers.map((browser) => {
                     const percentage = browserTotal ? Math.round((browser.count / browserTotal) * 100) : 0;
                     return (
-                      <span
-                        key={browser.name}
-                        className="rounded-md border border-white/[0.07] bg-white/[0.03] px-2 py-1 text-[10px] text-slate-300"
-                        title={`${formatNumber(browser.count)} sessions`}
-                      >
-                        {browser.name} <span className="text-slate-500">{percentage}%</span>
-                      </span>
+                      <div key={browser.name} className="min-w-0" title={`${formatNumber(browser.count)} sessions`}>
+                        <div className="mb-1 flex items-center justify-between gap-2 text-[10px]">
+                          <span className="truncate text-slate-400">{browser.name}</span>
+                          <span className="shrink-0 tabular-nums text-slate-300">{percentage}%</span>
+                        </div>
+                        <div className="h-1 overflow-hidden rounded-full bg-white/[0.055]">
+                          <div className="h-full rounded-full bg-slate-400/70" style={{ width: `${percentage}%` }} />
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
