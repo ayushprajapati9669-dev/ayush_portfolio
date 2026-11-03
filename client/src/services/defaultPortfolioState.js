@@ -410,7 +410,7 @@ export function getDefaultPortfolioState() {
         name: 'Michael Chang',
         email: 'michael@hyperscale-ai.io',
         subject: 'Autonomous Multi-Agent Workspace Collaboration',
-        message: 'Hello Ayush,\n\nWe saw your live case study for the Autonomous Multi-Agent Workspace and were really impressed by your task decomposition and multi-agent coordination architecture.\n\nWe are building next-generation agent harnesses for enterprise engineers and would love to consult with you or explore a collaborative engagement.\n\nLooking forward to speaking,\nMichael Chang',
+        message: 'Hello Ayush,\n\nWe saw your live project build for the Autonomous Multi-Agent Workspace and were really impressed by your task decomposition and multi-agent coordination architecture.\n\nWe are building next-generation agent harnesses for enterprise engineers and would love to consult with you or explore a collaborative engagement.\n\nLooking forward to speaking,\nMichael Chang',
         status: 'read',
         starred: false,
         createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),

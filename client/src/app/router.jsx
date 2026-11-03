@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { HomePage } from '../pages/Home/Home';
 import { ProjectsPage } from '../pages/Projects/Projects';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -40,7 +40,7 @@ export function AppRouter() {
         <Route path="/achievements" element={<JourneyPage />} />
         <Route path="/skills" element={<SkillsPage />} />
         <Route path="/projects" element={<ProjectsPage viewMode="projects" />} />
-        <Route path="/projects/:slug" element={<ProjectDetail />} />
+        <Route path="/projects/:slug" element={<Navigate to="/projects" replace />} />
         <Route path="/certificates" element={<CertificatesPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/connect" element={<ContactPage />} />

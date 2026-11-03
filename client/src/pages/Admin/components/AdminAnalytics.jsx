@@ -66,7 +66,7 @@ const FALLBACK_LIVE_EVENTS = [
   {
     id: 'ev-6',
     type: 'project_view',
-    title: 'AI Mock Interview Platform Case Study',
+    title: 'AI Mock Interview Platform',
     city: 'Toronto',
     country: 'Canada',
     countryCode: 'CA',
@@ -196,7 +196,7 @@ export function AdminAnalytics() {
             </span>
           </div>
           <p className="text-slate-400 text-xs mt-1">
-            Real-time recruiter interactions, ATS downloads, device sessions, and case study engagement.
+            Real-time recruiter interactions, ATS downloads, device sessions, and project demo engagement.
           </p>
         </div>
 

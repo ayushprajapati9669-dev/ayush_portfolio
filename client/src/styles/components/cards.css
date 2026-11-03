@@ -295,11 +295,7 @@ input::placeholder, textarea::placeholder {
   border-color: rgba(74, 222, 128, 0.25);
 }
 
-.p-badge.case-study {
-  background: rgba(212, 175, 55, 0.1);
-  color: #d4af37;
-  border-color: rgba(212, 175, 55, 0.25);
-}
+
 
 .project-content {
   padding: 20px;
@@ -393,56 +389,58 @@ input::placeholder, textarea::placeholder {
   flex-wrap: wrap;
 }
 
-.btn-case-study {
+.btn-demo {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 7px;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  color: #050608 !important;
-  background: linear-gradient(135deg, #d4af37 0%, #c49f2b 100%);
-  border: 1px solid #d4af37;
+  color: #000000 !important;
+  background: linear-gradient(135deg, #f5d77f 0%, #dfb740 100%);
+  border: 1px solid #dfb740;
   border-radius: 9999px;
-  padding: 7px 16px;
+  padding: 8px 16px;
   text-decoration: none;
-  transition: all 0.22s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.25);
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(223, 183, 64, 0.25);
 }
 
-.btn-case-study:hover {
-  background: linear-gradient(135deg, #f5d77f 0%, #d4af37 100%);
-  border-color: #f5d77f;
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-  transform: translateY(-1px);
+.btn-demo:hover {
+  background: linear-gradient(135deg, #fae29c 0%, #f5d77f 100%);
+  border-color: #fae29c;
+  color: #000000 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(223, 183, 64, 0.45);
 }
 
-.btn-demo,
 .btn-code {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0 !important;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 9999px;
-  padding: 6.5px 14px;
+  padding: 8px 16px;
   text-decoration: none;
-  transition: all 0.22s ease;
+  transition: all 0.25s ease;
   cursor: pointer;
+  white-space: nowrap;
 }
 
-.btn-demo:hover,
 .btn-code:hover {
-  border-color: rgba(212, 175, 55, 0.35);
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.09);
-  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff !important;
+  transform: translateY(-2px);
 }
 
 /* ============================================================
@@ -707,86 +705,61 @@ p.project-desc {
   border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
-.btn-case-study {
-  flex: 1.3 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.02em !important;
-  color: #050608 !important;
-  background: linear-gradient(135deg, #d4af37 0%, #c49f2b 100%) !important;
-  border: 1px solid #d4af37 !important;
-  border-radius: 9999px !important;
-  padding: 7px 12px !important;
-  text-decoration: none !important;
-  transition: all 0.22s ease !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.25) !important;
-  white-space: nowrap !important;
-}
 
-.btn-case-study:hover {
-  background: linear-gradient(135deg, #f5d77f 0%, #d4af37 100%) !important;
-  border-color: #f5d77f !important;
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4) !important;
-  transform: translateY(-1px) !important;
-}
 
 .btn-demo {
   flex: 1 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 5px !important;
+  gap: 7px !important;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 12.5px !important;
-  font-weight: 500 !important;
-  color: #f1f5f9 !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #000000 !important;
+  background: linear-gradient(135deg, #f5d77f 0%, #dfb740 100%) !important;
+  border: 1px solid #dfb740 !important;
   border-radius: 9999px !important;
-  padding: 7px 10px !important;
+  padding: 8px 16px !important;
   text-decoration: none !important;
-  transition: all 0.22s ease !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   cursor: pointer !important;
   white-space: nowrap !important;
+  box-shadow: 0 4px 14px rgba(223, 183, 64, 0.25) !important;
 }
 
 .btn-demo:hover {
-  border-color: rgba(212, 175, 55, 0.35) !important;
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.09) !important;
-  transform: translateY(-1px) !important;
+  background: linear-gradient(135deg, #fae29c 0%, #f5d77f 100%) !important;
+  border-color: #fae29c !important;
+  color: #000000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(223, 183, 64, 0.45) !important;
 }
 
 .btn-code {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 5px !important;
+  gap: 6px !important;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 12.5px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
-  color: #cbd5e1 !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 9999px !important;
-  padding: 7px 12px !important;
+  padding: 8px 16px !important;
   text-decoration: none !important;
-  transition: all 0.22s ease !important;
+  transition: all 0.25s ease !important;
   cursor: pointer !important;
   white-space: nowrap !important;
 }
 
 .btn-code:hover {
-  border-color: rgba(212, 175, 55, 0.35) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
   color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  transform: translateY(-1px) !important;
+  transform: translateY(-2px) !important;
 }
 
 /* ==========================================================================

@@ -329,7 +329,7 @@ export function DeveloperCliDrawer() {
             '  • GET  /api/public/leetcode-stats                         [Status 200 OK | ~28ms cached]',
             '  • POST /api/public/telemetry                              [Status 200 OK | ~15ms async]',
             '',
-            '  Try inspecting any project case study to test live queries in the interactive sandbox!'
+            '  Try testing live API queries and endpoints in the interactive sandbox!'
           ].join('\n')
         });
         break;

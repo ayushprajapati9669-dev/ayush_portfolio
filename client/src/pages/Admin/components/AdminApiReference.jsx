@@ -347,7 +347,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
       method: 'GET',
       path: '/api/public/projects/:slug',
       auth: 'Public',
-      description: 'Fetches detailed case study for a single published project by its unique URL slug.',
+      description: 'Fetches full technical details for a single published project by its unique URL slug.',
       headers: [],
       curl: `curl -X GET http://localhost:6000/api/public/projects/real-time-collaborative-code-studio`,
       responseTitle: 'JSON Response (200 OK)',
@@ -540,7 +540,7 @@ export function AdminApiReference({ onSelectTab, showToast }) {
       method: 'POST',
       path: '/api/admin/projects',
       auth: 'Admin Bearer + CSRF',
-      description: 'Creates a new portfolio project case study.',
+      description: 'Creates a new portfolio project.',
       headers: [
         'Content-Type: application/json',
         'Authorization: Bearer <admin_token>',

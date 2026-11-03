@@ -514,12 +514,27 @@ export function CinematicParticleCard({ className = '' }) {
       {/* State Indicator Dots */}
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
         {[0, 1, 2].map((idx) => (
-          <span
+          <button
             key={idx}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              const state = stateRef.current;
+              clearInterval(state.autoCycleId);
+              state.currentState = idx;
+              state.morphProgress = 0;
+              setCurrentState(idx);
+              state.autoCycleId = setInterval(() => {
+                state.currentState = (state.currentState + 1) % 3;
+                state.morphProgress = 0;
+                setCurrentState(state.currentState);
+              }, 6000);
+            }}
+            aria-label={`Morph to particle scene ${idx + 1}`}
+            className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
               idx === currentState
                 ? 'bg-[#e5b869] shadow-[0_0_10px_#e5b869] scale-125'
-                : 'bg-white/25 hover:bg-white/40'
+                : 'bg-white/25 hover:bg-white/60'
             }`}
           />
         ))}

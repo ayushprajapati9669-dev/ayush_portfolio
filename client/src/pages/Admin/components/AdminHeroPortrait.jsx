@@ -63,6 +63,7 @@ export function AdminHeroPortrait({
   });
 
   const fileInputRef = useRef(null);
+  const importInputRef = useRef(null);
   const autosaveTimerRef = useRef(null);
   const cropImgRef = useRef(null);
 
@@ -686,7 +687,7 @@ export function AdminHeroPortrait({
 
                 <div className="flex gap-2.5">
                   <div className="hero-file-upload-wrapper flex-1">
-                    <button type="button" className="hero-file-upload-btn">
+                    <button type="button" className="hero-file-upload-btn" onClick={() => { playTick(); fileInputRef.current?.click(); }}>
                       <i className="fa-solid fa-cloud-arrow-up text-yellow-400" />
                       <span>Upload & Crop Image</span>
                     </button>
@@ -992,6 +993,10 @@ export function AdminHeroPortrait({
                         <button
                           type="button"
                           className="hero-mockup-btn-primary"
+                          onClick={() => {
+                            playTick();
+                            window.open('/projects', '_blank');
+                          }}
                           style={{
                             background: themeColor,
                             boxShadow: `0 4px 15px ${themeColor}40`
@@ -1002,6 +1007,10 @@ export function AdminHeroPortrait({
                         <button
                           type="button"
                           className="hero-mockup-btn-secondary"
+                          onClick={() => {
+                            playTick();
+                            window.open('/contact', '_blank');
+                          }}
                         >
                           {secondaryCta || 'Contact Me'}
                         </button>
@@ -1166,14 +1175,23 @@ export function AdminHeroPortrait({
               </button>
 
               <div className="hero-file-upload-wrapper">
-                <button type="button" className="btn-hero-action w-full py-2.5 text-xs font-semibold">
+                <button
+                  type="button"
+                  className="btn-hero-action w-full py-2.5 text-xs font-semibold"
+                  onClick={() => {
+                    playTick();
+                    importInputRef.current?.click();
+                  }}
+                >
                   <i className="fa-solid fa-upload text-yellow-400" />
                   <span>Import Hero Config JSON</span>
                 </button>
                 <input
+                  ref={importInputRef}
                   type="file"
                   accept=".json,application/json"
                   onChange={handleImportData}
+                  style={{ display: 'none' }}
                 />
               </div>
             </div>

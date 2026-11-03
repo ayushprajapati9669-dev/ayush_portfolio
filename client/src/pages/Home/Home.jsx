@@ -376,7 +376,7 @@ export function HomePage() {
           {/* Top Announcement Capsule Pill */}
           <div
             className="hero-announcement-capsule"
-            onClick={() => scrollToSection('contact-preview')}
+            onClick={() => scrollToSection('home-cta-banner')}
             role="button"
             tabIndex={0}
           >
@@ -401,7 +401,7 @@ export function HomePage() {
           {/* Modern Action Buttons: Solid White Pill + Circular Glass Play Button */}
           <div className="hero-modern-actions">
             <MagneticButton
-              onClick={() => scrollToSection('featured-projects')}
+              onClick={() => scrollToSection('portfolio-directories')}
               className="hero-btn-solid-white"
             >
               <span>Explore work</span>
@@ -540,7 +540,7 @@ export function HomePage() {
                 Explore <em className="italic font-serif text-[#e5b869]">The Portfolio</em>
               </h2>
               <p className="text-stonewarm text-xs sm:text-sm mt-1 max-w-xl">
-                Direct access to full architectural case studies, interactive skills matrix, verified accreditations, and developer journey.
+                Direct access to live deployed applications, interactive skills matrix, verified accreditations, and developer journey.
               </p>
             </div>
           </div>

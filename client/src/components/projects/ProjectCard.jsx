@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 
 // Authentic, colorful brand tech icons for top 1% developer portfolio
@@ -169,7 +168,7 @@ export function ProjectCard({
         ease: 'power2.out'
       });
 
-      // Awwwards 3D Window Parallax: Image shifts counter-angle
+      // 3D Window Parallax: Image shifts counter-angle
       const img = card.querySelector('.project-img-wrap img');
       if (img) {
         gsap.to(img, {
@@ -212,8 +211,7 @@ export function ProjectCard({
     }
   };
 
-  const hasCaseStudy = true;
-  const detailLink = `/projects/${proj.slug || proj.id}`;
+  const primaryTargetUrl = liveHref || githubHref;
 
   return (
     <article
@@ -225,13 +223,13 @@ export function ProjectCard({
       onClick={() => onSelect && onSelect(proj.id)}
     >
       <a
-        href={liveHref || '#'}
-        target={liveHref ? '_blank' : '_self'}
+        href={primaryTargetUrl || '#'}
+        target={primaryTargetUrl ? '_blank' : '_self'}
         rel="noopener noreferrer"
         className="project-img-wrap block relative overflow-hidden"
         title={`Visit ${proj.title}`}
         onClick={(e) => {
-          if (!liveHref || liveHref === '#') e.preventDefault();
+          if (!primaryTargetUrl || primaryTargetUrl === '#') e.preventDefault();
         }}
       >
         <picture>
@@ -256,9 +254,6 @@ export function ProjectCard({
         {/* Badges */}
         <div className="project-badges">
           <div className="p-badge">{badgeText}</div>
-          {hasCaseStudy && (
-            <div className="p-badge case-study">📖 Case Study</div>
-          )}
           {liveHref && /^https?:\/\//i.test(liveHref) && (
             <div className="p-badge live flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -296,28 +291,17 @@ export function ProjectCard({
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="project-actions flex items-center gap-2.5 pt-2 mt-auto border-t border-white/5">
-          {hasCaseStudy && (
-            <Link
-              to={detailLink}
-              className="btn-case-study"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span>Read Case Study</span>
-              <i className="fa-solid fa-arrow-right text-[10px]" />
-            </Link>
-          )}
-
+        {/* Action Buttons: Prominent Live Demo & Source Code */}
+        <div className="project-actions flex items-center gap-2.5 pt-3 mt-auto border-t border-white/5">
           {liveHref && (
             <a
               href={liveHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-demo"
+              className="btn-demo flex-1 flex items-center justify-center gap-2"
               onClick={(e) => e.stopPropagation()}
             >
-              <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
+              <i className="fa-solid fa-arrow-up-right-from-square text-[11px]" />
               <span>Live Demo</span>
             </a>
           )}
@@ -327,12 +311,12 @@ export function ProjectCard({
               href={githubHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-code"
+              className={`btn-code flex items-center justify-center gap-2 ${!liveHref ? 'flex-1' : ''}`}
               onClick={(e) => e.stopPropagation()}
-              title="View Repository"
+              title="View Repository on GitHub"
             >
-              <i className="fa-brands fa-github text-[12px]" />
-              <span>Code</span>
+              <i className="fa-brands fa-github text-[13px]" />
+              <span>Source Code</span>
             </a>
           )}
         </div>

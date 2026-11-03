@@ -131,7 +131,7 @@ export function AdminProjects({
   });
   const [errors, setErrors] = useState({});
   const [isDraggingFile, setIsDraggingFile] = useState(false);
-  const [isPreviewCaseStudyModalOpen, setIsPreviewCaseStudyModalOpen] = useState(false);
+  
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [markdownPreviews, setMarkdownPreviews] = useState({
     problem: false,
@@ -206,13 +206,6 @@ export function AdminProjects({
       if (!form.thumbnailUrl || !form.thumbnailUrl.trim()) {
         newErrors.thumbnailUrl = 'Please upload a project cover image or paste an image URL.';
       }
-    } else if (stepNumber === 5) {
-      const cs = form.caseStudy || {};
-      if (cs.problem && cs.problem.length > 5000) newErrors.csProblem = 'Problem section cannot exceed 5000 characters.';
-      if (cs.approach && cs.approach.length > 5000) newErrors.csApproach = 'Approach section cannot exceed 5000 characters.';
-      if (cs.techDecisions && cs.techDecisions.length > 5000) newErrors.csTech = 'Tech Decisions section cannot exceed 5000 characters.';
-      if (cs.learnings && cs.learnings.length > 5000) newErrors.csLearnings = 'Learnings section cannot exceed 5000 characters.';
-      if (cs.result?.summary && cs.result.summary.length > 5000) newErrors.csResult = 'Result summary cannot exceed 5000 characters.';
     }
 
     setErrors((prev) => ({ ...prev, ...newErrors }));
@@ -266,7 +259,7 @@ export function AdminProjects({
     playTick();
     if (validateStep(currentStep)) {
       setErrors({});
-      setCurrentStep((prev) => Math.min(prev + 1, 5));
+      setCurrentStep((prev) => Math.min(prev + 1, 4));
       formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
@@ -1061,8 +1054,13 @@ export function AdminProjects({
           </div>
           <button
             type="button"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 hover:text-white transition-all"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 hover:text-white transition-all cursor-pointer"
             aria-label={isHeadingsOpen ? "Collapse headings customizer" : "Expand headings customizer"}
+            onClick={(e) => {
+              e.stopPropagation();
+              playTick();
+              setIsHeadingsOpen(!isHeadingsOpen);
+            }}
           >
             <i className={`fa-solid fa-chevron-${isHeadingsOpen ? 'up' : 'down'} text-xs`} />
           </button>
@@ -1128,13 +1126,13 @@ export function AdminProjects({
                     {editingId ? 'Edit Project' : 'Create New Live Project'}
                   </h2>
                   <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/30">
-                    Step {currentStep} of 5
+                    Step {currentStep} of 4
                   </span>
                 </div>
                 <p className="text-xs text-slate-400">
                   {editingId
-                    ? 'Update project details across 5 organized steps.'
-                    : 'Complete the 5 quick steps below to showcase a new live project with an in-depth case study.'}
+                    ? 'Update project details across 4 organized steps.'
+                    : 'Complete the 4 quick steps below to showcase a new live project with repository and demo links.'}
                 </p>
               </div>
             </div>
@@ -1154,19 +1152,17 @@ export function AdminProjects({
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
               <div
                 className="h-full bg-gradient-to-r from-yellow-400 via-indigo-400 to-purple-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
-                style={{ width: `${(currentStep / 5) * 100}%` }}
+                style={{ width: `${(currentStep / 4) * 100}%` }}
               />
             </div>
 
             {/* Stepper Buttons (5 steps) */}
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
                 { num: 1, title: 'Core Info', desc: 'Title & Category' },
                 { num: 2, title: 'Description', desc: 'Project Overview' },
                 { num: 3, title: 'Tech Stack', desc: 'Tags & Links' },
-                { num: 4, title: 'Media', desc: 'Cover & Status' },
-                { num: 5, title: 'Case Study', desc: 'Problem & Result' }
-              ].map((s) => (
+                { num: 4, title: 'Media & Status', desc: 'Cover & Publish' }].map((s) => (
                 <button
                   key={s.num}
                   type="button"
@@ -1319,7 +1315,7 @@ export function AdminProjects({
                 />
                 <FormErrorMessage message={errors.shortDescription} />
                 <p className="text-[11px] text-slate-400 mt-2">
-                  This summary appears on the public Projects listing page and home highlights. The deep technical case study is authored in Step 05.
+                  This summary appears on the public Projects listing page and home highlights.
                 </p>
               </div>
             </div>
@@ -1499,7 +1495,7 @@ export function AdminProjects({
                   <i className="fa-solid fa-photo-film text-yellow-400"></i>
                   <span>Media Upload, Visibility & Card Preview</span>
                 </div>
-                <span className="text-[11px] font-mono text-slate-400">Step 4 of 5</span>
+                <span className="text-[11px] font-mono text-slate-400">Step 4 of 4</span>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -1698,11 +1694,7 @@ export function AdminProjects({
                             <i className="fa-solid fa-star text-[9px]"></i> Featured
                           </span>
                         )}
-                        {(form.caseStudy?.problem || form.caseStudy?.result?.summary) && (
-                          <span className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 flex items-center gap-1 backdrop-blur-md">
-                            📖 Case Study
-                          </span>
-                        )}
+                        
                       </div>
 
                       {/* Remove image button if has thumbnail */}
@@ -1768,488 +1760,6 @@ export function AdminProjects({
             </div>
           )}
 
-          {/* STEP 5: Case Study (Detailed Engineering Breakdown) */}
-          {currentStep === 5 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
-              <div className="flex flex-wrap items-center justify-between border-b border-white/5 pb-2 gap-2">
-                <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                  <i className="fa-solid fa-book-open text-yellow-400"></i>
-                  <span>Engineering Case Study (Problem → Approach → Tech Decisions → Result → Learnings)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleGenerateAiBreakdown}
-                    disabled={isGeneratingAi}
-                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-500/20 to-yellow-500/20 hover:from-purple-500/30 hover:to-yellow-500/30 border border-yellow-500/40 text-yellow-300 font-mono text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all active:scale-95 disabled:opacity-50"
-                    title="Automatically generate Problem Statement, Strategy, Trade-offs, and Metrics using AI"
-                  >
-                    <i className={`fa-solid ${isGeneratingAi ? 'fa-circle-notch animate-spin text-purple-400' : 'fa-wand-magic-sparkles text-yellow-400'}`}></i>
-                    <span>{isGeneratingAi ? 'Generating Architecture...' : '✨ Generate AI Architecture Breakdown'}</span>
-                  </button>
-                  <span className="text-[11px] font-mono text-yellow-400 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20">
-                    Optional / Skip Available
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                {/* Left Column: Authoring Sections */}
-                <div className="lg:col-span-7 space-y-6">
-                  {/* Problem Section */}
-                  <div className="space-y-2 p-4 rounded-2xl border border-white/10 bg-black/30">
-                    <div className="flex items-center justify-between">
-                      <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">1</span>
-                        <span>The Problem Statement</span>
-                      </label>
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[10px] text-slate-400">
-                          {(form.caseStudy?.problem || '').length}/5000 chars
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => toggleMarkdownPreview('problem')}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-yellow-400 hover:bg-yellow-500/10"
-                        >
-                          {markdownPreviews.problem ? 'Edit Markdown' : 'Preview MD'}
-                        </button>
-                      </div>
-                    </div>
-                    {markdownPreviews.problem ? (
-                      <div className="markdown-body p-3.5 rounded-xl bg-black/60 border border-white/15 text-xs text-slate-300 min-h-[100px]">
-                        <MarkdownView content={form.caseStudy?.problem || '*No problem statement entered yet.*'} />
-                      </div>
-                    ) : (
-                      <textarea
-                        rows="4"
-                        value={form.caseStudy?.problem || ''}
-                        onChange={(e) => handleCaseStudyChange('problem', e.target.value)}
-                        placeholder="Explain the real-world friction, scaling challenge, or user need that required solving (supports Markdown)..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
-                      />
-                    )}
-                    <FormErrorMessage message={errors.csProblem} />
-                  </div>
-
-                  {/* Approach Section */}
-                  <div className="space-y-2 p-4 rounded-2xl border border-white/10 bg-black/30">
-                    <div className="flex items-center justify-between">
-                      <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">2</span>
-                        <span>Engineering Approach</span>
-                      </label>
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[10px] text-slate-400">
-                          {(form.caseStudy?.approach || '').length}/5000 chars
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => toggleMarkdownPreview('approach')}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-yellow-400 hover:bg-yellow-500/10"
-                        >
-                          {markdownPreviews.approach ? 'Edit Markdown' : 'Preview MD'}
-                        </button>
-                      </div>
-                    </div>
-                    {markdownPreviews.approach ? (
-                      <div className="markdown-body p-3.5 rounded-xl bg-black/60 border border-white/15 text-xs text-slate-300 min-h-[100px]">
-                        <MarkdownView content={form.caseStudy?.approach || '*No approach statement entered yet.*'} />
-                      </div>
-                    ) : (
-                      <textarea
-                        rows="4"
-                        value={form.caseStudy?.approach || ''}
-                        onChange={(e) => handleCaseStudyChange('approach', e.target.value)}
-                        placeholder="Detail how you partitioned the architecture, phased milestones, and solved challenges (supports Markdown)..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
-                      />
-                    )}
-                    <FormErrorMessage message={errors.csApproach} />
-                  </div>
-
-                  {/* Tech Decisions Section */}
-                  <div className="space-y-2 p-4 rounded-2xl border border-white/10 bg-black/30">
-                    <div className="flex items-center justify-between">
-                      <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">3</span>
-                        <span>Tech Decisions & Architectural Trade-offs</span>
-                      </label>
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[10px] text-slate-400">
-                          {(form.caseStudy?.techDecisions || '').length}/5000 chars
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => toggleMarkdownPreview('techDecisions')}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-yellow-400 hover:bg-yellow-500/10"
-                        >
-                          {markdownPreviews.techDecisions ? 'Edit Markdown' : 'Preview MD'}
-                        </button>
-                      </div>
-                    </div>
-                    {markdownPreviews.techDecisions ? (
-                      <div className="markdown-body p-3.5 rounded-xl bg-black/60 border border-white/15 text-xs text-slate-300 min-h-[100px]">
-                        <MarkdownView content={form.caseStudy?.techDecisions || '*No tech decisions entered yet.*'} />
-                      </div>
-                    ) : (
-                      <textarea
-                        rows="4"
-                        value={form.caseStudy?.techDecisions || ''}
-                        onChange={(e) => handleCaseStudyChange('techDecisions', e.target.value)}
-                        placeholder="Explain WHY you chose Node HTTP vs Express, MongoDB vs PostgreSQL, or React vs Next.js — highlight trade-offs..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
-                      />
-                    )}
-                    <FormErrorMessage message={errors.csTech} />
-                  </div>
-
-                  {/* Result & Metrics Section */}
-                  <div className="space-y-4 p-4 rounded-2xl border border-white/10 bg-black/30">
-                    <div className="flex items-center justify-between">
-                      <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">4</span>
-                        <span>Result & Measurable Outcomes</span>
-                      </label>
-                      <span className="font-mono text-[10px] text-slate-400">
-                        {(form.caseStudy?.result?.summary || '').length}/5000 chars
-                      </span>
-                    </div>
-
-                    <textarea
-                      rows="3"
-                      value={form.caseStudy?.result?.summary || ''}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setForm((prev) => ({
-                          ...prev,
-                          caseStudy: {
-                            ...(prev.caseStudy || DEFAULT_CASE_STUDY),
-                            result: {
-                              ...(prev.caseStudy?.result || {}),
-                              summary: val
-                            }
-                          }
-                        }));
-                      }}
-                      placeholder="High-level business & engineering impact summary..."
-                      className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
-                    />
-
-                    {/* Dynamic Metrics List */}
-                    <div className="space-y-2 pt-2 border-t border-white/5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[11px] text-slate-300 font-semibold flex items-center gap-1">
-                          <i className="fa-solid fa-chart-line text-yellow-400"></i>
-                          <span>Key Metrics (Max 10)</span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={handleAddMetric}
-                          disabled={(form.caseStudy?.result?.metrics || []).length >= 10}
-                          className="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20 transition-all flex items-center gap-1 disabled:opacity-40"
-                        >
-                          <i className="fa-solid fa-plus text-[9px]"></i> Add Metric
-                        </button>
-                      </div>
-
-                      <div className="space-y-2">
-                        {(form.caseStudy?.result?.metrics || []).map((m, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <input
-                              type="text"
-                              value={m.label || ''}
-                              onChange={(e) => handleMetricChange(idx, 'label', e.target.value)}
-                              placeholder="Metric label (e.g. API Endpoints)"
-                              className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white outline-none focus:border-yellow-400 font-mono"
-                            />
-                            <input
-                              type="text"
-                              value={m.value || ''}
-                              onChange={(e) => handleMetricChange(idx, 'value', e.target.value)}
-                              placeholder="Value (e.g. 15+)"
-                              className="w-28 rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-yellow-300 outline-none focus:border-yellow-400 font-mono font-bold"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveMetric(idx)}
-                              className="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center text-xs transition-all shrink-0"
-                              title="Remove metric"
-                            >
-                              <i className="fa-solid fa-trash-can"></i>
-                            </button>
-                          </div>
-                        ))}
-                        {(!form.caseStudy?.result?.metrics || form.caseStudy.result.metrics.length === 0) && (
-                          <p className="text-[11px] text-slate-500 italic font-mono py-1">
-                            No metrics added yet. Click &quot;Add Metric&quot; to showcase quantitative accomplishments (e.g. 92 Lighthouse, 200+ Test Cases).
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Architecture Diagram */}
-                  <div className="space-y-3 p-4 rounded-2xl border border-white/10 bg-black/30">
-                    <div className="flex items-center justify-between">
-                      <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">5</span>
-                        <span>System Architecture Diagram</span>
-                      </label>
-                      {form.caseStudy?.architectureDiagramUrl && (
-                        <button
-                          type="button"
-                          onClick={() => handleCaseStudyChange('architectureDiagramUrl', '')}
-                          className="font-mono text-[10px] text-red-400 hover:underline"
-                        >
-                          Clear Diagram
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <label className="cursor-pointer font-mono text-xs px-3 py-2 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/25 transition-all flex items-center gap-1.5">
-                        <i className="fa-solid fa-cloud-arrow-up"></i>
-                        <span>Upload Diagram</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                              handleUploadArchDiagram(e.target.files[0]);
-                            }
-                          }}
-                          className="hidden"
-                        />
-                      </label>
-                      <input
-                        type="text"
-                        value={form.caseStudy?.architectureDiagramUrl || ''}
-                        onChange={(e) => handleCaseStudyChange('architectureDiagramUrl', e.target.value)}
-                        placeholder="Or direct diagram image URL (https://...)"
-                        className="flex-1 rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white outline-none focus:border-yellow-400 font-mono"
-                      />
-                    </div>
-
-                    {form.caseStudy?.architectureDiagramUrl && (
-                      <div className="relative rounded-xl overflow-hidden border border-yellow-500/30 bg-black/60 aspect-video max-h-48">
-                        <img
-                          src={form.caseStudy.architectureDiagramUrl}
-                          alt="Architecture diagram preview"
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Before & After Screenshots */}
-                  <div className="space-y-4 p-4 rounded-2xl border border-white/10 bg-black/30">
-                    <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">6</span>
-                      <span>Before & After Screenshots (Max 5 Each)</span>
-                    </label>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Before Screenshots */}
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="font-mono text-[11px] text-amber-400 font-semibold">
-                            &quot;Before&quot; Screenshots ({form.caseStudy?.beforeScreenshots?.length || 0}/5)
-                          </span>
-                          <label className="cursor-pointer font-mono text-[10px] px-2 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20">
-                            + Add Image
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  handleAddScreenshot(e.target.files[0], 'before');
-                                }
-                              }}
-                              className="hidden"
-                            />
-                          </label>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {(form.caseStudy?.beforeScreenshots || []).map((imgUrl, i) => (
-                            <div key={i} className="relative w-16 h-12 rounded-lg overflow-hidden border border-white/20 group">
-                              <img src={imgUrl} alt={`Before ${i + 1}`} className="w-full h-full object-cover" />
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveScreenshot(i, 'before')}
-                                className="absolute inset-0 bg-red-600/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <i className="fa-solid fa-trash text-xs"></i>
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* After Screenshots */}
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="font-mono text-[11px] text-emerald-400 font-semibold">
-                            &quot;After&quot; Screenshots ({form.caseStudy?.afterScreenshots?.length || 0}/5)
-                          </span>
-                          <label className="cursor-pointer font-mono text-[10px] px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20">
-                            + Add Image
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  handleAddScreenshot(e.target.files[0], 'after');
-                                }
-                              }}
-                              className="hidden"
-                            />
-                          </label>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {(form.caseStudy?.afterScreenshots || []).map((imgUrl, i) => (
-                            <div key={i} className="relative w-16 h-12 rounded-lg overflow-hidden border border-white/20 group">
-                              <img src={imgUrl} alt={`After ${i + 1}`} className="w-full h-full object-cover" />
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveScreenshot(i, 'after')}
-                                className="absolute inset-0 bg-red-600/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <i className="fa-solid fa-trash text-xs"></i>
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Learnings Section */}
-                  <div className="space-y-2 p-4 rounded-2xl border border-white/10 bg-black/30">
-                    <div className="flex items-center justify-between">
-                      <label className="font-mono text-xs font-bold text-white flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-md bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-[10px]">7</span>
-                        <span>What I Learned (Engineering Retrospective)</span>
-                      </label>
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[10px] text-slate-400">
-                          {(form.caseStudy?.learnings || '').length}/5000 chars
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => toggleMarkdownPreview('learnings')}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded border border-white/10 text-yellow-400 hover:bg-yellow-500/10"
-                        >
-                          {markdownPreviews.learnings ? 'Edit Markdown' : 'Preview MD'}
-                        </button>
-                      </div>
-                    </div>
-                    {markdownPreviews.learnings ? (
-                      <div className="markdown-body p-3.5 rounded-xl bg-black/60 border border-white/15 text-xs text-slate-300 min-h-[100px]">
-                        <MarkdownView content={form.caseStudy?.learnings || '*No learnings entered yet.*'} />
-                      </div>
-                    ) : (
-                      <textarea
-                        rows="4"
-                        value={form.caseStudy?.learnings || ''}
-                        onChange={(e) => handleCaseStudyChange('learnings', e.target.value)}
-                        placeholder="What unexpected edge cases occurred? What would you do differently on Day 1 next time? (supports Markdown)..."
-                        className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-xs text-white outline-none focus:border-yellow-400 transition-all placeholder-slate-500 font-mono"
-                      />
-                    )}
-                    <FormErrorMessage message={errors.csLearnings} />
-                  </div>
-                </div>
-
-                {/* Right Column: Case Study Simulated Live Preview */}
-                <div className="lg:col-span-5 space-y-4 sticky top-6">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-yellow-400 font-semibold flex items-center gap-1.5">
-                      <i className="fa-solid fa-book-open"></i> Case Study Live Preview
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setIsPreviewCaseStudyModalOpen(true)}
-                      className="font-mono text-[10px] text-yellow-400 hover:underline flex items-center gap-1"
-                    >
-                      <span>Full Preview Modal</span>
-                      <i className="fa-solid fa-expand text-[9px]"></i>
-                    </button>
-                  </div>
-
-                  <div className="rounded-2xl border border-yellow-500/30 bg-black/70 p-5 space-y-4 shadow-2xl backdrop-blur-md">
-                    <div>
-                      <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-yellow-500/15 text-yellow-300 border border-yellow-500/30">
-                        {form.category || 'Category'}
-                      </span>
-                      <h3 className="text-base font-bold text-white mt-2">
-                        {form.title || 'Case Study Project Title'}
-                      </h3>
-                      <p className="text-xs text-slate-400 line-clamp-2 mt-1">
-                        {form.shortDescription || 'Short overview description...'}
-                      </p>
-                    </div>
-
-                    {/* Metrics preview */}
-                    {Array.isArray(form.caseStudy?.result?.metrics) && form.caseStudy.result.metrics.length > 0 && (
-                      <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
-                        {form.caseStudy.result.metrics.slice(0, 4).map((m, i) => (
-                          <div key={i} className="p-2 rounded-lg bg-white/5 border border-white/10">
-                            <span className="text-sm font-bold text-yellow-300 block">{m.value || '—'}</span>
-                            <span className="text-[10px] text-slate-400 truncate block">{m.label || 'Metric'}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Problem excerpt */}
-                    {form.caseStudy?.problem && (
-                      <div className="pt-2 border-t border-white/10">
-                        <span className="font-mono text-[10px] uppercase text-yellow-400 font-bold block mb-1">
-                          The Problem
-                        </span>
-                        <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
-                          {form.caseStudy.problem}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Architecture badge */}
-                    {form.caseStudy?.architectureDiagramUrl && (
-                      <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                        <span className="text-slate-400 flex items-center gap-1.5 font-mono text-[11px]">
-                          <i className="fa-solid fa-diagram-project text-yellow-400"></i> Architecture Included
-                        </span>
-                        <span className="text-[10px] font-mono text-emerald-400">✓ Uploaded</span>
-                      </div>
-                    )}
-
-                    {/* Screenshots count */}
-                    {((form.caseStudy?.beforeScreenshots?.length || 0) > 0 || (form.caseStudy?.afterScreenshots?.length || 0) > 0) && (
-                      <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                        <span className="text-slate-400 flex items-center gap-1.5 font-mono text-[11px]">
-                          <i className="fa-solid fa-images text-yellow-400"></i> Screenshots
-                        </span>
-                        <span className="text-[10px] font-mono text-slate-300">
-                          {form.caseStudy?.beforeScreenshots?.length || 0} Before / {form.caseStudy?.afterScreenshots?.length || 0} After
-                        </span>
-                      </div>
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={() => setIsPreviewCaseStudyModalOpen(true)}
-                      className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-yellow-300 font-mono flex items-center justify-center gap-2 transition-all mt-2"
-                    >
-                      <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                      <span>Launch Full Public Case Study Simulation</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Stepper Navigation Actions */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-5 border-t border-white/10">
             <button
@@ -2274,8 +1784,8 @@ export function AdminProjects({
                 </button>
               )}
 
-              {/* Continue to Next Step (Steps 1 to 4) */}
-              {currentStep < 5 && (
+              {/* Continue to Next Step (Steps 1 to 3) */}
+              {currentStep < 4 && (
                 <button
                   type="button"
                   onClick={handleNextStep}
@@ -2286,215 +1796,29 @@ export function AdminProjects({
                 </button>
               )}
 
-              {/* Step 5 Special Action Buttons */}
-              {currentStep === 5 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={handleSkipCaseStudy}
-                    className="font-mono text-xs px-4 py-2.5 rounded-xl border border-white/15 bg-black/50 text-slate-300 hover:text-white hover:border-white/30 transition-all"
-                    title="Publish or update project without case study content"
-                  >
-                    Skip Case Study
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsPreviewCaseStudyModalOpen(true)}
-                    className="font-mono text-xs px-4 py-2.5 rounded-xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20 transition-all flex items-center gap-1.5"
-                  >
-                    <i className="fa-solid fa-eye"></i>
-                    <span>Preview Case Study</span>
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={isUploading}
-                    className="btn-save flex items-center gap-2 px-7 py-2.5 text-xs font-bold shadow-lg shadow-cyan-500/20 disabled:opacity-50"
-                  >
-                    {isUploading ? (
-                      <>
-                        <i className="fa-solid fa-circle-notch fa-spin"></i>
-                        <span>Uploading Media...</span>
-                      </>
-                    ) : (
-                      <>
-                        <i className={editingId ? 'fa-solid fa-check' : 'fa-solid fa-rocket'}></i>
-                        <span>{editingId ? 'Update & Save Changes' : 'Publish New Project'}</span>
-                      </>
-                    )}
-                  </button>
-                </>
+              {/* Step 4 Save / Publish Button */}
+              {currentStep === 4 && (
+                <button
+                  type="submit"
+                  disabled={isUploading}
+                  className="btn-save flex items-center gap-2 px-7 py-2.5 text-xs font-bold shadow-lg shadow-cyan-500/20 disabled:opacity-50"
+                >
+                  {isUploading ? (
+                    <>
+                      <i className="fa-solid fa-circle-notch fa-spin"></i>
+                      <span>Uploading Media...</span>
+                    </>
+                  ) : (
+                    <>
+                      <i className={editingId ? 'fa-solid fa-check' : 'fa-solid fa-rocket'}></i>
+                      <span>{editingId ? 'Update & Save Changes' : 'Publish New Project'}</span>
+                    </>
+                  )}
+                </button>
               )}
             </div>
           </div>
         </form>
-      )}
-
-      {/* Modal: Full Public Case Study Preview Simulation */}
-      {isPreviewCaseStudyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="glass-card-admin max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-8 rounded-3xl border border-yellow-500/30 custom-scrollbar shadow-2xl">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-xs uppercase text-yellow-400 font-bold px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20">
-                  Public Case Study Preview
-                </span>
-                <span className="text-xs text-slate-400">
-                  Simulating /projects/{form.title ? form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') : 'slug'}
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsPreviewCaseStudyModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-sm transition-all"
-              >
-                <i className="fa-solid fa-xmark"></i>
-              </button>
-            </div>
-
-            {/* Simulated Hero */}
-            <div className="space-y-4">
-              {form.thumbnailUrl && (
-                <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10">
-                  <img src={form.thumbnailUrl} alt={form.title} className="w-full h-full object-cover" />
-                </div>
-              )}
-              <div>
-                <span className="font-mono text-xs text-yellow-400 font-bold">{form.category || 'Category'}</span>
-                <h1 className="text-2xl font-bold text-white mt-1">{form.title || 'Project Title'}</h1>
-                <p className="text-sm text-slate-300 mt-2 leading-relaxed">{form.shortDescription}</p>
-              </div>
-
-              {/* Technologies */}
-              <div className="flex flex-wrap gap-2">
-                {currentTechList.map((tech) => (
-                  <span key={tech} className="font-mono text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Simulated Case Study Sections */}
-            <div className="space-y-8 border-t border-white/10 pt-6">
-              {/* Problem */}
-              {form.caseStudy?.problem && (
-                <div className="space-y-2">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-yellow-400">01.</span> The Problem
-                  </h2>
-                  <div className="markdown-body p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
-                    <MarkdownView content={form.caseStudy.problem} />
-                  </div>
-                </div>
-              )}
-
-              {/* Approach */}
-              {form.caseStudy?.approach && (
-                <div className="space-y-2">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-yellow-400">02.</span> My Approach
-                  </h2>
-                  <div className="markdown-body p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
-                    <MarkdownView content={form.caseStudy.approach} />
-                  </div>
-                </div>
-              )}
-
-              {/* Tech Decisions */}
-              {form.caseStudy?.techDecisions && (
-                <div className="space-y-2">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-yellow-400">03.</span> Tech Decisions & Trade-offs
-                  </h2>
-                  <div className="markdown-body p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
-                    <MarkdownView content={form.caseStudy.techDecisions} />
-                  </div>
-                </div>
-              )}
-
-              {/* Result & Metrics */}
-              {(form.caseStudy?.result?.summary || (Array.isArray(form.caseStudy?.result?.metrics) && form.caseStudy.result.metrics.length > 0)) && (
-                <div className="space-y-4">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-yellow-400">04.</span> Result & Measurable Impact
-                  </h2>
-                  {form.caseStudy.result?.summary && (
-                    <p className="text-sm text-slate-300 leading-relaxed">{form.caseStudy.result.summary}</p>
-                  )}
-                  {Array.isArray(form.caseStudy.result?.metrics) && form.caseStudy.result.metrics.length > 0 && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {form.caseStudy.result.metrics.map((m, i) => (
-                        <div key={i} className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-center">
-                          <span className="text-2xl font-bold text-yellow-300 block">{m.value}</span>
-                          <span className="text-xs text-slate-400 block mt-1">{m.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Before / After screenshots */}
-                  {((form.caseStudy?.beforeScreenshots?.length || 0) > 0 || (form.caseStudy?.afterScreenshots?.length || 0) > 0) && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                      <div className="space-y-2">
-                        <span className="font-mono text-xs font-bold text-amber-400">Before</span>
-                        <div className="space-y-2">
-                          {(form.caseStudy?.beforeScreenshots || []).map((u, i) => (
-                            <img key={i} src={u} alt={`Before ${i}`} className="w-full rounded-xl border border-white/10" />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <span className="font-mono text-xs font-bold text-emerald-400">After</span>
-                        <div className="space-y-2">
-                          {(form.caseStudy?.afterScreenshots || []).map((u, i) => (
-                            <img key={i} src={u} alt={`After ${i}`} className="w-full rounded-xl border border-white/10" />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Architecture Diagram */}
-              {form.caseStudy?.architectureDiagramUrl && (
-                <div className="space-y-2">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-yellow-400">05.</span> System Architecture
-                  </h2>
-                  <div className="rounded-2xl overflow-hidden border border-white/10 bg-black/60">
-                    <img src={form.caseStudy.architectureDiagramUrl} alt="Architecture" className="w-full object-contain max-h-96" />
-                  </div>
-                </div>
-              )}
-
-              {/* Learnings */}
-              {form.caseStudy?.learnings && (
-                <div className="space-y-2">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <span className="text-yellow-400">06.</span> What I Learned
-                  </h2>
-                  <div className="markdown-body p-4 rounded-2xl bg-white/5 border border-white/10 text-sm">
-                    <MarkdownView content={form.caseStudy.learnings} />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-end pt-4 border-t border-white/10">
-              <button
-                type="button"
-                onClick={() => setIsPreviewCaseStudyModalOpen(false)}
-                className="font-mono text-xs px-6 py-2.5 rounded-xl bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 hover:bg-yellow-500/30 transition-all"
-              >
-                Close Preview
-              </button>
-            </div>
-          </div>
-        </div>
       )}
 
       {/* =========================================================================

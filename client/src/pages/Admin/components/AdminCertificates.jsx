@@ -1002,7 +1002,13 @@ export function AdminCertificates({
           </div>
           <button
             type="button"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 hover:text-white"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 hover:text-white transition-all cursor-pointer"
+            aria-label={isHeadingsOpen ? "Collapse headings customizer" : "Expand headings customizer"}
+            onClick={(e) => {
+              e.stopPropagation();
+              playTick();
+              setIsHeadingsOpen(!isHeadingsOpen);
+            }}
           >
             <i className={`fa-solid fa-chevron-${isHeadingsOpen ? 'up' : 'down'} text-xs`} />
           </button>

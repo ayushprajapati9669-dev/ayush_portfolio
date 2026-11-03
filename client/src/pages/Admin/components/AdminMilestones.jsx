@@ -1687,7 +1687,7 @@ export function AdminMilestones({
     setIsFetchingCommits(true);
     setTimeout(() => {
       const mockCommits = [
-        { hash: 'a4b8c9d', msg: 'feat: Architected Case Study Blueprint viewer with live metrics', date: 'Yesterday' },
+        { hash: 'a4b8c9d', msg: 'feat: Enhanced Milestone Blueprint viewer with live metrics', date: 'Yesterday' },
         { hash: 'e2f5g1h', msg: 'fix: Enhanced contrast & dynamic lighting across portfolio modals', date: '3 days ago' },
         { hash: 'j7k3m9n', msg: 'feat: Integrated Gemini API with streaming chat completions', date: '5 days ago' },
         { hash: 'p0q4r8s', msg: 'perf: Optimized GSAP bundle and asset preloading pipelines', date: '1 week ago' }
@@ -3335,7 +3335,7 @@ export function AdminMilestones({
                         />
                       </div>
                       <div className="form-group">
-                        <label>External Link / Case Study</label>
+                        <label>External Link / Project URL</label>
                         <input
                           type="url"
                           className="form-control"

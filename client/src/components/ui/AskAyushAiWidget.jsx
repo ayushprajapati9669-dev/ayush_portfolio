@@ -36,6 +36,15 @@ export function AskAyushAiWidget() {
     }
   };
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenAi = () => {
+      playTick('click');
+      setIsOpen(true);
+    };
+    window.addEventListener('ams-open-ask-ai', handleOpenAi);
+    return () => window.removeEventListener('ams-open-ask-ai', handleOpenAi);
+  }, []);
   const [messages, setMessages] = useState([
     {
       id: 'msg-init',
@@ -217,14 +226,14 @@ export function AskAyushAiWidget() {
                           📁 {m.relatedProject.title}
                         </span>
                         <Link
-                          to={`/projects/${m.relatedProject.slug || m.relatedProject.id}`}
+                          to="/projects"
                           onClick={() => {
                             playTick('click');
                             setIsOpen(false);
                           }}
                           className="text-white hover:text-yellow-300 underline underline-offset-2 shrink-0 ml-2"
                         >
-                          View Case Study →
+                          View Projects →
                         </Link>
                       </div>
                     )}

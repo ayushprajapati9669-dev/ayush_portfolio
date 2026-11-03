@@ -255,7 +255,7 @@ export function ProjectsPage({ viewMode = 'projects' }) {
       {currentProject ? (
         <SEO
           title={`${currentProject.title} | Case Study`}
-          description={currentProject.shortDescription || `Case study and architecture overview for ${currentProject.title} built with ${(currentProject.technologies || []).join(', ')}.`}
+          description={currentProject.shortDescription || `Architecture overview and live demo for ${currentProject.title} built with ${(currentProject.technologies || []).join(', ')}.`}
           image={currentProject.thumbnailUrl}
           schema={projectSchema(currentProject)}
         />
