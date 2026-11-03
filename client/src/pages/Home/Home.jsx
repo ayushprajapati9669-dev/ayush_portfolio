@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useSmoothScroll } from '../../components/common/SmoothScrollProvider';
-import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
 import { HeroCosmosCanvas } from '../../components/ui/HeroCosmosCanvas';
 import { InteractiveMeshWave } from '../../components/ui/InteractiveMeshWave';
 import { MagneticButton } from '../../components/ui/MagneticButton';
 import { TiltCard } from '../../components/ui/TiltCard';
+import { CinematicParticleCard } from '../../components/ui/CinematicParticleCard';
+import { ZeroToOneJourneyCard } from '../../components/ui/ZeroToOneJourneyCard';
 
 import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificateCard } from '../../components/projects/CertificateCard';
@@ -27,22 +28,6 @@ export function HomePage() {
   const heroRef = useRef(null);
   const portraitStageRef = useRef(null);
 
-  // Horizontal scroll refs & states for Projects
-  const projectsTrackRef = useRef(null);
-  const [projectsIndex, setProjectsIndex] = useState(1);
-  const [projectsProgress, setProjectsProgress] = useState(25);
-  const isDraggingProjectsRef = useRef(false);
-  const startXProjectsRef = useRef(0);
-  const scrollLeftProjectsRef = useRef(0);
-
-  // Horizontal scroll refs & states for Certificates
-  const certsTrackRef = useRef(null);
-  const [certsIndex, setCertsIndex] = useState(1);
-  const [certsProgress, setCertsProgress] = useState(33);
-  const isDraggingCertsRef = useRef(false);
-  const startXCertsRef = useRef(0);
-  const scrollLeftCertsRef = useRef(0);
-
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
 
@@ -52,8 +37,22 @@ export function HomePage() {
 
   const featuredProjects = publishedProjects.filter((proj) => proj.featured);
   const displayProjects = featuredProjects.length > 0 ? featuredProjects : publishedProjects;
+
+  // Deduplicate and pick 3 distinct, high-impact flagship engineering builds
+  const uniqueProjects = [];
+  const seenTypes = new Set();
+  for (const proj of displayProjects) {
+    const isAirbnb = (proj.title || '').toLowerCase().includes('airbnb');
+    const isAgentic = (proj.title || '').toLowerCase().includes('agentic');
+    const isChat = (proj.title || '').toLowerCase().includes('chat') || (proj.title || '').toLowerCase().includes('boat');
+    const key = isAirbnb ? 'airbnb' : isAgentic ? 'agentic' : isChat ? 'chat' : proj.id;
+    if (!seenTypes.has(key)) {
+      seenTypes.add(key);
+      uniqueProjects.push(proj);
+    }
+  }
+  const showcaseProjects = (uniqueProjects.length >= 3 ? uniqueProjects : displayProjects).slice(0, 3);
   const allSkillItems = (appState.skills || []).flatMap((g) => g.items || []);
-  const doubledSkills = [...allSkillItems, ...allSkillItems];
   const certificates = appState.certificates || [];
 
   const goTo = (route) => {
@@ -162,102 +161,6 @@ export function HomePage() {
     gsap.to(el, { x: 0, y: 0, duration: 0.75, ease: 'elastic.out(1, 0.3)' });
   };
 
-  // Projects Horizontal Track Scrolling
-  const handleProjectsScroll = useCallback(() => {
-    const track = projectsTrackRef.current;
-    if (!track) return;
-    const maxScroll = track.scrollWidth - track.clientWidth;
-    const progress = maxScroll > 0 ? (track.scrollLeft / maxScroll) * 100 : 0;
-    setProjectsProgress(Math.max(10, Math.min(100, progress)));
-
-    const slideWidth = track.clientWidth * 0.45 || 400;
-    const currentIdx = Math.min(
-      displayProjects.length,
-      Math.max(1, Math.round(track.scrollLeft / slideWidth) + 1)
-    );
-    setProjectsIndex(currentIdx);
-  }, [displayProjects.length]);
-
-  const scrollProjects = (direction) => {
-    playTick();
-    const track = projectsTrackRef.current;
-    if (!track) return;
-    const firstSlide = track.querySelector('.project-card-slide');
-    const slideWidth = firstSlide ? firstSlide.getBoundingClientRect().width + 24 : track.clientWidth * 0.5;
-    track.scrollBy({ left: slideWidth * (direction === 'left' ? -1 : 1), behavior: 'smooth' });
-  };
-
-  // Drag to scroll for Projects Track
-  const handleProjectsMouseDown = (e) => {
-    const track = projectsTrackRef.current;
-    if (!track) return;
-    isDraggingProjectsRef.current = true;
-    startXProjectsRef.current = e.pageX - track.offsetLeft;
-    scrollLeftProjectsRef.current = track.scrollLeft;
-  };
-
-  const handleProjectsMouseMove = (e) => {
-    if (!isDraggingProjectsRef.current) return;
-    e.preventDefault();
-    const track = projectsTrackRef.current;
-    if (!track) return;
-    const x = e.pageX - track.offsetLeft;
-    const walk = (x - startXProjectsRef.current) * 1.5;
-    track.scrollLeft = scrollLeftProjectsRef.current - walk;
-  };
-
-  const handleProjectsMouseUp = () => {
-    isDraggingProjectsRef.current = false;
-  };
-
-  // Certificates Horizontal Track Scrolling
-  const handleCertsScroll = useCallback(() => {
-    const track = certsTrackRef.current;
-    if (!track) return;
-    const maxScroll = track.scrollWidth - track.clientWidth;
-    const progress = maxScroll > 0 ? (track.scrollLeft / maxScroll) * 100 : 0;
-    setCertsProgress(Math.max(10, Math.min(100, progress)));
-
-    const slideWidth = track.clientWidth * 0.35 || 320;
-    const currentIdx = Math.min(
-      certificates.length,
-      Math.max(1, Math.round(track.scrollLeft / slideWidth) + 1)
-    );
-    setCertsIndex(currentIdx);
-  }, [certificates.length]);
-
-  const scrollCerts = (direction) => {
-    playTick();
-    const track = certsTrackRef.current;
-    if (!track) return;
-    const firstSlide = track.querySelector('.cert-card-slide');
-    const slideWidth = firstSlide ? firstSlide.getBoundingClientRect().width + 24 : track.clientWidth * 0.35;
-    track.scrollBy({ left: slideWidth * (direction === 'left' ? -1 : 1), behavior: 'smooth' });
-  };
-
-  // Drag to scroll for Certs Track
-  const handleCertsMouseDown = (e) => {
-    const track = certsTrackRef.current;
-    if (!track) return;
-    isDraggingCertsRef.current = true;
-    startXCertsRef.current = e.pageX - track.offsetLeft;
-    scrollLeftCertsRef.current = track.scrollLeft;
-  };
-
-  const handleCertsMouseMove = (e) => {
-    if (!isDraggingCertsRef.current) return;
-    e.preventDefault();
-    const track = certsTrackRef.current;
-    if (!track) return;
-    const x = e.pageX - track.offsetLeft;
-    const walk = (x - startXCertsRef.current) * 1.5;
-    track.scrollLeft = scrollLeftCertsRef.current - walk;
-  };
-
-  const handleCertsMouseUp = () => {
-    isDraggingCertsRef.current = false;
-  };
-
   // GSAP Entrance Timeline & ScrollTrigger Animations
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -356,135 +259,77 @@ export function HomePage() {
       gsap.from('.bento-section .bento-header > *', {
         scrollTrigger: {
           trigger: '.bento-section',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
+          start: 'top 92%',
+          once: true
         },
-        y: 30,
+        y: 20,
         opacity: 0,
-        stagger: 0.1,
-        duration: 0.7,
-        ease: 'power3.out'
+        stagger: 0.08,
+        duration: 0.6,
+        ease: 'power2.out',
+        clearProps: 'all'
       });
 
       gsap.from('.bento-bio-card', {
         scrollTrigger: {
           trigger: '.bento-section',
-          start: 'top 80%',
-          toggleActions: 'play none none none'
+          start: 'top 90%',
+          once: true
         },
-        x: -40,
+        y: 20,
         opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out'
+        duration: 0.6,
+        ease: 'power2.out',
+        clearProps: 'all'
       });
 
-      const bentoCards = containerRef.current.querySelectorAll('.bento-focus-card');
-      if (bentoCards.length > 0) {
-        gsap.from(bentoCards, {
+      const particleCard = containerRef.current.querySelector('.particle-container');
+      if (particleCard) {
+        gsap.from(particleCard, {
           scrollTrigger: {
-            trigger: '.bento-focus-grid',
-            start: 'top 85%',
-            toggleActions: 'play none none none'
+            trigger: '.bento-section',
+            start: 'top 90%',
+            once: true
           },
-          y: 40,
+          y: 20,
           opacity: 0,
-          scale: 0.95,
-          stagger: 0.12,
-          duration: 0.75,
-          ease: 'back.out(1.2)'
+          duration: 0.6,
+          ease: 'power2.out',
+          clearProps: 'all'
         });
       }
 
-      // 3. Section 02: Projects Horizontal Track Entrance
-      gsap.from('.projects-home-section .showcase-header > *', {
-        scrollTrigger: {
-          trigger: '.projects-home-section',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
-        y: 25,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.7,
-        ease: 'power3.out'
-      });
-
-      const projSlides = containerRef.current.querySelectorAll('.project-card-slide');
-      if (projSlides.length > 0) {
-        gsap.from(projSlides, {
+      // 3. Section 02: Directory Navigation Buttons Entrance
+      const navBtns = containerRef.current.querySelectorAll('.home-nav-executive-btn, .home-nav-btn');
+      if (navBtns.length > 0) {
+        gsap.from(navBtns, {
           scrollTrigger: {
-            trigger: '.projects-home-section .horizontal-scroll-track',
-            start: 'top 85%',
-            toggleActions: 'play none none none'
+            trigger: '#portfolio-directories',
+            start: 'top 92%',
+            once: true
           },
-          x: 40,
+          y: 16,
           opacity: 0,
-          scale: 0.97,
-          stagger: 0.12,
-          duration: 0.8,
-          ease: 'power3.out'
+          stagger: 0.08,
+          duration: 0.5,
+          ease: 'power2.out',
+          clearProps: 'all'
         });
       }
 
-      // 3.5 Section 02: Skills Showcase Entrance
-      gsap.from('.skills-home-section .showcase-header > *', {
-        scrollTrigger: {
-          trigger: '.skills-home-section',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
-        y: 25,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.7,
-        ease: 'power3.out'
-      });
-
-      // 4. Section 04: Certificates Horizontal Track Entrance
-      gsap.from('.certs-home-section .showcase-header > *', {
-        scrollTrigger: {
-          trigger: '.certs-home-section',
-          start: 'top 85%',
-          toggleActions: 'play none none none'
-        },
-        y: 25,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.7,
-        ease: 'power3.out'
-      });
-
-      const certSlides = containerRef.current.querySelectorAll('.cert-card-slide');
-      if (certSlides.length > 0) {
-        gsap.from(certSlides, {
-          scrollTrigger: {
-            trigger: '.certs-home-section .horizontal-scroll-track',
-            start: 'top 85%',
-            toggleActions: 'play none none none'
-          },
-          x: 40,
-          opacity: 0,
-          scale: 0.97,
-          stagger: 0.12,
-          duration: 0.8,
-          ease: 'power3.out'
-        });
-      }
-
-      
-
-      // 6. Section 05: CTA Banner ScrollTrigger
+      // 5. Section 04: CTA Banner ScrollTrigger
       gsap.from('.home-cta-banner', {
         scrollTrigger: {
           trigger: '.home-cta-banner',
-          start: 'top 88%',
-          toggleActions: 'play none none none'
+          start: 'top 92%',
+          once: true
         },
-        scale: 0.95,
+        scale: 0.98,
         opacity: 0,
-        y: 30,
-        duration: 0.85,
-        ease: 'power3.out'
+        y: 20,
+        duration: 0.6,
+        ease: 'power2.out',
+        clearProps: 'all'
       });
 
       ScrollTrigger.refresh();
@@ -649,239 +494,219 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-stretch">
             <TiltCard
-              className="bento-bio-card lg:col-span-6 glass-card rounded-3xl p-7 sm:p-8 space-y-4 text-stonewarm leading-relaxed cursor-default transition-shadow hover:shadow-cyan-500/10"
+              className="bento-bio-card lg:col-span-6 glass-card rounded-3xl p-7 sm:p-8 space-y-4 text-stonewarm leading-relaxed cursor-default transition-shadow hover:shadow-cyan-500/10 flex flex-col justify-between"
               onMouseMove={handleCardMouseMove}
               onMouseLeave={handleCardMouseLeave}
             >
-              {(p.aboutBio || []).map((para, i) => (
-                <p key={i} className="text-sm sm:text-base">{para}</p>
-              ))}
-              <div className="pt-3 border-t hairline-border flex flex-wrap gap-3 text-xs font-mono text-cyanglow">
+              <div className="space-y-4">
+                {(p.aboutBio || []).map((para, i) => (
+                  <p key={i} className="text-sm sm:text-base leading-relaxed">{para}</p>
+                ))}
+              </div>
+              <div className="pt-4 border-t hairline-border flex flex-wrap gap-4 text-xs font-mono text-cyanglow">
                 <span>✉ {p.email || 'ayushprajapati9669@gmail.com'}</span>
                 <span>☎ {p.phone || '(+91) 9669802554'}</span>
               </div>
             </TiltCard>
 
-            <div className="bento-focus-grid lg:col-span-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {(p.focusAreas || []).map((area, idx) => (
-                <TiltCard
-                  key={idx}
-                  className="bento-focus-card glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between space-y-3 cursor-default"
-                  onMouseMove={handleCardMouseMove}
-                  onMouseLeave={handleCardMouseLeave}
-                >
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-vermilion/15 font-mono text-xs font-bold text-vermilion">
-                    0{idx + 1}
+            <div className="lg:col-span-6 flex items-stretch">
+              <CinematicParticleCard className="h-full min-h-[380px]" />
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            SECTION 01.5: The 0 to 1 Journey Milestone Card (Reference: deepseek_html_20261103_4b0347.html)
+            ========================================================================= */}
+        <section className="pt-2">
+          <ZeroToOneJourneyCard
+            items={p.zeroToOneMilestones || p.learningJourneyBrief}
+            onExploreJourney={() => goTo('/journey')}
+          />
+        </section>
+
+        {/* =========================================================================
+            SECTION 02: Quick Directory Executive Buttons
+            ========================================================================= */}
+        <section id="portfolio-directories" className="border-t hairline-border pt-12 pb-2 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <p className="showcase-eyebrow font-mono text-[11px] uppercase tracking-widest text-amber-400/90 font-semibold">
+                02 · QUICK DIRECTORY
+              </p>
+              <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
+                Explore <em className="italic font-serif text-[#e5b869]">The Portfolio</em>
+              </h2>
+              <p className="text-stonewarm text-xs sm:text-sm mt-1 max-w-xl">
+                Direct access to full architectural case studies, interactive skills matrix, verified accreditations, and developer journey.
+              </p>
+            </div>
+          </div>
+
+          {/* 4 Executive Buttons with Real Icons, Better Fonts, and Luxury Styling */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
+            {/* Button 1: See My Projects */}
+            <button
+              type="button"
+              onClick={() => goTo('/projects')}
+              className="home-nav-executive-btn btn-projects group"
+              title="Explore all production engineering projects"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="icon-box bg-amber-400/10 border border-amber-400/20 text-amber-400">
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                    <polyline points="2 17 12 22 22 17" />
+                    <polyline points="2 12 12 17 22 12" />
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <span className="btn-title block group-hover:text-amber-200 transition-colors">
+                    See My Projects
                   </span>
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-alabaster">{area.title}</h3>
-                    <p className="mt-1.5 text-xs leading-relaxed text-stonewarm">{area.detail}</p>
-                  </div>
-                </TiltCard>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* =========================================================================
-            SECTION 02: Technical Capabilities / Skills Matrix (Above Projects)
-            ========================================================================= */}
-        <section id="technical-capabilities" className="skills-home-section horizontal-showcase-section border-t hairline-border pt-16">
-          <InteractiveSkillsWidget showCta={true} onCtaClick={() => goTo('/skills')} />
-        </section>
-
-        {/* =========================================================================
-            SECTION 03: Horizontal Scrollable Live Deployed Projects Track
-            ========================================================================= */}
-        <section id="featured-projects" className="projects-home-section horizontal-showcase-section border-t hairline-border pt-16">
-          <div className="showcase-header">
-            <div>
-              <ScrollWriteText
-                as="p"
-                className="showcase-eyebrow"
-                mode="scramble"
-                scrambleDuration={20}
-              >
-                {(ui.homeProjectsEyebrow || '03 · LIVE DEPLOYED PROJECTS').replace(/^02\b/, '03')}
-              </ScrollWriteText>
-              <ScrollWriteText
-                as="h2"
-                className="showcase-title"
-                mode="mask"
-                stagger={0.038}
-                highlightWords={['Full-Stack', 'Applications']}
-              >
-                {ui.homeProjectsHeading || 'Featured Full-Stack Applications'}
-              </ScrollWriteText>
-            </div>
-
-            <div className="showcase-controls">
-              <span className="showcase-counter">
-                0{projectsIndex} / 0{displayProjects.length || 1}
-              </span>
-
-              <button
-                type="button"
-                className="showcase-arrow-btn"
-                onClick={() => scrollProjects('left')}
-                title="Scroll Left"
-                aria-label="Scroll projects left"
-              >
-                <i className="fa-solid fa-chevron-left" />
-              </button>
-
-              <button
-                type="button"
-                className="showcase-arrow-btn"
-                onClick={() => scrollProjects('right')}
-                title="Scroll Right"
-                aria-label="Scroll projects right"
-              >
-                <i className="fa-solid fa-chevron-right" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => goTo('/projects')}
-                className="showcase-view-all"
-              >
-                {ui.homeProjectsCta || 'View All Projects'} ({publishedProjects.length}) ↗
-              </button>
-            </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="showcase-progress-bar">
-            <div className="showcase-progress-thumb" style={{ width: `${projectsProgress}%` }} />
-          </div>
-
-          {/* Horizontal Track */}
-          {displayProjects.length === 0 ? (
-            <div className="glass-card rounded-2xl p-8 text-center text-stonewarm font-mono text-sm border border-white/5">
-              No projects published yet. Click "Admin CMS" in the top bar to create and publish your first project.
-            </div>
-          ) : (
-            <div
-              ref={projectsTrackRef}
-              className="horizontal-scroll-track"
-              onScroll={handleProjectsScroll}
-              onMouseDown={handleProjectsMouseDown}
-              onMouseMove={handleProjectsMouseMove}
-              onMouseUp={handleProjectsMouseUp}
-              onMouseLeave={handleProjectsMouseUp}
-            >
-              {displayProjects.map((proj, idx) => (
-                <div key={proj.id} className="project-card-slide">
-                  <ProjectCard
-                    proj={proj}
-                    indexNum={idx + 1}
-                    isSelected={highlightedProjectId === proj.id}
-                    onSelect={setHighlightedProjectId}
-                    onCardMouseMove={handleCardMouseMove}
-                    onCardMouseLeave={handleCardMouseLeave}
-                  />
+                  <span className="btn-subtitle block">
+                    Live Builds
+                  </span>
                 </div>
-              ))}
-            </div>
-          )}
-        </section>
+              </div>
 
-        
+              <div className="count-pill">
+                <span>{publishedProjects.length}</span>
+                <span className="arrow">→</span>
+              </div>
+            </button>
 
-        {/* =========================================================================
-            SECTION 04: Horizontal Scrollable Verified Certificates Track
-            ========================================================================= */}
-        <section className="certs-home-section horizontal-showcase-section border-t hairline-border pt-16">
-          <div className="showcase-header">
-            <div>
-              <ScrollWriteText
-                as="p"
-                className="showcase-eyebrow"
-                mode="scramble"
-                scrambleDuration={20}
-              >
-                {ui.homeCertsEyebrow || '04 · VERIFIED CREDENTIALS'}
-              </ScrollWriteText>
-              <ScrollWriteText
-                as="h2"
-                className="showcase-title"
-                mode="mask"
-                stagger={0.038}
-                highlightWords={['Certifications', 'Achievements']}
-              >
-                {ui.homeCertsHeading || 'Certifications & Achievements'}
-              </ScrollWriteText>
-            </div>
-
-            <div className="showcase-controls">
-              <span className="showcase-counter">
-                0{certsIndex} / 0{certificates.length || 1}
-              </span>
-
-              <button
-                type="button"
-                className="showcase-arrow-btn"
-                onClick={() => scrollCerts('left')}
-                title="Scroll Left"
-                aria-label="Scroll certificates left"
-              >
-                <i className="fa-solid fa-chevron-left" />
-              </button>
-
-              <button
-                type="button"
-                className="showcase-arrow-btn"
-                onClick={() => scrollCerts('right')}
-                title="Scroll Right"
-                aria-label="Scroll certificates right"
-              >
-                <i className="fa-solid fa-chevron-right" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => goTo('/certificates')}
-                className="showcase-view-all"
-              >
-                {ui.homeCertsCta || 'View Certificates'} ({certificates.length}) ↗
-              </button>
-            </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="showcase-progress-bar">
-            <div className="showcase-progress-thumb" style={{ width: `${certsProgress}%` }} />
-          </div>
-
-          {/* Horizontal Track */}
-          {certificates.length === 0 ? (
-            <div className="glass-card rounded-2xl p-8 text-center text-stonewarm font-mono text-sm border border-white/5">
-              No certificates added yet. Upload your credentials in the Admin CMS to showcase them here.
-            </div>
-          ) : (
-            <div
-              ref={certsTrackRef}
-              className="horizontal-scroll-track"
-              onScroll={handleCertsScroll}
-              onMouseDown={handleCertsMouseDown}
-              onMouseMove={handleCertsMouseMove}
-              onMouseUp={handleCertsMouseUp}
-              onMouseLeave={handleCertsMouseUp}
+            {/* Button 2: See My Skills */}
+            <button
+              type="button"
+              onClick={() => goTo('/skills')}
+              className="home-nav-executive-btn btn-skills group"
+              title="Explore full interactive skills matrix"
             >
-              {certificates.map((cert, idx) => (
-                <div key={cert.id} className="cert-card-slide">
-                  <CertificateCard
-                    cert={cert}
-                    indexNum={idx + 1}
-                    onCardMouseMove={handleCardMouseMove}
-                    onCardMouseLeave={handleCardMouseLeave}
-                  />
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="icon-box bg-cyan-400/10 border border-cyan-400/20 text-cyan-400">
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="4" y="4" width="16" height="16" rx="2" />
+                    <rect x="9" y="9" width="6" height="6" />
+                    <line x1="9" y1="1" x2="9" y2="4" />
+                    <line x1="15" y1="1" x2="15" y2="4" />
+                    <line x1="9" y1="20" x2="9" y2="23" />
+                    <line x1="15" y1="20" x2="15" y2="23" />
+                    <line x1="20" y1="9" x2="23" y2="9" />
+                    <line x1="20" y1="14" x2="23" y2="14" />
+                    <line x1="1" y1="9" x2="4" y2="9" />
+                    <line x1="1" y1="14" x2="4" y2="14" />
+                  </svg>
                 </div>
-              ))}
-            </div>
-          )}
+                <div className="text-left">
+                  <span className="btn-title block group-hover:text-cyan-200 transition-colors">
+                    See My Skills
+                  </span>
+                  <span className="btn-subtitle block">
+                    Tech Stack
+                  </span>
+                </div>
+              </div>
+
+              <div className="count-pill">
+                <span>{allSkillItems.length}+</span>
+                <span className="arrow">→</span>
+              </div>
+            </button>
+
+            {/* Button 3: See My Certificates */}
+            <button
+              type="button"
+              onClick={() => goTo('/certificates')}
+              className="home-nav-executive-btn btn-certs group"
+              title="Inspect verified credentials and accreditations"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="icon-box bg-emerald-400/10 border border-emerald-400/20 text-emerald-400">
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="8" r="6" />
+                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <span className="btn-title block group-hover:text-emerald-200 transition-colors">
+                    See My Certificates
+                  </span>
+                  <span className="btn-subtitle block">
+                    Verified
+                  </span>
+                </div>
+              </div>
+
+              <div className="count-pill">
+                <span>{certificates.length}</span>
+                <span className="arrow">→</span>
+              </div>
+            </button>
+
+            {/* Button 4: My Journey */}
+            <button
+              type="button"
+              onClick={() => goTo('/journey')}
+              className="home-nav-executive-btn btn-journey group"
+              title="Discover milestones and algorithmic achievements"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="icon-box bg-rose-400/10 border border-rose-400/20 text-rose-400">
+                  <svg
+                    className="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <span className="btn-title block group-hover:text-rose-200 transition-colors">
+                    My Journey
+                  </span>
+                  <span className="btn-subtitle block">
+                    Milestones
+                  </span>
+                </div>
+              </div>
+
+              <div className="count-pill">
+                <span className="arrow">→</span>
+              </div>
+            </button>
+          </div>
         </section>
 
         

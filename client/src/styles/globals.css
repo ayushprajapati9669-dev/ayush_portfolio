@@ -164,7 +164,6 @@ h4, h5, h6 {
 .text-amber-400 { color: #d4af37 !important; }
 .text-emerald-400 { color: #4ade80 !important; }
 
-
 /* Universal Typography Enhancement: Elevate illegible micro-text across Public & Admin */
 .text-\[8px\] {
   font-size: 11px !important;
@@ -202,8 +201,6 @@ h4, h5, h6 {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.16) rgba(9, 10, 15, 0.95);
 }
-
-
 
 /* Custom Scrollbar Utility */
 .custom-scrollbar {
@@ -247,4 +244,47 @@ img {
 ::selection {
   background: rgba(212, 175, 55, 0.35) !important;
   color: #ffffff !important;
+}
+
+/* =========================================================================
+   Zero to One Journey Custom Luxury Scrollbar
+   ========================================================================= */
+.zero-journey-scrollbar {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(229, 184, 105, 0.6) rgba(255, 255, 255, 0.04);
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.zero-journey-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+  display: block;
+}
+
+.zero-journey-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 0 4px;
+}
+
+.zero-journey-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(229, 184, 105, 0.5) 0%, #e5b869 50%, rgba(229, 184, 105, 0.5) 100%);
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(229, 184, 105, 0.4);
+  border: 1px solid rgba(229, 184, 105, 0.35);
+  transition: all 0.25s ease;
+}
+
+.zero-journey-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #e5b869 0%, #fbbf24 50%, #e5b869 100%);
+  box-shadow: 0 0 16px rgba(229, 184, 105, 0.75);
+  border-color: rgba(251, 191, 36, 0.7);
+}
+
+.zero-journey-scrollbar::-webkit-scrollbar-thumb:active {
+  background: #f59e0b;
 }
