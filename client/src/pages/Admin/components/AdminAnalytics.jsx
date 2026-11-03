@@ -374,13 +374,14 @@ export function AdminAnalytics({ showToast }) {
   const [streamPaused, setStreamPaused] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchAnalytics = useCallback(async ({ silent = false } = {}) => {
+  const fetchAnalytics = useCallback(async ({ silent = false, signal } = {}) => {
     if (!silent) setRefreshing(true);
 
     try {
       const sessionToken = getCsrfToken();
       const response = await fetch('/api/admin/analytics', {
         credentials: 'include',
+        signal,
         headers: {
           Accept: 'application/json',
           ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
@@ -400,6 +401,9 @@ export function AdminAnalytics({ showToast }) {
       setError('');
       return true;
     } catch (requestError) {
+      if (requestError instanceof Error && requestError.name === 'AbortError') {
+        return false;
+      }
       setUsingDemoData(true);
       setError(requestError instanceof Error ? requestError.message : 'Unable to load visitor telemetry.');
       return false;
@@ -409,15 +413,16 @@ export function AdminAnalytics({ showToast }) {
   }, []);
 
   useEffect(() => {
-    fetchAnalytics();
-  }, [fetchAnalytics]);
-
-  useEffect(() => {
     if (streamPaused) return undefined;
-    const intervalId = window.setInterval(() => {
-      fetchAnalytics({ silent: true });
-    }, 15_000);
-    return () => window.clearInterval(intervalId);
+
+    const controller = new AbortController();
+    const refreshSilently = () => fetchAnalytics({ silent: true, signal: controller.signal });
+    refreshSilently();
+    const intervalId = window.setInterval(refreshSilently, 15_000);
+    return () => {
+      window.clearInterval(intervalId);
+      controller.abort();
+    };
   }, [fetchAnalytics, streamPaused]);
 
   const handleRefresh = async () => {
@@ -481,76 +486,82 @@ export function AdminAnalytics({ showToast }) {
     {
       label: 'Tracked events',
       value: formatNumber(analytics.totalPageViews),
-      description: 'Cumulative activity received by the telemetry service.',
+      description: 'All events recorded',
       icon: 'broadcast',
       accent: 'text-blue-300',
       iconBackground: 'bg-blue-400/10 border-blue-300/20',
-      hover: 'hover:border-blue-300/40'
+      hover: 'hover:border-blue-300/30'
     },
     {
       label: 'Project views',
       value: formatNumber(totalProjectViews),
-      description: `${formatNumber(topProjects.length)} projects with tracked views.`,
+      description: `Across ${formatNumber(topProjects.length)} tracked projects`,
       icon: 'project',
       accent: 'text-[#d4af37]',
       iconBackground: 'bg-[#d4af37]/10 border-[#d4af37]/20',
-      hover: 'hover:border-[#d4af37]/40'
+      hover: 'hover:border-[#d4af37]/30'
     },
     {
       label: 'Resume downloads',
       value: formatNumber(analytics.resumeDownloads),
-      description: 'Tracked resume downloads',
+      description: 'Resume file downloads',
       icon: 'file',
       accent: 'text-emerald-300',
       iconBackground: 'bg-emerald-400/10 border-emerald-300/20',
-      hover: 'hover:border-emerald-300/40'
+      hover: 'hover:border-emerald-300/30'
     },
     {
       label: 'Interactive actions',
       value: formatNumber(interactions),
-      description: 'Terminal, API sandbox, and AI assistant activity.',
+      description: 'Tool usage across the portfolio',
       detail: `Terminal ${formatNumber(analytics.cliLaunches)} · API ${formatNumber(analytics.apiSandboxExecutions)} · AI ${formatNumber(analytics.chatQueries)}`,
       icon: 'terminal',
       accent: 'text-violet-300',
       iconBackground: 'bg-violet-400/10 border-violet-300/20',
-      hover: 'hover:border-violet-300/40'
+      hover: 'hover:border-violet-300/30'
     }
   ];
 
   return (
-    <section className="space-y-5" aria-labelledby="telemetry-title">
-      <header className="flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
+    <section className="space-y-6" aria-labelledby="telemetry-title">
+      <header className="flex flex-col gap-4 border-b border-white/[0.08] pb-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#d4af37]/80">
+            Portfolio analytics
+          </p>
           <div className="flex flex-wrap items-center gap-3">
-            <h2 id="telemetry-title" className="text-2xl font-semibold tracking-tight text-white">
+            <h2 id="telemetry-title" className="text-2xl font-semibold tracking-tight text-white sm:text-[28px]">
               Visitor Telemetry
             </h2>
             <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-mono font-semibold uppercase tracking-wider ${
               usingDemoData
                 ? 'border-amber-300/20 bg-amber-300/[0.07] text-amber-200'
-                : 'border-emerald-400/20 bg-emerald-400/10 text-emerald-300'
+                : streamPaused
+                  ? 'border-slate-400/20 bg-slate-400/[0.07] text-slate-300'
+                  : 'border-emerald-400/20 bg-emerald-400/10 text-emerald-300'
             }`}>
               <span className={`h-1.5 w-1.5 rounded-full ${
-                usingDemoData ? 'bg-amber-300' : streamPaused ? 'bg-amber-300' : 'bg-emerald-300 animate-pulse'
+                usingDemoData ? 'bg-amber-300' : streamPaused ? 'bg-slate-400' : 'bg-emerald-300 animate-pulse'
               }`} />
-              {usingDemoData ? 'Demo data' : streamPaused ? 'Updates paused' : 'Auto-refresh on'}
+              {usingDemoData ? 'Demo data' : streamPaused ? 'Auto-refresh paused' : 'Auto-refresh · 15s'}
             </span>
           </div>
           <p className="mt-1.5 text-sm text-slate-400">
-            Cumulative activity, tracked referrals, project interest, and device mix.
+            A clear view of activity across your portfolio.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {analytics.serverTime && (
-            <span className="text-[11px] text-slate-500">
-              Last synced {new Date(analytics.serverTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            <span className="inline-flex items-center gap-1.5 text-[11px] text-slate-500">
+              <span className="h-1.5 w-1.5 rounded-full bg-slate-500" />
+              Synced {new Date(analytics.serverTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
           <button
             type="button"
             onClick={handleRefresh}
             disabled={refreshing}
-            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-slate-200 transition hover:border-[#d4af37]/40 hover:bg-white/[0.08] disabled:cursor-wait disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg border border-white/[0.12] bg-white/[0.045] px-3.5 py-2.5 text-xs font-medium text-slate-200 transition hover:border-[#d4af37]/35 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37]/60 disabled:cursor-wait disabled:opacity-60"
             aria-label="Sync visitor telemetry"
           >
             <Icon name="refresh" className={`h-4 w-4 text-[#d4af37] ${refreshing ? 'animate-spin' : ''}`} />
@@ -579,60 +590,78 @@ export function AdminAnalytics({ showToast }) {
         </div>
       )}
 
-      <div className="flex items-start gap-3 rounded-xl border border-[#d4af37]/15 bg-gradient-to-r from-[#d4af37]/[0.08] to-transparent p-4">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#d4af37]/15 bg-[#d4af37]/10 text-[#d4af37]">
-          <Icon name="sparkles" className="h-4 w-4" />
+      <div className="flex items-start gap-3 rounded-2xl border border-[#d4af37]/15 bg-[linear-gradient(110deg,rgba(212,175,55,0.09),rgba(12,15,20,0.82)_45%,rgba(12,15,20,0.55))] p-4 sm:p-5">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#d4af37]/20 bg-[#d4af37]/[0.08] text-[#e4c66b]">
+          <Icon name="sparkles" className="h-[18px] w-[18px]" />
         </span>
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-white">Quick read</h3>
-          <p className="mt-1 text-xs leading-relaxed text-slate-400">{smartInsight}</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#d4af37]/80">Quick read</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-slate-200">{smartInsight}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">
-        {metricCards.map((metric) => (
-          <article
-            key={metric.label}
-            className={`group relative overflow-hidden rounded-xl border border-white/[0.09] bg-gradient-to-br from-[#0c111a] to-[#080c12] p-4 shadow-lg shadow-black/20 transition duration-300 ${metric.hover}`}
-          >
-            <div className="relative flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">{metric.label}</p>
-                <p className="mt-3 text-3xl font-semibold tracking-tight text-white">
-                  {metric.value}
-                </p>
-              </div>
-              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border ${metric.iconBackground} ${metric.accent}`}>
-                <Icon name={metric.icon} className="h-[18px] w-[18px]" />
-              </span>
-            </div>
-            <p className="relative mt-2 text-[11px] leading-relaxed text-slate-400">
-              {metric.description}
-            </p>
-            {metric.detail && (
-              <p className="relative mt-1.5 text-[10px] text-slate-500">{metric.detail}</p>
-            )}
-          </article>
-        ))}
-      </div>
+      <section aria-labelledby="telemetry-overview-title" className="space-y-3">
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h3 id="telemetry-overview-title" className="text-sm font-semibold text-white">At a glance</h3>
+            <p className="mt-1 text-[11px] text-slate-500">Core engagement metrics</p>
+          </div>
+          <span className="rounded-md border border-white/[0.08] bg-white/[0.025] px-2 py-1 text-[9px] font-medium uppercase tracking-[0.12em] text-slate-500">
+            Lifetime totals
+          </span>
+        </div>
 
-      <p className="rounded-lg border border-white/[0.07] bg-white/[0.02] px-3.5 py-2.5 text-[11px] leading-relaxed text-slate-400">
-        Totals are cumulative, not date-filtered. Visitor identities are not deduplicated, so event counts should not be read as unique people.
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">
+          {metricCards.map((metric) => (
+            <article
+              key={metric.label}
+              className={`group flex min-h-[144px] flex-col justify-between rounded-2xl border border-white/[0.085] bg-[#0b0e13] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition duration-200 hover:-translate-y-0.5 ${metric.hover}`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{metric.label}</p>
+                  <p className="mt-2.5 text-[32px] font-semibold leading-none tracking-tight tabular-nums text-white">
+                    {metric.value}
+                  </p>
+                </div>
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${metric.iconBackground} ${metric.accent}`}>
+                  <Icon name={metric.icon} className="h-[18px] w-[18px]" />
+                </span>
+              </div>
+              <div className="mt-4">
+                <p className="text-[11px] leading-relaxed text-slate-400">{metric.description}</p>
+                {metric.detail && (
+                  <p className="mt-1.5 border-t border-white/[0.06] pt-2 text-[10px] tabular-nums text-slate-500">{metric.detail}</p>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <p className="flex items-start gap-2 px-1 text-[10px] leading-relaxed text-slate-500">
+        <Icon name="globe" className="mt-px h-3.5 w-3.5 shrink-0 text-slate-600" />
+        <span>Totals are cumulative and visitors are not deduplicated; these numbers represent recorded activity, not unique people.</span>
       </p>
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
+      <section aria-labelledby="telemetry-details-title" className="space-y-3">
+        <div>
+          <h3 id="telemetry-details-title" className="text-sm font-semibold text-white">Traffic &amp; engagement</h3>
+          <p className="mt-1 text-[11px] text-slate-500">Where visitors come from, what they view, and how they interact.</p>
+        </div>
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
         <div className="space-y-5 xl:col-span-3">
-          <section className="rounded-xl border border-white/10 bg-[#080c12]/90 p-4 shadow-lg shadow-black/20" aria-labelledby="traffic-sources-title">
-            <div className="mb-4 flex items-center justify-between gap-3">
+          <section className="rounded-2xl border border-white/[0.085] bg-[#0b0e13] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.16)] sm:p-5" aria-labelledby="traffic-sources-title">
+            <div className="mb-3 flex items-center justify-between gap-3">
               <h3 id="traffic-sources-title" className="flex items-center gap-2 text-sm font-semibold text-white">
                 <Icon name="route" className="h-4 w-4 text-[#d4af37]" />
                 Traffic sources
               </h3>
-              <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] text-slate-400">
-                {formatNumber(referralTotal)} tracked referrals
+              <span className="rounded-md border border-white/[0.08] bg-white/[0.025] px-2 py-1 text-[10px] tabular-nums text-slate-400">
+                {formatNumber(referralTotal)}
               </span>
             </div>
-            <p className="mb-4 -mt-2 text-[10px] text-slate-500">Share of tracked referral traffic</p>
+            <p className="mb-4 text-[10px] text-slate-500">Tracked referral share</p>
             {referrers.length > 0 ? (
               <div className="space-y-4">
                 {referrers.map(({ source, count }) => {
@@ -658,7 +687,7 @@ export function AdminAnalytics({ showToast }) {
                           {formatNumber(count)} <span className="text-[10px] text-slate-500">({percentage}%)</span>
                         </span>
                       </div>
-                      <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+                      <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.055]">
                         <div
                           className="h-full rounded-full transition-all duration-700"
                           style={{ width: `${percentage}%`, backgroundColor: presentation.color }}
@@ -675,13 +704,13 @@ export function AdminAnalytics({ showToast }) {
             )}
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-[#080c12]/90 p-4 shadow-lg shadow-black/20" aria-labelledby="device-breakdown-title">
+          <section className="rounded-2xl border border-white/[0.085] bg-[#0b0e13] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.16)] sm:p-5" aria-labelledby="device-breakdown-title">
             <div className="mb-4 flex items-center justify-between gap-3">
               <h3 id="device-breakdown-title" className="flex items-center gap-2 text-sm font-semibold text-white">
                 <Icon name="device" className="h-4 w-4 text-blue-300" />
                 Devices
               </h3>
-              <span className="text-[10px] text-slate-500">Session breakdown</span>
+              <span className="text-[10px] text-slate-500">By device</span>
             </div>
             <div className="flex items-center gap-4">
               <DeviceDonut desktop={desktop} mobile={mobile} tablet={tablet} total={totalDevices} />
@@ -726,13 +755,11 @@ export function AdminAnalytics({ showToast }) {
         </div>
 
         <section
-          className={`telemetry-scroll-panel relative flex min-h-0 flex-col overflow-hidden rounded-xl border bg-[#080c12]/90 shadow-lg shadow-black/20 transition-colors xl:col-span-5 ${
-            streamPaused ? 'border-amber-300/20' : 'border-emerald-300/20'
-          }`}
+          className="telemetry-scroll-panel relative flex min-h-0 flex-col overflow-hidden rounded-2xl border border-white/[0.085] bg-[#0b0e13] shadow-[0_8px_24px_rgba(0,0,0,0.16)] xl:col-span-5"
           aria-labelledby="recent-activity-title"
         >
-          <div className={`absolute inset-x-0 top-0 h-px ${streamPaused ? 'bg-amber-300/50' : 'bg-emerald-300/50'}`} />
-          <div className="flex items-center justify-between gap-3 border-b border-white/[0.07] px-4 py-3.5">
+          <div className={`absolute inset-x-0 top-0 h-px ${streamPaused ? 'bg-amber-300/55' : 'bg-emerald-300/45'}`} />
+          <div className="flex items-center justify-between gap-3 border-b border-white/[0.07] px-4 py-4 sm:px-5">
             <div className="flex items-center gap-2">
               <Icon name="broadcast" className={`h-4 w-4 ${streamPaused ? 'text-amber-300' : 'text-emerald-300'}`} />
               <div>
@@ -750,21 +777,22 @@ export function AdminAnalytics({ showToast }) {
                     : 'border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.08] hover:text-white'
                 }`}
                 aria-pressed={streamPaused}
-                aria-label={streamPaused ? 'Resume live event updates' : 'Pause live event updates'}
+                aria-label={streamPaused ? 'Resume automatic telemetry updates' : 'Pause automatic telemetry updates'}
+                title={streamPaused ? 'Resume auto-refresh and sync now' : 'Pause automatic refresh'}
               >
                 <Icon name={streamPaused ? 'play' : 'pause'} className="h-3 w-3" />
                 {streamPaused ? 'Resume' : 'Pause'}
               </button>
-              <span className={`rounded-full border px-2 py-1 text-[9px] font-bold tracking-wider ${
+              <span className={`rounded-md border px-2 py-1 text-[9px] font-bold tracking-[0.12em] ${
                 streamPaused
                   ? 'border-amber-300/20 bg-amber-300/[0.06] text-amber-200'
                   : 'border-emerald-300/20 bg-emerald-300/[0.06] text-emerald-200'
               }`}>
-                {streamPaused ? 'PAUSED' : 'LIVE'}
+                {streamPaused ? 'PAUSED' : 'POLLING'}
               </span>
             </div>
           </div>
-          <div className="telemetry-scroll-area min-h-0 flex-1 space-y-2 overflow-y-auto p-3" aria-live={streamPaused ? 'off' : 'polite'}>
+          <div className="telemetry-scroll-area min-h-0 flex-1 space-y-2 overflow-y-auto p-3 sm:p-4" aria-live={streamPaused ? 'off' : 'polite'}>
             {recentEvents.length > 0 ? recentEvents.map((event, index) => {
               const isDownload = event.type === 'resume_download';
               const isProject = event.type === 'project_view';
@@ -782,7 +810,7 @@ export function AdminAnalytics({ showToast }) {
               return (
                 <article
                   key={event.id || `${event.type}-${timestamp || index}`}
-                  className="flex items-start gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 transition hover:border-white/10 hover:bg-white/[0.04]"
+                  className="flex items-start gap-3 rounded-xl border border-white/[0.055] bg-white/[0.018] p-3 transition-colors hover:border-white/[0.1] hover:bg-white/[0.035]"
                 >
                   <span className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border ${iconStyle}`}>
                     <Icon name={eventIcon} className="h-4 w-4" />
@@ -826,19 +854,19 @@ export function AdminAnalytics({ showToast }) {
               </div>
             )}
           </div>
-          <div className="flex items-center justify-between border-t border-white/[0.07] px-4 py-2.5 text-[10px] text-slate-500">
+          <div className="flex items-center justify-between border-t border-white/[0.07] px-4 py-3 text-[10px] text-slate-500 sm:px-5">
             <span>{formatNumber(recentEvents.length)} recent events</span>
-            <span>{streamPaused ? 'Automatic updates paused' : 'Refreshes every 15 seconds'}</span>
+            <span>{streamPaused ? 'Auto-refresh paused' : 'Checks every 15 seconds'}</span>
           </div>
         </section>
 
-        <section className="telemetry-scroll-panel flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#080c12]/90 p-4 shadow-lg shadow-black/20 xl:col-span-4" aria-labelledby="top-projects-title">
+        <section className="telemetry-scroll-panel flex min-h-0 flex-col rounded-2xl border border-white/[0.085] bg-[#0b0e13] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.16)] sm:p-5 xl:col-span-4" aria-labelledby="top-projects-title">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h3 id="top-projects-title" className="flex items-center gap-2 text-sm font-semibold text-white">
               <Icon name="project" className="h-4 w-4 text-violet-300" />
               Top projects
             </h3>
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-500">Project views</span>
+            <span className="rounded-md border border-white/[0.08] bg-white/[0.025] px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-slate-500">By views</span>
           </div>
           {topProjects.length > 0 ? (
             <>
@@ -855,7 +883,9 @@ export function AdminAnalytics({ showToast }) {
                         <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-300 transition-colors group-hover:text-white" title={project.title}>
                           {project.title}
                         </span>
-                        <span className="shrink-0 text-xs font-semibold text-white">{formatNumber(project.views)}</span>
+                        <span className="shrink-0 text-xs font-semibold tabular-nums text-white">
+                          {formatNumber(project.views)} <span className="text-[9px] font-normal text-slate-500">views</span>
+                        </span>
                       </div>
                       <div className="ml-8 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
                         <div
@@ -885,6 +915,7 @@ export function AdminAnalytics({ showToast }) {
           )}
         </section>
       </div>
+      </section>
     </section>
   );
 }
