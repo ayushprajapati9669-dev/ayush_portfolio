@@ -534,7 +534,7 @@
   align-items: center !important;
   gap: 10px !important;
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 13px !important;
+  font-size: 12px !important;
   font-weight: 600 !important;
   color: #d4af37 !important;
   letter-spacing: 0.12em !important;
@@ -798,11 +798,11 @@
 
 .spotlight-card .content-title {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 1.4rem !important;
+  font-size: 1.45rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   line-height: 1.25 !important;
-  letter-spacing: -0.015em !important;
+  letter-spacing: -0.02em !important;
   margin: 0 !important;
 }
 
@@ -856,8 +856,9 @@
 }
 
 .spotlight-card .metric-label {
-  font-family: 'Jost', sans-serif !important;
-  font-size: 12.5px !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
   color: #94a3b8 !important;
   line-height: 1.2 !important;
   white-space: nowrap !important;
@@ -867,9 +868,9 @@
 
 /* Clean Executive Summary */
 .spotlight-card .spotlight-summary-text {
-  font-family: 'Jost', sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 14.5px !important;
-  line-height: 1.6 !important;
+  line-height: 1.65 !important;
   color: #cbd5e1 !important;
   margin: 0 !important;
 }

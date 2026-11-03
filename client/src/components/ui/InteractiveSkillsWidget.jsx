@@ -268,87 +268,101 @@ const getSkillBrandColor = (name, logoKey) => {
   return '#fcd34d';
 };
 
-  // Extract real skills dynamically from Admin CMS categories (honoring isVisible & custom icons)
-  const allSkills = useMemo(() => {
-    const rawSkills = appState?.skills || [];
-    const list = [];
+  // Extract real categories & skills dynamically from Admin CMS (appState.skills)
+  const { categoriesList, allSkills } = useMemo(() => {
+    const rawSkills = appState?.skills;
+    const catList = [];
+    const skillsList = [];
 
     if (Array.isArray(rawSkills) && rawSkills.length > 0) {
-      rawSkills.forEach((catGroup) => {
-        if (catGroup && Array.isArray(catGroup.items)) {
-          const categoryName = (catGroup.category || 'tools').toLowerCase();
-          let catKey = 'tools';
-          if (categoryName.includes('lang') || categoryName.includes('problem')) catKey = 'languages';
-          else if (categoryName.includes('front') || categoryName.includes('ui')) catKey = 'frontend';
-          else if (categoryName.includes('back') || categoryName.includes('api') || categoryName.includes('server')) catKey = 'backend';
-          else if (categoryName.includes('data') || categoryName.includes('sql') || categoryName.includes('db')) catKey = 'databases';
-          else if (categoryName.includes('tool') || categoryName.includes('devops') || categoryName.includes('workflow')) catKey = 'tools';
+      rawSkills.forEach((catGroup, cIdx) => {
+        if (!catGroup) return;
+        const catName = catGroup.category || catGroup.categoryName || catGroup.name || `Category ${cIdx + 1}`;
+        const catId = String(catGroup.id || `cat-${cIdx}-${catName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`);
+        const catColor = catGroup.color || '#d4af37';
 
-          catGroup.items.forEach((item) => {
-            if (item && item.isVisible !== false) {
-              const name = item.name || '';
-              list.push({
-                id: item.id || name,
-                name: name,
-                category: catKey,
-                categoryName: catGroup.category || 'Tools',
-                icon: item.icon,
-                logoKey: item.logoKey,
-                color: item.color || getSkillBrandColor(name, item.logoKey)
-              });
-            }
+        const items = Array.isArray(catGroup.items) ? catGroup.items : [];
+        const visibleItems = items.filter((item) => item && item.isVisible !== false);
+
+        const mappedItems = visibleItems.map((item, iIdx) => {
+          const name = item.name || '';
+          return {
+            id: item.id || `skill-${catId}-${iIdx}-${name.toLowerCase().replace(/[^a-z0-9]/g, '')}`,
+            name,
+            categoryId: catId,
+            categoryName: catName,
+            categoryColor: catColor,
+            icon: item.icon,
+            logoKey: item.logoKey || name.toLowerCase().replace(/[^a-z0-9]/g, ''),
+            color: item.color || getSkillBrandColor(name, item.logoKey)
+          };
+        });
+
+        if (mappedItems.length > 0) {
+          catList.push({
+            id: catId,
+            name: catName,
+            color: catColor,
+            count: mappedItems.length,
+            items: mappedItems
           });
+          skillsList.push(...mappedItems);
         }
       });
     }
 
-    if (list.length > 0) {
-      return list;
+    if (skillsList.length > 0) {
+      return { categoriesList: catList, allSkills: skillsList };
     }
 
-    return REFERENCE_SKILLS;
+    // Default reference skills fallback if CMS is loading
+    const fallbackMapped = REFERENCE_SKILLS.map((s, idx) => ({
+      id: `ref-${idx}-${s.name}`,
+      name: s.name,
+      categoryId: s.category,
+      categoryName: s.category.charAt(0).toUpperCase() + s.category.slice(1),
+      categoryColor: '#d4af37',
+      icon: null,
+      logoKey: s.iconKey,
+      color: s.color || getSkillBrandColor(s.name, s.iconKey)
+    }));
+
+    const fallbackCats = [
+      { id: 'languages', name: 'Languages', count: fallbackMapped.filter(s => s.categoryId === 'languages').length },
+      { id: 'frontend', name: 'Frontend', count: fallbackMapped.filter(s => s.categoryId === 'frontend').length },
+      { id: 'backend', name: 'Backend', count: fallbackMapped.filter(s => s.categoryId === 'backend').length },
+      { id: 'databases', name: 'Databases', count: fallbackMapped.filter(s => s.categoryId === 'databases').length },
+      { id: 'tools', name: 'Tools', count: fallbackMapped.filter(s => s.categoryId === 'tools').length }
+    ];
+
+    return { categoriesList: fallbackCats, allSkills: fallbackMapped };
   }, [appState?.skills]);
 
-  // Dynamic category counts
-  const categoryCounts = useMemo(() => {
-    const counts = { all: allSkills.length, languages: 0, frontend: 0, backend: 0, databases: 0, tools: 0 };
-    allSkills.forEach((s) => {
-      const cat = (s.category || '').toLowerCase();
-      if (cat === 'languages' || cat.includes('lang')) counts.languages++;
-      else if (cat === 'frontend') counts.frontend++;
-      else if (cat === 'backend') counts.backend++;
-      else if (cat === 'databases' || cat.includes('data') || cat.includes('sql')) counts.databases++;
-      else counts.tools++;
-    });
-    return counts;
-  }, [allSkills]);
-
-  const filterOptions = [
-    { id: 'all', label: 'All', count: categoryCounts.all },
-    { id: 'languages', label: 'Languages', count: categoryCounts.languages },
-    { id: 'frontend', label: 'Frontend', count: categoryCounts.frontend },
-    { id: 'backend', label: 'Backend', count: categoryCounts.backend },
-    { id: 'databases', label: 'Databases', count: categoryCounts.databases },
-    { id: 'tools', label: 'Tools', count: categoryCounts.tools }
-  ];
+  // Dynamic filter buttons from real CMS categories
+  const filterOptions = useMemo(() => {
+    return [
+      { id: 'all', label: 'All', count: allSkills.length },
+      ...categoriesList.map((cat) => ({
+        id: cat.id,
+        label: cat.name,
+        count: cat.count
+      }))
+    ];
+  }, [categoriesList, allSkills.length]);
 
   // Live filter & search
   const filteredSkills = useMemo(() => {
     return allSkills.filter((s) => {
       if (selectedFilter !== 'all') {
-        const cat = (s.category || '').toLowerCase();
-        if (selectedFilter === 'databases') {
-          if (cat !== 'databases' && !cat.includes('data') && !cat.includes('sql') && !cat.includes('db')) return false;
-        } else if (selectedFilter === 'languages') {
-          if (cat !== 'languages' && !cat.includes('lang')) return false;
-        } else if (cat !== selectedFilter && !cat.includes(selectedFilter)) {
-          return false;
-        }
+        const matchId = String(s.categoryId) === String(selectedFilter);
+        const matchName = (s.categoryName || '').toLowerCase() === String(selectedFilter).toLowerCase();
+        if (!matchId && !matchName) return false;
       }
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const n = (s.name || '').toLowerCase();
-        return n.includes(q);
+        const c = (s.categoryName || '').toLowerCase();
+        return n.includes(q) || c.includes(q);
       }
       return true;
     });
@@ -502,7 +516,7 @@ const getSkillBrandColor = (name, logoKey) => {
         ) : (
           filteredSkills.map((skill, index) => (
             <SkillChipItem
-              key={skill.name || index}
+              key={skill.id || `${skill.categoryId}-${skill.name}-${index}`}
               skill={skill}
             />
           ))

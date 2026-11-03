@@ -17,9 +17,10 @@
 .projects-page .page-eyebrow,
 .projects-page .page-tagline {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 12.5px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
   color: #d4af37 !important;
-  letter-spacing: 2px !important;
+  letter-spacing: 0.18em !important;
   text-transform: uppercase !important;
   margin-bottom: 16px !important;
   display: block !important;
@@ -28,19 +29,19 @@
 .projects-page .page-title {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.025em !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
   color: #ffffff !important;
   line-height: 1.05 !important;
   margin-bottom: 20px !important;
 }
 
 .projects-page .page-desc {
-  font-family: 'Jost', sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 15px !important;
-  color: #c5c7d0 !important;
-  line-height: 1.7 !important;
-  max-width: 600px !important;
+  color: #cbd5e1 !important;
+  line-height: 1.65 !important;
+  max-width: 620px !important;
 }
 
 /* Filters row */
@@ -107,7 +108,7 @@
   border-radius: 8px !important;
   padding: 9px 14px 9px 34px !important;
   color: #ffffff !important;
-  font-family: 'Jost', sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 13px !important;
   outline: none !important;
   width: 240px !important;
@@ -205,10 +206,12 @@
 }
 
 .project-card-desc {
-  font-family: 'Jost', sans-serif !important;
-  font-size: 13px !important;
-  color: #666666 !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  color: #cbd5e1 !important;
   line-height: 1.65 !important;
+  letter-spacing: -0.005em !important;
 }
 
 /* Status badges */
@@ -326,7 +329,7 @@
   border-radius: 8px !important;
   padding: 9px 14px 9px 34px !important;
   color: #ffffff !important;
-  font-family: 'Jost', sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 13px !important;
   outline: none !important;
   width: 240px !important;

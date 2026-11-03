@@ -197,43 +197,19 @@ export function JourneyPage() {
           as="h1"
           className="page-title"
           mode="mask"
-          stagger={0.035}
+          stagger={0.04}
+          highlightWords={['Milestones', 'Achievements']}
         >
           {ui.journeyHeading || 'Milestones & Achievements'}
         </ScrollWriteText>
-
-        <div className="page-contact-info">
-          <button
-            type="button"
-            className="contact-item magnetic"
-            style={{
-              background: 'rgba(212, 175, 55, 0.1)',
-              borderColor: 'rgba(212, 175, 55, 0.3)',
-              color: 'var(--accent-1, #d4af37)'
-            }}
-            onMouseMove={handleMagneticMouseMove}
-            onMouseLeave={handleMagneticMouseLeave}
-            onClick={() => {
-              playTick();
-              navigate('/about');
-            }}
-          >
-            <i className="fa-regular fa-user" /> View Bio & Profile <i className="fa-solid fa-arrow-right" />
-          </button>
-
-          <button
-            type="button"
-            className="contact-item magnetic"
-            onMouseMove={handleMagneticMouseMove}
-            onMouseLeave={handleMagneticMouseLeave}
-            onClick={() => {
-              playTick();
-              navigate('/projects');
-            }}
-          >
-            <i className="fa-solid fa-layer-group" /> Explore Projects ↗
-          </button>
-        </div>
+        <ScrollWriteText
+          as="p"
+          className="page-desc"
+          mode="words"
+          stagger={0.02}
+        >
+          Verified engineering milestones, hackathon track record, and algorithmic problem-solving progression across my undergraduate journey.
+        </ScrollWriteText>
       </div>
 
       {/* Part 1: Featured Milestone Spotlight Carousel */}

@@ -20,9 +20,10 @@
 .skills-page .page-eyebrow,
 .skills-page .page-tagline {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 12.5px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
   color: #d4af37 !important;
-  letter-spacing: 2px !important;
+  letter-spacing: 0.18em !important;
   text-transform: uppercase !important;
   margin-bottom: 16px !important;
   display: block !important;
@@ -31,8 +32,8 @@
 .skills-page .page-title {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.025em !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
   color: #ffffff !important;
   line-height: 1.05 !important;
   margin-bottom: 20px !important;
@@ -43,7 +44,7 @@
   font-size: 15px !important;
   color: #cbd5e1 !important;
   max-width: 680px !important;
-  line-height: 1.6 !important;
+  line-height: 1.65 !important;
   margin: 0 !important;
 }
 
@@ -102,9 +103,10 @@
   color: #a1a1aa !important;
   padding: 0.5rem 1.2rem !important;
   border-radius: 100px !important;
-  font-family: 'Inter', system-ui, sans-serif !important;
-  font-size: 0.92rem !important;
-  font-weight: 500 !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
   cursor: pointer !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   white-space: nowrap !important;
@@ -126,11 +128,12 @@
 
 .filter-btn .count,
 .filter-btn .filter-count {
-  font-size: 0.8rem !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.76rem !important;
   padding: 0.15rem 0.5rem !important;
   border-radius: 100px !important;
   background: rgba(255, 255, 255, 0.12) !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   transition: background 0.25s, color 0.25s !important;
 }
 
@@ -164,8 +167,9 @@
   color: #ffffff !important;
   padding: 0.65rem 1rem 0.65rem 2.45rem !important;
   border-radius: 100px !important;
-  font-family: 'Inter', system-ui, sans-serif !important;
-  font-size: 0.92rem !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 400 !important;
   outline: none !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
   backdrop-filter: blur(14px) !important;
@@ -344,13 +348,13 @@
 }
 
 .skill-name {
-  font-family: 'Inter', system-ui, sans-serif !important;
-  font-size: 0.95rem !important;
-  font-weight: 500 !important;
-  color: #d4d4d8 !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 0.94rem !important;
+  font-weight: 600 !important;
+  color: #f1f5f9 !important;
   transition: color 0.25s ease, text-shadow 0.25s ease !important;
   white-space: nowrap !important;
-  letter-spacing: -0.01em !important;
+  letter-spacing: -0.015em !important;
 }
 
 .skill-card:hover .skill-name {

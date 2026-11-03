@@ -22,7 +22,7 @@
 
 .contact-page .page-tagline {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 12.5px !important;
+  font-size: 12px !important;
   font-weight: 600 !important;
   color: #d4af37 !important;
   letter-spacing: 0.18em !important;
@@ -36,8 +36,8 @@
 .contact-page .page-title {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
   font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.025em !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
   color: #ffffff !important;
   line-height: 1.1 !important;
   margin-bottom: 16px !important;
@@ -51,8 +51,8 @@
 }
 
 .contact-page .page-desc {
-  font-family: 'Jost', sans-serif !important;
-  font-size: 15.5px !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 15px !important;
   color: #cbd5e1 !important;
   line-height: 1.65 !important;
   max-width: 620px !important;
@@ -101,9 +101,9 @@
 .contact-page .card-title {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 1.25rem !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   color: #ffffff !important;
-  letter-spacing: -0.01em !important;
+  letter-spacing: -0.02em !important;
   margin-bottom: 24px !important;
   display: flex !important;
   align-items: center !important;
@@ -154,9 +154,9 @@
   gap: 5px !important;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 13px !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   color: #e2e8f0 !important;
-  letter-spacing: 0.02em !important;
+  letter-spacing: 0.01em !important;
 }
 
 .label-req {
@@ -171,8 +171,9 @@
   border-radius: 12px !important;
   padding: 13px 16px !important;
   color: #ffffff !important;
-  font-family: 'Jost', system-ui, sans-serif !important;
-  font-size: 14.5px !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
   outline: none !important;
   resize: vertical !important;
@@ -181,6 +182,7 @@
 .form-control::placeholder {
   color: #64748b !important;
   font-size: 13.5px !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
 }
 
 .form-control:focus {
@@ -207,14 +209,15 @@ textarea.form-control {
 }
 
 .field-hint {
-  font-family: 'Jost', sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 12px !important;
   color: #94a3b8 !important;
 }
 
 .char-count {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 11px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
   color: #94a3b8 !important;
 }
 
@@ -222,7 +225,7 @@ textarea.form-control {
   display: flex !important;
   align-items: center !important;
   gap: 6px !important;
-  font-family: 'Jost', sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 12px !important;
   font-weight: 500 !important;
   color: #f87171 !important;
@@ -242,9 +245,9 @@ textarea.form-control {
   border: 1px solid #d4af37 !important;
   border-radius: 12px !important;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 14.5px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.02em !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
   cursor: pointer !important;
   transition: all 0.25s ease !important;
   margin-top: 8px !important;
@@ -362,17 +365,17 @@ textarea.form-control {
 
 .info-text .label {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  color: #94a3b8 !important;
-  letter-spacing: 0.1em !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #d4af37 !important;
+  letter-spacing: 0.12em !important;
   text-transform: uppercase !important;
 }
 
 .info-text .value {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 14.5px !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   color: #ffffff !important;
   display: flex !important;
   align-items: center !important;
@@ -381,9 +384,10 @@ textarea.form-control {
 }
 
 .info-text .sub-info {
-  font-size: 12.5px !important;
-  color: #94a3b8 !important;
-  line-height: 1.4 !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  color: #cbd5e1 !important;
+  line-height: 1.5 !important;
 }
 
 .cgpa-badge {
@@ -440,7 +444,7 @@ textarea.form-control {
 .social-header h4 {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 13px !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   color: #ffffff !important;
   letter-spacing: 0.05em !important;
   text-transform: uppercase !important;
@@ -448,7 +452,8 @@ textarea.form-control {
 
 .social-header span {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 12px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
   color: #94a3b8 !important;
 }
 

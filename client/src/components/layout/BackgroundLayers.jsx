@@ -40,6 +40,7 @@ export function BackgroundLayers() {
   
   const location = useLocation();
   const [scrollProgress, setScrollProgress] = useState(0);
+  const isHome = location.pathname === '/';
 
   // Detect individual project case study page
   const isCaseStudy = Boolean(
@@ -113,6 +114,14 @@ export function BackgroundLayers() {
             }}
           />
 
+          {/* Layer 0.5: Deep Obsidian Celestial Highlights */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: 'radial-gradient(ellipse 90% 45% at 50% 0%, rgba(212, 175, 55, 0.045) 0%, rgba(212, 175, 55, 0.01) 50%, transparent 80%), radial-gradient(circle at 12% 45%, rgba(212, 175, 55, 0.02) 0%, transparent 40%), radial-gradient(circle at 88% 60%, rgba(56, 189, 248, 0.02) 0%, transparent 40%)'
+            }}
+          />
+
           {/* Layer 1: High-Resolution Cinematic Dusk Landscape (Matches Uploaded Reference Photo)
               Softly dissolves on scroll so content sections rest on pure high-contrast obsidian */}
           <img
@@ -122,7 +131,7 @@ export function BackgroundLayers() {
             style={{
               transform: `translate3d(0, ${Math.min(100, scrollProgress * 120)}px, 0) scale(1.02)`,
               filter: 'contrast(112%) brightness(92%) saturate(108%)',
-              opacity: Math.max(0.08, 0.92 - scrollProgress * 2.8)
+              opacity: isHome ? Math.max(0.08, 0.92 - scrollProgress * 2.8) : 0.16
             }}
             loading="eager"
             fetchpriority="high"

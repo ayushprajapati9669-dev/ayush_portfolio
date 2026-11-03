@@ -16,6 +16,7 @@ export function ThemeProvider({ children }) {
         ...defaults,
         ...parsed,
         projects: Array.isArray(parsed.projects) ? parsed.projects : defaults.projects,
+        skills: Array.isArray(parsed.skills) && parsed.skills.length > 0 ? parsed.skills : defaults.skills,
         certificates: Array.isArray(parsed.certificates) ? parsed.certificates : defaults.certificates,
         uiLabels: { ...defaults.uiLabels, ...(parsed.uiLabels || {}) },
         settings: { ...defaults.settings, ...(parsed.settings || {}) },

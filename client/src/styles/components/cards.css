@@ -276,17 +276,17 @@ input::placeholder, textarea::placeholder {
 }
 
 .p-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  background: rgba(0, 0, 0, 0.75);
-  color: #aaaaaa;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 9999px;
-  padding: 3px 10px;
-  backdrop-filter: blur(8px);
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 9999px !important;
+  padding: 3px 10px !important;
+  backdrop-filter: blur(8px) !important;
 }
 
 .p-badge.live {
@@ -309,12 +309,12 @@ input::placeholder, textarea::placeholder {
 }
 
 .project-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #d4af37;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: #d4af37 !important;
 }
 
 .project-link-hint {
@@ -332,21 +332,23 @@ input::placeholder, textarea::placeholder {
 
 .project-title {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 1.25rem !important;
+  font-size: 1.28rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
-  letter-spacing: -0.015em !important;
+  letter-spacing: -0.02em !important;
   line-height: 1.25 !important;
   margin: 0 0 8px !important;
   transition: color 0.2s ease !important;
 }
 
 .project-desc {
-  font-family: 'Jost', system-ui, sans-serif !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: 13.5px !important;
+  font-weight: 400 !important;
   color: #cbd5e1 !important;
-  line-height: 1.6 !important;
+  line-height: 1.65 !important;
   margin: 0 0 12px !important;
+  letter-spacing: -0.005em !important;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

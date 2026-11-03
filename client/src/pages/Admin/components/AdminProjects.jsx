@@ -578,6 +578,7 @@ export function AdminProjects({
   const handleCancelEdit = () => {
     playTick();
     setEditingId(null);
+    setIsFormOpen(false);
     setCurrentStep(1);
     setForm({
       title: '',

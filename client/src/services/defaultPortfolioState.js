@@ -339,7 +339,7 @@ export function getDefaultPortfolioState() {
           { name: 'CSS', logoKey: 'css' },
           { name: 'Tailwind CSS', logoKey: 'tailwind' },
           { name: 'Bootstrap', logoKey: 'bootstrap' },
-          { name: 'JavaScript', logoKey: 'javascript' },
+          { name: 'Responsive UI', logoKey: 'responsive' },
           { name: 'Vite JS', logoKey: 'vite' },
           { name: 'Next.js', logoKey: 'nextjs' }
         ]
