@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useSmoothScroll } from '../common/SmoothScrollProvider';
@@ -39,13 +39,8 @@ const COSMIC_STARS = [
 export function BackgroundLayers() {
   
   const location = useLocation();
+  const [scrollProgress, setScrollProgress] = useState(0);
   const isHome = location.pathname === '/';
-  const scrollProgressRef = useRef(0);
-  const progressBarRef = useRef(null);
-  const landscapeRef = useRef(null);
-  const horizonRef = useRef(null);
-  const birdLayerRef = useRef(null);
-  const ambientGlowRef = useRef(null);
 
   // Detect individual project case study page
   const isCaseStudy = Boolean(
@@ -62,47 +57,14 @@ export function BackgroundLayers() {
 
   const lenis = useSmoothScroll();
 
-  // Keep the frame-by-frame scroll effects out of React's render cycle.
+  // Scroll Progress Tracking for Hairline Progress Bar & Subtle Parallax (Frame-locked with Lenis)
   useEffect(() => {
-    if (typeof window === 'undefined' || isAdmin) return undefined;
-
-    const updateScrollEffects = (progress) => {
-      const value = Math.min(1, Math.max(0, progress));
-      scrollProgressRef.current = value;
-
-      if (progressBarRef.current) {
-        progressBarRef.current.style.transform = `scaleX(${value})`;
-      }
-      if (landscapeRef.current) {
-        landscapeRef.current.style.transform = `translate3d(0, ${Math.min(100, value * 120)}px, 0) scale(1.02)`;
-        landscapeRef.current.style.opacity = isHome
-          ? Math.max(0.08, 0.92 - value * 2.8)
-          : 0.16;
-      }
-      if (horizonRef.current) {
-        horizonRef.current.style.opacity = Math.max(0, 1 - value * 3.5);
-      }
-      if (birdLayerRef.current) {
-        const layerOpacity = Math.max(0, 1 - value * 3.2);
-        const birdsOpacity = Math.max(0.22, 0.98 - value * 1.6);
-        birdLayerRef.current.style.opacity = layerOpacity * birdsOpacity;
-      }
-      if (ambientGlowRef.current) {
-        ambientGlowRef.current.style.opacity = Math.max(0, 1 - value * 3.2);
-      }
-    };
-
-    const updateFromWindow = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      updateScrollEffects(totalScroll > 0 ? window.scrollY / totalScroll : 0);
-    };
-
-    updateFromWindow();
+    if (typeof window === 'undefined' || isAdmin) return;
 
     if (lenis) {
       const onLenisScroll = (e) => {
         if (typeof e.progress === 'number') {
-          updateScrollEffects(e.progress);
+          setScrollProgress(e.progress);
         }
       };
       lenis.on('scroll', onLenisScroll);
@@ -113,18 +75,24 @@ export function BackgroundLayers() {
       };
     }
 
-    window.addEventListener('scroll', updateFromWindow, { passive: true });
-    return () => window.removeEventListener('scroll', updateFromWindow);
-  }, [isAdmin, isHome, lenis]);
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll > 0) {
+        setScrollProgress(Math.min(1, Math.max(0, window.scrollY / totalScroll)));
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isAdmin, lenis]);
 
   return (
     <>
       {/* Top Hairline Scroll Progress Bar */}
       {!isAdmin && (
         <div
-          ref={progressBarRef}
           className="scroll-progress-bar"
-          style={{ transform: 'scaleX(0)' }}
+          style={{ transform: `scaleX(${scrollProgress})` }}
           aria-hidden="true"
         />
       )}
@@ -157,14 +125,13 @@ export function BackgroundLayers() {
           {/* Layer 1: High-Resolution Cinematic Dusk Landscape (Matches Uploaded Reference Photo)
               Softly dissolves on scroll so content sections rest on pure high-contrast obsidian */}
           <img
-            ref={landscapeRef}
             src="/images/cinematic-dusk-landscape.jpg"
             alt=""
-            className="w-full h-full object-cover object-bottom"
+            className="w-full h-full object-cover object-bottom transition-all duration-700 ease-out"
             style={{
-              transform: 'translate3d(0, 0, 0) scale(1.02)',
+              transform: `translate3d(0, ${Math.min(100, scrollProgress * 120)}px, 0) scale(1.02)`,
               filter: 'contrast(112%) brightness(92%) saturate(108%)',
-              opacity: isHome ? 0.92 : 0.16
+              opacity: isHome ? Math.max(0.08, 0.92 - scrollProgress * 2.8) : 0.16
             }}
             loading="eager"
             fetchpriority="high"
@@ -172,20 +139,18 @@ export function BackgroundLayers() {
 
           {/* Layer 2: Dynamic Living Horizon Warmth Breath */}
           <div
-            ref={horizonRef}
-            className="dusk-horizon-breath pointer-events-none"
-            style={{ opacity: 1 }}
+            className="dusk-horizon-breath pointer-events-none transition-opacity duration-500"
+            style={{ opacity: Math.max(0, 1 - scrollProgress * 3.5) }}
             aria-hidden="true"
           />
 
           {/* Layer 3: Peaceful Twilight Birds Flocking Engine */}
           <div
-            ref={birdLayerRef}
-            className="absolute inset-0 pointer-events-none"
-            style={{ opacity: 1 }}
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+            style={{ opacity: Math.max(0, 1 - scrollProgress * 3.2) }}
             aria-hidden="true"
           >
-            <VantaBirdsBackground scrollProgressRef={scrollProgressRef} />
+            <VantaBirdsBackground scrollProgress={scrollProgress} />
           </div>
 
           
@@ -218,10 +183,9 @@ export function BackgroundLayers() {
 
       {/* Gold Radial Horizon Ambient Base Glow */}
       <div
-        ref={ambientGlowRef}
-        className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] max-w-[100vw] h-[360px] z-0"
+        className="pointer-events-none fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] max-w-[100vw] h-[360px] z-0 transition-opacity duration-500"
         style={{
-          opacity: 1,
+          opacity: Math.max(0, 1 - scrollProgress * 3.2),
           background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(212, 175, 55, 0.06), rgba(212, 175, 55, 0.015) 55%, transparent 75%)'
         }}
         aria-hidden="true"

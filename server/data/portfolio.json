@@ -622,7 +622,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "Full-Stack MERN Developer & Systems Builder.",
-    "updatedAt": "2026-11-03T19:51:51.370Z",
+    "updatedAt": "2026-11-04T03:41:27.338Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -702,7 +702,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-11-03T19:51:50.060Z"
+      "updatedAt": "2026-11-04T03:41:26.079Z"
     },
     {
       "id": "proj-1792430599188",
@@ -730,7 +730,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
-      "updatedAt": "2026-11-03T19:51:49.993Z"
+      "updatedAt": "2026-11-04T03:41:26.006Z"
     },
     {
       "id": "proj-1792496192331",
@@ -755,7 +755,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80",
       "title": "ai chat boat",
-      "updatedAt": "2026-11-03T19:51:50.111Z"
+      "updatedAt": "2026-11-04T03:41:26.154Z"
     },
     {
       "id": "proj-1792669669594",
@@ -783,7 +783,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-11-03T19:51:50.204Z"
+      "updatedAt": "2026-11-04T03:41:26.267Z"
     },
     {
       "id": "proj-1792781601076",
@@ -811,7 +811,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
-      "updatedAt": "2026-11-03T19:51:50.159Z"
+      "updatedAt": "2026-11-04T03:41:26.208Z"
     }
   ],
   "skills": [
@@ -871,7 +871,7 @@
           "createdAt": 1792600863119
         }
       ],
-      "updatedAt": "2026-11-03T19:51:50.661Z"
+      "updatedAt": "2026-11-04T03:41:26.878Z"
     },
     {
       "id": "skill-cat-frontend",
@@ -913,7 +913,7 @@
           "createdAt": 1792600868119
         }
       ],
-      "updatedAt": "2026-11-03T19:51:50.723Z"
+      "updatedAt": "2026-11-04T03:41:26.937Z"
     },
     {
       "id": "skill-cat-backend",
@@ -947,7 +947,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-11-03T19:51:50.777Z"
+      "updatedAt": "2026-11-04T03:41:27.004Z"
     },
     {
       "id": "skill-cat-databases",
@@ -973,7 +973,7 @@
           "createdAt": 1792600878119
         }
       ],
-      "updatedAt": "2026-11-03T19:51:50.822Z"
+      "updatedAt": "2026-11-04T03:41:27.063Z"
     },
     {
       "id": "skill-cat-tools",
@@ -1007,7 +1007,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-11-03T19:51:50.861Z"
+      "updatedAt": "2026-11-04T03:41:27.134Z"
     },
     {
       "id": "skill-cat-dsa",
@@ -1025,7 +1025,7 @@
           "createdAt": 1792600883119
         }
       ],
-      "updatedAt": "2026-11-03T19:51:50.919Z"
+      "updatedAt": "2026-11-04T03:41:27.204Z"
     }
   ],
   "certificates": [
@@ -1039,7 +1039,7 @@
       "issuer": "apna college",
       "skillsCovered": "HTML,CSS,JAVASCRIPT,NODEJS,EXPRESS",
       "title": "mern stack certificate ",
-      "updatedAt": "2026-11-03T19:51:50.305Z"
+      "updatedAt": "2026-11-04T03:41:26.380Z"
     },
     {
       "id": "cert-1792434116249",
@@ -1051,7 +1051,7 @@
       "issuer": "code with harry",
       "skillsCovered": "",
       "title": "ai-ml certificate",
-      "updatedAt": "2026-11-03T19:51:50.356Z"
+      "updatedAt": "2026-11-04T03:41:26.442Z"
     },
     {
       "id": "cert-1792578230937",
@@ -1063,7 +1063,7 @@
       "issuer": "Apna college",
       "skillsCovered": "html, css, javasript, nodejs, react, mongodb, express",
       "title": "Full Stack Development (Copy)",
-      "updatedAt": "2026-11-03T19:51:50.396Z"
+      "updatedAt": "2026-11-04T03:41:26.496Z"
     },
     {
       "id": "cert-1792588849135",
@@ -1075,7 +1075,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, GraphQL",
       "title": "mern stack",
-      "updatedAt": "2026-11-03T19:51:50.434Z"
+      "updatedAt": "2026-11-04T03:41:26.564Z"
     },
     {
       "id": "cert-1792595305806",
@@ -1087,7 +1087,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "cyber security",
-      "updatedAt": "2026-11-03T19:51:50.480Z"
+      "updatedAt": "2026-11-04T03:41:26.642Z"
     },
     {
       "id": "cert-1792663342696",
@@ -1099,7 +1099,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "mern stack",
-      "updatedAt": "2026-11-03T19:51:50.525Z"
+      "updatedAt": "2026-11-04T03:41:26.697Z"
     },
     {
       "id": "cert-1793434886240",
@@ -1111,7 +1111,7 @@
       "issuer": "Coursera",
       "skillsCovered": "",
       "title": "cloud certificate",
-      "updatedAt": "2026-11-03T19:51:50.571Z"
+      "updatedAt": "2026-11-04T03:41:26.770Z"
     }
   ],
   "media": [],
@@ -1162,7 +1162,7 @@
     "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",
     "particlesEnabled": true,
     "contactNote": "Messages submitted through the contact form are validated on the server and persisted directly to the portfolio database for review in the Admin CMS. No third-party SMTP relay is fabricated; a direct mailto fallback is also available.",
-    "updatedAt": "2026-11-03T19:51:52.620Z",
+    "updatedAt": "2026-11-04T03:41:28.586Z",
     "mongodbUri": "mongodb://127.0.0.1:27017/ayush_portfolio",
     "cloudinaryCloudName": "",
     "cloudinaryUploadPreset": "",
@@ -1177,7 +1177,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$46e38e197193f507b2915dfddd9e57c4$84ea16c78b00cc347397c3dee22616db3f8a8db4fdb6a703fd2c0e7c3bd2e68d6e19a80c27056c21e14b93a1a6c47c46d3072c10bc08f2312984acdbc1936af4",
       "role": "admin",
-      "updatedAt": "2026-11-03T19:51:52.883Z"
+      "updatedAt": "2026-11-04T03:41:28.944Z"
     },
     {
       "username": "ayush",
@@ -1186,7 +1186,7 @@
       "lastLoginAt": "2026-10-31T08:17:56.241Z",
       "passwordHash": "scrypt$16384$8$1$6c3bc64212cd8edca9910ed897608eb4$f774e89408d62a5e0d8d7bcdab65c9fa2b9203eab3b8ed19b0656cebfb23c0646c02d82f4f1ebd71374d31d696a9cc84341702a6800d2271900d0ee25c94235e",
       "role": "admin",
-      "updatedAt": "2026-11-03T19:51:52.933Z"
+      "updatedAt": "2026-11-04T03:41:29.123Z"
     }
   ],
   "resumes": [],

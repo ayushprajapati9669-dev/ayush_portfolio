@@ -378,7 +378,7 @@ export function CinematicParticleCard({ className = '' }) {
     const driftOffsets = new Float32Array(particleCount).map(() => Math.random() * 100);
 
     // Render loop
-    const renderFrame = () => {
+    renderer.setAnimationLoop(() => {
       if (!isMounted) return;
       const time = clock.getElapsedTime();
       material.uniforms.uTime.value = time;
@@ -435,9 +435,7 @@ export function CinematicParticleCard({ className = '' }) {
       camera.lookAt(0, 0, 0);
 
       renderer.render(scene, camera);
-    };
-
-    renderer.setAnimationLoop(renderFrame);
+    });
 
     // Handle Resize
     const handleResize = () => {

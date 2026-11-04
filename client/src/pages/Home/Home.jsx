@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useSmoothScroll } from '../../components/common/SmoothScrollProvider';
 import { HeroCosmosCanvas } from '../../components/ui/HeroCosmosCanvas';
+import { InteractiveMeshWave } from '../../components/ui/InteractiveMeshWave';
 import { MagneticButton } from '../../components/ui/MagneticButton';
 import { TiltCard } from '../../components/ui/TiltCard';
+import { CinematicParticleCard } from '../../components/ui/CinematicParticleCard';
 import { ZeroToOneJourneyCard } from '../../components/ui/ZeroToOneJourneyCard';
 
 import { ProjectCard } from '../../components/projects/ProjectCard';
@@ -16,47 +18,6 @@ import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { personSchema, websiteSchema } from '../../utils/seo';
-
-const InteractiveMeshWave = React.lazy(() =>
-  import('../../components/ui/InteractiveMeshWave').then((module) => ({ default: module.InteractiveMeshWave }))
-);
-const CinematicParticleCard = React.lazy(() =>
-  import('../../components/ui/CinematicParticleCard').then((module) => ({ default: module.CinematicParticleCard }))
-);
-
-function DeferredVisual({ Component, className = '' }) {
-  const containerRef = useRef(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return undefined;
-    if (!('IntersectionObserver' in window)) {
-      setShouldLoad(true);
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setShouldLoad(true);
-        observer.disconnect();
-      }
-    }, { rootMargin: '80px 0px' });
-
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={containerRef} className={className}>
-      {shouldLoad && (
-        <React.Suspense fallback={null}>
-          <Component className="absolute inset-0" />
-        </React.Suspense>
-      )}
-    </div>
-  );
-}
 
 export function HomePage() {
   const { appState, openResumeModal } = usePortfolio();
@@ -210,53 +171,89 @@ export function HomePage() {
     } catch (_e) {}
 
     const ctx = gsap.context(() => {
-      // Animate the elements used by the current editorial hero markup.
-      const heroTl = gsap.timeline({
-        delay: 0.08,
-        defaults: { ease: 'power3.out' }
-      });
+      // 1. Sarthak Sharma-Style Hero Entrance
+      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       heroTl
-        .fromTo('.hero-top-meta', { autoAlpha: 0, y: -12 }, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.55,
-          clearProps: 'opacity,transform,visibility'
+        .from('.hero-top-meta', {
+          y: -20,
+          opacity: 0,
+          duration: 0.8,
+          delay: 0.1
         })
-        .fromTo('.hero-announcement-capsule', { autoAlpha: 0, y: 14 }, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.55,
-          clearProps: 'opacity,transform,visibility'
-        }, '-=0.3')
-        .fromTo('.hero-title-line', { autoAlpha: 0, y: 22 }, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.68,
-          stagger: 0.09,
-          clearProps: 'opacity,transform,visibility'
-        }, '-=0.25')
-        .fromTo('.hero-modern-desc', { autoAlpha: 0, y: 18 }, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.6,
-          clearProps: 'opacity,transform,visibility'
-        }, '-=0.3')
-        .fromTo('.hero-modern-actions > *', { autoAlpha: 0, y: 14, scale: 0.98 }, {
-          autoAlpha: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.55,
-          stagger: 0.08,
-          clearProps: 'opacity,transform,visibility'
-        }, '-=0.3')
-        .fromTo('.hero-bottom-footer > *', { autoAlpha: 0, y: 14 }, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.06,
-          clearProps: 'opacity,transform,visibility'
-        }, '-=0.2');
+        .from(
+          '.hero-presence-strip',
+          {
+            x: -25,
+            opacity: 0,
+            duration: 0.8
+          },
+          '-=0.5'
+        )
+        .from(
+          '.hero-portrait-stage',
+          {
+            scale: 0.92,
+            opacity: 0,
+            y: 20,
+            duration: 1,
+            ease: 'power2.out'
+          },
+          '-=0.6'
+        )
+        .from(
+          '.hero-sub-eyebrow',
+          {
+            y: 15,
+            opacity: 0,
+            duration: 0.6
+          },
+          '-=0.5'
+        )
+        .from(
+          '.hero-name-editorial',
+          {
+            y: 30,
+            opacity: 0,
+            duration: 0.9,
+            ease: 'power3.out'
+          },
+          '-=0.45'
+        )
+        .from(
+          '.hero-narrative-editorial',
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.7
+          },
+          '-=0.4'
+        )
+        .fromTo(
+          '.hero-actions-editorial > *',
+          { y: 15, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            duration: 0.6,
+            ease: 'power2.out',
+            clearProps: 'all'
+          },
+          '-=0.3'
+        )
+        .fromTo(
+          '.hero-bottom-footer',
+          { y: 20, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+            clearProps: 'all'
+          },
+          '-=0.3'
+        );
 
       // 2. Section 01: Bento Intro & Focus Areas ScrollTrigger
       gsap.from('.bento-section .bento-header > *', {
@@ -493,10 +490,7 @@ export function HomePage() {
               <div className="absolute bottom-3 right-4 z-10 font-mono text-xs text-slate-400 pointer-events-none">
                 Hover to ripple
               </div>
-              <DeferredVisual
-                Component={InteractiveMeshWave}
-                className="home-mesh-visual absolute inset-0"
-              />
+              <InteractiveMeshWave className="absolute inset-0" />
             </div>
           </div>
 
@@ -518,10 +512,7 @@ export function HomePage() {
             </TiltCard>
 
             <div className="lg:col-span-6 flex items-stretch">
-              <DeferredVisual
-                Component={CinematicParticleCard}
-                className="home-particle-visual relative h-[400px] w-full sm:h-[440px]"
-              />
+              <CinematicParticleCard className="h-full min-h-[380px]" />
             </div>
           </div>
         </section>
