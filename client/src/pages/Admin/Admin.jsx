@@ -8,7 +8,7 @@ import { playTick } from '../../utils/audio';
 // Admin-specific CSS (only loaded when admin page is visited)
 import '../../styles/admin.css';
 import '../../styles/pages/admin-milestones.css';
-import '../../styles/admin-reference-theme.css';
+// import '../../styles/admin-reference-theme.css';
 
 // Subcomponents
 import { AdminSidebar } from './components/AdminSidebar';
@@ -59,10 +59,7 @@ export function AdminPage() {
   // Trigger smooth scroll animations on tab change
   useScrollAnimation(activeTab);
 
-  useEffect(() => {
-    document.body.classList.add('is-admin-route');
-    return () => document.body.classList.remove('is-admin-route');
-  }, []);
+  // admin route setup
 
   useEffect(() => {
     const handleSidebarToggle = () => setIsMobileSidebarOpen((open) => !open);

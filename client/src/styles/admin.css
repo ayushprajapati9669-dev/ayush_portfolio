@@ -1,17 +1,26 @@
 /* Admin CMS Styles */
 :root {
-  --admin-bg: #050505;
-  --nav-bg: #050505;
-  --text-main: #f0f8ff;
-  --text-muted: #8caab9;
-  --accent-1: #d4af37;
-  --accent-2: #b8960e;
-  --accent-3: #a259ff;
-  --accent-glow: rgba(212, 175, 55, 0.4);
-  --border: rgba(255, 255, 255, 0.12);
-  --card-bg: #0f0f11;
-  --sidebar-bg: #050505;
-  --danger: #ff4d4d;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --admin-bg: #07080a;
+  --nav-bg: #090a0f;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-1: #facc15;
+  --accent-2: #eab308;
+  --accent-3: #6366f1;
+  --accent-glow: rgba(250, 204, 21, 0.35);
+  --border: rgba(255, 255, 255, 0.08);
+  --card-bg: #0d0f17;
+  --sidebar-bg: #090a0f;
+  --danger: #ef4444;
+}
+
+.admin-workspace {
+  font-family: var(--font-sans);
+  background-color: var(--admin-bg);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Sidebar with Focus Mode */

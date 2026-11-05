@@ -1115,7 +1115,49 @@
     }
   ],
   "media": [],
-  "messages": [],
+  "messages": [
+    {
+      "id": "msg-recruiter-stripe",
+      "name": "Sarah Jenkins",
+      "email": "sjenkins.recruiting@stripe.com",
+      "subject": "Full-Stack Software Engineering Role (MERN / Distributed Systems)",
+      "message": "Hi Ayush,\n\nI came across your portfolio and was thoroughly impressed by your Wanderlust distributed architecture and full-stack systems work. Our engineering team at Stripe is expanding our platform integrations group and your background in React, Node.js, and high-performance cloud architectures stands out.\n\nWould you be open to an introductory call this week to discuss potential engineering roles?\n\nBest regards,\nSarah Jenkins",
+      "status": "unread",
+      "starred": true,
+      "createdAt": "2026-11-05T12:58:07.669Z",
+      "replies": []
+    },
+    {
+      "id": "msg-founder-agentic",
+      "name": "Michael Chang",
+      "email": "michael@hyperscale-ai.io",
+      "subject": "Autonomous Multi-Agent Workspace Collaboration",
+      "message": "Hello Ayush,\n\nWe saw your live project build for the Autonomous Multi-Agent Workspace and were really impressed by your task decomposition and multi-agent coordination architecture.\n\nWe are building next-generation agent harnesses for enterprise engineers and would love to consult with you or explore a collaborative engagement.\n\nLooking forward to speaking,\nMichael Chang",
+      "status": "read",
+      "starred": false,
+      "createdAt": "2026-11-04T14:58:07.669Z",
+      "replies": [
+        {
+          "id": "reply-founder-1",
+          "sender": "You (Admin)",
+          "text": "Hi Michael,\n\nThank you for reaching out! The multi-agent workspace was an exciting system to architect, particularly ensuring reliable inter-agent messaging and state synchronization.\n\nI would be very happy to connect and discuss your team's work. Feel free to book a convenient slot on my calendar.\n\nBest regards,\nAyush Prajapati",
+          "time": "11:30 AM",
+          "date": "11/5/2026"
+        }
+      ]
+    },
+    {
+      "id": "msg-speaker-conclave",
+      "name": "Dr. Rajiv Sharma",
+      "email": "rajiv.sharma@techconclave.org",
+      "subject": "Keynote Speaker Invitation: Modern Cloud Architecture Workshop",
+      "message": "Dear Ayush,\n\nFollowing your successful workshop mentoring 120+ engineers at SISTec on MERN and Cloud Architecture, the organizing committee would like to invite you as a keynote guest speaker for the upcoming Central India Tech Innovation Conclave.\n\nPlease let us know if your schedule allows for a 45-minute technical keynote in December.\n\nWarm regards,\nDr. Rajiv Sharma",
+      "status": "read",
+      "starred": true,
+      "createdAt": "2026-11-03T14:58:07.669Z",
+      "replies": []
+    }
+  ],
   "settings": {
     "siteTitle": "Ayush Prajapati — Developer Portfolio",
     "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",
@@ -1133,7 +1175,7 @@
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-05T12:36:36.451Z",
+      "lastLoginAt": "2026-11-05T13:37:20.712Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
       "updatedAt": "2026-11-05T12:05:07.107Z"
@@ -1142,7 +1184,7 @@
       "username": "ayush",
       "createdAt": "2026-10-31T08:52:17.838Z",
       "id": "usr-24ebcb8842aa",
-      "lastLoginAt": "2026-11-05T12:06:53.434Z",
+      "lastLoginAt": "2026-11-05T14:58:21.797Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
       "updatedAt": "2026-11-05T12:05:07.107Z"

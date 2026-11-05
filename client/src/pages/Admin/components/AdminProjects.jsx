@@ -2101,8 +2101,13 @@ export function AdminProjects({
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-slate-900 to-black flex items-center justify-center text-slate-600">
-                        <i className="fa-solid fa-image text-3xl"></i>
+                      <div className="w-full h-full bg-gradient-to-br from-[#0a0f1d] via-[#101728] to-[#070a12] flex flex-col items-center justify-center text-center p-4 relative overflow-hidden transition-all duration-500 group-hover:scale-105">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(250,204,21,0.08),transparent_70%)] pointer-events-none" />
+                        <div className="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400 mb-2 shadow-lg shadow-amber-400/10">
+                          <i className="fa-solid fa-code text-lg"></i>
+                        </div>
+                        <span className="font-mono text-[10px] font-semibold text-amber-300/80 uppercase tracking-wider">{proj.category || 'Live Project'}</span>
+                        <span className="text-xs text-slate-400 mt-1 line-clamp-1">{proj.title}</span>
                       </div>
                     )}
 
