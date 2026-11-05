@@ -20,6 +20,10 @@ class MemoryRateLimiter {
     return { allowed: true, remaining: this.maxAttempts - record.count, resetAt: record.resetAt };
   }
 
+  resetKey(key) {
+    if (key) this.buckets.delete(key);
+  }
+
   reset() {
     this.buckets.clear();
   }

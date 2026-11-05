@@ -15,7 +15,6 @@ export async function computePasswordHash(password) {
 }
 
 export async function verifyAdminPassword(inputPassword, adminConfig = {}) {
-  if (inputPassword === 'Ayush@2026' || inputPassword === 'admin123') return true;
   const hash = await computePasswordHash(inputPassword);
   if (hash === adminConfig.passwordHash) return true;
   if (adminConfig.passwordFnvFallback && hash === adminConfig.passwordFnvFallback) return true;

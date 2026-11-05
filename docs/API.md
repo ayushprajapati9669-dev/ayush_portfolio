@@ -1,36 +1,62 @@
-# API Reference — `argonPortfolio`
+# API Reference
 
-## 1. Public Endpoints
+Base URL for local development: `http://localhost:6000`. JSON routes accept and return JSON unless noted. Exact validation and response fields are defined in `server/src/controllers/` and `server/src/validators/`.
 
-- `GET /api/health` — Returns server status, storage engine mode, and admin bootstrap status.
-- `GET /api/public/bootstrap` — Returns `profile`, published `projects`, `skills`, `certificates`, and `settings`.
-- `GET /api/public/profile` — Returns Ayush Prajapati's profile metadata.
-- `GET /api/public/skills` — Returns categorized skill groups and items.
-- `GET /api/public/certificates` — Returns verified certificates.
-- `GET /api/public/projects` — Returns published-only projects (supports `?category=` query filter).
-- `GET /api/public/projects/:slug` — Returns a single published project by slug (`404` for drafts).
-- `POST /api/public/contact` — Validates (`name`, `email`, `subject`, `message`), rate-limits (`5/hour`), and persists contact messages.
+## Public API
 
-## 2. Authentication Endpoints
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/health` | Server and store status |
+| `GET` | `/api/public/bootstrap` | Initial portfolio payload |
+| `GET` | `/api/public/profile` | Public profile |
+| `GET` | `/api/public/skills` | Skills categories |
+| `GET` | `/api/public/certificates` | Public certificates |
+| `GET` | `/api/public/projects` | Published projects; accepts `?category=` |
+| `GET` | `/api/public/projects/:slug` | Published project lookup |
+| `GET` | `/api/public/leetcode-stats` | LeetCode stats service output |
+| `POST` | `/api/public/telemetry` | Record public telemetry |
+| `POST` | `/api/public/ask-ai` | Public AI assistant request |
+| `POST` | `/api/public/contact` | Validate and persist a contact message; rate limited |
+| `GET` | `/api/public/sitemap.xml`, `/sitemap.xml` | Sitemap XML |
+| `*` | `/api/v1/*` | Live API sandbox namespace handled by the public controller |
 
-- `POST /api/auth/login` — Authenticates admin credentials, enforces brute-force rate limiting (`5/15m`), sets `HttpOnly; SameSite=Strict` cookie (`argon_session`), and returns `{ authenticated: true, csrfToken }`.
-- `POST /api/auth/logout` — Clears the `argon_session` cookie.
-- `GET /api/auth/session` — Checks current admin session and returns `csrfToken`.
+## Authentication
 
-## 3. Protected Admin Endpoints
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/auth/login` | Login; sets `argon_session` cookie and returns a CSRF token |
+| `POST` | `/api/auth/logout` | Clear the session cookie |
+| `POST` | `/api/auth/password` | Change the authenticated admin's password; requires the current password and CSRF token |
+| `GET` | `/api/auth/session` | Check the current session |
 
-All mutating admin endpoints require a valid `argon_session` cookie and matching `X-CSRF-Token` header:
+Cookie/session defaults are configured in `server/src/config/env.js`; login attempts are rate limited. See [VERIFICATION.md](./VERIFICATION.md) for an important limitation in current authentication behavior.
 
-- `GET /api/admin/summary` — Dashboard metrics (published/draft projects, certificates, messages, media counts).
-- `PUT /api/admin/profile` — Updates profile, education, bio, social links, and hero portrait configuration.
-- `GET /api/admin/projects` — Lists all projects (`published` and `draft`).
-- `GET /api/admin/projects/preview/:idOrSlug` — Previews unpublished draft projects.
-- `POST /api/admin/projects` — Creates a new project.
-- `PUT /api/admin/projects/:id` — Updates or publishes/unpublishes a project.
-- `DELETE /api/admin/projects/:id` — Deletes a project.
-- `GET /api/admin/certificates`, `POST /api/admin/certificates`, `DELETE /api/admin/certificates/:id` — Certificate CRUD.
-- `GET /api/admin/skills`, `POST /api/admin/skills`, `DELETE /api/admin/skills/:id` — Skill category CRUD.
-- `GET /api/admin/media`, `POST /api/admin/media` — Media listing and magic-byte validated image upload.
-- `GET /api/admin/messages`, `PATCH /api/admin/messages/:id`, `DELETE /api/admin/messages/:id` — Contact message management.
-- `GET /api/admin/settings`, `PUT /api/admin/settings` — Site settings, particle toggle, and Cloudinary configuration.
-- `POST /api/portfolio/sync` — Synchronizes full Admin CMS state with the server store.
+## Admin API
+
+Admin endpoints require the auth middleware. Mutating requests require `X-CSRF-Token` matching the session CSRF token.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/admin/summary` | Admin dashboard summary |
+| `GET` | `/api/admin/analytics` | Analytics summary |
+| `POST` | `/api/admin/generate-case-study` | Generate case study content |
+| `PUT` | `/api/admin/profile` | Update profile |
+| `GET`, `POST` | `/api/admin/projects` | List or create projects |
+| `GET` | `/api/admin/projects/preview/:idOrSlug` | Preview a project, including drafts |
+| `PUT`, `DELETE` | `/api/admin/projects/:id` | Update or delete a project |
+| `GET`, `POST`, `DELETE` | `/api/admin/certificates[/:id]` | Certificate management |
+| `GET`, `POST`, `DELETE` | `/api/admin/skills[/:id]` | Skill category management |
+| `GET`, `POST` | `/api/admin/media` | List media or upload an image |
+| `GET`, `PATCH`, `DELETE` | `/api/admin/messages[/:id]` | List, update status, or delete messages |
+| `GET`, `PUT` | `/api/admin/settings` | Read or update site settings |
+| `POST` | `/api/portfolio/sync` | Synchronize portfolio state; auth is checked by the same middleware with its non-mutating CSRF mode |
+
+The server also serves files at `GET /uploads/:filename`.
+
+## Local request example
+
+```bash
+curl http://localhost:6000/api/health
+```
+
+For authenticated writes, first obtain a valid session and CSRF token through the login flow, then send the cookie and `X-CSRF-Token` header.

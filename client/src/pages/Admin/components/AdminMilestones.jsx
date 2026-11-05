@@ -1861,7 +1861,7 @@ export function AdminMilestones({
       )}
 
       {/* 0. TOP ACTION BANNER — Matching Photo 4 */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pt-1">
+      <div className="admin-milestones-header flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pt-1">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse" />
@@ -1895,7 +1895,7 @@ export function AdminMilestones({
           <button
             type="button"
             onClick={openNewWizard}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white text-xs font-semibold shadow-lg shadow-rose-950/50 transition-all active:scale-95"
+            className="admin-milestones-new-button flex items-center gap-1.5 px-4 py-2 rounded-xl text-white text-xs font-semibold transition-all active:scale-95"
           >
             <i className="fa-solid fa-plus text-xs" />
             <span>New Milestone</span>
@@ -1906,7 +1906,7 @@ export function AdminMilestones({
       {/* 4 REALISTIC STAT CARDS — Matching Photo 4 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {/* Total Milestones */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
+        <div className="admin-milestone-stat-card bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
               TOTAL MILESTONES
@@ -1921,7 +1921,7 @@ export function AdminMilestones({
         </div>
 
         {/* Completed */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
+        <div className="admin-milestone-stat-card bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
               COMPLETED
@@ -1936,7 +1936,7 @@ export function AdminMilestones({
         </div>
 
         {/* Active Focus */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
+        <div className="admin-milestone-stat-card bg-[#0b1322]/90 border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
               ACTIVE FOCUS
@@ -1951,7 +1951,7 @@ export function AdminMilestones({
         </div>
 
         {/* Featured Spotlight */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-amber-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
+        <div className="admin-milestone-stat-card bg-[#0b1322]/90 border border-white/[0.08] hover:border-amber-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-amber-400/80 transition-colors">
               FEATURED SPOTLIGHT
@@ -1971,7 +1971,7 @@ export function AdminMilestones({
         {/* LEFT COLUMN: Controls, Filters, Search & Milestones List */}
         <div className="w-full lg:flex-1 lg:min-w-0 pr-0 lg:pr-3 flex flex-col gap-4">
           {/* Controls Toolbar Container */}
-          <div className="bg-[#080e1b] border border-white/[0.08] rounded-2xl p-4 flex flex-col gap-3 shadow-sm">
+          <div className="admin-milestones-toolbar bg-[#080e1b] border border-white/[0.08] rounded-2xl p-4 flex flex-col gap-3 shadow-sm">
             {/* Filter Selects Row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               <select
@@ -2067,7 +2067,7 @@ export function AdminMilestones({
                 </button>
                 <button
                   type="button"
-                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-rose-950/40 transition-all active:scale-95"
+                  className="admin-milestones-toolbar-new-button px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-rose-950/40 transition-all active:scale-95"
                   onClick={openNewWizard}
                 >
                   <i className="fa-solid fa-plus text-xs" />
@@ -2150,7 +2150,7 @@ export function AdminMilestones({
                       setActiveEditorId(m.id);
                     }}
                     onDoubleClick={() => openEditWizard(m.id)}
-                    className={`group relative flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 ease-out cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-10px_rgba(212,175,55,0.22)] ${
+                    className={`admin-milestone-row group relative flex items-start gap-4 p-4 rounded-2xl transition-all duration-300 ease-out cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-10px_rgba(212,175,55,0.22)] ${
                       isCurrentActive
                         ? 'bg-[#0b1424] border-2 border-yellow-500/80 shadow-[0_0_24px_rgba(212,175,55,0.25)]'
                         : isSelected
@@ -2393,7 +2393,7 @@ export function AdminMilestones({
         {/* RIGHT COLUMN: LIVE PORTFOLIO PREVIEW */}
         <div
           style={{ width: `${rightPanelWidth}px` }}
-          className="w-full lg:shrink-0 bg-[#080e1b] border border-white/[0.08] rounded-2xl p-5 sticky top-24 max-h-[calc(100vh-120px)] flex flex-col overflow-y-auto shadow-sm"
+          className="admin-milestone-preview-panel w-full lg:shrink-0 bg-[#080e1b] border border-white/[0.08] rounded-2xl p-5 sticky top-24 max-h-[calc(100vh-120px)] flex flex-col overflow-y-auto shadow-sm"
         >
           {/* Live Preview Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
@@ -2435,7 +2435,7 @@ export function AdminMilestones({
                         setActiveEditorId(m.id);
                       }}
                       onDoubleClick={() => openEditWizard(m.id)}
-                      className={`relative group p-3.5 rounded-xl transition-all cursor-pointer ${
+                      className={`admin-milestone-preview-item relative group p-3.5 rounded-xl transition-all cursor-pointer ${
                         isCurrentActive ? 'bg-yellow-500/10 border border-yellow-500/35 shadow-md' : 'hover:bg-white/[0.03]'
                       }`}
                       title="Click to select • Double-click to edit"

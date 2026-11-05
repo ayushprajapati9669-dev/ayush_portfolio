@@ -743,9 +743,13 @@ export function Header() {
                 className="mobile-nav-toggle"
                 onClick={() => {
                   playTick();
-                  setMobileMenuOpen(true);
+                  if (isAdmin) {
+                    window.dispatchEvent(new CustomEvent('admin-sidebar-toggle'));
+                  } else {
+                    setMobileMenuOpen(true);
+                  }
                 }}
-                aria-label="Open navigation menu"
+                aria-label={isAdmin ? 'Open admin navigation' : 'Open navigation menu'}
               >
                 <i className="fa-solid fa-bars" />
               </button>

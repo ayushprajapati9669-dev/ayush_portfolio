@@ -5,6 +5,7 @@ export function AdminSidebar({
   activeTab,
   onSelectTab,
   isCollapsed,
+  isMobileOpen = false,
   onToggleCollapse,
   counts,
   profile,
@@ -122,7 +123,7 @@ export function AdminSidebar({
 
   return (
     <aside
-      className={`admin-sidebar ${isCollapsed ? 'focus-mode' : ''}`}
+      className={`admin-sidebar ${isCollapsed ? 'focus-mode' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}
       id="adminSidebar"
     >
       {/* Header with Logo and Focus Toggle */}

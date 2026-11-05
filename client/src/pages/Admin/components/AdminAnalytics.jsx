@@ -487,7 +487,7 @@ export function AdminAnalytics({ showToast }) {
   ];
 
   return (
-    <section className="space-y-6" aria-labelledby="telemetry-title">
+    <section className="admin-analytics-page space-y-6" aria-labelledby="telemetry-title">
       <header className="flex flex-col gap-4 border-b border-white/[0.08] pb-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#d4af37]/80">
@@ -554,7 +554,7 @@ export function AdminAnalytics({ showToast }) {
         </div>
       )}
 
-      <div className="flex items-start gap-3 rounded-2xl border border-[#d4af37]/15 bg-[linear-gradient(110deg,rgba(212,175,55,0.09),rgba(12,15,20,0.82)_45%,rgba(12,15,20,0.55))] p-4 sm:p-5">
+      <div className="admin-analytics-insight flex items-start gap-3 rounded-2xl border border-[#d4af37]/15 bg-[linear-gradient(110deg,rgba(212,175,55,0.09),rgba(12,15,20,0.82)_45%,rgba(12,15,20,0.55))] p-4 sm:p-5">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#d4af37]/20 bg-[#d4af37]/[0.08] text-[#e4c66b]">
           <Icon name="sparkles" className="h-[18px] w-[18px]" />
         </span>
@@ -579,7 +579,7 @@ export function AdminAnalytics({ showToast }) {
           {metricCards.map((metric) => (
             <article
               key={metric.label}
-              className={`group flex min-h-[144px] flex-col justify-between rounded-2xl border border-white/[0.085] bg-[#0b0e13] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition duration-200 hover:-translate-y-0.5 ${metric.hover}`}
+              className={`admin-analytics-metric-card group flex min-h-[144px] flex-col justify-between rounded-2xl border border-white/[0.085] bg-[#0b0e13] p-4 shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition duration-200 hover:-translate-y-0.5 ${metric.hover}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>

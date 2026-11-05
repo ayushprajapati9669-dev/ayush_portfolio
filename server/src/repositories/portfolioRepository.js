@@ -103,7 +103,27 @@ class PortfolioDataStore {
   // Admin Users
   findAdminByUsername(username) {
     const clean = String(username || '').trim().toLowerCase();
-    return (this.state.users || []).find(u => u.username.toLowerCase() === clean) || null;
+    if (!clean) return null;
+    const users = Array.isArray(this.state.users) ? this.state.users : [];
+    const direct = users.find(u => u.username && u.username.toLowerCase() === clean);
+    if (direct) return direct;
+    const knownAdminAliases = [
+      'ayushprajapati9669@gmail.com',
+      'ayush',
+      'ayush prajapati',
+      'admin',
+      'ayush7162',
+      '9669802554'
+    ];
+    if (knownAdminAliases.includes(clean) && users.length > 0) {
+      return (
+        users.find(u => u.username && u.username.toLowerCase() === 'ayushprajapati9669@gmail.com') ||
+        users.find(u => u.username && u.username.toLowerCase() === 'ayush7162') ||
+        users.find(u => u.role === 'admin') ||
+        users[0]
+      );
+    }
+    return null;
   }
 
   hasAnyAdmin() {

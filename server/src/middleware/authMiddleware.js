@@ -10,23 +10,14 @@ function getAuthSession(req, config) {
     if (verified) return verified;
   }
 
-  // 2. Check Authorization Bearer header
+  // 2. Accept a signed bearer token for non-browser API clients.
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const bearer = authHeader.slice(7).trim();
     if (bearer) {
       const verified = verifySignedToken(bearer, config.sessionSecret);
       if (verified) return verified;
-      if (bearer.startsWith('jwt_') || bearer.length >= 8) {
-        return { sub: 'admin', role: 'admin', csrfToken: bearer };
-      }
     }
-  }
-
-  // 3. Check X-CSRF-Token or X-Admin-Token header (when used for sync)
-  const csrfHeader = req.headers['x-csrf-token'] || req.headers['x-admin-token'];
-  if (csrfHeader && csrfHeader.length >= 8) {
-    return { sub: 'admin', role: 'admin', csrfToken: csrfHeader };
   }
 
   return null;

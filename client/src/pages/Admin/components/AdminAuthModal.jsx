@@ -125,7 +125,11 @@ export function AdminAuthModal({
     }
 
     playTick();
-    await resetAdminPassword(forgotForm.newPass);
+    const result = await resetAdminPassword(forgotForm.newPass);
+    if (!result?.ok) {
+      setAuthErrors({ banner: result?.error || 'Password recovery is unavailable. Contact the site administrator.' });
+      return;
+    }
     setForgotForm({ email: '', phone: '', newPass: '', confirmPass: '' });
     setAuthErrors({});
     setAuthMode('login');
@@ -133,7 +137,7 @@ export function AdminAuthModal({
   };
 
   return (
-    <div className="mx-auto max-w-md px-4 pt-32 pb-24">
+    <div className="admin-auth-content mx-auto max-w-md px-4">
       <div ref={cardRef} className="glass-card-admin rounded-3xl p-7 sm:p-9 space-y-6 border border-yellow-400/30">
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-2 rounded-full bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 font-mono text-[10px] font-bold text-yellow-400">

@@ -59,8 +59,13 @@ export function AdminSecurity({
 
     setIsUpdating(true);
     playTick();
-    await resetAdminPassword(form.newPass);
+    const result = await resetAdminPassword(form.newPass, form.curPass);
     setIsUpdating(false);
+
+    if (!result?.ok) {
+      setErrors({ curPass: result?.error || 'Password could not be updated.' });
+      return;
+    }
 
     setForm({ curPass: '', newPass: '', confirmPass: '' });
     setErrors({});
@@ -68,7 +73,7 @@ export function AdminSecurity({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="admin-security-page space-y-6">
       {/* 0. TOP ACTION BANNER — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>

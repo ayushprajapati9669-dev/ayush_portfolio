@@ -8,6 +8,7 @@ import { playTick } from '../../utils/audio';
 // Admin-specific CSS (only loaded when admin page is visited)
 import '../../styles/admin.css';
 import '../../styles/pages/admin-milestones.css';
+import '../../styles/admin-reference-theme.css';
 
 // Subcomponents
 import { AdminSidebar } from './components/AdminSidebar';
@@ -53,9 +54,21 @@ export function AdminPage() {
   const [activeTab, setActiveTab] = useState(getInitialTab);
 
   const contentAreaRef = useRef(null);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // Trigger smooth scroll animations on tab change
   useScrollAnimation(activeTab);
+
+  useEffect(() => {
+    document.body.classList.add('is-admin-route');
+    return () => document.body.classList.remove('is-admin-route');
+  }, []);
+
+  useEffect(() => {
+    const handleSidebarToggle = () => setIsMobileSidebarOpen((open) => !open);
+    window.addEventListener('admin-sidebar-toggle', handleSidebarToggle);
+    return () => window.removeEventListener('admin-sidebar-toggle', handleSidebarToggle);
+  }, []);
 
   // Smooth GSAP tab transition
   useEffect(() => {
@@ -91,6 +104,7 @@ export function AdminPage() {
   }, [location.pathname, searchParams]);
 
   const handleSelectTab = (tabId, route) => {
+    setIsMobileSidebarOpen(false);
     setActiveTab(tabId);
     if (route) {
       navigate(route);
@@ -101,7 +115,7 @@ export function AdminPage() {
     } else {
       navigate(tabId === 'dashboard' ? '/admin' : `/admin?tab=${tabId}`);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   // Manage body classes for global navbar desktop offset
@@ -125,11 +139,13 @@ export function AdminPage() {
   // If not authenticated, render login / forgot password modal
   if (!session) {
     return (
-      <AdminAuthModal
-        loginAdmin={loginAdmin}
-        resetAdminPassword={resetAdminPassword}
-        showToast={showToast}
-      />
+      <div className="admin-auth-screen">
+        <AdminAuthModal
+          loginAdmin={loginAdmin}
+          resetAdminPassword={resetAdminPassword}
+          showToast={showToast}
+        />
+      </div>
     );
   }
 
@@ -199,7 +215,7 @@ export function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen flex text-white relative">
+    <div className="admin-workspace min-h-screen flex text-white relative">
       <SEO
         title="Admin Management Studio & Milestones CMS"
         description="Administrative management studio for Ayush Prajapati's developer portfolio, managing career milestones, projects, skills, and verified credentials."
@@ -210,12 +226,21 @@ export function AdminPage() {
         activeTab={activeTab}
         onSelectTab={handleSelectTab}
         isCollapsed={isSidebarCollapsed}
+        isMobileOpen={isMobileSidebarOpen}
         onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
         counts={counts}
         profile={appState.profile}
         onLogout={logoutAdmin}
         onOpenCategoryModal={handleOpenCategoryModal}
       />
+      {isMobileSidebarOpen && (
+        <button
+          type="button"
+          className="admin-sidebar-backdrop"
+          onClick={() => setIsMobileSidebarOpen(false)}
+          aria-label="Close admin navigation"
+        />
+      )}
 
       {/* 2. Main Wrapper */}
       <div

@@ -7,6 +7,10 @@ async function handleAuthRoutes(req, res, pathname, authController) {
     authController.logout(req, res);
     return true;
   }
+  if (req.method === 'POST' && pathname === '/api/auth/password') {
+    await authController.changePassword(req, res);
+    return true;
+  }
   if (req.method === 'GET' && pathname === '/api/auth/session') {
     authController.session(req, res);
     return true;

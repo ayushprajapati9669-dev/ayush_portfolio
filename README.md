@@ -21,17 +21,17 @@ An art-directed, full-stack developer portfolio built for **Ayush Prajapati** (C
   - Full CRUD for Projects, Certificates, Skills, Profile & Resume, Hero Portrait, Contact Messages, and Password/Database settings with Cloudinary image upload support.
   - Server-side `scrypt` password hashing, `HttpOnly; SameSite=Strict` session cookies, `X-CSRF-Token` verification, brute-force rate limiting (`429`), input sanitization, and magic-byte image verification.
 
-## 2. Refactored Folder Architecture
+## 2. Documentation
 
-See [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) for the complete directory tree, [`docs/API.md`](./docs/API.md) for API endpoint documentation, and [`docs/SETUP.md`](./docs/SETUP.md) for local setup instructions.
+See [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) for the current structure, [`docs/API.md`](./docs/API.md) for API routes, [`docs/SETUP.md`](./docs/SETUP.md) for local setup, and [`docs/VERIFICATION.md`](./docs/VERIFICATION.md) for code review findings. Older detailed capability and security claims in this README may not match the current implementation; use the source-linked docs and verification notes as the reference.
 
 ## 3. Quick Start
 
 ```bash
-# Run backend & security test suite
+# Run backend verification suite
 npm test
 
-# Seed portfolio database
+# Reset local portfolio data to seed values
 npm run seed
 
 # Start backend server (http://localhost:6000)
@@ -40,3 +40,5 @@ npm run dev:server
 # Start frontend dev server (http://localhost:5174)
 npm run dev:client
 ```
+
+For a local production build, run `npm run build:client`. [`docs/VERIFICATION.md`](./docs/VERIFICATION.md) records the reviewed authentication fixes and verification coverage.

@@ -398,11 +398,11 @@ export function AdminMessages({
   };
 
   return (
-    <div className="space-y-6 flex flex-col min-h-[700px]">
+    <div className="admin-messages-root space-y-6 flex flex-col min-h-[700px]">
       {/* 1. Top KPI Stat Cards (Matching AdminProjects & AdminMilestones) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
         {/* Total Inquiries */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-yellow-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
+        <div className="admin-messages-stat-card bg-[#0b1322]/90 border border-white/[0.08] hover:border-yellow-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-yellow-400/80 transition-colors">
               TOTAL INQUIRIES
@@ -417,7 +417,7 @@ export function AdminMessages({
         </div>
 
         {/* Action Required / Unread */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-amber-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
+        <div className="admin-messages-stat-card bg-[#0b1322]/90 border border-white/[0.08] hover:border-amber-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-amber-400/80 transition-colors">
               ACTION REQUIRED
@@ -433,7 +433,7 @@ export function AdminMessages({
         </div>
 
         {/* Replied Threads */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-emerald-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
+        <div className="admin-messages-stat-card bg-[#0b1322]/90 border border-white/[0.08] hover:border-emerald-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-emerald-400/80 transition-colors">
               REPLIED THREADS
@@ -448,7 +448,7 @@ export function AdminMessages({
         </div>
 
         {/* Response Rate */}
-        <div className="bg-[#0b1322]/90 border border-white/[0.08] hover:border-purple-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
+        <div className="admin-messages-stat-card bg-[#0b1322]/90 border border-white/[0.08] hover:border-purple-500/30 rounded-2xl p-4 flex items-center justify-between transition-all shadow-sm group">
           <div>
             <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1 group-hover:text-purple-400/80 transition-colors">
               RESPONSE RATE
@@ -521,19 +521,19 @@ export function AdminMessages({
       {/* 3. Split-View Container */}
       <div
         ref={splitContainerRef}
-        className="flex-1 flex overflow-hidden rounded-2xl border border-white/10 bg-[#080d17]/80 backdrop-blur-xl shadow-2xl relative min-h-[580px] h-[calc(100vh-280px)]"
+        className="admin-messages-workspace flex-1 flex overflow-hidden rounded-2xl border border-white/10 bg-[#080d17]/80 backdrop-blur-xl shadow-2xl relative min-h-[580px] h-[calc(100vh-280px)]"
       >
         {/* =========================================================================
             LEFT PANEL: Message List with Filter Tabs & Date Groups
             ========================================================================= */}
         <div
-          className={`flex flex-col bg-[#070c14]/90 border-r border-white/5 overflow-hidden shrink-0 relative transition-all ${
+          className={`admin-messages-list-panel flex flex-col bg-[#070c14]/90 border-r border-white/5 overflow-hidden shrink-0 relative transition-all ${
             mobileView === 'detail' ? 'hidden md:flex' : 'flex w-full md:w-auto'
           }`}
           style={{ width: window.innerWidth >= 768 ? `${leftPanelWidth}px` : '100%' }}
         >
           {/* Inbox Filter Header */}
-          <div className="p-3 border-b border-white/10 bg-[#070c14]/95 flex items-center justify-between gap-2 shrink-0 flex-wrap">
+          <div className="admin-messages-filter-header p-3 border-b border-white/10 bg-[#070c14]/95 flex items-center justify-between gap-2 shrink-0 flex-wrap">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-white tracking-wide">Inbox</span>
               {unreadCount > 0 && (
@@ -551,7 +551,7 @@ export function AdminMessages({
             </div>
 
             {/* Filter Toggle Pills */}
-            <div className="flex items-center rounded-lg bg-black/40 border border-white/10 p-0.5">
+            <div className="admin-messages-filter-pills flex items-center rounded-lg bg-black/40 border border-white/10 p-0.5">
               <button
                 type="button"
                 onClick={() => { playTick(); setFilter('all'); }}
@@ -604,7 +604,7 @@ export function AdminMessages({
           {/* Mail List Scroll Area */}
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             {groupedMessages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full p-8 text-center text-slate-500">
+              <div className="admin-messages-empty-list flex flex-col items-center justify-center h-full p-8 text-center text-slate-500">
                 <i className="fa-regular fa-envelope-open text-3xl mb-2 opacity-40" />
                 <p className="text-xs">No messages match your search or filters.</p>
               </div>
@@ -612,7 +612,7 @@ export function AdminMessages({
               groupedMessages.map(([groupName, groupItems]) => (
                 <div key={groupName}>
                   {/* Sticky Date Group Header */}
-                  <div className="sticky top-0 z-10 px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-[#070c14]/95 backdrop-blur-md border-b border-white/5 flex items-center justify-between">
+                  <div className="admin-messages-date-header sticky top-0 z-10 px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-[#070c14]/95 backdrop-blur-md border-b border-white/5 flex items-center justify-between">
                     <span>{groupName}</span>
                     <span className="text-[9px] text-slate-500 font-mono">{groupItems.length}</span>
                   </div>
@@ -755,13 +755,13 @@ export function AdminMessages({
             RIGHT PANEL: Message Reader View & Interactive Reply Thread
             ========================================================================= */}
         <div
-          className={`flex-1 bg-[#0a111c] flex flex-col overflow-hidden relative ${
+          className={`admin-messages-reader-panel flex-1 bg-[#0a111c] flex flex-col overflow-hidden relative ${
             mobileView === 'list' ? 'hidden md:flex' : 'flex w-full'
           }`}
         >
           {!activeMail ? (
-            <div className="flex flex-col items-center justify-center h-full p-8 text-center text-slate-500">
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-3">
+            <div className="admin-messages-empty-state flex flex-col items-center justify-center h-full p-8 text-center text-slate-500">
+              <div className="admin-messages-empty-icon w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-3">
                 <i className="fa-regular fa-envelope-open text-2xl text-slate-600" />
               </div>
               <h3 className="text-white font-medium text-sm">No message selected</h3>
@@ -770,7 +770,7 @@ export function AdminMessages({
           ) : (
             <div className="flex flex-col h-full animate-in fade-in duration-200">
               {/* Reader Header Actions */}
-              <div className="h-14 px-4 sm:px-6 border-b border-white/10 flex items-center justify-between bg-[#080d17]/80 backdrop-blur-md shrink-0">
+              <div className="admin-messages-reader-header h-14 px-4 sm:px-6 border-b border-white/10 flex items-center justify-between bg-[#080d17]/80 backdrop-blur-md shrink-0">
                 <div className="flex items-center gap-2">
                   {/* Mobile Back Button */}
                   <button

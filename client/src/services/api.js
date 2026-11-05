@@ -57,9 +57,7 @@ export async function syncStateToMongoBackend(appState, sessionToken) {
       headers: {
         'Content-Type': 'application/json',
         ...(token ? {
-          'X-CSRF-Token': token,
-          'Authorization': `Bearer ${token}`,
-          'X-Admin-Token': token
+          'X-CSRF-Token': token
         } : {})
       },
       body: JSON.stringify(appState)

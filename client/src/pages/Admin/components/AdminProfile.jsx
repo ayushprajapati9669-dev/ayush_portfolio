@@ -214,7 +214,7 @@ export function AdminProfile({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="admin-profile-page space-y-6 animate-in fade-in duration-300">
       {/* Top Action Banner — consistent with all other admin tabs */}
       <div className="admin-proj-top-banner">
         <div>
@@ -261,7 +261,7 @@ export function AdminProfile({
             ========================================================================= */}
         <div className="xl:col-span-4 xl:sticky xl:top-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-white flex items-center gap-2 uppercase tracking-wider font-mono">
+            <h3 className="admin-profile-preview-heading text-xs font-bold text-white flex items-center gap-2 uppercase tracking-wider font-mono">
               <i className="fa-solid fa-mobile-screen text-yellow-400" />
               <span>Live Rendering</span>
             </h3>
@@ -869,9 +869,9 @@ export function AdminProfile({
           </div>
 
           {/* 6. DOCKED ACTION BAR (Fixed at bottom of right panel, never overlaps inputs) */}
-          <div className="shrink-0 pt-3 pb-1 border-t border-white/10 bg-[#0a1118]/95 backdrop-blur-md z-20 shadow-[0_-12px_24px_rgba(0,0,0,0.5)]">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-xs font-mono w-full sm:w-auto">
+          <div className="admin-profile-action-bar shrink-0 pt-3 pb-1 border-t border-white/10 bg-[#0a1118]/95 backdrop-blur-md z-20 shadow-[0_-12px_24px_rgba(0,0,0,0.5)]">
+            <div className="admin-profile-action-content flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="admin-profile-action-status flex items-center gap-2 text-xs font-mono w-full sm:w-auto">
                 {isDirty ? (
                   <span className="flex items-center gap-1.5 text-amber-400 font-semibold bg-amber-500/10 border border-amber-500/25 px-3 py-1.5 rounded-xl">
                     <i className="fa-solid fa-circle-exclamation animate-pulse text-xs" />
@@ -883,7 +883,7 @@ export function AdminProfile({
                     <span>All changes synced & live</span>
                   </span>
                 )}
-                <span className="hidden lg:inline text-[11px] text-slate-500 font-mono">
+                <span className="admin-profile-action-note hidden lg:inline text-[11px] text-slate-500 font-mono">
                   · Updates reflected in simulation
                 </span>
               </div>
@@ -892,7 +892,7 @@ export function AdminProfile({
                 type="button"
                 onClick={handleSaveProfile}
                 disabled={isSaving}
-                className="w-full sm:w-auto sm:min-w-[280px] flex items-center justify-center gap-2.5 bg-gradient-to-r from-yellow-400 via-sky-400 to-yellow-500 hover:from-yellow-300 hover:to-sky-400 text-black font-extrabold px-6 py-3.5 rounded-xl shadow-xl shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide cursor-pointer"
+                className="admin-profile-publish-button w-full sm:w-auto sm:min-w-[280px] flex items-center justify-center gap-2.5 bg-gradient-to-r from-yellow-400 via-sky-400 to-yellow-500 hover:from-yellow-300 hover:to-sky-400 text-black font-extrabold px-6 py-3.5 rounded-xl shadow-xl shadow-cyan-500/25 hover:shadow-cyan-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide cursor-pointer"
               >
                 {isSaving ? (
                   <>

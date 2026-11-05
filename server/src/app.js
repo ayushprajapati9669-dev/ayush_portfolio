@@ -50,24 +50,6 @@ function createPortfolioServer(customOptions = {}) {
         return fs.createReadStream(filePath).pipe(res);
       }
 
-      if (req.method === 'POST' && pathname === '/api/admin/optimize-asset') {
-        let body = '';
-        req.on('data', (chunk) => { body += chunk; });
-        req.on('end', () => {
-          try {
-            const { filename, base64 } = JSON.parse(body);
-            const targetPath = path.resolve(__dirname, '../../client/public/images', filename);
-            const data = base64.replace(/^data:image\/\w+;base64,/, '');
-            fs.writeFileSync(targetPath, Buffer.from(data, 'base64'));
-            const size = fs.statSync(targetPath).size;
-            return sendJson(res, 200, { success: true, filename, size });
-          } catch (e) {
-            return sendJson(res, 500, { error: e.message });
-          }
-        });
-        return;
-      }
-
       const handled = await dispatchApiRoutes(req, res, pathname, parsedUrl, controllers, config);
       if (handled) return;
 

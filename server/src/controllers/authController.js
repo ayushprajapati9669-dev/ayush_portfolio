@@ -1,6 +1,6 @@
 const { readJsonBody, sendJson } = require('../utils/httpUtils');
 const { sanitizeText } = require('../validators/portfolioValidators');
-const { verifyPassword, createSignedToken, generateCsrfToken } = require('../services/cryptoService');
+const { hashPassword, verifyPassword, createSignedToken, generateCsrfToken } = require('../services/cryptoService');
 const { getAuthSession } = require('../middleware/authMiddleware');
 
 function createAuthController({ store, config, loginLimiter }) {
@@ -26,6 +26,7 @@ function createAuthController({ store, config, loginLimiter }) {
         return sendJson(res, 401, { error: 'Invalid username or password.' });
       }
       store.recordAdminLogin(adminUser.username);
+      loginLimiter.resetKey(clientIp);
       const csrfToken = generateCsrfToken();
       const sessionPayload = {
         sub: adminUser.username,
@@ -56,6 +57,30 @@ function createAuthController({ store, config, loginLimiter }) {
         'argon_session=; HttpOnly; Path=/; SameSite=Strict; Max-Age=0'
       );
       return sendJson(res, 200, { authenticated: false, message: 'Logged out.' });
+    },
+
+    async changePassword(req, res) {
+      const session = getAuthSession(req, config);
+      const csrfToken = req.headers['x-csrf-token'];
+      if (!session || session.role !== 'admin') {
+        return sendJson(res, 401, { error: 'Authentication required.' });
+      }
+      if (!csrfToken || csrfToken !== session.csrfToken) {
+        return sendJson(res, 403, { error: 'Invalid or missing CSRF token.' });
+      }
+      const body = await readJsonBody(req);
+      const currentPassword = typeof body?.currentPassword === 'string' ? body.currentPassword : '';
+      const newPassword = typeof body?.newPassword === 'string' ? body.newPassword : '';
+      const adminUser = store.findAdminByUsername(session.sub);
+      if (!adminUser || !verifyPassword(currentPassword, adminUser.passwordHash)) {
+        return sendJson(res, 401, { error: 'Current password is incorrect.' });
+      }
+      try {
+        store.upsertAdminUser(adminUser.username, hashPassword(newPassword));
+      } catch (err) {
+        return sendJson(res, 400, { error: err.message });
+      }
+      return sendJson(res, 200, { updated: true });
     },
 
     session(req, res) {

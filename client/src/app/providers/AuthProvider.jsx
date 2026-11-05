@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { SESSION_KEY } from '../../services/defaultPortfolioState';
-import { setCsrfToken } from '../../services/api';
-import { computePasswordHash, verifyAdminPassword } from '../../utils/crypto';
+import { apiRequest, setCsrfToken } from '../../services/api';
 import { usePortfolio } from './ThemeProvider';
 
 const AuthContext = createContext(null);
@@ -26,53 +25,19 @@ export function AuthProvider({ children }) {
   });
 
   const loginAdmin = useCallback(async (usernameInput, passwordInput) => {
-    const cfg = appState.adminConfig || {};
-    const now = Date.now();
-    const isMasterPass = passwordInput === 'admin123' || passwordInput === 'Ayush@2026';
-    if (!isMasterPass && cfg.lockoutUntil && now < cfg.lockoutUntil) {
-      const secs = Math.ceil((cfg.lockoutUntil - now) / 1000);
-      return {
-        ok: false,
-        lockoutError: `Security lockout active due to multiple failed attempts. Please wait ${secs}s.`
-      };
-    }
-
-    const allowedUsers = [
-      String(cfg.username || 'ayushprajapati9669@gmail.com').toLowerCase(),
-      'ayushprajapati9669@gmail.com',
-      'ayush',
-      'ayush prajapati',
-      'admin',
-      '9669802554'
-    ];
-    const isUserValid = allowedUsers.includes(String(usernameInput || '').trim().toLowerCase());
-    const isPassValid = isMasterPass || (await verifyAdminPassword(passwordInput, cfg));
-
-    if (!isUserValid || !isPassValid) {
-      updateAppState((prev) => {
-        const attempts = (prev.adminConfig?.failedAttempts || 0) + 1;
-        const locked = attempts >= 5 ? Date.now() + 30 * 1000 : 0;
-        return {
-          ...prev,
-          adminConfig: {
-            ...prev.adminConfig,
-            failedAttempts: attempts >= 5 ? 0 : attempts,
-            lockoutUntil: locked
-          }
-        };
+    let response;
+    try {
+      response = await apiRequest('/api/auth/login', {
+        method: 'POST',
+        body: { username: usernameInput, password: passwordInput }
       });
-      return {
-        ok: false,
-        userError: !isUserValid ? 'Unrecognized admin email/username.' : '',
-        passError: !isPassValid ? 'Incorrect password. Only authorized admin can sign in.' : ''
-      };
+    } catch (err) {
+      return { ok: false, lockoutError: err.status === 429 ? err.message : '', passError: err.status === 401 ? err.message : '' };
     }
-
-    const csrfToken = 'jwt_' + Math.random().toString(36).slice(2);
+    const csrfToken = response.csrfToken;
     const nextSession = {
-      username: 'Ayush Prajapati',
-      role: 'admin',
-      token: csrfToken,
+      username: response.user?.username || usernameInput,
+      role: response.user?.role || 'admin',
       csrfToken,
       exp: Date.now() + 12 * 3600 * 1000
     };
@@ -93,9 +58,10 @@ export function AuthProvider({ children }) {
     }), csrfToken);
     showToast('Welcome back, Ayush! Signed in to Admin CMS.');
     return { ok: true };
-  }, [appState.adminConfig, updateAppState, showToast]);
+  }, [showToast]);
 
-  const logoutAdmin = useCallback(() => {
+  const logoutAdmin = useCallback(async () => {
+    try { await apiRequest('/api/auth/logout', { method: 'POST' }); } catch (_err) {}
     setSession(null);
     setCsrfToken(null);
     try {
@@ -106,23 +72,16 @@ export function AuthProvider({ children }) {
     showToast('Signed out of Admin CMS.');
   }, [showToast]);
 
-  const resetAdminPassword = useCallback(async (newPassword) => {
-    const newHash = await computePasswordHash(newPassword);
-    updateAppState((prev) => ({
-      ...prev,
-      adminConfig: {
-        ...prev.adminConfig,
-        passwordHash: newHash,
-        passwordFnvFallback: '',
-        failedAttempts: 0,
-        lockoutUntil: 0
-      }
-    }), session?.token);
-  }, [updateAppState, session?.token]);
+  const resetAdminPassword = useCallback(async (newPassword, currentPassword = '') => {
+    try {
+      await apiRequest('/api/auth/password', { method: 'POST', body: { currentPassword, newPassword } });
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err.message };
+    }
+  }, []);
 
-  const checkCurrentPassword = useCallback(async (plainPassword) => {
-    return await verifyAdminPassword(plainPassword, appState.adminConfig || {});
-  }, [appState.adminConfig]);
+  const checkCurrentPassword = useCallback(async () => Boolean(session), [session]);
 
   return (
     <AuthContext.Provider

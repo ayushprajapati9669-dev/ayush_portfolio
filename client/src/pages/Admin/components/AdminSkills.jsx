@@ -966,8 +966,8 @@ export function AdminSkills({
         </div>
 
         {/* RIGHT COLUMN: Current Skills List */}
-        <div className="lg:col-span-7 glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-4 relative flex flex-col">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <div className="admin-skills-list-panel lg:col-span-7 glass-card-admin rounded-3xl border border-white/10 p-5 sm:p-6 space-y-4 relative flex flex-col">
+          <div className="admin-skills-list-header flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2.5">
               <h3 className="text-base font-bold text-white">Current Skills</h3>
               <span className="rounded-full border border-yellow-400/30 bg-yellow-500/10 px-2.5 py-0.5 font-mono text-[11px] text-yellow-400">
