@@ -248,6 +248,7 @@ export function CertificateLightboxModal() {
     >
       <div
         ref={modalBoxRef}
+        data-lenis-prevent="true"
         className="w-full max-w-5xl max-h-[94vh] flex flex-col rounded-3xl border border-yellow-500/30 bg-[#0a0f16] shadow-2xl overflow-hidden"
       >
         {/* Header Bar */}

@@ -117,6 +117,17 @@ export function AdminSidebar({
   useEffect(() => {
     const timer = setTimeout(() => {
       moveHighlight();
+      const nav = navRef.current;
+      if (nav) {
+        const activeEl = nav.querySelector(".nav-item.active");
+        if (activeEl) {
+          const navRect = nav.getBoundingClientRect();
+          const elRect = activeEl.getBoundingClientRect();
+          if (elRect.top < navRect.top || elRect.bottom > navRect.bottom) {
+            activeEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          }
+        }
+      }
     }, 120);
     return () => clearTimeout(timer);
   }, [activeTab, isCollapsed, searchQuery]);
@@ -125,6 +136,7 @@ export function AdminSidebar({
     <aside
       className={`admin-sidebar ${isCollapsed ? 'focus-mode' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}
       id="adminSidebar"
+      data-lenis-prevent="true"
     >
       {/* Header with Logo and Focus Toggle */}
       <div className="sidebar-header">
@@ -191,6 +203,7 @@ export function AdminSidebar({
         className="sidebar-nav"
         id="sidebarNav"
         ref={navRef}
+        data-lenis-prevent="true"
         onMouseLeave={() => moveHighlight()}
       >
         <div className="sidebar-highlight" ref={highlightRef} />

@@ -39,6 +39,7 @@
   flex-direction: column;
   box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
   transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overscroll-behavior: contain;
 }
 
 .admin-sidebar.focus-mode {
@@ -257,6 +258,7 @@
 /* Sidebar Nav */
 .sidebar-nav {
   flex-grow: 1;
+  min-height: 0;
   padding: 8px 12px 16px 12px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -265,6 +267,8 @@
   gap: 4px;
   position: relative;
   scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-nav::-webkit-scrollbar {
@@ -2805,6 +2809,18 @@
 }
 
 /* Two-Column Editor Layout */
+.hero-preview-column {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+}
+
+@media (max-width: 1100px) {
+  .hero-preview-column {
+    position: static;
+  }
+}
+
 .hero-editor-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 460px;
@@ -3350,6 +3366,8 @@
   max-height: 320px;
   overflow-y: auto;
   padding-right: 4px;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 600px) {

@@ -36,14 +36,20 @@ export function SmoothScrollProvider({ children }) {
   const lenisRef = useRef(null);
   const [lenisInstance, setLenisInstance] = useState(null);
 
+  // Administrative CMS workspace and login screen require native scrolling for nested flex/grid panes
+  const isAdmin = Boolean(
+    location.pathname &&
+    (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
+  );
+
   useEffect(() => {
-    // Respect user's motion preference
+    // Respect user's motion preference or bypass Lenis on Admin routes to preserve 100% native nested scroll
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (prefersReducedMotion) {
+    if (prefersReducedMotion || isAdmin) {
       if (lenisRef.current) {
         lenisRef.current.destroy();
         lenisRef.current = null;
@@ -52,7 +58,7 @@ export function SmoothScrollProvider({ children }) {
       return;
     }
 
-    // Initialize Lenis smooth scroll with luxurious physical interpolation across both Public & Admin
+    // Initialize Lenis smooth scroll on public showcase pages with luxury physics and nested scroll protection
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential curve
@@ -62,7 +68,18 @@ export function SmoothScrollProvider({ children }) {
       wheelMultiplier: 0.95,
       touchMultiplier: 1.5,
       infinite: false,
-      autoRaf: false
+      autoRaf: false,
+      prevent: (node) => {
+        if (!node) return false;
+        return (
+          node.hasAttribute?.('data-lenis-prevent') ||
+          Boolean(
+            node.closest?.(
+              '[data-lenis-prevent], .sidebar-nav, .admin-sidebar, .cmd-results, .hero-media-grid, .modal-box, .premium-modal, .admin-modal-box, select, textarea, input[type="range"]'
+            )
+          )
+        );
+      }
     });
 
     lenisRef.current = lenis;
@@ -84,7 +101,7 @@ export function SmoothScrollProvider({ children }) {
       lenisRef.current = null;
       setLenisInstance(null);
     };
-  }, []);
+  }, [isAdmin]);
 
   // Route transition scroll reset & ScrollTrigger recalculation
   useEffect(() => {

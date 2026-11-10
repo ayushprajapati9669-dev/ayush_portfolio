@@ -369,6 +369,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
     >
       <div
         ref={modalRef}
+        data-lenis-prevent="true"
         className="cmd-modal w-full max-w-2xl rounded-2xl border border-yellow-500/30 bg-[#090c13] shadow-2xl shadow-yellow-500/10 overflow-hidden flex flex-col max-h-[82vh]"
         onClick={(e) => e.stopPropagation()}
       >
@@ -434,7 +435,8 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
         </div>
 
         {/* Results List */}
-        <div className="cmd-results flex-1 overflow-y-auto p-2 space-y-1 max-h-[50vh] scrollbar-thin" ref={resultsRef}>
+        <div data-lenis-prevent="true"
+        className="cmd-results flex-1 overflow-y-auto p-2 space-y-1 max-h-[50vh] scrollbar-thin" ref={resultsRef}>
           {filteredCommands.length === 0 ? (
             <div className="py-12 px-4 text-center text-slate-400 text-xs font-mono">
               <i className="fa-solid fa-compass text-3xl text-slate-600 mb-3 block" />

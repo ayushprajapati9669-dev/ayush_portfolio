@@ -909,7 +909,7 @@ export function AdminHeroPortrait({
             </div>
 
             {/* ================= RIGHT SIDE: LIVE MOCKUP PREVIEW ================= */}
-            <div>
+            <div className="hero-preview-column">
               <div className="hero-preview-header">
                 <span className="text-xs font-mono text-slate-400 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -1049,7 +1049,7 @@ export function AdminHeroPortrait({
       {/* ================= MODAL 1: CROPPER MODAL ================= */}
       {cropModalOpen && (
         <div className="premium-modal active" onClick={() => setCropModalOpen(false)}>
-          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-box" data-lenis-prevent="true" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title flex items-center gap-2">
                 <i className="fa-solid fa-crop text-yellow-400" />
@@ -1127,7 +1127,7 @@ export function AdminHeroPortrait({
               Select any previously uploaded or preset portrait photo to apply immediately.
             </p>
 
-            <div className="hero-media-grid">
+            <div className="hero-media-grid" data-lenis-prevent="true">
               {mediaLibrary.map((url, idx) => (
                 <img
                   key={idx}
