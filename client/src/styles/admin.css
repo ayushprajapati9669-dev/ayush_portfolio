@@ -4065,3 +4065,40 @@ button[style*="38bdf8"] {
     padding-right: 14px;
   }
 }
+
+
+/* =========================================================================
+   Unified Luxury Animation & Physics System (Matching Public & Admin)
+   ========================================================================= */
+.admin-workspace .stat-card,
+.admin-workspace .kpi-card,
+.admin-workspace .glass-card-admin,
+.admin-workspace .grid > div {
+  transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1), 
+              box-shadow 0.32s cubic-bezier(0.2, 0.9, 0.3, 1), 
+              border-color 0.25s ease,
+              background-color 0.25s ease;
+  will-change: transform, opacity;
+}
+
+.admin-workspace .stat-card:hover,
+.admin-workspace .grid > div:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(250, 204, 21, 0.18);
+}
+
+/* Stagger animation helpers */
+@keyframes fluidFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stagger-in {
+  animation: fluidFadeInUp 0.45s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}

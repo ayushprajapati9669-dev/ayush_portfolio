@@ -19,12 +19,12 @@ export function useScrollAnimation(dependencyKey) {
           el.classList.add('scroll-animated');
           const t = gsap.fromTo(
             el,
-            { opacity: 0, y: 32 },
+            { opacity: 0, y: 28 },
             {
               opacity: 1,
               y: 0,
-              duration: 0.75,
-              delay: (idx % 3) * 0.08,
+              duration: 0.65,
+              delay: (idx % 4) * 0.06,
               ease: 'power3.out',
               clearProps: 'transform,opacity',
               scrollTrigger: {
@@ -37,26 +37,30 @@ export function useScrollAnimation(dependencyKey) {
           if (t.scrollTrigger) triggers.push(t.scrollTrigger);
         });
 
-        // 2. Staggered Children Reveal (Grids / Lists)
-        const staggerContainers = document.querySelectorAll('.scroll-reveal-stagger:not(.scroll-animated)');
+        // 2. Staggered Children Reveal (Grids / Lists / Cards)
+        const staggerContainers = document.querySelectorAll(
+          '.scroll-reveal-stagger:not(.scroll-animated), .stats-grid:not(.scroll-animated), .admin-content-area .grid:not(.scroll-animated)'
+        );
         staggerContainers.forEach((container) => {
           container.classList.add('scroll-animated');
-          const children = container.children;
+          const children = Array.from(container.children).filter(
+            (el) => !el.classList.contains('no-stagger') && el.offsetHeight > 0
+          );
           if (children.length > 0) {
             const t = gsap.fromTo(
               children,
-              { opacity: 0, y: 30, scale: 0.98 },
+              { opacity: 0, y: 24, scale: 0.97 },
               {
                 opacity: 1,
                 y: 0,
                 scale: 1,
-                duration: 0.7,
-                stagger: 0.09,
-                ease: 'back.out(1.15)',
+                duration: 0.55,
+                stagger: 0.05,
+                ease: 'power2.out',
                 clearProps: 'transform,opacity',
                 scrollTrigger: {
                   trigger: container,
-                  start: 'top 88%',
+                  start: 'top 92%',
                   toggleActions: 'play none none none'
                 }
               }
@@ -65,18 +69,18 @@ export function useScrollAnimation(dependencyKey) {
           }
         });
 
-        // 3. Scale Reveal (Banners / Feature Cards)
+        // 3. Scale Reveal (Banners / Feature Cards / Lightbox Previews)
         const scaleBlocks = document.querySelectorAll('.scroll-reveal-scale:not(.scroll-animated)');
         scaleBlocks.forEach((el) => {
           el.classList.add('scroll-animated');
           const t = gsap.fromTo(
             el,
-            { opacity: 0, scale: 0.94, y: 20 },
+            { opacity: 0, scale: 0.94, y: 18 },
             {
               opacity: 1,
               scale: 1,
               y: 0,
-              duration: 0.8,
+              duration: 0.7,
               ease: 'power2.out',
               clearProps: 'transform,opacity',
               scrollTrigger: {
@@ -89,17 +93,17 @@ export function useScrollAnimation(dependencyKey) {
           if (t.scrollTrigger) triggers.push(t.scrollTrigger);
         });
 
-        // 4. Slide-in from Left
+        // 4. Slide-in from Left (Timeline / Headings)
         const leftBlocks = document.querySelectorAll('.scroll-reveal-left:not(.scroll-animated)');
         leftBlocks.forEach((el) => {
           el.classList.add('scroll-animated');
           const t = gsap.fromTo(
             el,
-            { opacity: 0, x: -40 },
+            { opacity: 0, x: -30 },
             {
               opacity: 1,
               x: 0,
-              duration: 0.8,
+              duration: 0.7,
               ease: 'power3.out',
               clearProps: 'transform,opacity',
               scrollTrigger: {
@@ -118,11 +122,11 @@ export function useScrollAnimation(dependencyKey) {
           el.classList.add('scroll-animated');
           const t = gsap.fromTo(
             el,
-            { opacity: 0, x: 40 },
+            { opacity: 0, x: 30 },
             {
               opacity: 1,
               x: 0,
-              duration: 0.8,
+              duration: 0.7,
               ease: 'power3.out',
               clearProps: 'transform,opacity',
               scrollTrigger: {
@@ -139,7 +143,7 @@ export function useScrollAnimation(dependencyKey) {
       } catch (_err) {
         // Fallback if ScrollTrigger is unavailable
       }
-    }, 120);
+    }, 100);
 
     return () => {
       clearTimeout(timer);
@@ -148,3 +152,4 @@ export function useScrollAnimation(dependencyKey) {
   }, [dependencyKey]);
 }
 
+export default useScrollAnimation;

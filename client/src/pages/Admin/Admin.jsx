@@ -67,15 +67,42 @@ export function AdminPage() {
     return () => window.removeEventListener('admin-sidebar-toggle', handleSidebarToggle);
   }, []);
 
-  // Smooth GSAP tab transition
+  // Smooth GSAP tab transition with unified card staggering
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduceMotion && contentAreaRef.current) {
+      gsap.killTweensOf(contentAreaRef.current);
       gsap.fromTo(
         contentAreaRef.current,
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', clearProps: 'transform,opacity' }
+        { opacity: 0, y: 14, scale: 0.995 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'power3.out', clearProps: 'transform,opacity' }
       );
+
+      // Stagger child cards consistently across all admin tabs
+      const timer = setTimeout(() => {
+        if (!contentAreaRef.current) return;
+        const cards = contentAreaRef.current.querySelectorAll(
+          '.stats-grid > *, .kpi-hero-card, .grid > div, .glass-card-admin, .stat-card'
+        );
+        if (cards.length > 0) {
+          gsap.killTweensOf(cards);
+          gsap.fromTo(
+            cards,
+            { opacity: 0, y: 20, scale: 0.97 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.45,
+              stagger: 0.045,
+              ease: 'power2.out',
+              clearProps: 'transform,opacity'
+            }
+          );
+        }
+      }, 50);
+
+      return () => clearTimeout(timer);
     }
   }, [activeTab]);
 

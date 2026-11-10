@@ -36,11 +36,6 @@ export function SmoothScrollProvider({ children }) {
   const lenisRef = useRef(null);
   const [lenisInstance, setLenisInstance] = useState(null);
 
-  const isAdmin = Boolean(
-    location.pathname &&
-    (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
-  );
-
   useEffect(() => {
     // Respect user's motion preference
     const prefersReducedMotion =
@@ -48,7 +43,7 @@ export function SmoothScrollProvider({ children }) {
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (prefersReducedMotion || isAdmin) {
+    if (prefersReducedMotion) {
       if (lenisRef.current) {
         lenisRef.current.destroy();
         lenisRef.current = null;
@@ -57,15 +52,15 @@ export function SmoothScrollProvider({ children }) {
       return;
     }
 
-    // Initialize Lenis smooth scroll with luxurious physical interpolation
+    // Initialize Lenis smooth scroll with luxurious physical interpolation across both Public & Admin
     const lenis = new Lenis({
-      duration: 1.25,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential curve
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 0.95,
-      touchMultiplier: 1.6,
+      touchMultiplier: 1.5,
       infinite: false,
       autoRaf: false
     });
@@ -89,7 +84,7 @@ export function SmoothScrollProvider({ children }) {
       lenisRef.current = null;
       setLenisInstance(null);
     };
-  }, [isAdmin]);
+  }, []);
 
   // Route transition scroll reset & ScrollTrigger recalculation
   useEffect(() => {
