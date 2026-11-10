@@ -67,6 +67,18 @@ export function AdminPage() {
     return () => window.removeEventListener('admin-sidebar-toggle', handleSidebarToggle);
   }, []);
 
+  // Guarantee Devicon icons stylesheet is loaded for Skills, Overview, and Projects CMS
+  useEffect(() => {
+    const deviconId = 'devicon-stylesheet-admin';
+    if (!document.getElementById(deviconId) && !document.querySelector('link[href*="devicon"]')) {
+      const link = document.createElement('link');
+      link.id = deviconId;
+      link.rel = 'stylesheet';
+      link.href = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css';
+      document.head.appendChild(link);
+    }
+  }, []);
+
   // Smooth GSAP tab transition with unified card staggering
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

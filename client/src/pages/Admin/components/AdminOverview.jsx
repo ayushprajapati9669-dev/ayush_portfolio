@@ -164,12 +164,18 @@ export function AdminOverview({
       actionTab: 'projects',
       source: p.liveDemoUrl || 'Live Deployment'
     })),
-    ...certificates.slice(0, 2).map((c) => ({
-      id: 'cert-' + c.id,
-      type: 'certificate',
-      title: c.title || 'Technical Certificate',
-      sub: `${c.issuer || 'Credential'} · ${c.issueDate || 'Verified'}`,
-      iconElement: <i className="devicon-amazonwebservices-plain colored icon-fix" />,
+    ...certificates.slice(0, 2).map((c) => {
+      const isAws = (c.title || '').toLowerCase().includes('aws') || (c.issuer || '').toLowerCase().includes('amazon');
+      return {
+        id: 'cert-' + c.id,
+        type: 'certificate',
+        title: c.title || 'Technical Certificate',
+        sub: `${c.issuer || 'Credential'} · ${c.issueDate || 'Verified'}`,
+        iconElement: isAws ? (
+          <i className="devicon-amazonwebservices-plain colored icon-fix" />
+        ) : (
+          <i className="fa-solid fa-certificate text-purple-400" />
+        ),
       iconBg: 'rgba(162,89,255,0.1)',
       iconBorder: '1px solid rgba(162,89,255,0.2)',
       badgeClass: 'info',
@@ -179,13 +185,14 @@ export function AdminOverview({
       actionLabel: 'Manage Certificates',
       actionTab: 'certificates',
       source: c.issuer || 'Online Certification'
-    })),
+      };
+    }),
     {
       id: 'commit-1',
       type: 'commit',
       title: 'Pushed to main branch',
       sub: 'ayushprajapati9669-dev/portfolio',
-      iconElement: <i className="devicon-github-original colored icon-fix" />,
+      iconElement: <i className="fa-brands fa-github text-white" />,
       iconBg: 'rgba(255,255,255,0.05)',
       iconBorder: '1px solid rgba(255,255,255,0.1)',
       badgeClass: 'info',
