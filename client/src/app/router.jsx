@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { HomePage } from '../pages/Home/Home';
 import { ProjectsPage } from '../pages/Projects/Projects';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -27,31 +28,59 @@ function RouteFallback() {
   );
 }
 
+// Cinematic fluid page transition variant
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.18, ease: 'easeIn' } }
+};
+
+function PageTransition({ children }) {
+  return (
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="w-full flex-1 flex flex-col"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export function AppRouter() {
   const location = useLocation();
   useScrollAnimation(location.pathname);
 
+  // Group admin routes so admin internal tab switching does not trigger full page unmount
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+
   return (
     <Suspense fallback={<RouteFallback />}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/journey" element={<JourneyPage />} />
-        <Route path="/achievements" element={<JourneyPage />} />
-        <Route path="/skills" element={<SkillsPage />} />
-        <Route path="/projects" element={<ProjectsPage viewMode="projects" />} />
-        <Route path="/projects/:slug" element={<Navigate to="/projects" replace />} />
-        <Route path="/certificates" element={<CertificatesPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/connect" element={<ContactPage />} />
-        <Route path="/hire" element={<ContactPage />} />
-        <Route path="/login" element={<AdminPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/admin/guide" element={<AdminPage />} />
-        <Route path="/admin/api-docs" element={<AdminPage />} />
-        <Route path="/admin/*" element={<AdminPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={isAdminRoute ? 'admin-root' : location.pathname}>
+          <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+          <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
+          <Route path="/journey" element={<PageTransition><JourneyPage /></PageTransition>} />
+          <Route path="/achievements" element={<PageTransition><JourneyPage /></PageTransition>} />
+          <Route path="/skills" element={<PageTransition><SkillsPage /></PageTransition>} />
+          <Route path="/projects" element={<PageTransition><ProjectsPage viewMode="projects" /></PageTransition>} />
+          <Route path="/projects/:slug" element={<Navigate to="/projects" replace />} />
+          <Route path="/certificates" element={<PageTransition><CertificatesPage /></PageTransition>} />
+          <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
+          <Route path="/connect" element={<PageTransition><ContactPage /></PageTransition>} />
+          <Route path="/hire" element={<PageTransition><ContactPage /></PageTransition>} />
+          <Route path="/login" element={<AdminPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/guide" element={<AdminPage />} />
+          <Route path="/admin/api-docs" element={<AdminPage />} />
+          <Route path="/admin/*" element={<AdminPage />} />
+          <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
+        </Routes>
+      </AnimatePresence>
     </Suspense>
   );
 }
+
+export default AppRouter;

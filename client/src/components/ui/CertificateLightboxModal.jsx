@@ -238,7 +238,7 @@ export function CertificateLightboxModal() {
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/92 p-3 sm:p-6 backdrop-blur-2xl"
+      className="fixed inset-0 z-[1000000] flex items-center justify-center bg-black/92 p-3 sm:p-6 backdrop-blur-2xl"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           playTick();

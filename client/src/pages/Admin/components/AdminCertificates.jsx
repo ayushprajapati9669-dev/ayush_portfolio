@@ -2264,7 +2264,7 @@ export function AdminCertificates({
                           onClick={(e) => {
                             e.stopPropagation();
                             playTick();
-                            openCertificateLightbox(cert.id);
+                            openCertificateLightbox(cert);
                           }}
                           className="inline-flex items-center gap-1.5 rounded-full bg-yellow-400 px-3.5 py-1.5 font-mono text-xs font-bold text-black shadow-lg shadow-cyan-400/40 hover:scale-105 active:scale-95 transition-all"
                           title="Inspect in full Lightbox (Pan & Zoom)"
@@ -2445,7 +2445,7 @@ export function AdminCertificates({
                           onClick={(e) => {
                             e.stopPropagation();
                             playTick();
-                            openCertificateLightbox(cert.id);
+                            openCertificateLightbox(cert);
                           }}
                           className="font-mono text-[11px] text-yellow-400 hover:underline inline-flex items-center gap-1"
                         >

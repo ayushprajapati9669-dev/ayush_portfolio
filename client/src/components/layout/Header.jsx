@@ -14,7 +14,14 @@ export function Header() {
   const [notifOpen, setNotifOpen] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [readNotifIds, setReadNotifIds] = useState([]);
+  const [readNotifIds, setReadNotifIds] = useState(() => {
+    try {
+      const stored = localStorage.getItem('admin_read_notifs_v9');
+      return stored ? JSON.parse(stored) : [];
+    } catch (_e) {
+      return [];
+    }
+  });
 
   const navWrapperRef = useRef(null);
   const navbarRef = useRef(null);

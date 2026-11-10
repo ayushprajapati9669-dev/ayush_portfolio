@@ -52,65 +52,46 @@
       }
     </script>
 
-    <!-- Critical Inline CSS for above-the-fold content (eliminates render-blocking) -->
+    <!-- Critical Inline CSS for above-the-fold content (eliminates render-blocking & CLS) -->
     <style>
       *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { color-scheme: dark; scroll-behavior: smooth; }
       body {
         background: #000000;
         color: #ffffff;
-        font-family: 'Plus Jakarta Sans', 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         min-height: 100vh;
         overflow-x: hidden;
         -webkit-font-smoothing: antialiased;
       }
       #root { min-height: 100vh; }
-      /* Prevent CLS from async font load */
-      h1, h2, h3 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: clamp(1.5rem, 4vw, 3.5rem); line-height: 1.1; letter-spacing: -0.02em; }
+      h1, h2, h3 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; line-height: 1.1; letter-spacing: -0.02em; }
     </style>
 
-    <!-- DNS Prefetch for faster external resource resolution -->
+    <!-- High-Performance DNS Prefetch & Preconnect -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
 
-    <!-- VSLFlow Design System Fonts: Cormorant Garamond + Jost + JetBrains Mono -->
-    <!-- Top 1% Typography System: Plus Jakarta Sans + Cormorant Garamond + Inter + JetBrains Mono + Jost -->
+    <!-- Performance-Optimized Webfonts with font-display=swap (Non-render-blocking) -->
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Syne:wght@600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       onload="this.onload=null;this.rel='stylesheet'"
     />
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       />
     </noscript>
 
-    <!-- Icons: FontAwesome & Devicon (Non-render-blocking) -->
-    <link
-      rel="preload"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    </noscript>
-    <link
-      rel="preload"
-      href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
-    </noscript>
+    <!-- FontAwesome Icons (Synchronous for guaranteed icon rendering across all views) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   </head>
   <body class="min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white">
     <div id="root"></div>

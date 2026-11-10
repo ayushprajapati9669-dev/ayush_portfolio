@@ -203,6 +203,14 @@ export function ThemeProvider({ children }) {
     }
   }, [appState.resumes, appState.profile?.resumeUrl, showToast]);
 
+  const openCertificateLightbox = useCallback((certOrId) => {
+    setActiveCertLightbox(certOrId);
+  }, []);
+
+  const closeCertificateLightbox = useCallback(() => {
+    setActiveCertLightbox(null);
+  }, []);
+
   return (
     <PortfolioContext.Provider
       value={{
@@ -220,7 +228,9 @@ export function ThemeProvider({ children }) {
         closeResumeModal: () => setResumeModalOpen(false),
         downloadOrPrintResume,
         activeCertLightbox,
-        setActiveCertLightbox
+        setActiveCertLightbox,
+        openCertificateLightbox,
+        closeCertificateLightbox
       }}
     >
       {children}

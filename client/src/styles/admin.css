@@ -4035,3 +4035,33 @@ button[style*="38bdf8"] {
   box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.16), 0 4px 16px rgba(0, 0, 0, 0.6) !important;
   outline: none !important;
 }
+
+
+/* =========================================================================
+   Administrator Authentication Screen (Positioned safely clear of Floating Navbar)
+   ========================================================================= */
+.admin-auth-screen {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 140px 20px 80px;
+  position: relative;
+  z-index: 20;
+  width: 100%;
+}
+
+.admin-auth-screen .admin-auth-content {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .admin-auth-screen {
+    padding-top: 120px;
+    padding-bottom: 50px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}

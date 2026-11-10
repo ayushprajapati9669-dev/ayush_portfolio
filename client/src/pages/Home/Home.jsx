@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -338,7 +338,7 @@ export function HomePage() {
     return () => ctx.revert();
   }, []);
 
-  const heroPhotoSrc = '/images/ayush-editorial-portrait.png';
+
 
   return (
     <div ref={containerRef} className="relative overflow-hidden">
@@ -490,7 +490,9 @@ export function HomePage() {
               <div className="absolute bottom-3 right-4 z-10 font-mono text-xs text-slate-400 pointer-events-none">
                 Hover to ripple
               </div>
-              <InteractiveMeshWave className="absolute inset-0" />
+              <React.Suspense fallback={<div className="absolute inset-0 bg-[#060810]/60" />}>
+                <InteractiveMeshWave className="absolute inset-0" />
+              </React.Suspense>
             </div>
           </div>
 
@@ -512,7 +514,9 @@ export function HomePage() {
             </TiltCard>
 
             <div className="lg:col-span-6 flex items-stretch">
-              <CinematicParticleCard className="h-full min-h-[380px]" />
+              <React.Suspense fallback={<div className="h-full min-h-[380px] w-full rounded-3xl bg-white/[0.02] border border-white/5" />}>
+                <CinematicParticleCard className="h-full min-h-[380px]" />
+              </React.Suspense>
             </div>
           </div>
         </section>
