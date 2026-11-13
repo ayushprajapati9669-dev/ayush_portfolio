@@ -231,27 +231,51 @@ export function InteractiveMeshWave({ className = '' }) {
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
 
-    // 7. Visibility Observer
-    let inViewport = true;
+    // 7. Visibility & State Machine
+    const isMounted = { current: true };
+    const inViewport = { current: true };
+    const isTabVisible = { current: typeof document !== 'undefined' ? !document.hidden : true };
+    const isLoopRunning = { current: false };
+
+    let animId = null;
+    const clock = new THREE.Clock();
+
+    function updateLoopState() {
+      const shouldAnimate = isMounted.current && inViewport.current && isTabVisible.current;
+      if (shouldAnimate && !isLoopRunning.current) {
+        isLoopRunning.current = true;
+        clock.start();
+        animId = requestAnimationFrame(animate);
+      } else if (!shouldAnimate && isLoopRunning.current) {
+        isLoopRunning.current = false;
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      }
+    }
+
+    const handleVisibilityChange = () => {
+      isTabVisible.current = !document.hidden;
+      updateLoopState();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
-        inViewport = entry.isIntersecting;
-        setIsVisible(inViewport);
+        inViewport.current = entry ? entry.isIntersecting : false;
+        setIsVisible(inViewport.current);
+        updateLoopState();
       },
       { threshold: 0.1 }
     );
     intersectionObserver.observe(container);
 
     // 8. Animation Loop
-    let animId;
-    const clock = new THREE.Clock();
-
     const animate = () => {
-      animId = requestAnimationFrame(animate);
+      if (!isLoopRunning.current) return;
 
-      if (!inViewport) return;
-
-      const delta = clock.getDelta();
+      const delta = Math.min(0.04, clock.getDelta());
       const time = clock.getElapsedTime();
 
       // Smooth mouse lerping
@@ -265,13 +289,21 @@ export function InteractiveMeshWave({ className = '' }) {
       }
 
       renderer.render(scene, camera);
+
+      if (isLoopRunning.current) {
+        animId = requestAnimationFrame(animate);
+      }
     };
 
-    animate();
+    updateLoopState();
 
     // 9. Memory Cleanup
     return () => {
-      cancelAnimationFrame(animId);
+      isMounted.current = false;
+      isLoopRunning.current = false;
+      if (animId) cancelAnimationFrame(animId);
+
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       container.removeEventListener('pointermove', handlePointerMove);
       container.removeEventListener('pointerleave', handlePointerLeave);
       resizeObserver.disconnect();

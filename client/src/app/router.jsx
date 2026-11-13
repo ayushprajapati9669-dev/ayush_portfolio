@@ -2,10 +2,10 @@ import React, { Suspense } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HomePage } from '../pages/Home/Home';
-import { ProjectsPage } from '../pages/Projects/Projects';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 // Route-level code splitting for top-tier Lighthouse performance
+const ProjectsPage = React.lazy(() => import('../pages/Projects/Projects').then(m => ({ default: m.ProjectsPage })));
 const AboutPage = React.lazy(() => import('../pages/About/About').then(m => ({ default: m.AboutPage })));
 const JourneyPage = React.lazy(() => import('../pages/Journey/Journey').then(m => ({ default: m.JourneyPage })));
 const SkillsPage = React.lazy(() => import('../pages/Skills/Skills').then(m => ({ default: m.SkillsPage })));

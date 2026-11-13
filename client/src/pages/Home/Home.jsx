@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import '../../styles/components/editorial-hero.css';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -6,11 +7,17 @@ import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useSmoothScroll } from '../../components/common/SmoothScrollProvider';
 import { HeroCosmosCanvas } from '../../components/ui/HeroCosmosCanvas';
 import { ScrollReactivePortraitParticles } from '../../components/particles/ScrollReactivePortraitParticles';
-import { InteractiveMeshWave } from '../../components/ui/InteractiveMeshWave';
+import { LazyInView } from '../../components/common/LazyInView';
 import { MagneticButton } from '../../components/ui/MagneticButton';
 import { TiltCard } from '../../components/ui/TiltCard';
-import { CinematicParticleCard } from '../../components/ui/CinematicParticleCard';
 import { ZeroToOneJourneyCard } from '../../components/ui/ZeroToOneJourneyCard';
+
+const InteractiveMeshWave = React.lazy(() =>
+  import('../../components/ui/InteractiveMeshWave').then((m) => ({ default: m.InteractiveMeshWave }))
+);
+const CinematicParticleCard = React.lazy(() =>
+  import('../../components/ui/CinematicParticleCard').then((m) => ({ default: m.CinematicParticleCard }))
+);
 
 import { ProjectCard } from '../../components/projects/ProjectCard';
 import { CertificateCard } from '../../components/projects/CertificateCard';
@@ -79,7 +86,7 @@ export function HomePage() {
       ? p.portrait.url
       : (p.photoUrl && !isLegacyCeiling(p.photoUrl))
       ? p.photoUrl
-      : '/images/ayush-hero-portrait.png';
+      : '/uploads/hero_cutout_1794562459704_847.webp';
   const ui = appState.uiLabels || {};
 
   const publishedProjects = (appState.projects || [])
@@ -439,17 +446,19 @@ export function HomePage() {
             </span>
             <span className="hero-title-name">
               That’s{' '}
-              <span className="hero-name-shimmer" aria-label={p.name || 'Ayush Prajapati'}>
-                {(p.name || 'Ayush Prajapati').split('').map((char, i) => (
-                  <span
-                    key={i}
-                    className={`hero-name-letter${char === ' ' ? ' hero-name-space' : ''}`}
-                    style={{ '--i': i }}
-                    aria-hidden="true"
-                  >
-                    {char === ' ' ? '\u00A0' : char}
-                  </span>
-                ))}
+              <span className="hero-name-shimmer">
+                <span className="sr-only">{p.name || 'Ayush Prajapati'}</span>
+                <span aria-hidden="true">
+                  {(p.name || 'Ayush Prajapati').split('').map((char, i) => (
+                    <span
+                      key={i}
+                      className={`hero-name-letter${char === ' ' ? ' hero-name-space' : ''}`}
+                      style={{ '--i': i }}
+                    >
+                      {char === ' ' ? '\u00A0' : char}
+                    </span>
+                  ))}
+                </span>
               </span>.
             </span>
           </h1>
@@ -576,9 +585,9 @@ export function HomePage() {
               <div className="absolute bottom-3 right-4 z-10 font-mono text-xs text-slate-400 pointer-events-none">
                 Hover to ripple
               </div>
-              <React.Suspense fallback={<div className="absolute inset-0 bg-[#060810]/60" />}>
+              <LazyInView minHeight="270px" className="absolute inset-0">
                 <InteractiveMeshWave className="absolute inset-0" />
-              </React.Suspense>
+              </LazyInView>
             </div>
           </div>
 
@@ -600,9 +609,9 @@ export function HomePage() {
             </TiltCard>
 
             <div className="lg:col-span-6 flex items-stretch">
-              <React.Suspense fallback={<div className="h-full min-h-[380px] w-full rounded-3xl bg-white/[0.02] border border-white/5" />}>
+              <LazyInView minHeight="380px" className="h-full w-full">
                 <CinematicParticleCard className="h-full min-h-[380px]" />
-              </React.Suspense>
+              </LazyInView>
             </div>
           </div>
         </section>

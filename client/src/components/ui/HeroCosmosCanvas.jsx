@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { runOnIdle, cancelIdle } from '../../utils/idle';
 
 const cosmosVertexShader = `
   uniform float uTime;
@@ -73,80 +74,22 @@ export function HeroCosmosCanvas({ className = '' }) {
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // 1. Scene & Camera
-    const scene = new THREE.Scene();
-    const width = container.clientWidth || window.innerWidth;
-    const height = container.clientHeight || 700;
+    // State machine flags
+    const isMounted = { current: true };
+    const inViewport = { current: true };
+    const isTabVisible = { current: typeof document !== 'undefined' ? !document.hidden : true };
+    const isLoopRunning = { current: false };
 
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
-    camera.position.set(0, 0, 32);
-
-    // 2. WebGL Renderer with graceful fallback
-    let renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance'
-      });
-    } catch (e) {
-      console.warn('HeroCosmosCanvas: WebGL unavailable, falling back cleanly:', e);
-      return;
-    }
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0);
-    container.appendChild(renderer.domElement);
-
-    // 3. Particle System Geometry
-    const count = 750;
-    const positions = new Float32Array(count * 3);
-    const scales = new Float32Array(count);
-    const randoms = new Float32Array(count);
-    const velocities = new Float32Array(count * 3);
-
-    for (let i = 0; i < count; i++) {
-      // Cylindrical/spherical distribution around the hero
-      const radius = 6 + Math.pow(Math.random(), 1.5) * 32;
-      const theta = Math.random() * Math.PI * 2;
-      const y = (Math.random() - 0.5) * 34;
-
-      positions[i * 3] = Math.cos(theta) * radius;
-      positions[i * 3 + 1] = y;
-      positions[i * 3 + 2] = Math.sin(theta) * (radius * 0.6) - 5;
-
-      scales[i] = 0.6 + Math.random() * 1.8;
-      randoms[i] = Math.random();
-
-      velocities[i * 3] = (Math.random() - 0.5) * 0.02;
-      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
-      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
-    }
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
-    geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
-    geometry.setAttribute('aVelocity', new THREE.BufferAttribute(velocities, 3));
-
-    // 4. Custom GLSL Shader Material
-    const material = new THREE.ShaderMaterial({
-      vertexShader: cosmosVertexShader,
-      fragmentShader: cosmosFragmentShader,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      uniforms: {
-        uTime: { value: 0 },
-        uMouse: { value: new THREE.Vector2(0, 0) },
-        uScroll: { value: 0 }
-      }
-    });
-
-    const particles = new THREE.Points(geometry, material);
-    scene.add(particles);
-
-    // 5. Mouse & Scroll Listeners
+    let renderer = null;
+    let scene = null;
+    let camera = null;
+    let geometry = null;
+    let material = null;
+    let particles = null;
+    let animationFrameId = null;
+    let clock = new THREE.Clock();
+    let resizeObserver = null;
+    let intersectionObserver = null;
     const targetMouse = new THREE.Vector2(0, 0);
 
     const handlePointerMove = (e) => {
@@ -154,11 +97,13 @@ export function HeroCosmosCanvas({ className = '' }) {
       targetMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
 
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    const handleVisibilityChange = () => {
+      isTabVisible.current = !document.hidden;
+      updateLoopState();
+    };
 
-    // 6. Resize Observer
     const handleResize = () => {
-      if (!container) return;
+      if (!container || !renderer || !camera) return;
       const nw = container.clientWidth || window.innerWidth;
       const nh = container.clientHeight || 700;
       camera.aspect = nw / nh;
@@ -167,63 +112,157 @@ export function HeroCosmosCanvas({ className = '' }) {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     };
 
-    const resizeObserver = new ResizeObserver(handleResize);
-    resizeObserver.observe(container);
-
-    // 7. Visibility Observer
-    let inViewport = true;
-    const intersectionObserver = new IntersectionObserver(
-      ([entry]) => {
-        inViewport = entry.isIntersecting;
-      },
-      { threshold: 0.02 }
-    );
-    intersectionObserver.observe(container);
-
-    // 8. Animation Loop
-    let animationFrameId;
-    let clock = new THREE.Clock();
+    function updateLoopState() {
+      const shouldAnimate = isMounted.current && inViewport.current && isTabVisible.current;
+      if (shouldAnimate && !isLoopRunning.current && renderer && material) {
+        isLoopRunning.current = true;
+        clock.start();
+        animationFrameId = requestAnimationFrame(animate);
+      } else if (!shouldAnimate && isLoopRunning.current) {
+        isLoopRunning.current = false;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+    }
 
     const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-
-      if (!inViewport) return;
+      if (!isLoopRunning.current) return;
 
       const time = prefersReducedMotion ? 0 : clock.getElapsedTime();
-      material.uniforms.uTime.value = time;
+      if (material) {
+        material.uniforms.uTime.value = time;
+        material.uniforms.uMouse.value.lerp(targetMouse, 0.08);
+        material.uniforms.uScroll.value = window.scrollY / window.innerHeight;
+      }
 
-      // Smooth mouse lerp
-      material.uniforms.uMouse.value.lerp(targetMouse, 0.08);
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
 
-      // Scroll offset
-      material.uniforms.uScroll.value = window.scrollY / window.innerHeight;
-
-      renderer.render(scene, camera);
+      if (isLoopRunning.current) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
     };
 
-    animate();
+    // Staggered initialization on idle: allows initial DOM paint and hero text to settle first
+    const idleHandle = runOnIdle(() => {
+      if (!isMounted.current || !container) return;
+
+      scene = new THREE.Scene();
+      const width = container.clientWidth || window.innerWidth;
+      const height = container.clientHeight || 700;
+
+      camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
+      camera.position.set(0, 0, 32);
+
+      try {
+        renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: true,
+          powerPreference: 'high-performance'
+        });
+      } catch (e) {
+        console.warn('HeroCosmosCanvas: WebGL unavailable, falling back cleanly:', e);
+        return;
+      }
+
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setClearColor(0x000000, 0);
+      container.appendChild(renderer.domElement);
+
+      const count = 750;
+      const positions = new Float32Array(count * 3);
+      const scales = new Float32Array(count);
+      const randoms = new Float32Array(count);
+      const velocities = new Float32Array(count * 3);
+
+      for (let i = 0; i < count; i++) {
+        const radius = 6 + Math.pow(Math.random(), 1.5) * 32;
+        const theta = Math.random() * Math.PI * 2;
+        const y = (Math.random() - 0.5) * 34;
+
+        positions[i * 3] = Math.cos(theta) * radius;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = Math.sin(theta) * (radius * 0.6) - 5;
+
+        scales[i] = 0.6 + Math.random() * 1.8;
+        randoms[i] = Math.random();
+        velocities[i * 3] = (Math.random() - 0.5) * 0.02;
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
+        velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+      }
+
+      geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
+      geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
+      geometry.setAttribute('aVelocity', new THREE.BufferAttribute(velocities, 3));
+
+      material = new THREE.ShaderMaterial({
+        vertexShader: cosmosVertexShader,
+        fragmentShader: cosmosFragmentShader,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: {
+          uTime: { value: 0 },
+          uMouse: { value: new THREE.Vector2(0, 0) },
+          uScroll: { value: 0 }
+        }
+      });
+
+      particles = new THREE.Points(geometry, material);
+      scene.add(particles);
+
+      window.addEventListener('pointermove', handlePointerMove, { passive: true });
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      resizeObserver = new ResizeObserver(handleResize);
+      resizeObserver.observe(container);
+
+      intersectionObserver = new IntersectionObserver(
+        ([entry]) => {
+          inViewport.current = entry ? entry.isIntersecting : false;
+          updateLoopState();
+        },
+        { threshold: 0.02 }
+      );
+      intersectionObserver.observe(container);
+
+      // Start animation loop cleanly
+      updateLoopState();
+    }, { timeout: 2500, minBudget: 12 });
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('pointermove', handlePointerMove);
-      resizeObserver.disconnect();
-      intersectionObserver.disconnect();
+      isMounted.current = false;
+      isLoopRunning.current = false;
+      cancelIdle(idleHandle);
 
-      if (renderer.domElement && container.contains(renderer.domElement)) {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (resizeObserver) resizeObserver.disconnect();
+      if (intersectionObserver) intersectionObserver.disconnect();
+
+      if (renderer && renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
+      if (geometry) geometry.dispose();
+      if (material) material.dispose();
+      if (renderer) renderer.dispose();
     };
   }, []);
 
   return (
     <div
       ref={mountRef}
-      className={`absolute inset-0 pointer-events-none overflow-hidden select-none z-0 ${className}`}
+      className={`absolute inset-0 pointer-events-none overflow-hidden select-none z-0 transition-opacity duration-700 ease-out ${className}`}
       aria-hidden="true"
     />
   );
 }
 
+export default HeroCosmosCanvas;

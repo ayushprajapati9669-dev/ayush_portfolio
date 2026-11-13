@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { AuthProvider } from './providers/AuthProvider';
 import { SmoothScrollProvider } from '../components/common/SmoothScrollProvider';
@@ -7,13 +7,23 @@ import { Footer } from '../components/layout/Footer';
 import { BackgroundLayers } from '../components/layout/BackgroundLayers';
 import { Toast } from '../components/ui/Toast';
 import { ConfirmModal } from '../components/ui/ConfirmModal';
-import { CertificateLightboxModal } from '../components/ui/CertificateLightboxModal';
-import { ResumeModal } from '../components/ui/ResumeModal';
-import { DeveloperCliDrawer } from '../components/ui/DeveloperCliDrawer';
 import { SoundscapeStudio } from '../components/ui/SoundscapeStudio';
-import { AskAyushAiWidget } from '../components/ui/AskAyushAiWidget';
 import { TelemetryTracker } from '../components/common/TelemetryTracker';
 import { AppRouter } from './router';
+
+// Lazy-load secondary overlay modals to prevent dead bundle evaluation on initial boot
+const CertificateLightboxModal = React.lazy(() =>
+  import('../components/ui/CertificateLightboxModal').then((m) => ({ default: m.CertificateLightboxModal }))
+);
+const ResumeModal = React.lazy(() =>
+  import('../components/ui/ResumeModal').then((m) => ({ default: m.ResumeModal }))
+);
+const DeveloperCliDrawer = React.lazy(() =>
+  import('../components/ui/DeveloperCliDrawer').then((m) => ({ default: m.DeveloperCliDrawer }))
+);
+const AskAyushAiWidget = React.lazy(() =>
+  import('../components/ui/AskAyushAiWidget').then((m) => ({ default: m.AskAyushAiWidget }))
+);
 
 export default function App() {
   return (
@@ -32,11 +42,13 @@ export default function App() {
             <Header />
             <Toast />
             <ConfirmModal />
-            <CertificateLightboxModal />
-            <ResumeModal />
-            <DeveloperCliDrawer />
+            <Suspense fallback={null}>
+              <CertificateLightboxModal />
+              <ResumeModal />
+              <DeveloperCliDrawer />
+              <AskAyushAiWidget />
+            </Suspense>
             <SoundscapeStudio />
-            <AskAyushAiWidget />
             <main id="main-content" className="flex-1 relative z-10">
               <AppRouter />
             </main>
