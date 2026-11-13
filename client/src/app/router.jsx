@@ -9,7 +9,6 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 const AboutPage = React.lazy(() => import('../pages/About/About').then(m => ({ default: m.AboutPage })));
 const JourneyPage = React.lazy(() => import('../pages/Journey/Journey').then(m => ({ default: m.JourneyPage })));
 const SkillsPage = React.lazy(() => import('../pages/Skills/Skills').then(m => ({ default: m.SkillsPage })));
-const ProjectDetail = React.lazy(() => import('../pages/Projects/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
 const CertificatesPage = React.lazy(() => import('../pages/Certificates/Certificates').then(m => ({ default: m.CertificatesPage })));
 const ContactPage = React.lazy(() => import('../pages/Contact/Contact').then(m => ({ default: m.ContactPage })));
 const AdminPage = React.lazy(() => import('../pages/Admin/Admin').then(m => ({ default: m.AdminPage })));
@@ -66,7 +65,7 @@ export function AppRouter() {
           <Route path="/achievements" element={<PageTransition><JourneyPage /></PageTransition>} />
           <Route path="/skills" element={<PageTransition><SkillsPage /></PageTransition>} />
           <Route path="/projects" element={<PageTransition><ProjectsPage viewMode="projects" /></PageTransition>} />
-          <Route path="/projects/:slug" element={<PageTransition><ProjectDetail /></PageTransition>} />
+          <Route path="/projects/:slug" element={<Navigate to="/projects" replace />} />
           <Route path="/certificates" element={<PageTransition><CertificatesPage /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
           <Route path="/connect" element={<PageTransition><ContactPage /></PageTransition>} />

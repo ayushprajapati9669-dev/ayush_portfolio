@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 
 // Authentic, colorful brand tech icons for top 1% developer portfolio
@@ -212,7 +211,6 @@ export function ProjectCard({
     }
   };
 
-  const caseStudyUrl = `/projects/${proj.slug || proj.id}`;
   const primaryTargetUrl = liveHref || githubHref;
 
   return (
@@ -224,59 +222,104 @@ export function ProjectCard({
       onMouseLeave={handleMouseLeave}
       onClick={() => onSelect && onSelect(proj.id)}
     >
-      <Link
-        to={caseStudyUrl}
-        className="project-img-wrap block relative overflow-hidden"
-        title={`Inspect ${proj.title} Case Study`}
-      >
-        <picture>
-          {imgSrc && imgSrc.includes('airbnb-clone-preview') && (
-            <source srcSet="/images/airbnb-clone-preview.webp" type="image/webp" />
-          )}
-          <img
-            src={imgSrc}
-            alt={proj.title}
-            loading={indexNum === 1 ? 'eager' : 'lazy'}
-            fetchpriority={indexNum === 1 ? 'high' : 'auto'}
-            decoding={indexNum === 1 ? 'sync' : 'async'}
-            width="600"
-            height="340"
-            className="w-full h-[200px] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
-          />
-        </picture>
+      {primaryTargetUrl ? (
+        <a
+          href={primaryTargetUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-img-wrap block relative overflow-hidden"
+          title={`Launch ${proj.title} ${liveHref ? 'Live Demo' : 'Source Code'}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <picture>
+            {imgSrc && imgSrc.includes('airbnb-clone-preview') && (
+              <source srcSet="/images/airbnb-clone-preview.webp" type="image/webp" />
+            )}
+            <img
+              src={imgSrc}
+              alt={proj.title}
+              loading={indexNum === 1 ? 'eager' : 'lazy'}
+              fetchpriority={indexNum === 1 ? 'high' : 'auto'}
+              decoding={indexNum === 1 ? 'sync' : 'async'}
+              width="600"
+              height="340"
+              className="w-full h-[200px] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+            />
+          </picture>
 
-        {/* Gradient shadow over bottom of image */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent" />
+          {/* Gradient shadow over bottom of image */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent" />
 
-        {/* Badges */}
-        <div className="project-badges">
-          <div className="p-badge">{badgeText}</div>
-          {liveHref && /^https?:\/\//i.test(liveHref) && (
-            <div className="p-badge live flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Live Deployed</span>
-            </div>
-          )}
+          {/* Badges */}
+          <div className="project-badges">
+            <div className="p-badge">{badgeText}</div>
+            {liveHref && /^https?:\/\//i.test(liveHref) && (
+              <div className="p-badge live flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Live Deployed</span>
+              </div>
+            )}
+          </div>
+        </a>
+      ) : (
+        <div className="project-img-wrap block relative overflow-hidden">
+          <picture>
+            {imgSrc && imgSrc.includes('airbnb-clone-preview') && (
+              <source srcSet="/images/airbnb-clone-preview.webp" type="image/webp" />
+            )}
+            <img
+              src={imgSrc}
+              alt={proj.title}
+              loading={indexNum === 1 ? 'eager' : 'lazy'}
+              fetchpriority={indexNum === 1 ? 'high' : 'auto'}
+              decoding={indexNum === 1 ? 'sync' : 'async'}
+              width="600"
+              height="340"
+              className="w-full h-[200px] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+            />
+          </picture>
+
+          {/* Gradient shadow over bottom of image */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent" />
+
+          {/* Badges */}
+          <div className="project-badges">
+            <div className="p-badge">{badgeText}</div>
+            {liveHref && /^https?:\/\//i.test(liveHref) && (
+              <div className="p-badge live flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Live Deployed</span>
+              </div>
+            )}
+          </div>
         </div>
-      </Link>
+      )}
 
       <div className="project-content flex-1 flex flex-col justify-between">
         <div>
-          <div className="project-meta flex items-center justify-between mb-1.5">
+          <div className="project-meta flex items-center justify-between mb-2">
             <span className="project-num">PROJECT {indexNum < 10 ? `0${indexNum}` : indexNum}</span>
-            <Link
-              to={caseStudyUrl}
-              className="project-link-hint min-h-[36px] inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono text-amber-300 rounded-full transition-all no-underline max-sm:opacity-90 max-sm:bg-white/[0.04] max-sm:border max-sm:border-white/10 opacity-0 group-hover:opacity-100 hover:bg-amber-400/10 focus-visible:opacity-100"
-            >
-              <span>Case Study</span>
-              <i className="fa-solid fa-arrow-right text-[9px] group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            {proj.category && (
+              <span className="font-mono text-[10px] text-zinc-400 tracking-wider uppercase px-2 py-0.5 rounded-full bg-white/[0.03] border border-white/5">
+                {proj.category}
+              </span>
+            )}
           </div>
 
           <h2 className="project-title group-hover:text-amber-300 transition-colors">
-            <Link to={caseStudyUrl} className="no-underline text-inherit hover:text-amber-300 transition-colors">
-              {proj.title}
-            </Link>
+            {primaryTargetUrl ? (
+              <a
+                href={primaryTargetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="no-underline text-inherit hover:text-amber-300 transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {proj.title}
+              </a>
+            ) : (
+              proj.title
+            )}
           </h2>
 
           <p className="project-desc">

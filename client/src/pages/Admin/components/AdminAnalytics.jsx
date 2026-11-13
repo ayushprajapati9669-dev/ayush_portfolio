@@ -364,7 +364,7 @@ function TelemetryEventDetailModal({ event, onClose }) {
   const intentText = isResume
     ? 'High Recruiter Intent · Candidate ATS Resume Evaluation'
     : isProject
-    ? 'Deep Technical Engagement · Architecture Case Study Review'
+    ? 'Deep Technical Engagement · Project Showcase Review'
     : isInteractive
     ? 'Hands-on Technical Trial · Live Developer Sandbox / CLI Execution'
     : 'General Portfolio Navigation · Pageview Interaction';
@@ -761,7 +761,7 @@ export function AdminAnalytics({ showToast }) {
         {/* Metric 2 */}
         <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-4 sm:p-5 shadow-lg space-y-2">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-medium">Case Study Reads</span>
+            <span className="text-xs font-medium">Project Views</span>
             <div className="w-7 h-7 rounded-lg bg-cyan-400/10 flex items-center justify-center text-cyan-400">
               <i className="fa-solid fa-layer-group text-xs" />
             </div>
@@ -869,11 +869,11 @@ export function AdminAnalytics({ showToast }) {
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="font-mono font-bold text-white text-xs">{project.views}</span>
                       <a
-                        href={`/projects/${project.slug}`}
+                        href={project.liveDemoUrl || project.githubUrl || '/projects'}
                         target="_blank"
                         rel="noreferrer"
                         className="text-slate-500 hover:text-amber-400 text-xs transition-colors"
-                        title="View case study"
+                        title="View project"
                       >
                         <i className="fa-solid fa-arrow-up-right-from-square" />
                       </a>

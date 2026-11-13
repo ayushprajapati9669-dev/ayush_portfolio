@@ -43,13 +43,6 @@ export function BackgroundLayers() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const isHome = location.pathname === '/';
 
-  // Detect individual project case study page
-  const isCaseStudy = Boolean(
-    location.pathname &&
-    location.pathname.startsWith('/projects/') &&
-    location.pathname !== '/projects'
-  );
-
   // Detect admin or login pages — no public background effects
   const isAdmin = Boolean(
     location.pathname &&
@@ -197,7 +190,7 @@ export function BackgroundLayers() {
       />
 
       {/* Living Atmospheric Aurora Nebulae */}
-      <div className={`liquid-bg ${isCaseStudy ? 'liquid-bg-case-study' : ''}`} aria-hidden="true">
+      <div className="liquid-bg" aria-hidden="true">
         <div className="aurora-blob aurora-1" />
         <div className="aurora-blob aurora-2" />
         <div className="aurora-blob aurora-3" />

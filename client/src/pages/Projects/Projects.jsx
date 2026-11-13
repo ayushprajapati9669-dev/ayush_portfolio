@@ -7,7 +7,7 @@ const LazyCertificatesPage = React.lazy(() => import('../Certificates/Certificat
 import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
-import { itemListSchema, projectSchema } from '../../utils/seo';
+import { itemListSchema } from '../../utils/seo';
 
 // Baseline Reference Projects from Reference HTML
 const REFERENCE_PROJECTS = [
@@ -105,7 +105,6 @@ export function ProjectsPage({ viewMode = 'projects' }) {
     .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
 
   const allProjects = cmsPublished.length > 0 ? cmsPublished : REFERENCE_PROJECTS;
-  const currentProject = slug ? allProjects.find((p) => p.slug === slug || p.id === slug) : null;
 
   // Filter tabs
   const FILTER_TABS = [
@@ -252,20 +251,11 @@ export function ProjectsPage({ viewMode = 'projects' }) {
   return (
     <main className="projects-page min-h-[1400px]" ref={containerRef}>
       <link rel="preload" as="image" href="/images/airbnb-clone-preview.webp" type="image/webp" fetchpriority="high" />
-      {currentProject ? (
-        <SEO
-          title={`${currentProject.title} | Case Study`}
-          description={currentProject.shortDescription || `Architecture overview and live demo for ${currentProject.title} built with ${(currentProject.technologies || []).join(', ')}.`}
-          image={currentProject.thumbnailUrl}
-          schema={projectSchema(currentProject)}
-        />
-      ) : (
-        <SEO
-          title="Featured Projects & Live Software"
-          description="A collection of full-stack web applications, interactive dashboards, and AI-powered tools engineered and deployed by Ayush Prajapati."
-          schema={itemListSchema(allProjects, 'SoftwareApplication')}
-        />
-      )}
+      <SEO
+        title="Featured Projects & Live Software"
+        description="A collection of full-stack web applications, interactive dashboards, and AI-powered tools engineered and deployed by Ayush Prajapati."
+        schema={itemListSchema(allProjects, 'SoftwareApplication')}
+      />
       {/* Page Header */}
       <div className="page-header">
         <ScrollWriteText

@@ -368,7 +368,7 @@ export function DeveloperCliDrawer() {
         addLog({
           type: 'output',
           content: [
-            'LIVE API SANDBOX ENDPOINTS (Interactive Console in Project Details):',
+            'LIVE API SANDBOX ENDPOINTS (Public Sandbox & REST Microservices):',
             '  • GET  /api/v1/properties/search?city=bhopal&guests=2     [Status 200 OK | ~42ms]',
             '  • POST /api/v1/auth/demo-session                          [Status 201 Created | ~68ms]',
             '  • GET  /api/public/leetcode-stats                         [Status 200 OK | ~28ms cached]',

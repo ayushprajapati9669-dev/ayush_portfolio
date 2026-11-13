@@ -26,7 +26,7 @@ function generateAiAnswer(question, portfolioState = {}) {
       `• **MongoDB Indexing & Aggregations:** Experienced with compound indexes, sparse indexes, text search indexes, and multi-stage aggregation pipelines ($lookup, $facet, $unwind) ensuring sub-50ms query execution even across 100k+ records.\n` +
       `• **Redis Layering:** Utilizes Redis for distributed session caching, rate-limiting (sliding window log), and pub/sub message brokers to cut primary database load by over 60%.\n` +
       `• **Transactions & Consistency:** Implements 2-phase commits and atomic transactions in MongoDB for multi-entity bookings and financial/cart states.`;
-    followUps = ['Show me the Wanderlust Airbnb case study', 'What caching strategies does he use?', 'Tell me about his LeetCode stats'];
+    followUps = ['Show me the Wanderlust Airbnb project', 'What caching strategies does he use?', 'Tell me about his LeetCode stats'];
     relatedProject = projects.find((p) => p.title?.toLowerCase().includes('wanderlust') || p.slug?.includes('airbnb')) || projects[0];
   }
   // 3. Hackathon & Competitions
@@ -47,11 +47,11 @@ function generateAiAnswer(question, portfolioState = {}) {
       `• **AI & Automation:** LangChain, OpenAI/Gemini API integrations, RAG vectors, Agentic workflows.`;
     followUps = ['View System Architecture Blueprint', 'Check LeetCode Profile', 'Download Full-Stack Resume'];
   }
-  // 5. Projects & Case Studies
-  else if (q.includes('project') || q.includes('case study') || q.includes('airbnb') || q.includes('wanderlust')) {
-    const featured = projects.slice(0, 3).map((p) => `• **${p.title}**: ${p.description || p.tagline || 'High-performance system'}`).join('\n');
-    answer = `Ayush has built several production-grade full-stack architectures:\n\n${featured}\n\nEvery project features an interactive Live API Sandbox, system telemetry, and modular architecture blueprints.`;
-    followUps = ['Test the Live API Sandbox', 'Explore System Architecture Diagram', 'Ask about his DSA proficiency'];
+  // 5. Projects & Architectures
+  else if (q.includes('project') || q.includes('system') || q.includes('airbnb') || q.includes('wanderlust') || q.includes('app')) {
+    const featured = projects.slice(0, 3).map((p) => `• **${p.title}**: ${p.shortDescription || p.description || 'High-performance system'}`).join('\n');
+    answer = `Ayush has built several production-grade full-stack web applications:\n\n${featured}\n\nEvery project features live cloud deployments, accessible responsive interfaces, and clean modular codebases.`;
+    followUps = ['Show live deployed projects', 'Tell me about his primary tech stack', 'Ask about his DSA proficiency'];
     relatedProject = projects[0];
   }
   // 6. LeetCode / DSA / Problem Solving
