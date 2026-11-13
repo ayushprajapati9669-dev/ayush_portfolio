@@ -355,6 +355,7 @@ export function HomePage() {
 
         {/* Hero Right-Side Portrait with Gradient Fade Masks (matching index 14 & Image 1) */}
         <div ref={heroPhotoBoxRef} className="hero-photo-container">
+          <div className="hero-photo-ambient-aura" aria-hidden="true" />
           <img
             ref={heroImgRef}
             id="himg"
@@ -364,6 +365,10 @@ export function HomePage() {
             onLoad={checkPhotoFit}
             decoding="async"
           />
+          <div className="hero-photo-status-badge" aria-hidden="true">
+            <span className="hero-photo-pulse-dot" />
+            <span className="hero-photo-badge-text">Full-Stack Engineer</span>
+          </div>
         </div>
 
         {/* Top Eyebrow Meta Row */}
