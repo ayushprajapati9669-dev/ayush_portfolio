@@ -39,6 +39,7 @@ export function AuthProvider({ children }) {
       username: response.user?.username || usernameInput,
       role: response.user?.role || 'admin',
       csrfToken,
+      token: response.token || csrfToken,
       exp: Date.now() + 12 * 3600 * 1000
     };
     setCsrfToken(csrfToken);

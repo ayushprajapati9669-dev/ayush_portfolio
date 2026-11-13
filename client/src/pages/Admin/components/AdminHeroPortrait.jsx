@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
-import { uploadImageViaCloudinary } from '../../../services/api';
+import { uploadImageViaCloudinary, removeImageBackground } from '../../../services/api';
 import { playTick } from '../../../utils/audio';
 
 const DEFAULT_PORTRAIT_PRESETS = [
+  '/images/ayush-hero-portrait.png',
+  '/images/ayush-hero-portrait.webp',
   '/images/ayush-hero-portrait.jpg',
   '/images/ayush-resume-preview.jpg',
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80',
@@ -33,12 +35,21 @@ export function AdminHeroPortrait({
   const [imageAltText, setImageAltText] = useState(p.portrait?.alt || 'Ayush Prajapati - Hero Portrait');
   const [maintenanceMode, setMaintenanceMode] = useState(Boolean(settings.maintenanceMode));
 
+  // Keep local photoUrl in sync if profile updates from backend
+  useEffect(() => {
+    const currentUrl = p.photoUrl || p.portrait?.url;
+    if (currentUrl && currentUrl !== photoUrl) {
+      setPhotoUrl(currentUrl);
+    }
+  }, [p.photoUrl, p.portrait?.url]);
+
   // UI state
   const [deviceMode, setDeviceMode] = useState('desktop'); // 'desktop' | 'mobile'
   const [titleError, setTitleError] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [autosaveStatus, setAutosaveStatus] = useState('saved'); // 'saved' | 'saving'
   const [liveVisitors, setLiveVisitors] = useState(12);
+  const [isRemovingBg, setIsRemovingBg] = useState(false);
 
   // Undo / Redo history
   const [historyStack, setHistoryStack] = useState([]);
@@ -63,6 +74,7 @@ export function AdminHeroPortrait({
   });
 
   const fileInputRef = useRef(null);
+  const directCutoutInputRef = useRef(null);
   const importInputRef = useRef(null);
   const autosaveTimerRef = useRef(null);
   const cropImgRef = useRef(null);
@@ -310,27 +322,139 @@ export function AdminHeroPortrait({
     });
   };
 
-  const handleApplyCrop = async () => {
+  // AI Background Removal
+  const handleRemoveBackground = async (imageInput) => {
+    const targetImage = imageInput || photoUrl;
+    if (!targetImage) {
+      showToast('Please select or upload an image first.', 'warn');
+      return;
+    }
     playTick();
-    const canvas = document.createElement('canvas');
-    const size = 420;
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
+    setIsRemovingBg(true);
+    showToast('Removing background with AI, please wait...', 'info');
 
+    try {
+      const res = await removeImageBackground(targetImage);
+      if (res && res.success && res.image) {
+        setPhotoUrl(res.image);
+        // Also add to media library
+        const updatedLib = Array.from(new Set([res.image, ...mediaLibrary]));
+        setMediaLibrary(updatedLib);
+        try {
+          localStorage.setItem('ayush_media_library', JSON.stringify(updatedLib.slice(0, 20)));
+        } catch (_e) {}
+
+        const nextState = { ...getCurrentState(), photoUrl: res.image };
+        pushHistory(nextState);
+        triggerAutosave();
+
+        // Immediately auto-persist to global state and MongoDB backend
+        updateAppState((prev) => ({
+          ...prev,
+          profile: {
+            ...prev.profile,
+            photoUrl: res.image,
+            portrait: {
+              ...(prev.profile?.portrait || {}),
+              url: res.image,
+              isTemporaryStandIn: false
+            }
+          }
+        }), session?.csrfToken || session?.token);
+
+        showToast('Background removed and saved permanently!', 'success');
+        return res.image;
+      } else {
+        showToast('Could not remove background. Check Python/rembg service.', 'error');
+      }
+    } catch (err) {
+      console.error('[AdminHeroPortrait] AI cutout failed:', err);
+      showToast('AI background removal error: ' + (err.message || 'Server error'), 'error');
+    } finally {
+      setIsRemovingBg(false);
+    }
+  };
+
+  // Direct AI Upload (Bypasses Canvas - 100% Original Resolution & Sharpness)
+  const handleDirectCutoutSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 15 * 1024 * 1024) {
+      showToast('File size must be under 15MB.', 'error');
+      if (directCutoutInputRef.current) directCutoutInputRef.current.value = '';
+      return;
+    }
+
+    playTick();
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const rawDataUrl = event.target.result;
+      await handleRemoveBackground(rawDataUrl);
+      if (directCutoutInputRef.current) directCutoutInputRef.current.value = '';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleApplyCrop = async (removeBg = false) => {
+    playTick();
     const img = new Image();
     img.src = cropImageSrc;
     img.onload = async () => {
-      const sourceSize = Math.min(img.width, img.height) / cropScale;
-      const sx = (img.width - sourceSize) / 2;
-      const sy = (img.height - sourceSize) / 2;
-      ctx.drawImage(img, sx, sy, sourceSize, sourceSize, 0, 0, size, size);
-      const croppedUrl = canvas.toDataURL('image/webp', 0.85);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
-      setPhotoUrl(croppedUrl);
+      // Keep natural dimensions of image up to full resolution (e.g. 2400px)
+      const maxDim = 2400;
+      let targetW = img.width;
+      let targetH = img.height;
+      if (Math.max(targetW, targetH) > maxDim) {
+        const ratio = maxDim / Math.max(targetW, targetH);
+        targetW = Math.round(targetW * ratio);
+        targetH = Math.round(targetH * ratio);
+      }
+
+      canvas.width = targetW;
+      canvas.height = targetH;
+
+      if (cropScale === 1) {
+        // Full original resolution without square crop distortion
+        ctx.drawImage(img, 0, 0, targetW, targetH);
+      } else {
+        // Scaled zoom from center
+        const sourceW = img.width / cropScale;
+        const sourceH = img.height / cropScale;
+        const sx = (img.width - sourceW) / 2;
+        const sy = (img.height - sourceH) / 2;
+        ctx.drawImage(img, sx, sy, sourceW, sourceH, 0, 0, targetW, targetH);
+      }
+
+      // Export as lossless PNG to guarantee zero compression loss
+      let finalUrl = canvas.toDataURL('image/png');
+
+      if (removeBg) {
+        setIsRemovingBg(true);
+        showToast('Removing background with AI at full original quality...', 'info');
+        try {
+          const res = await removeImageBackground(finalUrl);
+          if (res && res.success && res.image) {
+            finalUrl = res.image;
+            showToast('Background removed with 100% original quality!', 'success');
+          }
+        } catch (bgErr) {
+          console.warn('[AdminHeroPortrait] BG removal failed during crop:', bgErr);
+          showToast('Saved crop (AI BG removal failed)', 'warn');
+        } finally {
+          setIsRemovingBg(false);
+        }
+      }
+
+      setPhotoUrl(finalUrl);
 
       // Save to media library
-      const updatedLib = Array.from(new Set([croppedUrl, ...mediaLibrary]));
+      const updatedLib = Array.from(new Set([finalUrl, ...mediaLibrary]));
       setMediaLibrary(updatedLib);
       try {
         localStorage.setItem('ayush_media_library', JSON.stringify(updatedLib.slice(0, 20)));
@@ -339,10 +463,27 @@ export function AdminHeroPortrait({
       setCropModalOpen(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
 
-      const nextState = { ...getCurrentState(), photoUrl: croppedUrl };
+      const nextState = { ...getCurrentState(), photoUrl: finalUrl };
       pushHistory(nextState);
       triggerAutosave();
-      showToast('Image cropped & set as Hero Portrait!', 'success');
+
+      // Automatically persist to backend and MongoDB Atlas
+      updateAppState((prev) => ({
+        ...prev,
+        profile: {
+          ...prev.profile,
+          photoUrl: finalUrl,
+          portrait: {
+            ...(prev.profile?.portrait || {}),
+            url: finalUrl,
+            isTemporaryStandIn: false
+          }
+        }
+      }), session?.csrfToken || session?.token);
+
+      if (!removeBg) {
+        showToast('Image saved permanently at full original quality!', 'success');
+      }
     };
   };
 
@@ -354,7 +495,19 @@ export function AdminHeroPortrait({
     const nextState = { ...getCurrentState(), photoUrl: url };
     pushHistory(nextState);
     triggerAutosave();
-    showToast('Portrait image selected from library!', 'success');
+    updateAppState((prev) => ({
+      ...prev,
+      profile: {
+        ...prev.profile,
+        photoUrl: url,
+        portrait: {
+          ...(prev.profile?.portrait || {}),
+          url: url,
+          isTemporaryStandIn: false
+        }
+      }
+    }), session?.csrfToken || session?.token);
+    showToast('Portrait image selected and saved permanently!', 'success');
   };
 
   // Toggle Maintenance Mode
@@ -428,7 +581,8 @@ export function AdminHeroPortrait({
       portrait: {
         ...(p.portrait || {}),
         url: photoUrl.trim(),
-        alt: imageAltText.trim()
+        alt: imageAltText.trim(),
+        isTemporaryStandIn: false
       },
       customDomain: customDomain.trim(),
       portfolioSlug: portfolioSlug.trim(),
@@ -445,7 +599,7 @@ export function AdminHeroPortrait({
       ...prev,
       profile: updatedProfile,
       settings: updatedSettings
-    }), session?.token);
+    }), session?.csrfToken || session?.token);
 
     // Save to localStorage as ultimate
     try {
@@ -685,23 +839,60 @@ export function AdminHeroPortrait({
                   <span className="text-[11px] font-mono text-slate-500">1:1 Square recommended</span>
                 </label>
 
-                <div className="flex gap-2.5">
-                  <div className="hero-file-upload-wrapper flex-1">
-                    <button type="button" className="hero-file-upload-btn" onClick={() => { playTick(); fileInputRef.current?.click(); }}>
-                      <i className="fa-solid fa-cloud-arrow-up text-yellow-400" />
-                      <span>Upload & Crop Image</span>
+                <div className="flex flex-wrap gap-2.5">
+                  <div className="hero-file-upload-wrapper flex-1 min-w-[150px]">
+                    <button type="button" className="hero-file-upload-btn" onClick={() => { playTick(); directCutoutInputRef.current?.click(); }} title="Upload raw photo and automatically remove background at 100% full original resolution">
+                      <i className="fa-solid fa-wand-magic-sparkles text-yellow-400" />
+                      <span>Upload &amp; Auto Cutout (Lossless)</span>
                     </button>
                     <input
-                      ref={fileInputRef}
+                      ref={directCutoutInputRef}
                       type="file"
                       accept="image/*"
-                      onChange={handleFileSelect}
+                      onChange={handleDirectCutoutSelect}
                     />
                   </div>
 
                   <button
                     type="button"
-                    className="btn-hero-action px-4"
+                    className="btn-hero-action px-3.5"
+                    onClick={() => { playTick(); fileInputRef.current?.click(); }}
+                    title="Upload and manually crop image"
+                  >
+                    <i className="fa-solid fa-crop text-yellow-400" />
+                    <span>Crop Tool</span>
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    style={{ display: 'none' }}
+                  />
+
+                  <button
+                    type="button"
+                    className="btn-hero-action px-3.5"
+                    onClick={() => handleRemoveBackground(photoUrl)}
+                    disabled={isRemovingBg || !photoUrl}
+                    title="Remove background from current image using AI"
+                    style={{
+                      background: 'rgba(212, 175, 55, 0.12)',
+                      borderColor: 'rgba(212, 175, 55, 0.4)',
+                      color: '#ffd700'
+                    }}
+                  >
+                    {isRemovingBg ? (
+                      <i className="fa-solid fa-spinner fa-spin" />
+                    ) : (
+                      <i className="fa-solid fa-wand-magic-sparkles text-yellow-400" />
+                    )}
+                    <span>{isRemovingBg ? 'Processing...' : 'Remove BG (AI)'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-hero-action px-3.5"
                     onClick={() => {
                       playTick();
                       setMediaModalOpen(true);
@@ -1094,11 +1285,37 @@ export function AdminHeroPortrait({
               </button>
               <button
                 type="button"
-                className="btn-hero-action btn-hero-primary text-xs"
-                onClick={handleApplyCrop}
+                className="btn-hero-action text-xs"
+                onClick={() => handleApplyCrop(false)}
+                disabled={isRemovingBg}
+                title="Keep original background"
               >
-                <i className="fa-solid fa-check" />
-                <span>Apply Crop</span>
+                <i className="fa-solid fa-crop-simple" />
+                <span>Keep Background</span>
+              </button>
+              <button
+                type="button"
+                className="btn-hero-action btn-hero-primary text-xs"
+                onClick={() => handleApplyCrop(true)}
+                disabled={isRemovingBg}
+                title="Remove background with AI and make transparent"
+                style={{
+                  background: 'linear-gradient(135deg, #d4af37, #f59e0b)',
+                  color: '#000',
+                  fontWeight: 700
+                }}
+              >
+                {isRemovingBg ? (
+                  <>
+                    <i className="fa-solid fa-spinner fa-spin" />
+                    <span>Removing BG...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-solid fa-wand-magic-sparkles" />
+                    <span>Apply &amp; Remove BG (AI)</span>
+                  </>
+                )}
               </button>
             </div>
           </div>

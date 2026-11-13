@@ -12,7 +12,7 @@ function parseCookies(cookieHeader) {
   return cookies;
 }
 
-function readJsonBody(req, maxBytes = 8 * 1024 * 1024) {
+function readJsonBody(req, maxBytes = 40 * 1024 * 1024) {
   return new Promise((resolve, reject) => {
     let total = 0;
     const chunks = [];

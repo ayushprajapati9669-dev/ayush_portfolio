@@ -4,10 +4,36 @@ const crypto = require('crypto');
 const { INITIAL_SEED_DATA } = require('../models/seedData');
 
 class PortfolioDataStore {
-  constructor(dataFilePath) {
+  constructor(dataFilePath, uploadsDir) {
     this.dataFilePath = dataFilePath;
+    this.uploadsDir = uploadsDir || path.resolve(path.dirname(dataFilePath), '../uploads');
     this.mode = 'json-document-store';
     this._ensureLoaded();
+  }
+
+  _saveBase64ToUploads(dataUrl, prefix = 'hero_portrait') {
+    if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
+      return dataUrl;
+    }
+    try {
+      const match = dataUrl.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+      if (!match) return dataUrl;
+      const rawExt = match[1].toLowerCase();
+      const ext = rawExt === 'jpeg' ? 'jpg' : rawExt === 'webp' ? 'webp' : rawExt === 'png' ? 'png' : 'jpg';
+      const base64Data = match[2];
+      const buffer = Buffer.from(base64Data, 'base64');
+      const targetDir = this.uploadsDir || path.resolve(path.dirname(this.dataFilePath), '../uploads');
+      if (!fs.existsSync(targetDir)) {
+        fs.mkdirSync(targetDir, { recursive: true });
+      }
+      const filename = `${prefix}_${Date.now()}_${Math.floor(Math.random() * 1000)}.${ext}`;
+      const filePath = path.join(targetDir, filename);
+      fs.writeFileSync(filePath, buffer);
+      return `/uploads/${filename}`;
+    } catch (err) {
+      console.warn('[PortfolioDataStore] Failed to save base64 to uploads:', err.message);
+      return dataUrl;
+    }
   }
 
   _ensureLoaded() {
@@ -39,6 +65,19 @@ class PortfolioDataStore {
               mutated = true;
             }
           });
+        }
+        // Ensure legacy stand-in ceiling image is replaced with clean transparent hero cutout
+        const isLegacyCeilingStandin = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+        if (this.state.profile) {
+          if (isLegacyCeilingStandin(this.state.profile.photoUrl)) {
+            this.state.profile.photoUrl = '/images/ayush-hero-portrait.png';
+            mutated = true;
+          }
+          if (this.state.profile.portrait && isLegacyCeilingStandin(this.state.profile.portrait.url)) {
+            this.state.profile.portrait.url = '/images/ayush-hero-portrait.png';
+            this.state.profile.portrait.isTemporaryStandIn = false;
+            mutated = true;
+          }
         }
         // Ensure Workshop flagship milestone is present in learningJourney
         if (this.state.profile && Array.isArray(this.state.profile.learningJourney)) {
@@ -169,20 +208,41 @@ class PortfolioDataStore {
   }
 
   updateProfile(patch) {
+    const cleanedPatch = { ...patch };
+    if (cleanedPatch.photoUrl && typeof cleanedPatch.photoUrl === 'string' && cleanedPatch.photoUrl.startsWith('data:image/')) {
+      cleanedPatch.photoUrl = this._saveBase64ToUploads(cleanedPatch.photoUrl, 'hero_portrait');
+    }
+    if (cleanedPatch.portrait && typeof cleanedPatch.portrait === 'object') {
+      cleanedPatch.portrait = { ...cleanedPatch.portrait };
+      if (cleanedPatch.portrait.url && typeof cleanedPatch.portrait.url === 'string' && cleanedPatch.portrait.url.startsWith('data:image/')) {
+        cleanedPatch.portrait.url = this._saveBase64ToUploads(cleanedPatch.portrait.url, 'hero_portrait');
+      }
+    }
+    if (cleanedPatch.photoUrl && (!cleanedPatch.portrait || !cleanedPatch.portrait.url)) {
+      cleanedPatch.portrait = {
+        ...(this.state.profile.portrait || {}),
+        ...(cleanedPatch.portrait || {}),
+        url: cleanedPatch.photoUrl,
+        isTemporaryStandIn: false
+      };
+    } else if (cleanedPatch.portrait?.url && !cleanedPatch.photoUrl) {
+      cleanedPatch.photoUrl = cleanedPatch.portrait.url;
+    }
+
     this.state.profile = {
       ...this.state.profile,
-      ...patch,
+      ...cleanedPatch,
       education: {
         ...this.state.profile.education,
-        ...(patch.education || {})
+        ...(cleanedPatch.education || {})
       },
       socialLinks: {
         ...this.state.profile.socialLinks,
-        ...(patch.socialLinks || {})
+        ...(cleanedPatch.socialLinks || {})
       },
       portrait: {
         ...this.state.profile.portrait,
-        ...(patch.portrait || {})
+        ...(cleanedPatch.portrait || {})
       },
       updatedAt: new Date().toISOString()
     };
@@ -269,9 +329,13 @@ class PortfolioDataStore {
       throw err;
     }
     const current = this.state.projects[idx];
+    let cleanedPatch = { ...patch };
+    if (cleanedPatch.thumbnail && typeof cleanedPatch.thumbnail === 'string' && cleanedPatch.thumbnail.startsWith('data:image/')) {
+      cleanedPatch.thumbnail = this._saveBase64ToUploads(cleanedPatch.thumbnail, 'project_thumb');
+    }
     const updated = {
       ...current,
-      ...patch,
+      ...cleanedPatch,
       id: current.id,
       createdAt: current.createdAt,
       updatedAt: new Date().toISOString()
@@ -297,7 +361,11 @@ class PortfolioDataStore {
   upsertCertificate(certPayload) {
     if (!Array.isArray(this.state.certificates)) this.state.certificates = [];
     const now = new Date().toISOString();
-    if (certPayload.id) {
+    let cleanedCert = { ...certPayload };
+    if (cleanedCert.imageUrl && typeof cleanedCert.imageUrl === 'string' && cleanedCert.imageUrl.startsWith('data:image/')) {
+      cleanedCert.imageUrl = this._saveBase64ToUploads(cleanedCert.imageUrl, 'cert_img');
+    }
+    if (cleanedCert.id) {
       const idx = this.state.certificates.findIndex(c => c.id === certPayload.id);
       if (idx !== -1) {
         this.state.certificates[idx] = {
@@ -501,16 +569,57 @@ class PortfolioDataStore {
   // Full state sync (used by v4 Admin CMS sync)
   syncPortfolioState(payload) {
     if (payload.profile && typeof payload.profile === 'object') {
-      this.state.profile = { ...this.state.profile, ...payload.profile };
+      const pCopy = { ...payload.profile };
+      if (pCopy.photoUrl && typeof pCopy.photoUrl === 'string' && pCopy.photoUrl.startsWith('data:image/')) {
+        pCopy.photoUrl = this._saveBase64ToUploads(pCopy.photoUrl, 'hero_portrait');
+      }
+      if (pCopy.portrait && typeof pCopy.portrait === 'object') {
+        pCopy.portrait = { ...pCopy.portrait };
+        if (pCopy.portrait.url && typeof pCopy.portrait.url === 'string' && pCopy.portrait.url.startsWith('data:image/')) {
+          pCopy.portrait.url = this._saveBase64ToUploads(pCopy.portrait.url, 'hero_portrait');
+        }
+      }
+      if (pCopy.photoUrl && (!pCopy.portrait || !pCopy.portrait.url)) {
+        pCopy.portrait = {
+          ...(this.state.profile.portrait || {}),
+          ...(pCopy.portrait || {}),
+          url: pCopy.photoUrl,
+          isTemporaryStandIn: false
+        };
+      } else if (pCopy.portrait?.url && !pCopy.photoUrl) {
+        pCopy.photoUrl = pCopy.portrait.url;
+      }
+      const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+      if (pCopy.photoUrl && isLegacyCeiling(pCopy.photoUrl)) {
+        pCopy.photoUrl = '/images/ayush-hero-portrait.png';
+      }
+      if (pCopy.portrait && isLegacyCeiling(pCopy.portrait.url)) {
+        pCopy.portrait = { ...pCopy.portrait, url: '/images/ayush-hero-portrait.png', isTemporaryStandIn: false };
+      }
+      this.state.profile = { ...this.state.profile, ...pCopy };
     }
     if (Array.isArray(payload.projects)) {
-      this.state.projects = payload.projects;
+      this.state.projects = payload.projects.map((proj) => {
+        if (!proj || typeof proj !== 'object') return proj;
+        let updatedProj = { ...proj };
+        if (updatedProj.thumbnail && typeof updatedProj.thumbnail === 'string' && updatedProj.thumbnail.startsWith('data:image/')) {
+          updatedProj.thumbnail = this._saveBase64ToUploads(updatedProj.thumbnail, 'project_thumb');
+        }
+        return updatedProj;
+      });
     }
     if (Array.isArray(payload.skills)) {
       this.state.skills = payload.skills;
     }
     if (Array.isArray(payload.certificates)) {
-      this.state.certificates = payload.certificates;
+      this.state.certificates = payload.certificates.map((cert) => {
+        if (!cert || typeof cert !== 'object') return cert;
+        let updatedCert = { ...cert };
+        if (updatedCert.imageUrl && typeof updatedCert.imageUrl === 'string' && updatedCert.imageUrl.startsWith('data:image/')) {
+          updatedCert.imageUrl = this._saveBase64ToUploads(updatedCert.imageUrl, 'cert_img');
+        }
+        return updatedCert;
+      });
     }
     if (Array.isArray(payload.resumes)) {
       this.state.resumes = payload.resumes;

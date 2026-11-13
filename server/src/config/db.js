@@ -293,6 +293,19 @@ async function connectMongoDB(mongoUri, store) {
             }
           });
         }
+        // Ensure legacy stand-in ceiling image is replaced with clean transparent hero cutout
+        const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+        if (store.state.profile) {
+          if (store.state.profile.photoUrl && isLegacyCeiling(store.state.profile.photoUrl)) {
+            store.state.profile.photoUrl = '/images/ayush-hero-portrait.png';
+            needSync = true;
+          }
+          if (store.state.profile.portrait && isLegacyCeiling(store.state.profile.portrait.url)) {
+            store.state.profile.portrait.url = '/images/ayush-hero-portrait.png';
+            store.state.profile.portrait.isTemporaryStandIn = false;
+            needSync = true;
+          }
+        }
         // Ensure Workshop milestone is present in profile.learningJourney
         if (store.state.profile && Array.isArray(store.state.profile.learningJourney)) {
           const hasWorkshop = store.state.profile.learningJourney.some(m => m.id === 'm-workshop-mern-lead' || (m.title && m.title.includes('Workshop')));

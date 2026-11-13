@@ -14,7 +14,7 @@ const { dispatchApiRoutes } = require('./routes');
 function createPortfolioServer(customOptions = {}) {
   const config = { ...getEnvConfig(), ...customOptions };
   const dbPath = customOptions.dataFilePath || path.join(config.dataDir, 'portfolio.json');
-  const store = new PortfolioDataStore(dbPath);
+  const store = new PortfolioDataStore(dbPath, config.uploadsDir);
   const loginLimiter = new MemoryRateLimiter(config.loginWindowMs, config.loginMaxAttempts);
   const contactLimiter = new MemoryRateLimiter(config.contactWindowMs, config.contactMaxAttempts);
 

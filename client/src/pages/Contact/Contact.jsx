@@ -74,26 +74,26 @@ export function ContactPage() {
         method: 'POST',
         body: check.cleanData
       });
-    } catch (_err) {
-      // Local fallback in state
-    }
 
-    updateAppState((prev) => ({
-      ...prev,
-      messages: [newMsg, ...(prev.messages || [])]
-    }));
+      updateAppState((prev) => ({
+        ...prev,
+        messages: [newMsg, ...(prev.messages || [])]
+      }));
 
-    setTimeout(() => {
       setLoading(false);
       setSuccess(true);
-      showToast('Thank you! Your message has been sent.');
+      showToast('Thank you! Your message has been sent.', 'success');
 
       setTimeout(() => {
         setFormData({ name: '', email: '', subject: '', message: '' });
         setErrors({});
         setSuccess(false);
       }, 3000);
-    }, 1200);
+    } catch (err) {
+      setLoading(false);
+      setSuccess(false);
+      showToast(err.message || 'Failed to send message. Please try again.', 'error');
+    }
   };
 
   // 3D Card tilt physics
@@ -251,7 +251,7 @@ export function ContactPage() {
                   <input
                     type="text"
                     className={`form-control ${errors.name ? 'error' : ''}`}
-                    id="name"
+                    id="name" name="name"
                     placeholder="e.g. Ayush Prajapati"
                     value={formData.name}
                     onChange={(e) => handleChange('name', e.target.value)}
@@ -273,7 +273,7 @@ export function ContactPage() {
                   <input
                     type="email"
                     className={`form-control ${errors.email ? 'error' : ''}`}
-                    id="email"
+                    id="email" name="email"
                     placeholder="name@example.com"
                     value={formData.email}
                     onChange={(e) => handleChange('email', e.target.value)}
@@ -296,7 +296,7 @@ export function ContactPage() {
                 <input
                   type="text"
                   className={`form-control ${errors.subject ? 'error' : ''}`}
-                  id="subject"
+                  id="subject" name="subject"
                   placeholder="e.g. Hiring / Full-Stack Project Collaboration"
                   value={formData.subject}
                   onChange={(e) => handleChange('subject', e.target.value)}
@@ -317,7 +317,7 @@ export function ContactPage() {
                 </label>
                 <textarea
                   className={`form-control ${errors.message ? 'error' : ''}`}
-                  id="message"
+                  id="message" name="message"
                   placeholder="Describe your project, role, timeline or inquiry..."
                   value={formData.message}
                   onChange={(e) => handleChange('message', e.target.value)}

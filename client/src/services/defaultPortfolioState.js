@@ -49,8 +49,9 @@ export function getDefaultPortfolioState() {
       email: 'ayushprajapati9669@gmail.com',
       phone: '(+91) 9669802554',
       eyebrow: 'FULL-STACK MERN DEVELOPER · B.TECH CSE (2028)',
-      headline: 'Building modern, scalable full-stack web applications.',
-      supportingHeadline: "Hi, I'm Ayush Prajapati — CS Undergrad & Full-Stack Developer.",
+      headline: 'From blank screen to live product. That’s Ayush Prajapati.',
+      supportingHeadline: 'From blank screen to live product. That’s Ayush Prajapati.',
+      photoUrl: '/images/ayush-hero-portrait.png',
       heroDescription: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42) skilled in C, Java, JavaScript, Python, React.js, Node.js, Express.js, MySQL, and MongoDB. Winner of a college website-making competition.',
       availabilityLabel: 'CSE @ SISTec, Bhopal · CGPA: 8.42 (2028)',
       primaryCtaText: 'Explore Live Projects',
@@ -164,7 +165,7 @@ export function getDefaultPortfolioState() {
         instagram: 'https://www.instagram.com/ayush7162/'
       },
       portrait: {
-        url: '/images/ayush-hero-portrait.jpg',
+        url: '/images/ayush-hero-portrait.png',
         alt: 'Ayush Prajapati',
         scale: 1.0,
         offsetX: 0,

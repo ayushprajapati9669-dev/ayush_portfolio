@@ -27,8 +27,34 @@ export function HomePage() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
   const portraitStageRef = useRef(null);
+  const heroImgRef = useRef(null);
+  const heroPhotoBoxRef = useRef(null);
+  const [isPhotoWide, setIsPhotoWide] = useState(false);
+
+  const checkPhotoFit = () => {
+    if (heroImgRef.current && heroPhotoBoxRef.current) {
+      const img = heroImgRef.current;
+      const box = heroPhotoBoxRef.current;
+      if (img.naturalWidth && img.naturalHeight && box.clientHeight) {
+        setIsPhotoWide(img.naturalWidth / img.naturalHeight > box.clientWidth / box.clientHeight);
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkPhotoFit();
+    window.addEventListener('resize', checkPhotoFit);
+    return () => window.removeEventListener('resize', checkPhotoFit);
+  }, []);
 
   const p = appState.profile || {};
+  const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+  const heroPortraitUrl =
+    (p.portrait?.url && !isLegacyCeiling(p.portrait.url))
+      ? p.portrait.url
+      : (p.photoUrl && !isLegacyCeiling(p.photoUrl))
+      ? p.photoUrl
+      : '/images/ayush-hero-portrait.png';
   const ui = appState.uiLabels || {};
 
   const publishedProjects = (appState.projects || [])
@@ -171,7 +197,7 @@ export function HomePage() {
     } catch (_e) {}
 
     const ctx = gsap.context(() => {
-      // 1. Sarthak Sharma-Style Hero Entrance
+      // 1. Luxury Editorial Hero Entrance
       const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       heroTl
@@ -182,27 +208,17 @@ export function HomePage() {
           delay: 0.1
         })
         .from(
-          '.hero-presence-strip',
+          '.hero-photo-container',
           {
-            x: -25,
+            scale: 0.95,
             opacity: 0,
-            duration: 0.8
-          },
-          '-=0.5'
-        )
-        .from(
-          '.hero-portrait-stage',
-          {
-            scale: 0.92,
-            opacity: 0,
-            y: 20,
             duration: 1,
             ease: 'power2.out'
           },
           '-=0.6'
         )
         .from(
-          '.hero-sub-eyebrow',
+          '.hero-announcement-capsule',
           {
             y: 15,
             opacity: 0,
@@ -211,17 +227,7 @@ export function HomePage() {
           '-=0.5'
         )
         .from(
-          '.hero-name-editorial',
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.9,
-            ease: 'power3.out'
-          },
-          '-=0.45'
-        )
-        .from(
-          '.hero-narrative-editorial',
+          '.hero-modern-desc',
           {
             y: 20,
             opacity: 0,
@@ -230,20 +236,7 @@ export function HomePage() {
           '-=0.4'
         )
         .fromTo(
-          '.hero-actions-editorial > *',
-          { y: 15, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.1,
-            duration: 0.6,
-            ease: 'power2.out',
-            clearProps: 'all'
-          },
-          '-=0.3'
-        )
-        .fromTo(
-          '.hero-bottom-footer',
+          '.hero-features-strip',
           { y: 20, opacity: 0 },
           {
             y: 0,
@@ -360,81 +353,122 @@ export function HomePage() {
           <div />
         </div>
 
+        {/* Hero Right-Side Portrait with Gradient Fade Masks (matching index 14 & Image 1) */}
+        <div ref={heroPhotoBoxRef} className="hero-photo-container">
+          <img
+            ref={heroImgRef}
+            id="himg"
+            src={heroPortraitUrl}
+            alt={p.portrait?.alt || p.name || 'Ayush Prajapati'}
+            className={`hero-photo-img ${isPhotoWide ? 'wide' : ''}`}
+            onLoad={checkPhotoFit}
+            decoding="async"
+          />
+        </div>
+
         {/* Top Eyebrow Meta Row */}
         <div className="hero-top-meta">
           <div className="hero-meta-left">
             <span className="hero-meta-dot">▪</span>
             <span>ENGINEER. DEVELOPER. BUILDER.</span>
           </div>
-          <div className="hero-meta-right">
-            BASED IN BHOPAL · THINKING BEYOND
-          </div>
+          
         </div>
 
-        {/* Center Showcase matching uploaded reference photo */}
+        {/* Center / Left-Aligned Showcase matching Reference Image 1 & index (14).html */}
         <div className="hero-center-showcase">
-          {/* Top Announcement Capsule Pill */}
+          {/* Top Announcement Capsule Pill with Pulsing Green Indicator */}
           <div
             className="hero-announcement-capsule"
             onClick={() => scrollToSection('home-cta-banner')}
             role="button"
             tabIndex={0}
           >
-            <span className="capsule-icon">✦</span>
-            <span>Available for Full-Stack & Engineering Roles</span>
-            <span className="capsule-arrow">→</span>
+            <span className="hero-status-dot" aria-hidden="true" />
+            <span>{p.availabilityLabel || 'Available for full-stack & engineering roles'}</span>
+            <span className="capsule-arrow" aria-hidden="true">→</span>
           </div>
 
-          {/* Modern Hero Headline Matching Image 4 */}
+          {/* Hero Editorial Headline matching Image 1 & index (14).html */}
           <h1 className="hero-modern-title hero-editorial-title">
-            <span className="hero-title-line">Solid Full-Stack</span>
-            <span className="hero-title-line hero-title-accent">Engineering</span>
-            <span className="hero-title-line">That Turns Ideas Into</span>
-            <span className="hero-title-line hero-title-accent">Software</span>
+            <span className="hero-title-line">
+              From <em className="hero-title-accent">blank screen</em>
+            </span>
+            <span className="hero-title-line">
+              to <em className="hero-title-accent">live product.</em>
+            </span>
+            <span className="hero-title-name">
+              That’s {p.name || 'Ayush Prajapati'}.
+            </span>
           </h1>
 
-          {/* Modern Subtitle Matching Image 4 */}
+          {/* Modern Description matching Reference Image 1 & index (14).html */}
           <p className="hero-modern-desc">
-            I’m a Computer Science student exploring the intersection of web engineering, problem solving, and intelligent applications. I enjoy turning ideas into useful digital products and continuously improving how I build them.
+            {p.heroDescription || "I’m a Computer Science student from Bhopal exploring web engineering, problem-solving, and intelligent applications."}
           </p>
 
-          {/* Modern Action Buttons: Solid White Pill + Circular Glass Play Button */}
-          <div className="hero-modern-actions">
-            <MagneticButton
-              onClick={() => scrollToSection('portfolio-directories')}
-              className="hero-btn-solid-white"
-            >
-              <span>Explore work</span>
-              <span aria-hidden="true" className="text-xs ml-0.5">↓</span>
-            </MagneticButton>
+          </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                playTick();
-                if (openResumeModal) openResumeModal();
-              }}
-              className="hero-btn-play-circle"
-              title="Open Interactive Resume"
-              aria-label="Open Interactive Resume"
-            >
-              <i className="fa-regular fa-file-lines text-sm" />
-            </button>
-          </div>
-        </div>
+        {/* Bottom Hero Features Strip matching Image 1 & index (14).html */}
+        <div className="hero-features-strip">
+          <button
+            type="button"
+            onClick={() => {
+              playTick();
+              navigate('/projects');
+            }}
+            className="hero-feature-item"
+            title="Go to Projects Page"
+          >
+            <span className="hero-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+            </span>
+            <span>See my <strong>projects</strong></span>
+          </button>
 
-        {/* Bottom Hero Footer Strip */}
-        <div className="hero-bottom-footer">
-          <div className="hero-footer-left">
-            <span>SCROLL TO DISCOVER</span>
-            <span className="animate-bounce inline-block">↓</span>
-          </div>
-          <div>
-            BUILDING & SHIPPING SINCE 2022
-          </div>
-          <div>
-            AN ONGOING EXPLORATION
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              playTick();
+              if (openResumeModal) openResumeModal();
+            }}
+            className="hero-feature-item"
+            title="Open Interactive Resume"
+          >
+            <span className="hero-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 3 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+            </span>
+            <span>Download my <strong>resume</strong></span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              playTick();
+              navigate('/contact');
+            }}
+            className="hero-feature-item"
+            title="Send Ayush a direct message"
+          >
+            <span className="hero-feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </span>
+            <span>Send a <strong>message</strong></span>
+          </button>
         </div>
       </section>
 

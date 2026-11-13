@@ -10,13 +10,34 @@ export function getCsrfToken() {
   return csrfTokenMemory;
 }
 
+export function getActiveSession() {
+  try {
+    const raw = sessionStorage.getItem('ayush_modern_portfolio_admin_session_v4');
+    if (raw) return JSON.parse(raw);
+  } catch (_e) {}
+  return null;
+}
+
+export function getActiveSessionToken() {
+  const session = getActiveSession();
+  if (session?.token) return session.token;
+  if (csrfTokenMemory) return csrfTokenMemory;
+  if (session?.csrfToken) return session.csrfToken;
+  return null;
+}
+
 export async function apiRequest(pathname, options = {}) {
+  const session = getActiveSession();
+  const bearerToken = session?.token;
+  const csrf = csrfTokenMemory || session?.csrfToken;
+
   const headers = {
     'Content-Type': 'application/json',
+    ...(bearerToken ? { 'Authorization': `Bearer ${bearerToken}` } : {}),
     ...(options.headers || {})
   };
-  if (csrfTokenMemory && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method || 'GET')) {
-    headers['X-CSRF-Token'] = csrfTokenMemory;
+  if (csrf && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method || 'GET')) {
+    headers['X-CSRF-Token'] = csrf;
   }
   const response = await fetch(`${API_BASE}${pathname}`, {
     ...options,
@@ -34,31 +55,18 @@ export async function apiRequest(pathname, options = {}) {
   return data;
 }
 
-export function getActiveSessionToken() {
-  if (csrfTokenMemory) return csrfTokenMemory;
-  try {
-    const raw = sessionStorage.getItem('ayush_modern_portfolio_admin_session_v4');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed.token || parsed.csrfToken) {
-        return parsed.token || parsed.csrfToken;
-      }
-    }
-  } catch (_e) {}
-  return 'jwt_admin_master_sync';
-}
-
 export async function syncStateToMongoBackend(appState, sessionToken) {
-  const token = sessionToken || getActiveSessionToken();
+  const session = getActiveSession();
+  const bearerToken = sessionToken || session?.token;
+  const csrf = csrfTokenMemory || session?.csrfToken || bearerToken;
   try {
     const res = await fetch(`${API_BASE}/api/portfolio/sync`, {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        ...(token ? {
-          'X-CSRF-Token': token
-        } : {})
+        ...(csrf ? { 'X-CSRF-Token': csrf } : {}),
+        ...(bearerToken ? { 'Authorization': `Bearer ${bearerToken}` } : {})
       },
       body: JSON.stringify(appState)
     });
@@ -189,5 +197,12 @@ export async function uploadResumeFile(file, settings = {}) {
     };
     reader.onerror = err => reject(err);
     reader.readAsDataURL(file);
+  });
+}
+
+export async function removeImageBackground(imageDataUrl) {
+  return apiRequest('/api/admin/remove-background', {
+    method: 'POST',
+    body: { image: imageDataUrl }
   });
 }

@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+const { execFile } = require('child_process');
 const { readJsonBody, sendJson } = require('../utils/httpUtils');
 const {
   sanitizeText,
@@ -43,6 +46,7 @@ function createAdminController({ store, config }) {
       if (body.secondaryCtaText !== undefined) patch.secondaryCtaText = sanitizeText(body.secondaryCtaText, 60);
       if (body.location !== undefined) patch.location = sanitizeText(body.location, 160);
       if (body.footerTagline !== undefined) patch.footerTagline = sanitizeText(body.footerTagline, 200);
+      if (body.photoUrl !== undefined) patch.photoUrl = sanitizeText(body.photoUrl, 2000000);
       if (body.education && typeof body.education === 'object') {
         patch.education = {
           degree: sanitizeText(body.education.degree, 160),
@@ -80,7 +84,7 @@ function createAdminController({ store, config }) {
       if (body.portrait && typeof body.portrait === 'object') {
         patch.portrait = {
           ...store.getProfile().portrait,
-          url: body.portrait.url !== undefined ? sanitizeText(body.portrait.url, 500) : store.getProfile().portrait.url,
+          url: body.portrait.url !== undefined ? sanitizeText(body.portrait.url, 2000000) : store.getProfile().portrait.url,
           alt: body.portrait.alt !== undefined ? sanitizeText(body.portrait.alt, 300) : store.getProfile().portrait.alt,
           caption: body.portrait.caption !== undefined ? sanitizeText(body.portrait.caption, 200) : store.getProfile().portrait.caption,
           isTemporaryStandIn: body.portrait.isTemporaryStandIn !== undefined ? Boolean(body.portrait.isTemporaryStandIn) : store.getProfile().portrait.isTemporaryStandIn,
@@ -218,6 +222,7 @@ function createAdminController({ store, config }) {
       });
       if (body.setAsHeroPortrait) {
         store.updateProfile({
+          photoUrl: record.url,
           portrait: {
             ...store.getProfile().portrait,
             url: record.url,
@@ -225,6 +230,11 @@ function createAdminController({ store, config }) {
             isTemporaryStandIn: Boolean(body.isTemporaryStandIn)
           }
         });
+        if (typeof store.onPersistMongo === 'function') {
+          try {
+            await store.onPersistMongo(store.state);
+          } catch (_e) {}
+        }
       }
       return sendJson(res, 201, { media: record, profile: store.getProfile() });
     },
@@ -263,6 +273,73 @@ function createAdminController({ store, config }) {
         cloudinaryUploadPreset: body.cloudinaryUploadPreset !== undefined ? sanitizeText(body.cloudinaryUploadPreset, 120) : store.getSettings().cloudinaryUploadPreset
       });
       return sendJson(res, 200, { settings: updated });
+    },
+
+    async removeBackground(req, res) {
+      try {
+        const body = await readJsonBody(req);
+        const image = body?.image;
+        if (!image || typeof image !== 'string') {
+          return sendJson(res, 400, { error: 'Image data URL or file path is required.' });
+        }
+
+        const uploadsDir = config.uploadsDir || path.resolve(__dirname, '../../uploads');
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+        }
+        const outFilename = `hero_cutout_${Date.now()}_${Math.floor(Math.random() * 1000)}.webp`;
+        const outFilePath = path.join(uploadsDir, outFilename);
+
+        const scriptPath = path.join(__dirname, '../../scripts/remove_bg.py');
+        const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
+
+        const child = execFile(pythonCmd, [scriptPath, '-', outFilePath], { maxBuffer: 40 * 1024 * 1024 }, async (err, stdout, stderr) => {
+          if (err) {
+            console.error('[RemoveBg] Execution error:', err, stderr);
+            return sendJson(res, 500, { error: 'Failed to process image background removal.' });
+          }
+          const cleanOutput = stdout.trim();
+          // Fallback: If python printed base64 to stdout, write it to outFilePath
+          if (!fs.existsSync(outFilePath) && cleanOutput.startsWith('data:image/')) {
+            const match = cleanOutput.match(/^data:image\/[a-zA-Z0-9+]+;base64,(.+)$/);
+            if (match) {
+              fs.writeFileSync(outFilePath, Buffer.from(match[1], 'base64'));
+            }
+          }
+
+          const relativeUrl = `/uploads/${outFilename}`;
+          if (body.setAsHeroPortrait !== false) {
+            store.updateProfile({
+              photoUrl: relativeUrl,
+              portrait: {
+                ...(store.getProfile().portrait || {}),
+                url: relativeUrl,
+                isTemporaryStandIn: false
+              }
+            });
+            if (typeof store.onPersistMongo === 'function') {
+              try {
+                await store.onPersistMongo(store.state);
+              } catch (syncErr) {
+                console.warn('[AdminController] Mongo persistence warning during removeBackground:', syncErr.message);
+              }
+            }
+          }
+
+          return sendJson(res, 200, {
+            success: true,
+            url: relativeUrl,
+            image: relativeUrl,
+            profile: store.getProfile()
+          });
+        });
+
+        child.stdin.write(image);
+        child.stdin.end();
+      } catch (err) {
+        console.error('[RemoveBg] Exception:', err);
+        return sendJson(res, 500, { error: err.message });
+      }
     },
 
     async syncPortfolio(req, res) {

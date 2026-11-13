@@ -8,6 +8,13 @@ async function handleAdminRoutes(req, res, pathname, config, adminController) {
     return true;
   }
 
+  if (req.method === 'POST' && pathname === '/api/admin/remove-background') {
+    const session = requireAdminAuth(req, res, config, false);
+    if (!session) return true;
+    await adminController.removeBackground(req, res);
+    return true;
+  }
+
   if (!pathname.startsWith('/api/admin')) {
     return false;
   }

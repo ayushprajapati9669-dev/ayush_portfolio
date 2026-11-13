@@ -66,7 +66,7 @@ export function AppRouter() {
           <Route path="/achievements" element={<PageTransition><JourneyPage /></PageTransition>} />
           <Route path="/skills" element={<PageTransition><SkillsPage /></PageTransition>} />
           <Route path="/projects" element={<PageTransition><ProjectsPage viewMode="projects" /></PageTransition>} />
-          <Route path="/projects/:slug" element={<Navigate to="/projects" replace />} />
+          <Route path="/projects/:slug" element={<PageTransition><ProjectDetail /></PageTransition>} />
           <Route path="/certificates" element={<PageTransition><CertificatesPage /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
           <Route path="/connect" element={<PageTransition><ContactPage /></PageTransition>} />

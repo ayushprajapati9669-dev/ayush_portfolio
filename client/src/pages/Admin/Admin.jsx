@@ -48,7 +48,9 @@ export function AdminPage() {
     if (location.pathname === '/admin/api-docs' || location.pathname === '/admin/api-docs/') {
       return 'api-docs';
     }
-    return searchParams.get('tab') || 'dashboard';
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'hero' || tabParam === 'portrait') return 'media';
+    return tabParam || 'dashboard';
   };
 
   const [activeTab, setActiveTab] = useState(getInitialTab);
@@ -348,7 +350,7 @@ export function AdminPage() {
             />
           )}
 
-          {activeTab === 'media' && (
+          {(activeTab === 'media' || activeTab === 'hero' || activeTab === 'portrait') && (
             <AdminHeroPortrait
               appState={appState}
               updateAppState={updateAppState}

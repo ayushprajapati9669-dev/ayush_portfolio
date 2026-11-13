@@ -12,6 +12,15 @@ export function ThemeProvider({ children }) {
       if (!raw) return defaults;
       const parsed = JSON.parse(raw);
       if (!parsed.profile) return defaults;
+      // Auto-purge only the legacy base64 ceiling image from client localStorage
+      const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+      if (parsed.profile.photoUrl && isLegacyCeiling(parsed.profile.photoUrl)) {
+        parsed.profile.photoUrl = '/images/ayush-hero-portrait.png';
+      }
+      if (parsed.profile.portrait && isLegacyCeiling(parsed.profile.portrait.url)) {
+        parsed.profile.portrait.url = '/images/ayush-hero-portrait.png';
+        parsed.profile.portrait.isTemporaryStandIn = false;
+      }
       return {
         ...defaults,
         ...parsed,

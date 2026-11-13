@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { getCsrfToken } from '../../../services/api';
+import { apiRequest } from '../../../services/api';
 import { playTick } from '../../../utils/audio';
 
 const createDemoTimestamp = (minutesAgo) => new Date(Date.now() - minutesAgo * 60_000).toISOString();
@@ -362,20 +362,7 @@ export function AdminAnalytics({ showToast }) {
     if (!silent) setRefreshing(true);
 
     try {
-      const sessionToken = getCsrfToken();
-      const response = await fetch('/api/admin/analytics', {
-        credentials: 'include',
-        signal,
-        headers: {
-          Accept: 'application/json',
-          ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {})
-        }
-      });
-      const result = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        throw new Error(result?.error || `Telemetry request failed (${response.status}).`);
-      }
+      const result = await apiRequest('/api/admin/analytics', { signal });
       if (!result?.analytics || typeof result.analytics !== 'object') {
         throw new Error('The telemetry response did not contain analytics data.');
       }

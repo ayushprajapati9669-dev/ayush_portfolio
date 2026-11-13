@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 
 // Authentic, colorful brand tech icons for top 1% developer portfolio
@@ -211,6 +212,7 @@ export function ProjectCard({
     }
   };
 
+  const caseStudyUrl = `/projects/${proj.slug || proj.id}`;
   const primaryTargetUrl = liveHref || githubHref;
 
   return (
@@ -222,15 +224,10 @@ export function ProjectCard({
       onMouseLeave={handleMouseLeave}
       onClick={() => onSelect && onSelect(proj.id)}
     >
-      <a
-        href={primaryTargetUrl || '#'}
-        target={primaryTargetUrl ? '_blank' : '_self'}
-        rel="noopener noreferrer"
+      <Link
+        to={caseStudyUrl}
         className="project-img-wrap block relative overflow-hidden"
-        title={`Visit ${proj.title}`}
-        onClick={(e) => {
-          if (!primaryTargetUrl || primaryTargetUrl === '#') e.preventDefault();
-        }}
+        title={`Inspect ${proj.title} Case Study`}
       >
         <picture>
           {imgSrc && imgSrc.includes('airbnb-clone-preview') && (
@@ -261,19 +258,21 @@ export function ProjectCard({
             </div>
           )}
         </div>
-      </a>
+      </Link>
 
       <div className="project-content flex-1 flex flex-col justify-between">
         <div>
           <div className="project-meta flex items-center justify-between mb-2">
             <span className="project-num">PROJECT {indexNum < 10 ? `0${indexNum}` : indexNum}</span>
-            <span className="project-link-hint flex items-center gap-1 text-[11px] text-amber-300 opacity-0 group-hover:opacity-100 transition-opacity">
-              Explore <i className="fa-solid fa-arrow-up-right-from-square text-[9px]" />
-            </span>
+            <Link to={caseStudyUrl} className="project-link-hint flex items-center gap-1 text-[11px] text-amber-300 opacity-0 group-hover:opacity-100 transition-opacity no-underline">
+              Case Study <i className="fa-solid fa-arrow-right text-[9px]" />
+            </Link>
           </div>
 
           <h2 className="project-title group-hover:text-amber-300 transition-colors">
-            {proj.title}
+            <Link to={caseStudyUrl} className="no-underline text-inherit hover:text-amber-300 transition-colors">
+              {proj.title}
+            </Link>
           </h2>
 
           <p className="project-desc">

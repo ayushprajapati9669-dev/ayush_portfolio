@@ -634,7 +634,7 @@ export function Header() {
                         >
                           <i className="fa-solid fa-terminal text-xs text-yellow-400" />
                           <span>Developer Terminal</span>
-                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">Ctrl + K</kbd>
+                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">Ctrl + ~</kbd>
                         </button>
                         <button
                           type="button"
@@ -685,11 +685,11 @@ export function Header() {
                       playTick('click');
                       window.dispatchEvent(new CustomEvent('ams-open-terminal'));
                     }}
-                    title="Open Developer Terminal (Ctrl + K)"
+                    title="Open Developer Terminal (Ctrl + ~)"
                   >
                     <i className="fa-solid fa-terminal text-yellow-400" style={{ fontSize: '10px' }} />
                     <span className="hidden sm:inline">&gt;_ Terminal</span>
-                    <span className="cmd-kbd hidden sm:inline-flex">Ctrl + K</span>
+                    <span className="cmd-kbd hidden sm:inline-flex">Ctrl + ~</span>
                   </button>
                 </div>
               )}

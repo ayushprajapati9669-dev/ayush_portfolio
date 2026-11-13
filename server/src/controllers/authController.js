@@ -47,7 +47,8 @@ function createAuthController({ store, config, loginLimiter }) {
       return sendJson(res, 200, {
         authenticated: true,
         user: { username: adminUser.username, role: 'admin' },
-        csrfToken
+        csrfToken,
+        token: signedSession
       });
     },
 

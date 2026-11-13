@@ -1,6 +1,6 @@
 import React, {  useState, useRef, useEffect, useMemo  } from 'react';
 import { createPortal } from 'react-dom';
-import { uploadImageViaCloudinary } from '../../../services/api';
+import { uploadImageViaCloudinary, apiRequest } from '../../../services/api';
 import { validateProjectForm } from '../../../utils/validation';
 import { playTick } from '../../../utils/audio';
 import { MarkdownView } from '../../../components/common/MarkdownView';
@@ -216,20 +216,15 @@ export function AdminProjects({
     playTick();
     setIsGeneratingAi(true);
     try {
-      const res = await fetch('/api/admin/generate-case-study', {
+      const data = await apiRequest('/api/admin/generate-case-study', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.token || ''}`
-        },
-        body: JSON.stringify({
+        body: {
           title: form.title || 'Distributed Web Platform',
           category: form.category || 'Full-Stack Web App',
           tags: currentTechList
-        })
+        }
       });
-      if (res.ok) {
-        const data = await res.json();
+      if (data) {
         if (data?.draft) {
           const d = data.draft;
           setForm((prev) => ({

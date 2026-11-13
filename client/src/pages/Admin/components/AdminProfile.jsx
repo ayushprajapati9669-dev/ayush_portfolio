@@ -107,7 +107,7 @@ export function AdminProfile({
         updateAppState((prev) => ({
           ...prev,
           profile: { ...prev.profile, resumeUrl: targetUrl }
-        }), session?.token);
+        }), session?.csrfToken || session?.token);
         showToast('Resume uploaded and synchronized!', 'fa-circle-check');
       } else {
         showToast('Resume loaded locally. Click Save to persist.', 'fa-check');
@@ -205,7 +205,7 @@ export function AdminProfile({
           },
           aboutBio: aboutBioList
         }
-      }), session?.token);
+      }), session?.csrfToken || session?.token);
 
       setIsSaving(false);
       setIsDirty(false);

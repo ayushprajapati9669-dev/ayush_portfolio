@@ -41,7 +41,7 @@ export function DeveloperCliDrawer() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Toggle with Ctrl+` or Ctrl+~ or Cmd+`
-      if ((e.ctrlKey || e.metaKey) && (e.key === '`' || e.key === '~' || e.key.toLowerCase() === 'k')) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '`' || e.key === '~' || e.code === 'Backquote')) {
         e.preventDefault();
         playTick('click');
         setIsOpen((prev) => !prev);
@@ -477,7 +477,9 @@ export function DeveloperCliDrawer() {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-md transition-all animate-fadeIn"
+      role="dialog"
+      aria-label="Developer CLI Terminal"
+      className="terminal-drawer-panel fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-md transition-all animate-fadeIn"
       onClick={(e) => {
         if (e.target === e.currentTarget) setIsOpen(false);
       }}
