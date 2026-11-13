@@ -2269,7 +2269,7 @@ export function AdminMilestones({
                       {/* Description snippet */}
                       <div
                         className="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-2"
-                        dangerouslySetInnerHTML={{ __html: m.desc }}
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(m.desc || '') }}
                       />
 
                       {/* Tech Tags */}
@@ -2474,7 +2474,7 @@ export function AdminMilestones({
                       {/* Description */}
                       <div
                         className="text-xs text-slate-400 leading-relaxed mt-1"
-                        dangerouslySetInnerHTML={{ __html: m.desc }}
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(m.desc || '') }}
                       />
 
                       {/* Tech Tags */}
@@ -3392,7 +3392,7 @@ export function AdminMilestones({
                       <div
                         className="review-desc-preview"
                         dangerouslySetInnerHTML={{
-                          __html: wizardDesc || rteEditorRef.current?.innerHTML || '<em class="text-slate-500">No description provided</em>'
+                          __html: DOMPurify.sanitize(wizardDesc || rteEditorRef.current?.innerHTML || '<em class="text-slate-500">No description provided</em>')
                         }}
                       />
                     </div>
@@ -3995,7 +3995,7 @@ export function AdminMilestones({
                     Milestone {idx === 0 ? 'A' : 'B'}
                   </span>
                   <h4 className="font-display font-semibold text-sm text-white mb-1.5">{target.title}</h4>
-                  <div className="text-xs text-slate-400 mb-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: target.desc }} />
+                  <div className="text-xs text-slate-400 mb-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(target.desc || '') }} />
                   <div className="text-[11px] text-slate-400 flex flex-col gap-1 border-t border-slate-800 pt-2">
                     <div><b>Year:</b> {target.year}</div>
                     <div><b>Status:</b> {target.status}</div>

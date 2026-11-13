@@ -194,12 +194,12 @@ export function ContactPage() {
       <div className="page-header">
         <div className="header-orb" />
         <ScrollWriteText as="div" className="page-tagline" mode="scramble" scrambleDuration={20}>
-          05 · CONNECT
+          06 · DIRECT CHANNEL & INQUIRIES
         </ScrollWriteText>
-        <ScrollWriteText as="h1" className="page-title" mode="mask" stagger={0.04} highlightWords={['Touch']}>
-          Get In Touch
+        <ScrollWriteText as="h1" className="page-title hero-editorial-title text-left !m-0 !p-0 !max-w-none" mode="mask" stagger={0.04} highlightWords={['Touch']}>
+          Get In *Touch*
         </ScrollWriteText>
-        <p className="page-desc">
+        <p className="page-desc mt-4">
           Reach out directly at <strong>{p.email || 'ayushprajapati9669@gmail.com'}</strong> or{' '}
           <strong>{p.phone || '(+91) 9669802554'}</strong> or send a message below.
         </p>

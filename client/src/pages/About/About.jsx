@@ -6,6 +6,7 @@ import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { personSchema } from '../../utils/seo';
 import { ScrollWriteText } from '../../components/common/ScrollWriteText';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 export function AboutPage() {
   const { appState } = usePortfolio();
@@ -171,7 +172,6 @@ export function AboutPage() {
     };
   }, []);
 
-  const profileImageUrl = p.portrait?.url || p.profileImage || '/images/ayush-hero-portrait.jpg';
   const githubUrl = p.socialLinks?.github || 'https://github.com/ayushprajapati9669-dev';
   const linkedinUrl = p.socialLinks?.linkedin || 'https://www.linkedin.com/in/ayush-prajapati-b9042424a/';
   const instagramUrl = p.socialLinks?.instagram || 'https://www.instagram.com/ayush7162/';
@@ -192,7 +192,7 @@ export function AboutPage() {
           mode="scramble"
           scrambleDuration={20}
         >
-          {p.aboutEyebrow || p.eyebrow || 'Computer Science Student · Developer · Builder'}
+          {p.aboutEyebrow || '01 · BACKGROUND & PHILOSOPHY'}
         </ScrollWriteText>
         <h1 className="name-heading" id="mainName">
           <span className="word-wrapper" id="word1">Ayush</span>
@@ -256,7 +256,7 @@ export function AboutPage() {
 
           {p.aboutBio && Array.isArray(p.aboutBio) && p.aboutBio.length > 0 ? (
             p.aboutBio.map((paragraph, i) => (
-              <p key={i} dangerouslySetInnerHTML={{ __html: paragraph }} />
+              <p key={i} dangerouslySetInnerHTML={{ __html: sanitizeHtml(paragraph) }} />
             ))
           ) : (
             <>
@@ -285,18 +285,9 @@ export function AboutPage() {
           onMouseMove={handleCardMouseMove}
           onMouseLeave={handleCardMouseLeave}
         >
-          <div className="avatar-ring">
-            <div className="profile-img-wrap">
-              <span className="initials-fallback">{p.monogram || 'AP'}</span>
-              <img
-                className="profile-img"
-                src={profileImageUrl}
-                alt={p.name || 'Ayush Prajapati'}
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
+          <div className="avatar-ring about-emblem-ring" aria-label={`Monogram logo of ${p.name || 'Ayush Prajapati'}`}>
+            <div className="profile-img-wrap about-monogram-wrap">
+              <span className="about-monogram-text">{p.monogram || 'AP'}</span>
             </div>
           </div>
 

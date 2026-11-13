@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useSmoothScroll } from '../common/SmoothScrollProvider';
+import { ErrorBoundary } from '../common/ErrorBoundary';
 const VantaBirdsBackground = React.lazy(() => import('../ui/VantaBirdsBackground').then((m) => ({ default: m.VantaBirdsBackground })));
 
 // Deterministic cosmic starfield coordinates to ensure zero SSR/hydration mismatch
@@ -150,9 +151,11 @@ export function BackgroundLayers() {
             style={{ opacity: Math.max(0, 1 - scrollProgress * 3.2) }}
             aria-hidden="true"
           >
-            <React.Suspense fallback={null}>
-              <VantaBirdsBackground scrollProgress={scrollProgress} />
-            </React.Suspense>
+            <ErrorBoundary fallback={null}>
+              <React.Suspense fallback={null}>
+                <VantaBirdsBackground scrollProgress={scrollProgress} />
+              </React.Suspense>
+            </ErrorBoundary>
           </div>
 
           

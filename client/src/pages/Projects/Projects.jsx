@@ -274,20 +274,20 @@ export function ProjectsPage({ viewMode = 'projects' }) {
           mode="scramble"
           scrambleDuration={20}
         >
-          02 · Featured Work
+          03 · FEATURED ENGINEERING WORK
         </ScrollWriteText>
         <ScrollWriteText
           as="h1"
-          className="page-title"
+          className="page-title hero-editorial-title text-left !m-0 !p-0 !max-w-none"
           mode="mask"
           stagger={0.04}
           highlightWords={['Projects']}
         >
-          Live Deployed Projects
+          Live Deployed *Projects*
         </ScrollWriteText>
         <ScrollWriteText
           as="p"
-          className="page-desc"
+          className="page-desc mt-4"
           mode="words"
           stagger={0.02}
         >

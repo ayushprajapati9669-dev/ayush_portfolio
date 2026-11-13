@@ -291,51 +291,72 @@ function createAdminController({ store, config }) {
         const outFilePath = path.join(uploadsDir, outFilename);
 
         const scriptPath = path.join(__dirname, '../../scripts/remove_bg.py');
+        if (!fs.existsSync(scriptPath)) {
+          return sendJson(res, 501, { error: 'Python background removal script is not configured on this server.' });
+        }
         const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
 
-        const child = execFile(pythonCmd, [scriptPath, '-', outFilePath], { maxBuffer: 40 * 1024 * 1024 }, async (err, stdout, stderr) => {
-          if (err) {
-            console.error('[RemoveBg] Execution error:', err, stderr);
-            return sendJson(res, 500, { error: 'Failed to process image background removal.' });
-          }
-          const cleanOutput = stdout.trim();
-          // Fallback: If python printed base64 to stdout, write it to outFilePath
-          if (!fs.existsSync(outFilePath) && cleanOutput.startsWith('data:image/')) {
-            const match = cleanOutput.match(/^data:image\/[a-zA-Z0-9+]+;base64,(.+)$/);
-            if (match) {
-              fs.writeFileSync(outFilePath, Buffer.from(match[1], 'base64'));
+        let child;
+        try {
+          child = execFile(pythonCmd, [scriptPath, '-', outFilePath], { maxBuffer: 40 * 1024 * 1024 }, async (err, stdout, stderr) => {
+            if (err) {
+              console.error('[RemoveBg] Execution error:', err.message || err, stderr);
+              return sendJson(res, 500, { error: 'Failed to process image background removal. Please upload a transparent PNG directly.' });
             }
-          }
-
-          const relativeUrl = `/uploads/${outFilename}`;
-          if (body.setAsHeroPortrait !== false) {
-            store.updateProfile({
-              photoUrl: relativeUrl,
-              portrait: {
-                ...(store.getProfile().portrait || {}),
-                url: relativeUrl,
-                isTemporaryStandIn: false
+            const cleanOutput = stdout.trim();
+            // Fallback: If python printed base64 to stdout, write it to outFilePath
+            if (!fs.existsSync(outFilePath) && cleanOutput.startsWith('data:image/')) {
+              const match = cleanOutput.match(/^data:image\/[a-zA-Z0-9+]+;base64,(.+)$/);
+              if (match) {
+                fs.writeFileSync(outFilePath, Buffer.from(match[1], 'base64'));
               }
+            }
+
+            const relativeUrl = `/uploads/${outFilename}`;
+            if (body.setAsHeroPortrait !== false) {
+              store.updateProfile({
+                photoUrl: relativeUrl,
+                portrait: {
+                  ...(store.getProfile().portrait || {}),
+                  url: relativeUrl,
+                  isTemporaryStandIn: false
+                }
+              });
+              if (typeof store.onPersistMongo === 'function') {
+                try {
+                  await store.onPersistMongo(store.state);
+                } catch (syncErr) {
+                  console.warn('[AdminController] Mongo persistence warning during removeBackground:', syncErr.message);
+                }
+              }
+            }
+
+            return sendJson(res, 200, {
+              success: true,
+              url: relativeUrl,
+              image: relativeUrl,
+              profile: store.getProfile()
             });
-            if (typeof store.onPersistMongo === 'function') {
-              try {
-                await store.onPersistMongo(store.state);
-              } catch (syncErr) {
-                console.warn('[AdminController] Mongo persistence warning during removeBackground:', syncErr.message);
-              }
-            }
-          }
-
-          return sendJson(res, 200, {
-            success: true,
-            url: relativeUrl,
-            image: relativeUrl,
-            profile: store.getProfile()
           });
-        });
 
-        child.stdin.write(image);
-        child.stdin.end();
+          child.on('error', (spawnErr) => {
+            console.error('[RemoveBg] Process spawn error:', spawnErr.message);
+            if (!res.headersSent) {
+              sendJson(res, 500, { error: 'Python runtime is unavailable for background removal. Please upload a PNG with transparency.' });
+            }
+          });
+
+          if (child.stdin) {
+            child.stdin.on('error', (stdinErr) => {
+              console.warn('[RemoveBg] stdin error:', stdinErr.message);
+            });
+            child.stdin.write(image);
+            child.stdin.end();
+          }
+        } catch (execErr) {
+          console.error('[RemoveBg] Spawn invocation error:', execErr.message);
+          return sendJson(res, 500, { error: 'Unable to start background removal process.' });
+        }
       } catch (err) {
         console.error('[RemoveBg] Exception:', err);
         return sendJson(res, 500, { error: err.message });

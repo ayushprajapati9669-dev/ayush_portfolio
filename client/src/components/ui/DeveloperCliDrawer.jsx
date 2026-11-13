@@ -3,6 +3,51 @@ import { useNavigate } from 'react-router-dom';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick, setSwitchPreset, getSoundSettings, startLofiAmbient, stopLofiAmbient, isLofiPlaying } from '../../utils/audio';
 
+function renderAnsiText(text) {
+  if (!text || typeof text !== 'string') return text;
+  if (!text.includes('\x1b[')) return text;
+
+  const parts = [];
+  const regex = /\x1b\[(\d+)m/g;
+  let lastIndex = 0;
+  let currentColor = null;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({
+        text: text.substring(lastIndex, match.index),
+        color: currentColor
+      });
+    }
+    const code = match[1];
+    if (code === '0') {
+      currentColor = null;
+    } else if (code === '36') {
+      currentColor = 'text-cyan-400 font-semibold';
+    } else if (code === '32') {
+      currentColor = 'text-emerald-400 font-semibold';
+    } else if (code === '33') {
+      currentColor = 'text-yellow-400 font-semibold';
+    } else if (code === '31') {
+      currentColor = 'text-rose-400 font-semibold';
+    }
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < text.length) {
+    parts.push({
+      text: text.substring(lastIndex),
+      color: currentColor
+    });
+  }
+
+  return parts.map((part, i) => (
+    <span key={i} className={part.color || undefined}>
+      {part.text}
+    </span>
+  ));
+}
+
 export function DeveloperCliDrawer() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
@@ -479,7 +524,8 @@ export function DeveloperCliDrawer() {
     <div
       role="dialog"
       aria-label="Developer CLI Terminal"
-      className="terminal-drawer-panel fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-md transition-all animate-fadeIn"
+      className="terminal-drawer-panel fixed inset-0 !z-[9999999] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md transition-all animate-fadeIn"
+      style={{ zIndex: 9999999 }}
       onClick={(e) => {
         if (e.target === e.currentTarget) setIsOpen(false);
       }}
@@ -487,8 +533,8 @@ export function DeveloperCliDrawer() {
       <div
         ref={containerRef}
         className={`w-full ${
-          isMaximized ? 'h-full max-w-full rounded-none' : 'max-w-4xl h-[80vh] sm:h-[620px] rounded-t-2xl sm:rounded-2xl'
-        } bg-[#080d14]/95 border border-yellow-500/30 shadow-[0_20px_70px_rgba(0,240,255,0.15)] flex flex-col font-mono text-xs overflow-hidden backdrop-blur-xl transition-all duration-200`}
+          isMaximized ? 'h-full max-w-full rounded-none' : 'max-w-4xl h-[82vh] sm:h-[580px] max-h-[calc(100vh-5.5rem)] rounded-2xl'
+        } bg-[#080d14]/98 border border-yellow-500/35 shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_40px_rgba(212,175,55,0.12)] flex flex-col font-mono text-xs overflow-hidden backdrop-blur-2xl transition-all duration-200 mt-6 sm:mt-10`}
       >
         {/* Terminal Title Bar */}
         <div className="flex items-center justify-between px-4 py-2.5 bg-[#0e1622]/90 border-b border-yellow-500/20 select-none">
@@ -533,7 +579,7 @@ export function DeveloperCliDrawer() {
             <button
               onClick={() => setIsOpen(false)}
               className="text-white/40 hover:text-white px-1.5 py-0.5 rounded hover:bg-white/10 transition"
-            aria-label="Close terminal"
+              aria-label="Close terminal"
             >
               <i className="fa-solid fa-xmark" />
             </button>
@@ -569,20 +615,20 @@ export function DeveloperCliDrawer() {
             if (log.type === 'system') {
               return (
                 <div key={index} className="text-emerald-400/90 whitespace-pre-wrap">
-                  {log.content}
+                  {renderAnsiText(log.content)}
                 </div>
               );
             }
             if (log.type === 'error') {
               return (
                 <div key={index} className="text-rose-400 whitespace-pre-wrap">
-                  {log.content}
+                  {renderAnsiText(log.content)}
                 </div>
               );
             }
             return (
               <div key={index} className="text-white/80 whitespace-pre-wrap leading-relaxed">
-                {log.content}
+                {renderAnsiText(log.content)}
               </div>
             );
           })}

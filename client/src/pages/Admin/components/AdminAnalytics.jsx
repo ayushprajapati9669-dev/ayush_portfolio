@@ -5,7 +5,7 @@ import { playTick } from '../../../utils/audio';
 const createDemoTimestamp = (minutesAgo) => new Date(Date.now() - minutesAgo * 60_000).toISOString();
 
 const DEMO_ANALYTICS = {
-  totalPageViews: 3619,
+  totalPageViews: 4125,
   uniqueVisitors: 1420,
   resumeDownloads: 89,
   cliLaunches: 142,
@@ -36,118 +36,126 @@ const DEMO_ANALYTICS = {
     '2026-11-02': 802,
     '2026-11-03': 339,
     '2026-11-04': 184,
-    '2026-11-05': 210
+    '2026-11-05': 210,
+    '2026-11-06': 295,
+    '2026-11-07': 340,
+    '2026-11-08': 415,
+    '2026-11-09': 380,
+    '2026-11-10': 490,
+    '2026-11-11': 530,
+    '2026-11-12': 620,
+    '2026-11-13': 468
   },
   recentEvents: [
     {
-      id: 'demo-1',
+      id: 'ev-1',
       type: 'project_view',
       title: 'Viewed Wanderlust — Distributed Airbnb Architecture',
       path: '/projects/wanderlust-airbnb-clone',
       city: 'San Francisco',
       country: 'United States',
       referrer: 'LinkedIn',
-      timestamp: createDemoTimestamp(2)
+      timestamp: createDemoTimestamp(3)
     },
     {
-      id: 'demo-2',
+      id: 'ev-2',
       type: 'resume_download',
-      title: 'Downloaded Full-Stack Engineering Resume',
+      title: 'Downloaded Official Full-Stack Resume ATS PDF',
       path: '/resume',
       city: 'London',
       country: 'United Kingdom',
       referrer: 'GitHub',
-      timestamp: createDemoTimestamp(7)
+      timestamp: createDemoTimestamp(9)
     },
     {
-      id: 'demo-3',
+      id: 'ev-3',
       type: 'api_sandbox',
-      title: 'Executed Live Property Search REST Endpoint',
+      title: 'Executed Live Property Search REST API Endpoint',
       path: '/api/v1/properties/search',
       city: 'Bengaluru',
       country: 'India',
       referrer: 'Direct / URL',
-      timestamp: createDemoTimestamp(14)
+      timestamp: createDemoTimestamp(18)
     },
     {
-      id: 'demo-4',
+      id: 'ev-4',
       type: 'cli_launch',
-      title: 'Launched Interactive Developer CLI Drawer',
+      title: 'Launched Interactive Developer CLI Drawer (AYUSH-TERM)',
       path: '/terminal',
       city: 'Seattle',
       country: 'United States',
       referrer: 'LinkedIn',
-      timestamp: createDemoTimestamp(28)
+      timestamp: createDemoTimestamp(32)
     },
     {
-      id: 'demo-5',
+      id: 'ev-5',
       type: 'project_view',
       title: 'Viewed Autonomous Multi-Agent AI Workspace',
       path: '/projects/agentic-workspace',
       city: 'Berlin',
       country: 'Germany',
       referrer: 'Google / Search',
-      timestamp: createDemoTimestamp(45)
+      timestamp: createDemoTimestamp(48)
     },
     {
-      id: 'demo-6',
+      id: 'ev-6',
       type: 'pageview',
-      title: 'Inspected Tech Stack & Framework Competencies',
+      title: 'Inspected Tech Stack & Skills Matrix',
       path: '/skills',
       city: 'Toronto',
       country: 'Canada',
       referrer: 'GitHub',
-      timestamp: createDemoTimestamp(62)
+      timestamp: createDemoTimestamp(65)
     },
     {
-      id: 'demo-7',
+      id: 'ev-7',
       type: 'chat_query',
       title: 'Prompted Antigravity Portfolio AI Assistant',
       path: '/ai-chat',
       city: 'Singapore',
       country: 'Singapore',
       referrer: 'Direct / URL',
-      timestamp: createDemoTimestamp(80)
+      timestamp: createDemoTimestamp(82)
     },
     {
-      id: 'demo-8',
+      id: 'ev-8',
       type: 'project_view',
       title: 'Viewed AI Mock Interview & Assessment Platform',
       path: '/projects/ai-mock-interview-platform',
       city: 'Amsterdam',
       country: 'Netherlands',
       referrer: 'LinkedIn',
-      timestamp: createDemoTimestamp(98)
+      timestamp: createDemoTimestamp(104)
     },
     {
-      id: 'demo-9',
+      id: 'ev-9',
       type: 'resume_download',
-      title: 'Downloaded Full-Stack Engineering Resume',
+      title: 'Downloaded Official Full-Stack Resume ATS PDF',
       path: '/resume',
       city: 'Pune',
       country: 'India',
       referrer: 'LeetCode',
-      timestamp: createDemoTimestamp(115)
+      timestamp: createDemoTimestamp(120)
     },
     {
-      id: 'demo-10',
+      id: 'ev-10',
       type: 'pageview',
-      title: 'Explored Career Milestones & Workshop Leadership',
+      title: 'Explored Career Milestones & Leadership Journey',
       path: '/journey',
       city: 'Sydney',
       country: 'Australia',
       referrer: 'Direct / URL',
-      timestamp: createDemoTimestamp(140)
+      timestamp: createDemoTimestamp(145)
     }
   ]
 };
 
 const REFERRER_ICONS = {
-  LinkedIn: { icon: 'fa-brands fa-linkedin', color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.12)' },
+  LinkedIn: { icon: 'fa-brands fa-linkedin', color: '#0a66c2', bg: 'rgba(10, 102, 194, 0.12)' },
   GitHub: { icon: 'fa-brands fa-github', color: '#f1f5f9', bg: 'rgba(241, 245, 249, 0.1)' },
   'Direct / URL': { icon: 'fa-solid fa-link', color: '#facc15', bg: 'rgba(250, 204, 21, 0.12)' },
   'Direct / External': { icon: 'fa-solid fa-arrow-up-right-from-square', color: '#facc15', bg: 'rgba(250, 204, 21, 0.12)' },
-  'Google / Search': { icon: 'fa-brands fa-google', color: '#60a5fa', bg: 'rgba(96, 165, 250, 0.12)' },
+  'Google / Search': { icon: 'fa-brands fa-google', color: '#ea4335', bg: 'rgba(234, 67, 53, 0.12)' },
   LeetCode: { icon: 'fa-solid fa-code', color: '#fb923c', bg: 'rgba(251, 146, 60, 0.12)' },
   'Twitter / X': { icon: 'fa-brands fa-x-twitter', color: '#cbd5e1', bg: 'rgba(203, 213, 225, 0.1)' }
 };
@@ -168,44 +176,39 @@ function formatTimeAgo(timestamp) {
   return new Date(parsed).toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
 
-function MiniSparkline({ data, stroke = '#facc15', fill = 'rgba(250, 204, 21, 0.1)' }) {
-  if (!data || data.length < 2) return null;
-  const max = Math.max(...data, 1);
-  const min = Math.min(...data, 0);
-  const range = max - min || 1;
-  const width = 120;
-  const height = 32;
-
-  const points = data.map((val, i) => {
-    const x = (i / (data.length - 1)) * width;
-    const y = height - ((val - min) / range) * (height - 6) - 3;
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
+function formatExactDate(timestamp) {
+  const parsed = new Date(timestamp);
+  if (Number.isNaN(parsed.getTime())) return 'Recently';
+  return parsed.toLocaleString([], {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   });
-
-  const pathD = `M ${points.join(' L ')}`;
-  const areaD = `${pathD} L ${width},${height} L 0,${height} Z`;
-
-  return (
-    <svg width={width} height={height} className="overflow-visible shrink-0">
-      <path d={areaD} fill={fill} />
-      <path d={pathD} fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
 }
 
-function TrafficTrendAreaChart({ dailyViews, activeTimeframe }) {
+/**
+ * Clean & Minimalist Traffic Line Chart
+ */
+function SimpleTrafficAreaChart({ dailyViews, activeTimeframe }) {
   const entries = useMemo(() => {
     if (!dailyViews || Object.keys(dailyViews).length === 0) return [];
-    return Object.entries(dailyViews)
+    const all = Object.entries(dailyViews)
       .map(([date, count]) => ({ date, count: Number(count) || 0 }))
       .sort((a, b) => new Date(a.date) - new Date(b.date));
-  }, [dailyViews]);
+
+    if (activeTimeframe === '24h') return all.slice(-2);
+    if (activeTimeframe === '7d') return all.slice(-7);
+    if (activeTimeframe === '30d') return all.slice(-30);
+    return all;
+  }, [dailyViews, activeTimeframe]);
 
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   if (entries.length < 2) {
     return (
-      <div className="h-44 flex items-center justify-center text-xs text-slate-500 font-mono">
+      <div className="h-40 flex items-center justify-center text-xs text-slate-500 font-mono">
         Aggregating daily visitor trends...
       </div>
     );
@@ -217,11 +220,11 @@ function TrafficTrendAreaChart({ dailyViews, activeTimeframe }) {
   const peak = Math.max(...counts);
 
   const width = 640;
-  const height = 180;
-  const padLeft = 36;
-  const padRight = 20;
-  const padTop = 18;
-  const padBottom = 28;
+  const height = 170;
+  const padLeft = 32;
+  const padRight = 16;
+  const padTop = 16;
+  const padBottom = 26;
   const chartW = width - padLeft - padRight;
   const chartH = height - padTop - padBottom;
 
@@ -231,7 +234,6 @@ function TrafficTrendAreaChart({ dailyViews, activeTimeframe }) {
     return { x, y, date: entry.date, count: entry.count };
   });
 
-  // Bezier curve generation
   let pathD = `M ${coordinates[0].x.toFixed(1)},${coordinates[0].y.toFixed(1)}`;
   for (let i = 0; i < coordinates.length - 1; i++) {
     const curr = coordinates[i];
@@ -244,57 +246,52 @@ function TrafficTrendAreaChart({ dailyViews, activeTimeframe }) {
 
   return (
     <div className="space-y-3">
+      {/* Chart Top Summary */}
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-4 font-mono text-[11px]">
+        <div className="flex items-center gap-4 text-xs font-mono">
           <div>
-            <span className="text-slate-500 block text-[9px] uppercase tracking-wider">Total in View</span>
+            <span className="text-slate-400 text-[10px] block">Total Views</span>
             <span className="font-bold text-amber-300 text-sm">{formatNumber(totalInPeriod)}</span>
           </div>
           <div className="border-l border-white/10 pl-4">
-            <span className="text-slate-500 block text-[9px] uppercase tracking-wider">Peak Day</span>
-            <span className="font-bold text-cyan-300 text-sm">{formatNumber(peak)} visits</span>
+            <span className="text-slate-400 text-[10px] block">Peak Day</span>
+            <span className="font-bold text-white text-sm">{formatNumber(peak)} visits</span>
           </div>
           <div className="border-l border-white/10 pl-4">
-            <span className="text-slate-500 block text-[9px] uppercase tracking-wider">Daily Avg</span>
+            <span className="text-slate-400 text-[10px] block">Daily Average</span>
             <span className="font-bold text-slate-300 text-sm">{Math.round(totalInPeriod / entries.length)}/day</span>
           </div>
         </div>
 
         {hoveredIndex !== null && (
-          <div className="inline-flex items-center gap-2 rounded-lg border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-xs font-mono text-amber-300">
-            <i className="fa-solid fa-calendar-day text-[10px]" />
+          <div className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-2.5 py-1 text-xs font-mono text-amber-300">
             <span>{coordinates[hoveredIndex].date}:</span>
-            <strong className="text-white">{formatNumber(coordinates[hoveredIndex].count)} visits</strong>
+            <strong className="text-white">{formatNumber(coordinates[hoveredIndex].count)} views</strong>
           </div>
         )}
       </div>
 
+      {/* SVG Canvas */}
       <div className="relative w-full overflow-hidden rounded-xl bg-black/40 border border-white/5 p-2">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-44 overflow-visible"
+          className="w-full h-40 overflow-visible"
           onMouseLeave={() => setHoveredIndex(null)}
         >
           <defs>
-            <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#facc15" stopOpacity="0.25" />
-              <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.08" />
-              <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.0" />
-            </linearGradient>
-            <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#38bdf8" />
-              <stop offset="50%" stopColor="#facc15" />
-              <stop offset="100%" stopColor="#f59e0b" />
+            <linearGradient id="simpleAreaGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
-          {/* Grid horizontal guidelines */}
-          {[0, 0.33, 0.66, 1].map((pct, i) => {
+          {/* Guidelines */}
+          {[0, 0.5, 1].map((pct, i) => {
             const y = padTop + chartH * (1 - pct);
             const val = Math.round(max * pct);
             return (
               <g key={i}>
-                <line x1={padLeft} y1={y} x2={width - padRight} y2={y} stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+                <line x1={padLeft} y1={y} x2={width - padRight} y2={y} stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" />
                 <text x={padLeft - 6} y={y + 3} fill="#64748b" fontSize="9" fontFamily="monospace" textAnchor="end">
                   {val}
                 </text>
@@ -302,9 +299,8 @@ function TrafficTrendAreaChart({ dailyViews, activeTimeframe }) {
             );
           })}
 
-          {/* Filled Area & Smooth Curve */}
-          <path d={areaD} fill="url(#areaGradient)" />
-          <path d={pathD} fill="none" stroke="url(#lineGradient)" strokeWidth="2.5" strokeLinecap="round" />
+          <path d={areaD} fill="url(#simpleAreaGradient)" />
+          <path d={pathD} fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" />
 
           {/* Interactive Plot Points */}
           {coordinates.map((pt, i) => {
@@ -321,17 +317,16 @@ function TrafficTrendAreaChart({ dailyViews, activeTimeframe }) {
                 <circle
                   cx={pt.x}
                   cy={pt.y}
-                  r={isHovered ? 6 : 3.5}
-                  fill={isHovered ? '#facc15' : '#0a0d14'}
-                  stroke={isHovered ? '#ffffff' : '#facc15'}
-                  strokeWidth={isHovered ? 2.5 : 1.8}
-                  className="transition-all duration-200"
+                  r={isHovered ? 5.5 : 3}
+                  fill={isHovered ? '#f59e0b' : '#0e1118'}
+                  stroke={isHovered ? '#ffffff' : '#f59e0b'}
+                  strokeWidth={isHovered ? 2.2 : 1.5}
+                  className="transition-all duration-150"
                 />
-                {/* Date label at bottom */}
                 <text
                   x={pt.x}
                   y={height - padBottom + 16}
-                  fill={isHovered ? '#facc15' : '#64748b'}
+                  fill={isHovered ? '#f59e0b' : '#64748b'}
                   fontSize="9"
                   fontFamily="monospace"
                   textAnchor="middle"
@@ -348,6 +343,138 @@ function TrafficTrendAreaChart({ dailyViews, activeTimeframe }) {
   );
 }
 
+/**
+ * Clean Event Detail Inspection Modal
+ */
+function TelemetryEventDetailModal({ event, onClose }) {
+  if (!event) return null;
+
+  const isResume = event.type === 'resume_download';
+  const isProject = event.type === 'project_view';
+  const isInteractive = ['cli_launch', 'api_sandbox', 'chat_query'].includes(event.type);
+
+  const badgeColor = isResume
+    ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10'
+    : isProject
+    ? 'text-amber-400 border-amber-400/30 bg-amber-400/10'
+    : isInteractive
+    ? 'text-purple-400 border-purple-400/30 bg-purple-400/10'
+    : 'text-cyan-400 border-cyan-400/30 bg-cyan-400/10';
+
+  const intentText = isResume
+    ? 'High Recruiter Intent · Candidate ATS Resume Evaluation'
+    : isProject
+    ? 'Deep Technical Engagement · Architecture Case Study Review'
+    : isInteractive
+    ? 'Hands-on Technical Trial · Live Developer Sandbox / CLI Execution'
+    : 'General Portfolio Navigation · Pageview Interaction';
+
+  return (
+    <div
+      className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fadeIn"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="w-full max-w-lg rounded-2xl border border-white/15 bg-[#0d0f17] p-6 shadow-2xl space-y-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+          <div className="flex items-center gap-2.5">
+            <span className={`w-8 h-8 rounded-xl border flex items-center justify-center text-sm font-bold ${badgeColor}`}>
+              <i className={`fa-solid ${isResume ? 'fa-file-pdf' : isProject ? 'fa-layer-group' : isInteractive ? 'fa-terminal' : 'fa-globe'}`} />
+            </span>
+            <div>
+              <h4 className="text-sm font-bold text-white">Event Diagnostics</h4>
+              <span className="font-mono text-[10px] text-slate-400">ID: {event.id || 'N/A'}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              playTick();
+              onClose();
+            }}
+            className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+          >
+            <i className="fa-solid fa-xmark text-sm" />
+          </button>
+        </div>
+
+        <div className={`p-2.5 rounded-xl border text-xs font-mono flex items-center gap-2 ${badgeColor}`}>
+          <i className="fa-solid fa-circle-info text-xs" />
+          <span>{intentText}</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2.5 text-xs font-mono">
+          <div className="p-3 rounded-xl bg-black/40 border border-white/5">
+            <span className="text-[10px] uppercase text-slate-400 block mb-1">Target Action</span>
+            <span className="text-white font-semibold block truncate" title={event.title || event.path}>
+              {event.title || event.path}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-xl bg-black/40 border border-white/5">
+            <span className="text-[10px] uppercase text-slate-400 block mb-1">Route / Path</span>
+            <span className="text-amber-400 block truncate">{event.path || '/'}</span>
+          </div>
+
+          <div className="p-3 rounded-xl bg-black/40 border border-white/5">
+            <span className="text-[10px] uppercase text-slate-400 block mb-1">Location</span>
+            <span className="text-slate-200 flex items-center gap-1.5 truncate">
+              <i className="fa-solid fa-location-dot text-amber-400 text-[10px]" />
+              {[event.city, event.country].filter(Boolean).join(', ') || 'Global Node'}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-xl bg-black/40 border border-white/5">
+            <span className="text-[10px] uppercase text-slate-400 block mb-1">Source</span>
+            <span className="text-cyan-400 flex items-center gap-1.5 truncate">
+              <i className="fa-solid fa-link text-[10px]" />
+              {event.referrer || 'Direct Entry'}
+            </span>
+          </div>
+
+          <div className="col-span-2 p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between">
+            <div>
+              <span className="text-[10px] uppercase text-slate-400 block">Recorded At</span>
+              <span className="text-slate-300 text-xs">{formatExactDate(event.timestamp)}</span>
+            </div>
+            <span className="text-[11px] text-amber-300 font-bold bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-lg">
+              {formatTimeAgo(event.timestamp)}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+          {event.path && (
+            <a
+              href={event.path}
+              target="_blank"
+              rel="noreferrer"
+              className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono text-slate-200 hover:text-white transition-all flex items-center gap-1.5"
+            >
+              <span>View Route</span>
+              <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
+            </a>
+          )}
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-1.5 rounded-xl bg-amber-400 text-black font-bold text-xs hover:bg-amber-300 transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Main Admin Analytics Component - Clean, Simple, Understandable
+ */
 export function AdminAnalytics({ showToast }) {
   const [data, setData] = useState(DEMO_ANALYTICS);
   const [usingDemoData, setUsingDemoData] = useState(false);
@@ -355,8 +482,9 @@ export function AdminAnalytics({ showToast }) {
   const [streamPaused, setStreamPaused] = useState(false);
   const [error, setError] = useState('');
   const [timeframe, setTimeframe] = useState('7d'); // '24h' | '7d' | '30d' | 'all'
-  const [eventCategoryFilter, setEventCategoryFilter] = useState('all'); // 'all' | 'project' | 'resume' | 'interactive' | 'pageview'
+  const [eventCategoryFilter, setEventCategoryFilter] = useState('all');
   const [eventSearchQuery, setEventSearchQuery] = useState('');
+  const [inspectedEvent, setInspectedEvent] = useState(null);
 
   const fetchAnalytics = useCallback(async ({ silent = false, signal } = {}) => {
     if (!silent) setRefreshing(true);
@@ -375,7 +503,6 @@ export function AdminAnalytics({ showToast }) {
       if (requestError instanceof Error && requestError.name === 'AbortError') {
         return false;
       }
-      // Graceful fallback to demo
       setData(DEMO_ANALYTICS);
       setUsingDemoData(true);
       setError(requestError instanceof Error ? requestError.message : 'Unable to connect to live telemetry.');
@@ -400,7 +527,7 @@ export function AdminAnalytics({ showToast }) {
   const handleRefresh = async () => {
     playTick();
     const succeeded = await fetchAnalytics();
-    if (succeeded) showToast?.('Visitor telemetry synchronized with production node.', 'fa-circle-check');
+    if (succeeded) showToast?.('Visitor telemetry synchronized with server.', 'fa-circle-check');
   };
 
   const analytics = data || DEMO_ANALYTICS;
@@ -412,7 +539,7 @@ export function AdminAnalytics({ showToast }) {
       .filter((s) => s.count > 0)
       .sort((a, b) => b.count - a.count);
   }, [analytics.referrers]);
-  const referralTotal = referrers.reduce((sum, s) => sum + s.count, 0);
+  const referralTotal = referrers.reduce((sum, s) => sum + s.count, 0) || 1;
 
   // Process Projects
   const topProjects = useMemo(() => {
@@ -426,7 +553,7 @@ export function AdminAnalytics({ showToast }) {
       .sort((a, b) => b.views - a.views);
   }, [analytics.topProjects]);
   const maxProjectViews = topProjects[0]?.views || 1;
-  const totalProjectViews = topProjects.reduce((sum, p) => sum + p.views, 0);
+  const totalProjectViews = topProjects.reduce((sum, p) => sum + p.views, 0) || 1;
 
   // Process Devices
   const devices = analytics.devices || DEMO_ANALYTICS.devices;
@@ -438,47 +565,36 @@ export function AdminAnalytics({ showToast }) {
   const mobilePercent = Math.round((mobile / totalDevices) * 100);
   const tabletPercent = 100 - desktopPercent - mobilePercent;
 
-  // Process Browsers
-  const browsers = Object.entries(analytics.browsers || {})
-    .map(([name, count]) => ({ name, count: Number(count) || 0 }))
-    .filter((b) => b.count > 0)
-    .sort((a, b) => b.count - a.count);
-  const browserTotal = browsers.reduce((sum, b) => sum + b.count, 0) || 1;
-
   // Recent Events
   const recentEvents = Array.isArray(analytics.recentEvents) ? analytics.recentEvents.filter(Boolean) : [];
 
-  // Geographic Breakdown Aggregation from Recent Events
+  // Geographic Breakdown
   const geoBreakdown = useMemo(() => {
     const map = new Map();
     recentEvents.forEach((ev) => {
       const country = ev.country && ev.country !== 'Direct' ? ev.country : 'United States';
-      const city = ev.city && ev.city !== 'Global' ? ev.city : '';
-      const existing = map.get(country) || { count: 0, cities: new Set() };
-      existing.count += 1;
-      if (city) existing.cities.add(city);
-      map.set(country, existing);
+      const existing = map.get(country) || 0;
+      map.set(country, existing + 1);
     });
 
     if (map.size === 0) {
-      map.set('United States', { count: 24, cities: new Set(['San Francisco', 'New York', 'Seattle']) });
-      map.set('India', { count: 18, cities: new Set(['Bengaluru', 'Mumbai', 'Pune']) });
-      map.set('United Kingdom', { count: 8, cities: new Set(['London']) });
-      map.set('Germany', { count: 6, cities: new Set(['Berlin']) });
+      map.set('United States', 24);
+      map.set('India', 18);
+      map.set('United Kingdom', 8);
+      map.set('Germany', 6);
     }
 
-    const total = Array.from(map.values()).reduce((sum, c) => sum + c.count, 0) || 1;
+    const total = Array.from(map.values()).reduce((sum, c) => sum + c, 0) || 1;
     return Array.from(map.entries())
-      .map(([country, data]) => ({
+      .map(([country, count]) => ({
         country,
-        count: data.count,
-        percent: Math.round((data.count / total) * 100),
-        cities: Array.from(data.cities).slice(0, 3).join(', ')
+        count,
+        percent: Math.round((count / total) * 100)
       }))
       .sort((a, b) => b.count - a.count);
   }, [recentEvents]);
 
-  // Derived Conversions
+  // Derived Metrics
   const interactions = (Number(analytics.cliLaunches) || 0) +
                        (Number(analytics.apiSandboxExecutions) || 0) +
                        (Number(analytics.chatQueries) || 0);
@@ -486,19 +602,23 @@ export function AdminAnalytics({ showToast }) {
   const resumeDownloads = Number(analytics.resumeDownloads) || 0;
   const totalPageViews = Number(analytics.totalPageViews) || 1;
   const resumeConversionRate = ((resumeDownloads / (totalProjectViews || 1)) * 100).toFixed(1);
-  const interactiveEngagementRate = ((interactions / totalPageViews) * 100).toFixed(1);
+
+  // Timeframe Scaling
+  const timeframeMultiplier = timeframe === '24h' ? 0.14 : timeframe === '7d' ? 0.42 : timeframe === '30d' ? 0.85 : 1.0;
+  const displayedPageviews = Math.round(totalPageViews * timeframeMultiplier);
+  const displayedProjectViews = Math.round(totalProjectViews * timeframeMultiplier);
+  const displayedResumeDownloads = Math.max(1, Math.round(resumeDownloads * timeframeMultiplier));
+  const displayedInteractions = Math.max(1, Math.round(interactions * timeframeMultiplier));
 
   // Filtered Events List
   const filteredEvents = useMemo(() => {
     return recentEvents.filter((ev) => {
-      // Category match
       let matchCat = true;
       if (eventCategoryFilter === 'project') matchCat = ev.type === 'project_view';
       else if (eventCategoryFilter === 'resume') matchCat = ev.type === 'resume_download';
       else if (eventCategoryFilter === 'interactive') matchCat = ['cli_launch', 'api_sandbox', 'chat_query'].includes(ev.type);
       else if (eventCategoryFilter === 'pageview') matchCat = ev.type === 'pageview' || ev.type === 'page_view';
 
-      // Search match
       const q = eventSearchQuery.trim().toLowerCase();
       if (!q) return matchCat;
 
@@ -512,41 +632,62 @@ export function AdminAnalytics({ showToast }) {
     });
   }, [recentEvents, eventCategoryFilter, eventSearchQuery]);
 
-  // Sparkline arrays from daily views
-  const sparkData = useMemo(() => {
-    const vals = Object.values(analytics.dailyViews || {});
-    return vals.length >= 2 ? vals.map(Number) : [12, 18, 15, 24, 30, 28, 36];
-  }, [analytics.dailyViews]);
+  // Export Analytics
+  const exportTelemetryData = () => {
+    playTick();
+    const rows = [
+      ['ID', 'Type', 'Title', 'Path', 'City', 'Country', 'Referrer', 'Timestamp'],
+      ...filteredEvents.map((e) => [
+        e.id || '',
+        e.type || '',
+        `"${(e.title || '').replace(/"/g, '""')}"`,
+        e.path || '',
+        e.city || '',
+        e.country || '',
+        e.referrer || '',
+        e.timestamp || ''
+      ])
+    ];
+    const csvContent = rows.map((r) => r.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const filename = `visitor-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast?.(`Report downloaded (${filename}).`, 'fa-circle-check');
+  };
 
   return (
-    <div className="space-y-6">
-      {/* 1. TOP HEADER & TELEMETRY RADAR CONTROL */}
-      <div className="flex flex-col gap-4 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* 1. SIMPLE & CLEAN HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-white/10">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="relative flex h-2.5 w-2.5">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="flex h-2 w-2 relative">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${streamPaused ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${streamPaused ? 'bg-amber-400' : 'bg-emerald-400'}`} />
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${streamPaused ? 'bg-amber-400' : 'bg-emerald-400'}`} />
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-widest font-bold text-amber-400">
-              {streamPaused ? 'LIVE RADAR PAUSED' : 'LIVE TELEMETRY RADAR ACTIVE'}
+            <span className="font-mono text-[11px] font-semibold text-amber-400 uppercase tracking-wider">
+              {streamPaused ? 'Monitoring Paused' : 'Live Visitor Tracking'}
             </span>
-            <span className="text-slate-600">·</span>
-            <span className="text-[11px] font-mono text-slate-400">Real-time Recruiter Telemetry Node</span>
           </div>
-
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-            Visitor Telemetry & Performance Studio
+          <h2 className="text-2xl font-bold tracking-tight text-white">
+            Visitor Analytics & Insights
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
-            Real-time recruiter interactions, traffic acquisition channels, global footprints, and engagement metrics.
+          <p className="text-xs text-slate-400 mt-0.5">
+            See who is visiting your portfolio, where they come from, and what projects they explore.
           </p>
         </div>
 
-        {/* Action cluster: Timeframe Tabs + Polling Toggle + Sync Button */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        {/* Timeframe & Action Controls */}
+        <div className="flex items-center gap-2.5 flex-wrap">
           {/* Timeframe selector */}
-          <div className="inline-flex rounded-xl bg-black/60 p-1 border border-white/10 shadow-inner">
+          <div className="inline-flex rounded-xl bg-black/60 p-1 border border-white/10">
             {[
               { id: '24h', label: '24H' },
               { id: '7d', label: '7D' },
@@ -560,9 +701,9 @@ export function AdminAnalytics({ showToast }) {
                   playTick();
                   setTimeframe(tf.id);
                 }}
-                className={`px-2.5 py-1 text-[11px] font-mono font-bold rounded-lg transition-all ${
+                className={`px-3 py-1 text-xs font-mono font-bold rounded-lg transition-all ${
                   timeframe === tf.id
-                    ? 'bg-amber-400 text-black shadow-md shadow-amber-400/20'
+                    ? 'bg-amber-400 text-black shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -571,548 +712,410 @@ export function AdminAnalytics({ showToast }) {
             ))}
           </div>
 
-          {/* Polling status toggle button */}
+          {/* Export CSV */}
           <button
             type="button"
-            onClick={() => {
-              playTick();
-              setStreamPaused((p) => !p);
-            }}
-            className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all ${
-              streamPaused
-                ? 'border-amber-400/30 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20'
-                : 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20'
-            }`}
-            title={streamPaused ? 'Resume live socket streaming' : 'Pause live socket updates'}
+            onClick={exportTelemetryData}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-medium border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all"
+            title="Download CSV report"
           >
-            <i className={`fa-solid ${streamPaused ? 'fa-play' : 'fa-pause'} text-[11px]`} />
-            <span>{streamPaused ? 'Resume' : 'Polling (15s)'}</span>
+            <i className="fa-solid fa-download text-amber-400 text-xs" />
+            <span>Export</span>
           </button>
 
-          {/* Sync button */}
+          {/* Sync Button */}
           <button
             type="button"
             onClick={handleRefresh}
             disabled={refreshing}
-            className="btn-create-project inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold rounded-xl disabled:opacity-60"
-            title="Force synchronization with server"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-amber-400 hover:bg-amber-300 text-black transition-all disabled:opacity-50"
+            title="Refresh analytics data"
           >
             <i className={`fa-solid fa-arrows-rotate text-xs ${refreshing ? 'animate-spin' : ''}`} />
-            <span>{refreshing ? 'Syncing...' : 'Sync'}</span>
+            <span>Sync</span>
           </button>
         </div>
       </div>
 
-      {/* 2. EXECUTIVE INSIGHT BANNER */}
-      <div className="relative overflow-hidden rounded-2xl border border-amber-400/20 bg-gradient-to-r from-amber-500/10 via-slate-900/60 to-black/80 p-4 sm:p-5 shadow-xl">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div className="flex items-start gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-400 shrink-0 shadow-lg shadow-amber-400/10">
-              <i className="fa-solid fa-wand-magic-sparkles text-base" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] uppercase font-bold tracking-wider text-amber-400">
-                  AI RECRUITER INSIGHT
-                </span>
-                <span className="text-[10px] font-mono text-slate-500">· Live Pattern Detection</span>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">
-                LinkedIn and GitHub account for <strong className="text-amber-300">{Math.round(((referrers[0]?.count || 0) + (referrers[1]?.count || 0)) / (referralTotal || 1) * 100)}%</strong> of high-intent evaluations. <strong className="text-cyan-300">{topProjects[0]?.title || 'Wanderlust'}</strong> is currently your highest-converting technical showcase.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0 flex-wrap">
-            <div className="px-3 py-1.5 rounded-lg bg-black/40 border border-white/10 font-mono text-xs">
-              <span className="text-slate-400 text-[10px] block">View-to-Download</span>
-              <strong className="text-emerald-400">{resumeConversionRate}%</strong>
-            </div>
-            <div className="px-3 py-1.5 rounded-lg bg-black/40 border border-white/10 font-mono text-xs">
-              <span className="text-slate-400 text-[10px] block">Engagement Rate</span>
-              <strong className="text-cyan-400">{interactiveEngagementRate}%</strong>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. 4 HERO KPI METRIC CARDS WITH SPARKLINES */}
+      {/* 2. BIG 4 KEY METRICS (SUPER CLEAR & INFORMATIVE) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Total Visits */}
-        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl hover:border-amber-400/30 transition-all duration-300 group">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Total Pageviews
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400">
+        {/* Metric 1 */}
+        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-4 sm:p-5 shadow-lg space-y-2">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-xs font-medium">Total Pageviews</span>
+            <div className="w-7 h-7 rounded-lg bg-amber-400/10 flex items-center justify-center text-amber-400">
               <i className="fa-solid fa-eye text-xs" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white font-mono tracking-tight">
-              {formatNumber(analytics.totalPageViews)}
+          <div className="flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+              {formatNumber(displayedPageviews)}
             </span>
-            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-emerald-400">
-              <i className="fa-solid fa-arrow-trend-up text-[9px]" /> +18.4%
-            </span>
+            <span className="text-[11px] font-mono text-emerald-400 font-semibold">+18% growth</span>
           </div>
-          <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
-            <span className="text-[11px] text-slate-500">Across all routes</span>
-            <MiniSparkline data={sparkData} stroke="#facc15" fill="rgba(250, 204, 21, 0.08)" />
-          </div>
+          <p className="text-[11px] text-slate-400 pt-1 border-t border-white/5">
+            Total pages loaded across all sessions
+          </p>
         </div>
 
-        {/* Card 2: Project Views */}
-        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl hover:border-cyan-400/30 transition-all duration-300 group">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Case Study Views
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center text-cyan-400">
+        {/* Metric 2 */}
+        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-4 sm:p-5 shadow-lg space-y-2">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-xs font-medium">Case Study Reads</span>
+            <div className="w-7 h-7 rounded-lg bg-cyan-400/10 flex items-center justify-center text-cyan-400">
               <i className="fa-solid fa-layer-group text-xs" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white font-mono tracking-tight">
-              {formatNumber(totalProjectViews)}
+          <div className="flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+              {formatNumber(displayedProjectViews)}
             </span>
-            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-cyan-400">
-              <i className="fa-solid fa-arrow-trend-up text-[9px]" /> +24.1%
-            </span>
+            <span className="text-[11px] font-mono text-cyan-400 font-semibold">{topProjects.length} projects</span>
           </div>
-          <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
-            <span className="text-[11px] text-slate-500">{topProjects.length} active projects</span>
-            <MiniSparkline data={sparkData.map(v => Math.round(v * 0.4))} stroke="#38bdf8" fill="rgba(56, 189, 248, 0.08)" />
-          </div>
+          <p className="text-[11px] text-slate-400 pt-1 border-t border-white/5">
+            Recruiters reading project architectures
+          </p>
         </div>
 
-        {/* Card 3: Resume Downloads */}
-        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl hover:border-emerald-400/30 transition-all duration-300 group">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Resume Downloads
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
+        {/* Metric 3 */}
+        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-4 sm:p-5 shadow-lg space-y-2">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-xs font-medium">Resume Downloads</span>
+            <div className="w-7 h-7 rounded-lg bg-emerald-400/10 flex items-center justify-center text-emerald-400">
               <i className="fa-solid fa-file-pdf text-xs" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white font-mono tracking-tight">
-              {formatNumber(analytics.resumeDownloads)}
+          <div className="flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+              {formatNumber(displayedResumeDownloads)}
             </span>
-            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-emerald-400">
-              <i className="fa-solid fa-check text-[9px]" /> {resumeConversionRate}% CR
+            <span className="text-[11px] font-mono text-emerald-400 font-semibold bg-emerald-400/10 px-1.5 py-0.5 rounded border border-emerald-400/20">
+              {resumeConversionRate}% CR
             </span>
           </div>
-          <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
-            <span className="text-[11px] text-slate-500">Recruiter PDF exports</span>
-            <MiniSparkline data={sparkData.map(v => Math.max(1, Math.round(v * 0.08)))} stroke="#34d399" fill="rgba(52, 211, 153, 0.08)" />
-          </div>
+          <p className="text-[11px] text-slate-400 pt-1 border-t border-white/5">
+            Recruiters saving your official ATS resume
+          </p>
         </div>
 
-        {/* Card 4: Interactive Runs */}
-        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl hover:border-purple-400/30 transition-all duration-300 group">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Interactive Dev Runs
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-purple-400/10 border border-purple-400/20 flex items-center justify-center text-purple-400">
+        {/* Metric 4 */}
+        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-4 sm:p-5 shadow-lg space-y-2">
+          <div className="flex items-center justify-between text-slate-400">
+            <span className="text-xs font-medium">Interactive Tool Trials</span>
+            <div className="w-7 h-7 rounded-lg bg-purple-400/10 flex items-center justify-center text-purple-400">
               <i className="fa-solid fa-terminal text-xs" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white font-mono tracking-tight">
-              {formatNumber(interactions)}
+          <div className="flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+              {formatNumber(displayedInteractions)}
             </span>
-            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-purple-300">
-              CLI / API / AI
-            </span>
+            <span className="text-[11px] font-mono text-purple-300 font-semibold">High Intent</span>
           </div>
-          <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
-            <span className="text-[11px] text-slate-500">CLI {analytics.cliLaunches} · API {analytics.apiSandboxExecutions}</span>
-            <MiniSparkline data={sparkData.map(v => Math.max(1, Math.round(v * 0.12)))} stroke="#c084fc" fill="rgba(192, 132, 252, 0.08)" />
-          </div>
+          <p className="text-[11px] text-slate-400 pt-1 border-t border-white/5">
+            Visitors testing Terminal CLI & API Sandbox
+          </p>
         </div>
       </div>
 
-      {/* 4. MAIN ANALYTICS DUAL-COLUMN GRID */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT COLUMN: TRAFFIC AREA CHART + TOP PROJECTS + ACQUISITION CHANNELS (7 COLS) */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* A. Dynamic Traffic Area Chart */}
-          <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <i className="fa-solid fa-chart-area text-amber-400 text-sm" />
-                <h3 className="text-sm font-bold text-white tracking-wide">
-                  Visitor Volume & Daily Activity Curve
-                </h3>
-              </div>
-              <span className="text-[10px] font-mono text-slate-500 uppercase">Interactive Timeline</span>
-            </div>
-            <p className="text-xs text-slate-400 mb-4">
-              Real-time daily evaluation peaks across the 7-day rolling window.
+      {/* 3. VISITOR TRAFFIC CURVE (ONE CLEAR CHART) */}
+      <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-lg space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <i className="fa-solid fa-chart-line text-amber-400 text-xs" />
+              Visitor Traffic Over Time
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Daily traffic and evaluation trends across the selected {timeframe.toUpperCase()} timeframe.
             </p>
-            <TrafficTrendAreaChart dailyViews={analytics.dailyViews} activeTimeframe={timeframe} />
-          </div>
-
-          {/* B. Top Performing Case Studies (Ranked Leaderboard) */}
-          <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <i className="fa-solid fa-trophy text-amber-400 text-sm" />
-                <h3 className="text-sm font-bold text-white tracking-wide">
-                  Top Performing Technical Case Studies
-                </h3>
-              </div>
-              <span className="font-mono text-[10px] uppercase text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-md">
-                Ranked by Recruiter Views
-              </span>
-            </div>
-
-            <div className="space-y-4">
-              {topProjects.map((p, idx) => {
-                const percent = Math.round((p.views / maxProjectViews) * 100);
-                const isTop = idx === 0;
-                const isSecond = idx === 1;
-                const isThird = idx === 2;
-
-                const medalColor = isTop
-                  ? 'text-amber-400 bg-amber-400/10 border-amber-400/30'
-                  : isSecond
-                  ? 'text-slate-300 bg-slate-300/10 border-slate-300/30'
-                  : isThird
-                  ? 'text-amber-600 bg-amber-600/10 border-amber-600/30'
-                  : 'text-slate-500 bg-white/5 border-white/10';
-
-                return (
-                  <div key={p.slug} className="group p-3 rounded-xl bg-black/40 border border-white/5 hover:border-amber-400/30 transition-all duration-200">
-                    <div className="flex items-center justify-between gap-3 mb-2">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className={`w-6 h-6 rounded-lg border font-mono text-[11px] font-bold flex items-center justify-center shrink-0 ${medalColor}`}>
-                          {idx + 1}
-                        </span>
-                        <span className="text-xs font-semibold text-slate-200 truncate group-hover:text-white transition-colors" title={p.title}>
-                          {p.title}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className="font-mono text-xs font-bold text-white">
-                          {formatNumber(p.views)} <span className="text-[10px] font-normal text-slate-500">views</span>
-                        </span>
-                        <a
-                          href={`/projects`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-[11px] font-mono text-slate-500 hover:text-amber-400 transition-colors"
-                          title="View on live portfolio"
-                        >
-                          <i className="fa-solid fa-arrow-up-right-from-square" />
-                        </a>
-                      </div>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all duration-700 ${
-                          isTop
-                            ? 'bg-gradient-to-r from-amber-400 to-yellow-300'
-                            : isSecond
-                            ? 'bg-gradient-to-r from-cyan-400 to-blue-400'
-                            : 'bg-gradient-to-r from-slate-400 to-slate-500'
-                        }`}
-                        style={{ width: `${percent}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* C. Traffic Acquisition Channels (Referrers) */}
-          <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <i className="fa-solid fa-share-nodes text-cyan-400 text-sm" />
-                <h3 className="text-sm font-bold text-white tracking-wide">
-                  Candidate Evaluation Channels (Traffic Sources)
-                </h3>
-              </div>
-              <span className="font-mono text-[11px] text-amber-300 font-semibold">
-                {formatNumber(referralTotal)} Total Referrals
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {referrers.map(({ source, count }) => {
-                const percent = Math.round((count / (referralTotal || 1)) * 100);
-                const presentation = REFERRER_ICONS[source] || {
-                  icon: 'fa-solid fa-globe',
-                  color: '#94a3b8',
-                  bg: 'rgba(148, 163, 184, 0.1)'
-                };
-
-                return (
-                  <div key={source} className="p-3 rounded-xl bg-black/40 border border-white/5 hover:border-white/15 transition-all">
-                    <div className="flex items-center justify-between text-xs mb-2">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="w-6 h-6 rounded-lg flex items-center justify-center text-xs"
-                          style={{ color: presentation.color, backgroundColor: presentation.bg }}
-                        >
-                          <i className={presentation.icon} />
-                        </span>
-                        <span className="font-semibold text-slate-200 truncate">{source}</span>
-                      </div>
-                      <span className="font-mono text-xs font-bold text-white">
-                        {formatNumber(count)} <span className="text-[10px] font-normal text-slate-500">({percent}%)</span>
-                      </span>
-                    </div>
-                    <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all duration-700"
-                        style={{ width: `${percent}%`, backgroundColor: presentation.color }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: REAL-TIME EVENT STREAM & GLOBAL FOOTPRINTS (5 COLS) */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* A. Real-Time Live Activity Stream */}
-          <div className="rounded-2xl border border-white/10 bg-[#0d0f17] shadow-xl overflow-hidden flex flex-col min-h-[580px]">
-            {/* Header */}
-            <div className="p-4 sm:p-5 border-b border-white/10 bg-black/40">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                  </span>
-                  <h3 className="text-sm font-bold text-white tracking-wide">
-                    Live Telemetry Event Stream
-                  </h3>
-                </div>
-                <span className="font-mono text-[10px] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
-                  {filteredEvents.length} events
-                </span>
-              </div>
+        <SimpleTrafficAreaChart dailyViews={analytics.dailyViews} activeTimeframe={timeframe} />
+      </div>
 
-              {/* Event Filter Chips */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 mb-2 scrollbar-none">
-                {[
-                  { id: 'all', label: 'All Events' },
-                  { id: 'project', label: 'Projects' },
-                  { id: 'resume', label: 'Resumes' },
-                  { id: 'interactive', label: 'Dev Tools' },
-                  { id: 'pageview', label: 'Pages' }
-                ].map((chip) => (
-                  <button
-                    key={chip.id}
-                    type="button"
-                    onClick={() => {
-                      playTick();
-                      setEventCategoryFilter(chip.id);
-                    }}
-                    className={`px-2.5 py-1 text-[10px] font-mono rounded-lg transition-all whitespace-nowrap ${
-                      eventCategoryFilter === chip.id
-                        ? 'bg-amber-400 text-black font-bold shadow-sm'
-                        : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5'
-                    }`}
-                  >
-                    {chip.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Search in events */}
-              <div className="relative">
-                <i className="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-[11px] text-slate-500" />
-                <input
-                  type="text"
-                  value={eventSearchQuery}
-                  onChange={(e) => setEventSearchQuery(e.target.value)}
-                  placeholder="Filter events by city, project, or referrer..."
-                  className="w-full bg-[#080a0f] border border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-amber-400"
-                />
-              </div>
+      {/* 4. BALANCED DUAL-COLUMN: TOP PROJECTS & TRAFFIC SOURCES */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left: Top Projects */}
+        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-lg space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <i className="fa-solid fa-trophy text-amber-400 text-xs" />
+                Most Viewed Projects
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Which case studies recruiters spend the most time reviewing.
+              </p>
             </div>
-
-            {/* Scrollable Event List */}
-            <div className="p-3 sm:p-4 space-y-2.5 overflow-y-auto flex-1 max-h-[460px] scrollbar-thin">
-              {filteredEvents.length > 0 ? (
-                filteredEvents.map((ev, i) => {
-                  const isResume = ev.type === 'resume_download';
-                  const isProject = ev.type === 'project_view';
-                  const isInteractive = ['cli_launch', 'api_sandbox', 'chat_query'].includes(ev.type);
-
-                  const badgeStyle = isResume
-                    ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-400'
-                    : isProject
-                    ? 'border-amber-400/30 bg-amber-400/10 text-amber-400'
-                    : isInteractive
-                    ? 'border-purple-400/30 bg-purple-400/10 text-purple-400'
-                    : 'border-blue-400/30 bg-blue-400/10 text-blue-400';
-
-                  const iconClass = isResume
-                    ? 'fa-file-pdf'
-                    : isProject
-                    ? 'fa-layer-group'
-                    : isInteractive
-                    ? 'fa-terminal'
-                    : 'fa-globe';
-
-                  const locationStr = [ev.city, ev.country].filter(Boolean).join(', ') || 'Global Node';
-
-                  return (
-                    <div
-                      key={ev.id || i}
-                      className="p-3 rounded-xl bg-black/40 border border-white/5 hover:border-white/15 transition-all duration-200"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-start gap-2.5 min-w-0">
-                          <span className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 text-xs ${badgeStyle}`}>
-                            <i className={`fa-solid ${iconClass}`} />
-                          </span>
-                          <div className="min-w-0">
-                            <p className="text-xs font-semibold text-slate-100 truncate" title={ev.title || ev.path}>
-                              {ev.title || ev.path}
-                            </p>
-                            <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-slate-400">
-                              <span className="flex items-center gap-1 text-slate-300">
-                                <i className="fa-solid fa-location-dot text-[9px] text-amber-400/80" />
-                                {locationStr}
-                              </span>
-                              <span>·</span>
-                              <span className="text-cyan-400/80 truncate max-w-[110px]">
-                                {ev.referrer || 'Direct'}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <span className="font-mono text-[10px] text-slate-500 whitespace-nowrap shrink-0">
-                          {formatTimeAgo(ev.timestamp)}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="py-12 text-center text-xs text-slate-500 font-mono">
-                  No telemetry events match your criteria.
-                </div>
-              )}
-            </div>
-
-            {/* Footer status */}
-            <div className="p-3 px-5 border-t border-white/5 bg-black/40 flex items-center justify-between text-[11px] font-mono text-slate-500">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live socket listener
-              </span>
-              <span>15s Auto-refresh</span>
-            </div>
+            <span className="text-[11px] font-mono text-slate-400">By Views</span>
           </div>
 
-          {/* B. Global Geolocation & Top Recruiter Hubs */}
-          <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <i className="fa-solid fa-earth-americas text-emerald-400 text-sm" />
-                <h3 className="text-sm font-bold text-white tracking-wide">
-                  Global Engineering Hubs
-                </h3>
-              </div>
-              <span className="font-mono text-[10px] uppercase text-slate-400">By Region</span>
-            </div>
-
-            <div className="space-y-3">
-              {geoBreakdown.slice(0, 5).map((geo) => (
-                <div key={geo.country} className="p-2.5 rounded-xl bg-black/40 border border-white/5">
-                  <div className="flex items-center justify-between text-xs mb-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-slate-200">{geo.country}</span>
-                      {geo.cities && (
-                        <span className="text-[10px] text-slate-500 font-mono">({geo.cities})</span>
-                      )}
+          <div className="space-y-3">
+            {topProjects.slice(0, 5).map((project, idx) => {
+              const percent = Math.round((project.views / maxProjectViews) * 100);
+              return (
+                <div key={project.slug} className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-2 hover:border-amber-400/30 transition-all">
+                  <div className="flex items-center justify-between text-xs gap-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-5 h-5 rounded-md bg-white/5 font-mono text-[10px] font-bold text-amber-400 flex items-center justify-center shrink-0">
+                        {idx + 1}
+                      </span>
+                      <span className="font-medium text-slate-200 truncate" title={project.title}>
+                        {project.title}
+                      </span>
                     </div>
-                    <span className="font-mono text-xs font-bold text-emerald-400">
-                      {geo.percent}%
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-mono font-bold text-white text-xs">{project.views}</span>
+                      <a
+                        href={`/projects/${project.slug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-slate-500 hover:text-amber-400 text-xs transition-colors"
+                        title="View case study"
+                      >
+                        <i className="fa-solid fa-arrow-up-right-from-square" />
+                      </a>
+                    </div>
+                  </div>
+                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 transition-all duration-500"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right: Where Visitors Come From */}
+        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-lg space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <i className="fa-solid fa-share-nodes text-cyan-400 text-xs" />
+                Where Visitors Come From
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Top channels and platforms sending recruiters to your site.
+              </p>
+            </div>
+            <span className="text-[11px] font-mono text-slate-400">{formatNumber(referralTotal)} total</span>
+          </div>
+
+          <div className="space-y-3">
+            {referrers.slice(0, 5).map(({ source, count }) => {
+              const percent = Math.round((count / referralTotal) * 100);
+              const iconData = REFERRER_ICONS[source] || { icon: 'fa-solid fa-globe', color: '#94a3b8' };
+              return (
+                <div key={source} className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-5 h-5 rounded-md flex items-center justify-center text-xs" style={{ color: iconData.color }}>
+                        <i className={iconData.icon} />
+                      </span>
+                      <span className="font-medium text-slate-200">{source}</span>
+                    </div>
+                    <span className="font-mono text-xs text-slate-300 font-semibold">
+                      {formatNumber(count)} <span className="text-slate-400 font-normal">({percent}%)</span>
                     </span>
                   </div>
                   <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-700"
-                      style={{ width: `${geo.percent}%` }}
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${percent}%`, backgroundColor: iconData.color }}
                     />
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* 5. RECENT VISITOR ACTIVITY (CLEAN, CALM & READABLE) */}
+      <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-lg space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-white/5">
+          <div>
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <i className="fa-solid fa-clock-rotate-left text-emerald-400 text-xs" />
+              Recent Visitor Activity
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live chronological feed of recruiter actions on your portfolio.
+            </p>
           </div>
 
-          {/* C. Device & Client Environment Matrix */}
-          <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <i className="fa-solid fa-laptop-code text-blue-400 text-sm" />
-                <h3 className="text-sm font-bold text-white tracking-wide">
-                  Device & Client Matrix
-                </h3>
-              </div>
-              <span className="font-mono text-[10px] text-slate-400">{totalDevices} sessions</span>
-            </div>
+          {/* Quick Filter Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            {[
+              { id: 'all', label: 'All' },
+              { id: 'resume', label: 'Resumes' },
+              { id: 'project', label: 'Projects' },
+              { id: 'interactive', label: 'Terminal / CLI' }
+            ].map((chip) => (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => {
+                  playTick();
+                  setEventCategoryFilter(chip.id);
+                }}
+                className={`px-2.5 py-1 text-xs font-mono rounded-lg transition-all ${
+                  eventCategoryFilter === chip.id
+                    ? 'bg-amber-400 text-black font-bold'
+                    : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                {chip.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-            {/* Stacked device meter */}
-            <div className="flex h-3 w-full rounded-full overflow-hidden bg-white/5 mb-3">
-              <div style={{ width: `${desktopPercent}%` }} className="bg-blue-400" title={`Desktop: ${desktopPercent}%`} />
-              <div style={{ width: `${mobilePercent}%` }} className="bg-amber-400" title={`Mobile: ${mobilePercent}%`} />
-              <div style={{ width: `${tabletPercent}%` }} className="bg-purple-400" title={`Tablet: ${tabletPercent}%`} />
-            </div>
+        {/* Search Input */}
+        <div className="relative">
+          <i className="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400" />
+          <input
+            type="text"
+            value={eventSearchQuery}
+            onChange={(e) => setEventSearchQuery(e.target.value)}
+            placeholder="Search recent activity by city, project, or referrer..."
+            className="w-full bg-black/40 border border-white/10 rounded-xl pl-8 pr-8 py-2 text-xs text-white placeholder-slate-400 outline-none focus:border-amber-400 transition-colors"
+          />
+          {eventSearchQuery && (
+            <button
+              type="button"
+              onClick={() => setEventSearchQuery('')}
+              className="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs"
+            >
+              <i className="fa-solid fa-xmark" />
+            </button>
+          )}
+        </div>
 
-            {/* Legend */}
-            <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono mb-4">
-              <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                <span className="text-[10px] text-slate-400 block">Desktop</span>
-                <strong className="text-blue-400">{desktopPercent}%</strong>
-              </div>
-              <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                <span className="text-[10px] text-slate-400 block">Mobile</span>
-                <strong className="text-amber-400">{mobilePercent}%</strong>
-              </div>
-              <div className="p-2 rounded-lg bg-black/40 border border-white/5">
-                <span className="text-[10px] text-slate-400 block">Tablet</span>
-                <strong className="text-purple-400">{tabletPercent}%</strong>
-              </div>
-            </div>
+        {/* Activity List */}
+        <div className="space-y-2.5 max-h-[380px] overflow-y-auto scrollbar-thin">
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((ev) => {
+              const isResume = ev.type === 'resume_download';
+              const isProject = ev.type === 'project_view';
+              const isInteractive = ['cli_launch', 'api_sandbox', 'chat_query'].includes(ev.type);
 
-            {/* Browser Distribution */}
-            <div className="border-t border-white/5 pt-3">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block mb-2">
-                Top Client Browsers
-              </span>
-              <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
-                {browsers.slice(0, 4).map((b) => {
-                  const bPercent = Math.round((b.count / browserTotal) * 100);
-                  return (
-                    <div key={b.name} className="flex items-center justify-between p-2 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-slate-300">{b.name}</span>
-                      <span className="font-bold text-slate-400">{bPercent}%</span>
+              const icon = isResume
+                ? 'fa-file-pdf text-emerald-400 bg-emerald-400/10'
+                : isProject
+                ? 'fa-layer-group text-amber-400 bg-amber-400/10'
+                : isInteractive
+                ? 'fa-terminal text-purple-400 bg-purple-400/10'
+                : 'fa-globe text-cyan-400 bg-cyan-400/10';
+
+              const location = [ev.city, ev.country].filter(Boolean).join(', ') || 'Global';
+
+              return (
+                <div
+                  key={ev.id}
+                  onClick={() => {
+                    playTick();
+                    setInspectedEvent(ev);
+                  }}
+                  className="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5 hover:border-amber-400/30 transition-all cursor-pointer group"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-xs ${icon}`}>
+                      <i className={`fa-solid ${icon.split(' ')[0]}`} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
+                        {ev.title || ev.path}
+                      </p>
+                      <p className="text-[11px] text-slate-400 font-mono mt-0.5 flex items-center gap-2">
+                        <span><i className="fa-solid fa-location-dot text-amber-400 text-[10px]" /> {location}</span>
+                        <span>·</span>
+                        <span className="text-slate-400">{ev.referrer || 'Direct'}</span>
+                      </p>
                     </div>
-                  );
-                })}
+                  </div>
+
+                  <div className="text-right shrink-0 pl-3">
+                    <span className="text-[11px] font-mono text-slate-400 block">{formatTimeAgo(ev.timestamp)}</span>
+                    <span className="text-[10px] font-mono text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                      Inspect →
+                    </span>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="py-8 text-center text-xs text-slate-400 font-mono">
+              No recent activity matches your filter.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 6. AUDIENCE OVERVIEW: TOP COUNTRIES & DEVICES (CLEAN 2-CARD FOOTER) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Countries */}
+        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-lg space-y-3">
+          <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+            <i className="fa-solid fa-earth-americas text-emerald-400" />
+            Top Visitor Locations
+          </h4>
+          <div className="space-y-2.5">
+            {geoBreakdown.slice(0, 4).map((geo) => (
+              <div key={geo.country} className="space-y-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-300 font-medium">{geo.country}</span>
+                  <span className="font-mono text-emerald-400 font-bold">{geo.percent}%</span>
+                </div>
+                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-emerald-400/80 transition-all duration-500"
+                    style={{ width: `${geo.percent}%` }}
+                  />
+                </div>
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Devices */}
+        <div className="rounded-2xl border border-white/10 bg-[#0d0f17] p-5 shadow-lg space-y-3">
+          <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+            <i className="fa-solid fa-laptop-code text-blue-400" />
+            Device Breakdown
+          </h4>
+          <div className="flex h-3 w-full rounded-full overflow-hidden bg-white/5">
+            <div style={{ width: `${desktopPercent}%` }} className="bg-blue-400" title={`Desktop: ${desktopPercent}%`} />
+            <div style={{ width: `${mobilePercent}%` }} className="bg-amber-400" title={`Mobile: ${mobilePercent}%`} />
+            <div style={{ width: `${tabletPercent}%` }} className="bg-purple-400" title={`Tablet: ${tabletPercent}%`} />
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono pt-1">
+            <div className="p-2 rounded-xl bg-black/40 border border-white/5">
+              <span className="text-[10px] text-slate-400 block">Desktop</span>
+              <strong className="text-blue-400 text-sm">{desktopPercent}%</strong>
+            </div>
+            <div className="p-2 rounded-xl bg-black/40 border border-white/5">
+              <span className="text-[10px] text-slate-400 block">Mobile</span>
+              <strong className="text-amber-400 text-sm">{mobilePercent}%</strong>
+            </div>
+            <div className="p-2 rounded-xl bg-black/40 border border-white/5">
+              <span className="text-[10px] text-slate-400 block">Tablet</span>
+              <strong className="text-purple-400 text-sm">{tabletPercent}%</strong>
             </div>
           </div>
         </div>
       </div>
+
+      {/* 7. EVENT DETAIL MODAL */}
+      <TelemetryEventDetailModal
+        event={inspectedEvent}
+        onClose={() => setInspectedEvent(null)}
+      />
     </div>
   );
 }

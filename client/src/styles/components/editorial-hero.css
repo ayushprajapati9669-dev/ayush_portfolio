@@ -1194,25 +1194,9 @@
   border: none !important;
 }
 
-/* Ambient Backlight Glow Aura behind subject */
+/* Ambient Backlight Glow Aura behind subject - Disabled to keep pristine dark sky */
 .hero-photo-ambient-aura {
-  position: absolute;
-  right: 14%;
-  bottom: 24%;
-  width: min(520px, 44vw);
-  height: min(520px, 44vw);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(245, 158, 11, 0.32) 0%,
-    rgba(217, 119, 6, 0.16) 36%,
-    rgba(180, 83, 9, 0.04) 62%,
-    transparent 78%
-  );
-  filter: blur(52px);
-  pointer-events: none;
-  z-index: 0;
-  animation: heroAuraBreath 7s ease-in-out infinite alternate;
+  display: none !important;
 }
 
 @keyframes heroAuraBreath {
@@ -1277,6 +1261,30 @@
   display: none !important;
 }
 
+.hero-photo-wrapper {
+  position: absolute;
+  right: 3%;
+  bottom: 0;
+  height: 98%;
+  max-height: 89vh;
+  width: auto;
+  max-width: 92%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-photo-wrapper .hero-photo-img {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+}
+
 .hero-photo-img {
   position: absolute;
   right: 3%;
@@ -1287,7 +1295,7 @@
   max-width: 92%;
   object-fit: contain;
   object-position: right bottom;
-  filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 40px rgba(245, 158, 11, 0.16)) contrast(1.05) brightness(1.02);
+  filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.85)) contrast(1.04) brightness(1.0);
   -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.85) 6%, #000 18%), linear-gradient(to right, transparent 0%, #000 8%);
   mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.85) 6%, #000 18%), linear-gradient(to right, transparent 0%, #000 8%);
   transition: opacity 0.5s ease;
@@ -1307,17 +1315,6 @@
 @media (max-width: 1000px) {
   .hero-photo-status-badge {
     display: none !important;
-  }
-
-  .hero-photo-ambient-aura {
-    right: 50% !important;
-    transform: translateX(50%) !important;
-    top: 50px !important;
-    bottom: auto !important;
-    width: 270px !important;
-    height: 270px !important;
-    opacity: 0.55 !important;
-    filter: blur(40px) !important;
   }
 
   .hero-photo-container {
@@ -1344,6 +1341,20 @@
     display: none !important;
   }
 
+  .hero-photo-wrapper {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    top: 0;
+    height: 100%;
+    max-height: 48vh;
+    max-width: 80%;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
   .hero-photo-img {
     position: relative;
     right: auto;
@@ -1354,7 +1365,7 @@
     max-width: 80%;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 24px rgba(245, 158, 11, 0.16));
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.7));
     -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 94%);
     mask-image: linear-gradient(to bottom, #000 52%, transparent 94%);
     opacity: 0.72;
@@ -1450,6 +1461,94 @@
   font-weight: 500 !important;
   color: rgba(255, 255, 255, 0.92) !important;
   letter-spacing: -0.01em !important;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroLineFadeUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.34s forwards;
+}
+
+/* Luxury Editorial Name Shimmer & Kinetic Letter Animation */
+.hero-name-shimmer {
+  display: inline-block !important;
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif !important;
+  font-style: italic !important;
+  font-weight: 600 !important;
+  position: relative !important;
+  perspective: 800px !important;
+  cursor: default !important;
+}
+
+.hero-name-letter {
+  display: inline-block !important;
+  opacity: 0;
+  transform: translateY(14px) scale(0.88) rotateX(-30deg);
+  filter: blur(4px);
+  will-change: transform, opacity, filter, color, text-shadow;
+  color: #fcd34d !important;
+  -webkit-text-fill-color: #fcd34d !important;
+  text-shadow: 0 0 28px rgba(252, 211, 77, 0.35) !important;
+  animation: heroLetterReveal 0.62s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 0.038s + 0.48s) forwards,
+             heroLetterGlint 6.5s ease-in-out calc(var(--i) * 0.055s + 2.2s) infinite;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.28s ease, color 0.28s ease;
+}
+
+.hero-name-space {
+  display: inline-block !important;
+  width: 0.28em !important;
+}
+
+@keyframes heroLetterReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.88) rotateX(-30deg);
+    filter: blur(4px);
+  }
+  65% {
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    text-shadow: 0 0 42px rgba(252, 211, 77, 0.9), 0 0 16px rgba(255, 255, 255, 0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    filter: blur(0);
+    color: #fcd34d;
+    -webkit-text-fill-color: #fcd34d;
+    text-shadow: 0 0 28px rgba(252, 211, 77, 0.35);
+  }
+}
+
+@keyframes heroLetterGlint {
+  0%, 82%, 100% {
+    color: #fcd34d;
+    -webkit-text-fill-color: #fcd34d;
+    transform: translateY(0) scale(1);
+    text-shadow: 0 0 28px rgba(252, 211, 77, 0.35);
+  }
+  90% {
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    transform: translateY(-2px) scale(1.04);
+    text-shadow: 0 0 38px rgba(252, 211, 77, 0.85), 0 0 14px rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* Interactive micro-lift and radiant bloom on hover */
+.hero-name-shimmer:hover .hero-name-letter {
+  transform: translateY(-3px) scale(1.06);
+  color: #fffbeb !important;
+  -webkit-text-fill-color: #fffbeb !important;
+  text-shadow: 0 0 36px rgba(252, 211, 77, 0.75), 0 0 12px rgba(255, 255, 255, 0.85) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-editorial-title .hero-title-name,
+  .hero-name-shimmer,
+  .hero-name-letter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
 }
 
 /* Secondary Hero Button */

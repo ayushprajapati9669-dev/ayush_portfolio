@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
 import { playTick } from '../../../utils/audio';
 
 function MethodBadge({ method }) {
@@ -98,7 +99,7 @@ function CodeBlock({ code, language = 'bash', title = 'cURL Request' }) {
           return `<span class="${cls}">${match}</span>`;
         });
 
-      return <pre className="font-mono text-[11.5px] leading-relaxed text-slate-300 overflow-x-auto p-4 custom-admin-scrollbar" dangerouslySetInnerHTML={{ __html: highlighted }} />;
+      return <pre className="font-mono text-[11.5px] leading-relaxed text-slate-300 overflow-x-auto p-4 custom-admin-scrollbar" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(highlighted) }} />;
     }
 
     return (

@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useSmoothScroll } from '../../components/common/SmoothScrollProvider';
 import { HeroCosmosCanvas } from '../../components/ui/HeroCosmosCanvas';
+import { ScrollReactivePortraitParticles } from '../../components/particles/ScrollReactivePortraitParticles';
 import { InteractiveMeshWave } from '../../components/ui/InteractiveMeshWave';
 import { MagneticButton } from '../../components/ui/MagneticButton';
 import { TiltCard } from '../../components/ui/TiltCard';
@@ -20,9 +21,33 @@ import { SEO } from '../../components/SEO';
 import { personSchema, websiteSchema } from '../../utils/seo';
 
 export function HomePage() {
-  const { appState, openResumeModal } = usePortfolio();
+  const { appState, openResumeModal, showToast } = usePortfolio();
   const navigate = useNavigate();
   const [highlightedProjectId, setHighlightedProjectId] = useState(null);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+
+  const handleCopyEmail = () => {
+    const email = p.email || 'ayushprajapati9669@gmail.com';
+    navigator.clipboard.writeText(email);
+    setCopiedEmail(true);
+    if (showToast) showToast('Email copied to clipboard!');
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
+  const coreTechList = [
+    { name: 'React', label: 'React.js' },
+    { name: 'Node.js', label: 'Node.js' },
+    { name: 'TypeScript', label: 'TypeScript' },
+    { name: 'Express.js', label: 'Express.js' },
+    { name: 'MongoDB', label: 'MongoDB' },
+    { name: 'JavaScript', label: 'JavaScript' },
+    { name: 'Python', label: 'Python' },
+    { name: 'Tailwind CSS', label: 'Tailwind CSS' },
+    { name: 'PostgreSQL', label: 'PostgreSQL' },
+    { name: 'Git', label: 'Git & GitHub' },
+    { name: 'Docker', label: 'Docker' },
+    { name: 'REST APIs', label: 'REST APIs' }
+  ];
 
   const containerRef = useRef(null);
   const heroRef = useRef(null);
@@ -310,6 +335,24 @@ export function HomePage() {
         });
       }
 
+      // 4. Section 03: Featured Projects Entrance
+      const projectCards = containerRef.current.querySelectorAll('#featured-projects .project-card, #featured-projects .project-card-v2');
+      if (projectCards.length > 0) {
+        gsap.from(projectCards, {
+          scrollTrigger: {
+            trigger: '#featured-projects',
+            start: 'top 92%',
+            once: true
+          },
+          y: 24,
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.6,
+          ease: 'power2.out',
+          clearProps: 'all'
+        });
+      }
+
       // 5. Section 04: CTA Banner ScrollTrigger
       gsap.from('.home-cta-banner', {
         scrollTrigger: {
@@ -353,22 +396,14 @@ export function HomePage() {
           <div />
         </div>
 
-        {/* Hero Right-Side Portrait with Gradient Fade Masks (matching index 14 & Image 1) */}
+        {/* Hero Right-Side Portrait with Scroll-Reactive Particle Dissolve Engine (Razorpay AI Builders Inspired) */}
         <div ref={heroPhotoBoxRef} className="hero-photo-container">
-          <div className="hero-photo-ambient-aura" aria-hidden="true" />
-          <img
-            ref={heroImgRef}
-            id="himg"
-            src={heroPortraitUrl}
+          <ScrollReactivePortraitParticles
+            imageUrl={heroPortraitUrl}
             alt={p.portrait?.alt || p.name || 'Ayush Prajapati'}
-            className={`hero-photo-img ${isPhotoWide ? 'wide' : ''}`}
-            onLoad={checkPhotoFit}
-            decoding="async"
+            imgClassName={`hero-photo-img ${isPhotoWide ? 'wide' : ''}`}
+            onPhotoFit={checkPhotoFit}
           />
-          <div className="hero-photo-status-badge" aria-hidden="true">
-            <span className="hero-photo-pulse-dot" />
-            <span className="hero-photo-badge-text">Full-Stack Engineer</span>
-          </div>
         </div>
 
         {/* Top Eyebrow Meta Row */}
@@ -403,7 +438,19 @@ export function HomePage() {
               to <em className="hero-title-accent">live product.</em>
             </span>
             <span className="hero-title-name">
-              That’s {p.name || 'Ayush Prajapati'}.
+              That’s{' '}
+              <span className="hero-name-shimmer" aria-label={p.name || 'Ayush Prajapati'}>
+                {(p.name || 'Ayush Prajapati').split('').map((char, i) => (
+                  <span
+                    key={i}
+                    className={`hero-name-letter${char === ' ' ? ' hero-name-space' : ''}`}
+                    style={{ '--i': i }}
+                    aria-hidden="true"
+                  >
+                    {char === ' ' ? '\u00A0' : char}
+                  </span>
+                ))}
+              </span>.
             </span>
           </h1>
 
@@ -559,6 +606,25 @@ export function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Core Technologies Infinite Marquee Ribbon */}
+        <div className="relative overflow-hidden py-4 border-y border-white/10 bg-black/40 backdrop-blur-md rounded-2xl -mx-2 sm:mx-0">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#07090e] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#07090e] to-transparent z-10" />
+          <div className="animate-marquee flex items-center gap-6 whitespace-nowrap">
+            {[...coreTechList, ...coreTechList].map((tech, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.03] border border-white/10 hover:border-amber-400/40 hover:bg-white/[0.07] transition-all shrink-0 cursor-default group"
+              >
+                <TechLogo name={tech.name} className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <span className="font-mono text-xs text-white/85 font-medium tracking-wide">
+                  {tech.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* =========================================================================
             SECTION 01.5: The 0 to 1 Journey Milestone Card (Reference: deepseek_html_20261103_4b0347.html)
@@ -755,18 +821,110 @@ export function HomePage() {
         
 
         {/* =========================================================================
+            SECTION 02.5: Engineering Impact & Capabilities Matrix
+            ========================================================================= */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-2">
+          <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-amber-400/30 transition-all group backdrop-blur-sm">
+            <span className="font-mono text-3xl sm:text-4xl font-extrabold text-amber-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
+              {publishedProjects.length}+
+            </span>
+            <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
+              Live Applications Deployed
+            </span>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-cyan-400/30 transition-all group backdrop-blur-sm">
+            <span className="font-mono text-3xl sm:text-4xl font-extrabold text-cyan-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
+              {allSkillItems.length}+
+            </span>
+            <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
+              Technologies & Tools
+            </span>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-emerald-400/30 transition-all group backdrop-blur-sm">
+            <span className="font-mono text-3xl sm:text-4xl font-extrabold text-emerald-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
+              {certificates.length}
+            </span>
+            <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
+              Verified Accreditations
+            </span>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-rose-400/30 transition-all group backdrop-blur-sm">
+            <span className="font-mono text-3xl sm:text-4xl font-extrabold text-rose-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
+              100%
+            </span>
+            <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
+              Code Craft & Dedication
+            </span>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            SECTION 03: Selected Flagship Engineering Builds
+            ========================================================================= */}
+        <section id="featured-projects" className="border-t hairline-border pt-14 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div className="space-y-2">
+              <ScrollWriteText
+                as="p"
+                className="font-mono text-[11px] uppercase tracking-widest text-amber-400/90 font-semibold"
+                mode="scramble"
+                scrambleDuration={20}
+              >
+                03 · FEATURED ENGINEERING
+              </ScrollWriteText>
+              <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight">
+                Selected <em className="italic font-serif text-[#e5b869]">Flagship Builds</em>
+              </h2>
+              <p className="text-stonewarm text-xs sm:text-sm max-w-xl">
+                Production-grade full-stack architectures engineered with real-time sync, resilient databases, and responsive modern interfaces.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => goTo('/projects')}
+              className="inline-flex items-center gap-2 self-start sm:self-end px-4 py-2 rounded-full border border-white/10 hover:border-amber-400/50 bg-white/[0.03] hover:bg-white/[0.08] text-xs font-mono text-white transition-all group shrink-0"
+              title="Explore all engineering projects"
+            >
+              <span>Explore all {publishedProjects.length} projects</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {showcaseProjects.map((proj, idx) => (
+              <ProjectCard
+                key={proj.id || `home-proj-${idx}`}
+                proj={proj}
+                indexNum={idx + 1}
+                onCardMouseMove={handleCardMouseMove}
+                onCardMouseLeave={handleCardMouseLeave}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* =========================================================================
             SECTION 05: Direct Contact CTA Banner
             ========================================================================= */}
-        <section className="home-cta-banner rounded-3xl border border-white/10 bg-gradient-to-r from-charcoal via-graphite to-charcoal p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl">
-          <div className="space-y-3 max-w-2xl">
-            <ScrollWriteText
-              as="p"
-              className="font-mono text-xs font-semibold uppercase tracking-widest text-vermilion"
-              mode="scramble"
-              scrambleDuration={20}
-            >
-              {ui.homeBannerEyebrow || 'GET IN TOUCH'}
-            </ScrollWriteText>
+        <section className="home-cta-banner rounded-3xl border border-white/10 bg-gradient-to-r from-[#121216] via-[#161622] to-[#121216] p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
+          {/* Subtle Ambient Radial Glow */}
+          <div
+            className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-amber-400/10 blur-3xl"
+            aria-hidden="true"
+          />
+
+          <div className="space-y-4 max-w-2xl relative z-10">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-mono text-xs font-semibold uppercase tracking-widest text-emerald-400">
+                {ui.homeBannerEyebrow || 'OPEN FOR OPPORTUNITIES'}
+              </span>
+            </div>
+
             <ScrollWriteText
               as="h2"
               className="font-display text-2xl sm:text-4xl font-extrabold text-alabaster leading-tight"
@@ -776,16 +934,39 @@ export function HomePage() {
             >
               {ui.homeBannerHeading || "Let's build something extraordinary together."}
             </ScrollWriteText>
+
             <ScrollWriteText
               as="p"
               className="text-sm sm:text-base text-stonewarm"
               mode="words"
               stagger={0.02}
             >
-              {ui.homeBannerSubtext || "Available for software engineering roles, full-stack development, and ambitious client projects."}
+              {ui.homeBannerSubtext || "Available for software engineering roles, full-stack development, and high-impact engineering projects."}
             </ScrollWriteText>
+
+            {/* Quick Contact Micro-Row */}
+            <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-mono text-white/60">
+              <span className="flex items-center gap-1.5 text-amber-300">
+                <i className="fa-regular fa-clock" /> Usually responds within 24h
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5 text-white/70">
+                <i className="fa-solid fa-location-dot" /> Bhopal, India (Open to Remote / Relocation)
+              </span>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-3.5 shrink-0">
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 shrink-0 relative z-10 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={handleCopyEmail}
+              className="px-5 py-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.1] text-xs font-mono text-white font-medium transition-all flex items-center justify-center gap-2 group cursor-pointer"
+              title="Copy Ayush's email address"
+            >
+              <i className={`fa-regular ${copiedEmail ? 'fa-circle-check text-emerald-400' : 'fa-copy text-amber-300'}`} />
+              <span>{copiedEmail ? 'Email Copied!' : 'Copy Email'}</span>
+            </button>
+
             <button
               type="button"
               onClick={() => goTo('/contact')}

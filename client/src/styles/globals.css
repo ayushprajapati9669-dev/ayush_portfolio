@@ -61,6 +61,29 @@ h4, h5, h6 {
   color: #ffffff;
 }
 
+/* Universal Luxury Page Header & Typography Standard (Top 0.001%) */
+.page-header {
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 0 clamp(20px, 5vw, 64px) 56px !important;
+  box-sizing: border-box !important;
+  position: relative;
+}
+
+.page-tagline,
+.page-eyebrow {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #d4af37 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
 .page-title {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
   font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
@@ -68,6 +91,45 @@ h4, h5, h6 {
   letter-spacing: -0.03em !important;
   color: #ffffff !important;
   line-height: 1.05 !important;
+  margin-bottom: 20px !important;
+}
+
+.page-title .token-italic,
+.page-title em,
+.page-title .token-highlight,
+.page-title span.highlight,
+.page-title .gold-accent {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif !important;
+  font-style: italic !important;
+  font-weight: 500 !important;
+  color: #fcd34d !important;
+  background: transparent !important;
+  -webkit-text-fill-color: #fcd34d !important;
+  text-shadow: 0 0 35px rgba(252, 211, 77, 0.3) !important;
+  display: inline-block !important;
+}
+
+.page-desc {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 15px !important;
+  color: #cbd5e1 !important;
+  line-height: 1.65 !important;
+  max-width: 680px !important;
+  margin: 0 !important;
+}
+
+/* Universal Page Padding-Top Alignment (prevents header jumps on route change) */
+.projects-page,
+.certificates-page,
+.about-page,
+.journey-page,
+.skills-page,
+.contact-page {
+  min-height: 100vh !important;
+  padding-top: 130px !important;
+  padding-bottom: 100px !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
 }
 
 .font-display {

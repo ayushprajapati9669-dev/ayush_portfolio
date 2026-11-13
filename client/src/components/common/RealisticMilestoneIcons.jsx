@@ -91,7 +91,7 @@ export function RealisticMilestoneFlagIcon({ size = 42, className = '' }) {
         <path
           d="M19 13.5 C 24 12, 28 15, 34 13.5 C 36 13, 37 13.2, 38 13.5 L 34.5 20 L 38 26.5 C 35 25.5, 31 27.5, 27 25.5 C 23 24, 21 26, 19 25.2 Z"
           fill="url(#flagFold)"
-          mixBlendMode="overlay"
+          style={{ mixBlendMode: 'overlay' }}
         />
         {/* Star Accent on Flag */}
         <polygon points="26,17 27.2,19.5 30,19.8 28,21.7 28.5,24.5 26,23.2 23.5,24.5 24,21.7 22,19.8 24.8,19.5" fill="#fef08a" opacity="0.9" />

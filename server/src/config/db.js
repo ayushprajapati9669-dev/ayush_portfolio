@@ -18,79 +18,62 @@ try {
   mongoose = null;
 }
 
+async function bulkSyncCollection(Model, items, idKey = 'id') {
+  if (!Model || !Array.isArray(items)) return;
+  if (items.length > 0) {
+    const ops = items.map(item => {
+      const copy = { ...item };
+      delete copy._id;
+      delete copy.__v;
+      return {
+        updateOne: {
+          filter: { [idKey]: item[idKey] },
+          update: { $set: copy },
+          upsert: true
+        }
+      };
+    });
+    await Model.bulkWrite(ops, { ordered: false });
+  }
+  const currentIds = items.map(i => i[idKey]).filter(Boolean);
+  await Model.deleteMany({ [idKey]: { $nin: currentIds } });
+}
+
 /**
  * Persist store state changes to MongoDB Atlas collections.
- * Guaranteed atomic writes directly to MongoDB database.
+ * High-performance atomic bulk writes directly to MongoDB database.
  */
 async function syncStoreToMongoCollections(state) {
   if (!mongoose || mongoose.connection.readyState !== 1) return;
 
   try {
-    // 1. Projects collection
-    if (Array.isArray(state.projects)) {
-      for (const p of state.projects) {
-        const copy = { ...p };
+    // 1-4. Bulk write relational collections in parallel
+    await Promise.all([
+      bulkSyncCollection(Project, state.projects),
+      bulkSyncCollection(Certificate, state.certificates),
+      bulkSyncCollection(SkillCategory, state.skills),
+      bulkSyncCollection(Message, state.messages),
+      bulkSyncCollection(Resume, state.resumes)
+    ]);
+
+    // 5. Admin Users collection
+    if (Array.isArray(state.users) && state.users.length > 0) {
+      const userOps = state.users.map(u => {
+        const copy = { ...u };
         delete copy._id;
         delete copy.__v;
-        await Project.findOneAndUpdate(
-          { id: p.id },
-          { $set: copy },
-          { upsert: true, new: true }
-        );
-      }
-      const storeIds = state.projects.map(p => p.id);
-      await Project.deleteMany({ id: { $nin: storeIds } });
+        return {
+          updateOne: {
+            filter: { username: u.username },
+            update: { $set: copy },
+            upsert: true
+          }
+        };
+      });
+      await User.bulkWrite(userOps, { ordered: false });
     }
 
-    // 2. Certificates collection
-    if (Array.isArray(state.certificates)) {
-      for (const c of state.certificates) {
-        const copy = { ...c };
-        delete copy._id;
-        delete copy.__v;
-        await Certificate.findOneAndUpdate(
-          { id: c.id },
-          { $set: copy },
-          { upsert: true, new: true }
-        );
-      }
-      const certIds = state.certificates.map(c => c.id);
-      await Certificate.deleteMany({ id: { $nin: certIds } });
-    }
-
-    // 3. Skills collection
-    if (Array.isArray(state.skills) && state.skills.length > 0) {
-      for (const s of state.skills) {
-        const copy = { ...s };
-        delete copy._id;
-        delete copy.__v;
-        await SkillCategory.findOneAndUpdate(
-          { id: s.id },
-          { $set: copy },
-          { upsert: true, new: true }
-        );
-      }
-      const skillIds = state.skills.map(s => s.id);
-      await SkillCategory.deleteMany({ id: { $nin: skillIds } });
-    }
-
-    // 4. Messages collection
-    if (Array.isArray(state.messages)) {
-      for (const m of state.messages) {
-        const copy = { ...m };
-        delete copy._id;
-        delete copy.__v;
-        await Message.findOneAndUpdate(
-          { id: m.id },
-          { $set: copy },
-          { upsert: true, new: true }
-        );
-      }
-      const msgIds = state.messages.map(m => m.id);
-      await Message.deleteMany({ id: { $nin: msgIds } });
-    }
-
-    // 5. Profiles collection
+    // 6. Profiles singleton
     if (state.profile) {
       const copy = { ...state.profile };
       delete copy._id;
@@ -102,7 +85,7 @@ async function syncStoreToMongoCollections(state) {
       );
     }
 
-    // 6. Settings collection (includes theme, trash, mediaLibrary, templates, logs)
+    // 7. Settings singleton (includes theme, trash, mediaLibrary, templates, logs)
     if (state.settings) {
       const copy = { ...state.settings };
       delete copy._id;
@@ -112,36 +95,6 @@ async function syncStoreToMongoCollections(state) {
         { $set: copy },
         { upsert: true, new: true }
       );
-    }
-
-    // 7. Resumes collection
-    if (Array.isArray(state.resumes)) {
-      for (const r of state.resumes) {
-        const copy = { ...r };
-        delete copy._id;
-        delete copy.__v;
-        await Resume.findOneAndUpdate(
-          { id: r.id },
-          { $set: copy },
-          { upsert: true, new: true }
-        );
-      }
-      const resumeIds = state.resumes.map(r => r.id);
-      await Resume.deleteMany({ id: { $nin: resumeIds } });
-    }
-
-    // 8. Admin Users collection
-    if (Array.isArray(state.users) && state.users.length > 0) {
-      for (const u of state.users) {
-        const copy = { ...u };
-        delete copy._id;
-        delete copy.__v;
-        await User.findOneAndUpdate(
-          { username: u.username },
-          { $set: copy },
-          { upsert: true, new: true }
-        );
-      }
     }
 
     // 9. Legacy singleton update (for backward compatibility)

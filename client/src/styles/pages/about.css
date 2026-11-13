@@ -32,11 +32,11 @@
 .about-page .page-title {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.025em !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
   color: #ffffff !important;
   line-height: 1.05 !important;
-  margin: 0 0 24px 0 !important;
+  margin-bottom: 20px !important;
 }
 
 /* Cinzel 3D Dynamic Name Heading */
@@ -234,37 +234,82 @@
   to { transform: rotate(360deg); }
 }
 
-.about-page .profile-img-wrap {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.about-page .profile-img-wrap {
+.about-page .profile-img-wrap,
+.about-page .about-monogram-wrap {
   width: 100% !important;
   height: 100% !important;
   border-radius: 50% !important;
   overflow: hidden !important;
   position: relative !important;
-  background: #0a0a0a !important;
-}
-
-.about-page .profile-img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center top !important;
-  display: block !important;
-}
-
-.about-page .initials-fallback {
-  position: absolute !important;
-  inset: 0 !important;
+  z-index: 1 !important;
+  background: radial-gradient(circle at 45% 35%, #181924 0%, #0d0e15 65%, #07080d 100%) !important;
+  border: 1.5px solid rgba(212, 175, 55, 0.45) !important;
+  box-shadow: inset 0 0 25px rgba(212, 175, 55, 0.16), inset 0 1px 2px rgba(255, 255, 255, 0.15), 0 8px 24px rgba(0, 0, 0, 0.6) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-family: 'Cormorant Garamond', Georgia, serif !important;
-  font-size: 2rem !important;
-  color: #d4af37 !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease !important;
+}
+
+.about-page .about-monogram-wrap::before {
+  content: '';
+  position: absolute;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.about-page .about-monogram-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px dashed rgba(212, 175, 55, 0.24);
+  pointer-events: none;
+  transition: border-color 0.35s ease;
+}
+
+.about-page .about-card.profile-card:hover .about-monogram-wrap {
+  transform: scale(1.03) !important;
+  border-color: rgba(252, 211, 77, 0.8) !important;
+  box-shadow: inset 0 0 35px rgba(212, 175, 55, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.25), 0 12px 30px rgba(0, 0, 0, 0.75) !important;
+}
+
+.about-page .about-card.profile-card:hover .about-monogram-wrap::after {
+  border-color: rgba(252, 211, 77, 0.5) !important;
+}
+
+.about-page .about-monogram-text {
+  position: relative !important;
+  z-index: 2 !important;
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 2.85rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1 !important;
+  padding-left: 0.08em !important;
+  background: linear-gradient(135deg, #ffffff 0%, #fde68a 35%, #f59e0b 70%, #d4af37 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 2px 14px rgba(245, 158, 11, 0.45)) !important;
+  transition: filter 0.35s ease, transform 0.35s ease !important;
+  user-select: none !important;
+}
+
+.about-page .about-card.profile-card:hover .about-monogram-text {
+  filter: drop-shadow(0 0 24px rgba(252, 211, 77, 0.85)) !important;
+  transform: scale(1.06) !important;
+}
+
+.about-page .profile-img {
+  display: none !important;
+}
+
+.about-page .initials-fallback {
+  display: none !important;
 }
 
 .about-page .profile-details h2 {

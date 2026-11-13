@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { playTick } from '../../utils/audio';
 import { TechLogo } from '../common/TechLogos';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 // ===== TECH ICON MAP (Branded real icons matching public_abou_spotlight_milestone.html) =====
 const TECH_ICONS = {
@@ -642,7 +643,7 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
                     {currentSlide.deepdive && (
                       <div
                         className="deepdive-body"
-                        dangerouslySetInnerHTML={{ __html: currentSlide.deepdive }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(currentSlide.deepdive) }}
                       />
                     )}
                   </div>

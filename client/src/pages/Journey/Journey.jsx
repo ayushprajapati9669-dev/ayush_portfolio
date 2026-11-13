@@ -9,6 +9,7 @@ import { MilestoneSpotlightSlider } from '../../components/ui/MilestoneSpotlight
 import { TechLogo } from '../../components/common/TechLogos';
 import { LeetCodeMetricsBadge } from '../../components/ui/LeetCodeMetricsBadge';
 import { ScrollWriteText } from '../../components/common/ScrollWriteText';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 export function JourneyPage() {
   const { appState } = usePortfolio();
@@ -191,20 +192,20 @@ export function JourneyPage() {
           mode="scramble"
           scrambleDuration={20}
         >
-          {ui.journeyEyebrow || '02 · TRACK RECORD & MILESTONES'}
+          {ui.journeyEyebrow || '05 · TRACK RECORD & MILESTONES'}
         </ScrollWriteText>
         <ScrollWriteText
           as="h1"
-          className="page-title"
+          className="page-title hero-editorial-title text-left !m-0 !p-0 !max-w-none"
           mode="mask"
           stagger={0.04}
-          highlightWords={['Milestones', 'Achievements']}
+          highlightWords={['Achievements']}
         >
-          {ui.journeyHeading || 'Milestones & Achievements'}
+          Milestones & *Achievements*
         </ScrollWriteText>
         <ScrollWriteText
           as="p"
-          className="page-desc"
+          className="page-desc mt-4"
           mode="words"
           stagger={0.02}
         >
@@ -325,7 +326,7 @@ export function JourneyPage() {
                   </div>
                   <div
                     className="timeline-desc"
-                    dangerouslySetInnerHTML={{ __html: item.description }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.description) }}
                   />
                   {item.image && (
                     <img

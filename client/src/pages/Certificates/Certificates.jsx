@@ -284,24 +284,24 @@ export function CertificatesPage() {
           mode="scramble"
           scrambleDuration={20}
         >
-          {ui.homeCertsEyebrow || '04 · Verified Credentials'}
+          {ui.homeCertsEyebrow || '04 · VERIFIED ACCREDITATIONS'}
         </ScrollWriteText>
         <ScrollWriteText
           as="h1"
-          className="page-title"
+          className="page-title hero-editorial-title text-left !m-0 !p-0 !max-w-none"
           mode="mask"
-          stagger={0.05}
-          highlightWords={['Certifications', 'Achievements']}
+          stagger={0.04}
+          highlightWords={['Credentials']}
         >
-          {ui.homeCertsHeading || 'Certifications & Achievements'}
+          Certifications & *Credentials*
         </ScrollWriteText>
         <ScrollWriteText
           as="p"
-          className="page-desc"
+          className="page-desc mt-4"
           mode="words"
           stagger={0.02}
         >
-          Click on any certificate card or "View Certificate" to inspect the full-resolution credential in the interactive viewer.
+          Accredited certifications and professional credentials earned across software engineering, cloud computing, and full-stack web development.
         </ScrollWriteText>
       </div>
 

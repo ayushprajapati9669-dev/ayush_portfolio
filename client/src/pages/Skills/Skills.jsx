@@ -1,5 +1,4 @@
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
+import React, { useRef } from 'react';
 import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
 import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
@@ -16,12 +15,12 @@ export function SkillsPage() {
   return (
     <main className="skills-page min-h-screen" ref={containerRef}>
       <SEO
-        title="Technical Skills & Stack"
-        description="Comprehensive matrix of Ayush Prajapati's software competencies: React, Node.js, Express, MongoDB, Data Structures, Java, C, Python, SQL, REST APIs, and DevOps tools."
+        title="Skills & Tech Stack"
+        description="Ayush Prajapati's comprehensive technical stack, architectural proficiencies, and software competencies across frontend, backend, databases, languages, and developer tools."
         schema={personSchema(appState.profile, { knowsAbout: allSkillNames.length > 0 ? allSkillNames : undefined })}
       />
       
-      {/* Page Header - 100% Unified with Projects, Certificates, About, and Contact pages */}
+      {/* Page Header */}
       <div className="page-header">
         <ScrollWriteText
           as="div"
@@ -33,20 +32,20 @@ export function SkillsPage() {
         </ScrollWriteText>
         <ScrollWriteText
           as="h1"
-          className="page-title"
+          className="page-title hero-editorial-title text-left !m-0 !p-0 !max-w-none"
           mode="mask"
           stagger={0.04}
-          highlightWords={['Skills']}
+          highlightWords={['Tech', 'Stack']}
         >
-          Interactive Skills & Tech Stack
+          Skills & *Tech Stack*
         </ScrollWriteText>
         <ScrollWriteText
           as="p"
-          className="page-desc"
+          className="page-desc mt-4"
           mode="words"
           stagger={0.02}
         >
-          Full-stack proficiency across languages, modern frontend systems, backend APIs, distributed databases, and engineering developer tools.
+          A complete overview of my technical proficiencies across frontend, backend, databases, programming languages, and developer tools.
         </ScrollWriteText>
       </div>
 

@@ -2,14 +2,14 @@ const { requireAdminAuth } = require('../middleware/authMiddleware');
 
 async function handleAdminRoutes(req, res, pathname, config, adminController) {
   if (req.method === 'POST' && pathname === '/api/portfolio/sync') {
-    const session = requireAdminAuth(req, res, config, false);
+    const session = requireAdminAuth(req, res, config, true);
     if (!session) return true;
     await adminController.syncPortfolio(req, res);
     return true;
   }
 
   if (req.method === 'POST' && pathname === '/api/admin/remove-background') {
-    const session = requireAdminAuth(req, res, config, false);
+    const session = requireAdminAuth(req, res, config, true);
     if (!session) return true;
     await adminController.removeBackground(req, res);
     return true;

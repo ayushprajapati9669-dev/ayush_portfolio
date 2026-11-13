@@ -267,10 +267,30 @@ async function runTests() {
       body: { username: 'ayush_admin', password: 'WrongPassword' }
     });
     assert.strictEqual(rateLimitedLogin.status, 429, '6th login attempt within window must return 429');
-    console.log('✓ [11/11] Login brute-force rate limiting (HTTP 429) verified');
+    console.log('✓ [11/13] Login brute-force rate limiting (HTTP 429) verified');
     passed++;
 
-    console.log(`\nALL ${passed}/11 BACKEND & SECURITY TESTS PASSED.`);
+    // Test 12: Verify /api/portfolio/sync rejects requests missing CSRF token
+    const syncNoCsrf = await requestJson(baseUrl, '/api/portfolio/sync', {
+      method: 'POST',
+      headers: { Cookie: cookieHeader },
+      body: { state: {} }
+    });
+    assert.strictEqual(syncNoCsrf.status, 403, '/api/portfolio/sync without CSRF token must be rejected with 403');
+    console.log('✓ [12/13] Portfolio sync CSRF protection verified');
+    passed++;
+
+    // Test 13: Social crawler user-agent receives dynamic OpenGraph meta tags
+    const crawlerRes = await fetch(`${baseUrl}/projects/trading-platform-zerodha-inspired`, {
+      headers: { 'User-Agent': 'Twitterbot/1.0' }
+    });
+    assert.strictEqual(crawlerRes.status, 200);
+    const crawlerHtml = await crawlerRes.text();
+    assert.ok(crawlerHtml.includes('og:title') || crawlerHtml.includes('Trading Platform'), 'Social crawler must receive OpenGraph tags');
+    console.log('✓ [13/13] Social crawler OpenGraph meta tag pre-injection verified');
+    passed++;
+
+    console.log(`\nALL ${passed}/13 BACKEND & SECURITY TESTS PASSED.`);
   } finally {
     server.close();
     if (fs.existsSync(TEST_DB_PATH)) fs.unlinkSync(TEST_DB_PATH);

@@ -1454,6 +1454,11 @@ a.btn-primary:hover {
   pointer-events: none !important;
 }
 
+/* Modal overlay must always sit on top of fixed navbar */
+.terminal-drawer-panel {
+  z-index: 9999999 !important;
+}
+
 /* 2. Main Navbar Glass Bar */
 .navbar {
   display: flex !important;
