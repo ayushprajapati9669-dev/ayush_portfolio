@@ -1985,3 +1985,262 @@ a.btn-primary:hover {
 #navWrapper .btn-primary i {
   color: #000000 !important;
 }
+
+/* =========================================================================
+   RESPONSIVE & MOBILE NAVIGATION (AUTHORITATIVE OVERRIDES)
+   ========================================================================= */
+
+/* Desktop only: Hide mobile hamburger toggle */
+@media (min-width: 1025px) {
+  .mobile-nav-toggle,
+  #navWrapper .mobile-nav-toggle {
+    display: none !important;
+  }
+}
+
+/* Tablet & Mobile Screens (<= 1024px) */
+@media (max-width: 1024px) {
+  /* Capsule Wrapper Positioning */
+  .nav-wrapper,
+  #navWrapper,
+  body.has-admin-sidebar .nav-wrapper,
+  body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
+    position: fixed !important;
+    top: 12px !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    z-index: 99990 !important;
+  }
+
+  .navbar,
+  #navbar,
+  #navWrapper .navbar {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 6px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  /* Center Desktop Navigation Links MUST BE HIDDEN on <= 1024px */
+  .nav-center,
+  #navWrapper .nav-center,
+  #navCenter {
+    display: none !important;
+  }
+
+  /* Desktop-only action items hidden on <= 1024px */
+  .nav-terminal-btn,
+  #navWrapper .nav-terminal-btn,
+  .nav-resume-btn,
+  #navWrapper .nav-resume-btn,
+  .nav-v-divider,
+  #navWrapper .nav-v-divider,
+  #navWrapper .btn-outline {
+    display: none !important;
+  }
+
+  /* Admin-specific desktop controls hidden on mobile */
+  body.has-admin-sidebar .theme-selector,
+  body.has-admin-sidebar .accent-picker-wrapper,
+  body.has-admin-sidebar .nav-search-btn,
+  body.has-admin-sidebar .btn-admin-cms,
+  body.has-admin-sidebar .admin-tools-popover,
+  body.has-admin-sidebar .btn-icon {
+    display: none !important;
+  }
+
+  /* Mobile Hamburger Toggle */
+  .mobile-nav-toggle,
+  #navWrapper .mobile-nav-toggle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+    z-index: 2 !important;
+    padding: 0 !important;
+  }
+
+  .mobile-nav-toggle:hover,
+  .mobile-nav-toggle:active,
+  #navWrapper .mobile-nav-toggle:hover {
+    background: rgba(255, 255, 255, 0.16) !important;
+    border-color: rgba(252, 211, 77, 0.6) !important;
+    color: #fcd34d !important;
+    transform: scale(1.05) !important;
+  }
+}
+
+/* Compact Mobile (< 640px) */
+@media (max-width: 640px) {
+  .nav-wrapper,
+  #navWrapper,
+  body.has-admin-sidebar .nav-wrapper,
+  body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
+    top: 10px !important;
+    width: calc(100% - 16px) !important;
+    max-width: calc(100% - 16px) !important;
+  }
+
+  .navbar,
+  #navbar,
+  #navWrapper .navbar {
+    padding: 5px 8px !important;
+  }
+
+  /* Hide brand text on phones to keep monogram and hamburger clean and non-colliding */
+  .nav-logo-text,
+  #navWrapper .nav-logo-text {
+    display: none !important;
+  }
+
+  /* Hide CTA pill on phones — it is fully accessible inside the mobile drawer */
+  .nav-talk-btn,
+  #navWrapper .nav-talk-btn,
+  .btn-admin-cms,
+  #navWrapper .btn-admin-cms {
+    display: none !important;
+  }
+}
+
+/* =========================================================================
+   LUXURY FULLSCREEN MOBILE DRAWER
+   ========================================================================= */
+.mobile-drawer {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  background: rgba(8, 10, 14, 0.97) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  z-index: 1000000 !important;
+  padding: 24px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateX(100%) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  box-sizing: border-box !important;
+}
+
+.mobile-drawer.open {
+  opacity: 1 !important;
+  pointer-events: all !important;
+  transform: translateX(0) !important;
+}
+
+.mobile-drawer-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-bottom: 18px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  margin-bottom: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+.mobile-drawer-close {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+.mobile-drawer-close:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+  border-color: rgba(252, 211, 77, 0.5) !important;
+  transform: scale(1.05) !important;
+}
+
+.mobile-drawer-links {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  flex-grow: 1 !important;
+}
+
+.mobile-drawer-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 13px 16px !important;
+  border-radius: 12px !important;
+  color: #cbd5e1 !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 15.5px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.2s ease !important;
+}
+
+.mobile-drawer-link i {
+  font-size: 15px !important;
+  width: 22px !important;
+  text-align: center !important;
+  color: #94a3b8 !important;
+  transition: color 0.2s ease !important;
+}
+
+.mobile-drawer-link:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  transform: translateX(4px) !important;
+}
+
+.mobile-drawer-link.active {
+  background: linear-gradient(135deg, rgba(252, 211, 77, 0.18), rgba(252, 211, 77, 0.05)) !important;
+  border: 1px solid rgba(252, 211, 77, 0.35) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.mobile-drawer-link.active i {
+  color: #fcd34d !important;
+}
+
+.mobile-drawer-footer {
+  margin-top: auto !important;
+  padding-top: 20px !important;
+  padding-bottom: env(safe-area-inset-bottom, 16px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;
+}
+

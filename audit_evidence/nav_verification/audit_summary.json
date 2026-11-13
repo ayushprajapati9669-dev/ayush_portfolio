@@ -1,0 +1,213 @@
+{
+  "public": {
+    "behaviorTests": {
+      "toggleOpenClose": true,
+      "scrollLock": true,
+      "escapeKeyDismiss": true,
+      "allLinksWorkAndCloseDrawer": true
+    },
+    "viewportTests": [
+      {
+        "viewport": "320px Ultra-compact",
+        "width": 320,
+        "hScroll": false,
+        "scrollWidth": 320,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "pass": true,
+        "screenshot": "final_public_320p.png"
+      },
+      {
+        "viewport": "360px Small Mobile",
+        "width": 360,
+        "hScroll": false,
+        "scrollWidth": 360,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "pass": true,
+        "screenshot": "final_public_360p.png"
+      },
+      {
+        "viewport": "390px Standard Mobile",
+        "width": 390,
+        "hScroll": false,
+        "scrollWidth": 390,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "pass": true,
+        "screenshot": "final_public_390p.png"
+      },
+      {
+        "viewport": "430px Large Mobile",
+        "width": 430,
+        "hScroll": false,
+        "scrollWidth": 430,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "pass": true,
+        "screenshot": "final_public_430p.png"
+      },
+      {
+        "viewport": "768px Portrait Tablet",
+        "width": 768,
+        "hScroll": false,
+        "scrollWidth": 768,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "pass": true,
+        "screenshot": "final_public_768p.png"
+      },
+      {
+        "viewport": "820px iPad Air Tablet",
+        "width": 820,
+        "hScroll": false,
+        "scrollWidth": 820,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "pass": true,
+        "screenshot": "final_public_820p.png"
+      },
+      {
+        "viewport": "1024px Large Tablet",
+        "width": 1024,
+        "hScroll": false,
+        "scrollWidth": 1024,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "pass": true,
+        "screenshot": "final_public_1024p.png"
+      },
+      {
+        "viewport": "1366px Laptop Desktop",
+        "width": 1366,
+        "hScroll": false,
+        "scrollWidth": 1366,
+        "navCenterVisible": true,
+        "toggleVisible": false,
+        "pass": true,
+        "screenshot": "final_public_1366p.png"
+      },
+      {
+        "viewport": "1920px Full HD Desktop",
+        "width": 1920,
+        "hScroll": false,
+        "scrollWidth": 1920,
+        "navCenterVisible": true,
+        "toggleVisible": false,
+        "pass": true,
+        "screenshot": "final_public_1920p.png"
+      }
+    ]
+  },
+  "admin": {
+    "behaviorTests": {
+      "toggleAndCloseBtn": true,
+      "scrollLock": true,
+      "backdropDismiss": true,
+      "escapeKeyDismiss": true,
+      "tabsNavigationAndAutoClose": true
+    },
+    "viewportTests": [
+      {
+        "viewport": "320px Ultra-compact",
+        "width": 320,
+        "hScroll": false,
+        "scrollWidth": 320,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "cardTop": 76,
+        "pass": true,
+        "screenshot": "final_admin_320p.png"
+      },
+      {
+        "viewport": "360px Small Mobile",
+        "width": 360,
+        "hScroll": false,
+        "scrollWidth": 360,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "cardTop": 76,
+        "pass": true,
+        "screenshot": "final_admin_360p.png"
+      },
+      {
+        "viewport": "390px Standard Mobile",
+        "width": 390,
+        "hScroll": false,
+        "scrollWidth": 390,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "cardTop": 76,
+        "pass": true,
+        "screenshot": "final_admin_390p.png"
+      },
+      {
+        "viewport": "430px Large Mobile",
+        "width": 430,
+        "hScroll": false,
+        "scrollWidth": 430,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "cardTop": 76,
+        "pass": true,
+        "screenshot": "final_admin_430p.png"
+      },
+      {
+        "viewport": "768px Portrait Tablet",
+        "width": 768,
+        "hScroll": false,
+        "scrollWidth": 768,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "cardTop": 84,
+        "pass": true,
+        "screenshot": "final_admin_768p.png"
+      },
+      {
+        "viewport": "820px iPad Air Tablet",
+        "width": 820,
+        "hScroll": false,
+        "scrollWidth": 820,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "cardTop": 84,
+        "pass": true,
+        "screenshot": "final_admin_820p.png"
+      },
+      {
+        "viewport": "1024px Large Tablet",
+        "width": 1024,
+        "hScroll": false,
+        "scrollWidth": 1024,
+        "navCenterVisible": false,
+        "toggleVisible": true,
+        "cardTop": 84,
+        "pass": true,
+        "screenshot": "final_admin_1024p.png"
+      },
+      {
+        "viewport": "1366px Laptop Desktop",
+        "width": 1366,
+        "hScroll": false,
+        "scrollWidth": 1366,
+        "navCenterVisible": true,
+        "toggleVisible": false,
+        "cardTop": 92,
+        "pass": true,
+        "screenshot": "final_admin_1366p.png"
+      },
+      {
+        "viewport": "1920px Full HD Desktop",
+        "width": 1920,
+        "hScroll": false,
+        "scrollWidth": 1920,
+        "navCenterVisible": true,
+        "toggleVisible": false,
+        "cardTop": 92,
+        "pass": true,
+        "screenshot": "final_admin_1920p.png"
+      }
+    ]
+  },
+  "consoleErrors": []
+}

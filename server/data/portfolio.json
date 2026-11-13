@@ -617,7 +617,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "From blank screen to live product. That’s Ayush Prajapati.",
-    "updatedAt": "2026-11-13T09:34:43.393Z",
+    "updatedAt": "2026-11-13T13:58:34.938Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -697,7 +697,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
-      "updatedAt": "2026-11-13T07:46:17.007Z"
+      "updatedAt": "2026-11-13T13:58:33.608Z"
     },
     {
       "id": "proj-1792430568297",
@@ -725,7 +725,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-11-13T07:46:18.639Z"
+      "updatedAt": "2026-11-13T13:58:33.663Z"
     },
     {
       "id": "proj-1792496192331",
@@ -748,9 +748,9 @@
         "react"
       ],
       "thumbnailType": "image",
-      "thumbnailUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80",
+      "thumbnailUrl": "/images/ai-chat-preview.webp",
       "title": "ai chat boat",
-      "updatedAt": "2026-11-13T07:46:19.041Z"
+      "updatedAt": "2026-11-13T14:43:13.566Z"
     },
     {
       "id": "proj-1792781601076",
@@ -778,7 +778,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
-      "updatedAt": "2026-11-13T07:46:19.419Z"
+      "updatedAt": "2026-11-13T13:58:33.794Z"
     },
     {
       "id": "proj-1792669669594",
@@ -804,9 +804,9 @@
         "MongoDB"
       ],
       "thumbnailType": "image",
-      "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
+      "thumbnailUrl": "/images/ai-agentic-preview.webp",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-11-13T07:46:20.135Z"
+      "updatedAt": "2026-11-13T14:43:14.211Z"
     }
   ],
   "skills": [
@@ -866,7 +866,7 @@
           "createdAt": 1792600863119
         }
       ],
-      "updatedAt": "2026-11-13T07:46:30.415Z"
+      "updatedAt": "2026-11-13T13:58:34.418Z"
     },
     {
       "id": "skill-cat-frontend",
@@ -908,7 +908,7 @@
           "createdAt": 1792600868119
         }
       ],
-      "updatedAt": "2026-11-13T07:46:31.356Z"
+      "updatedAt": "2026-11-13T13:58:34.473Z"
     },
     {
       "id": "skill-cat-backend",
@@ -942,7 +942,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-11-13T07:46:32.212Z"
+      "updatedAt": "2026-11-13T13:58:34.530Z"
     },
     {
       "id": "skill-cat-databases",
@@ -968,7 +968,7 @@
           "createdAt": 1792600878119
         }
       ],
-      "updatedAt": "2026-11-13T07:46:33.084Z"
+      "updatedAt": "2026-11-13T13:58:34.578Z"
     },
     {
       "id": "skill-cat-tools",
@@ -1002,7 +1002,7 @@
           "createdAt": 1792600873119
         }
       ],
-      "updatedAt": "2026-11-13T07:46:34.096Z"
+      "updatedAt": "2026-11-13T13:58:34.629Z"
     },
     {
       "id": "skill-cat-dsa",
@@ -1020,7 +1020,7 @@
           "createdAt": 1792600883119
         }
       ],
-      "updatedAt": "2026-11-13T07:46:34.740Z"
+      "updatedAt": "2026-11-13T13:58:34.672Z"
     }
   ],
   "certificates": [
@@ -1034,7 +1034,7 @@
       "issuer": "apna college",
       "skillsCovered": "HTML,CSS,JAVASCRIPT,NODEJS,EXPRESS",
       "title": "mern stack certificate ",
-      "updatedAt": "2026-11-13T07:46:22.833Z"
+      "updatedAt": "2026-11-13T13:58:33.963Z"
     },
     {
       "id": "cert-1792434116249",
@@ -1046,7 +1046,7 @@
       "issuer": "code with harry",
       "skillsCovered": "",
       "title": "ai-ml certificate",
-      "updatedAt": "2026-11-13T07:46:23.529Z"
+      "updatedAt": "2026-11-13T13:58:34.038Z"
     },
     {
       "id": "cert-1792578230937",
@@ -1058,7 +1058,7 @@
       "issuer": "Apna college",
       "skillsCovered": "html, css, javasript, nodejs, react, mongodb, express",
       "title": "Full Stack Development (Copy)",
-      "updatedAt": "2026-11-13T07:46:24.360Z"
+      "updatedAt": "2026-11-13T13:58:34.087Z"
     },
     {
       "id": "cert-1792588849135",
@@ -1070,7 +1070,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, GraphQL",
       "title": "mern stack",
-      "updatedAt": "2026-11-13T07:46:25.368Z"
+      "updatedAt": "2026-11-13T13:58:34.140Z"
     },
     {
       "id": "cert-1792595305806",
@@ -1082,7 +1082,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "cyber security",
-      "updatedAt": "2026-11-13T07:46:26.613Z"
+      "updatedAt": "2026-11-13T13:58:34.191Z"
     },
     {
       "id": "cert-1792663342696",
@@ -1094,7 +1094,7 @@
       "issuer": "Apna College",
       "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
       "title": "mern stack",
-      "updatedAt": "2026-11-13T07:46:27.702Z"
+      "updatedAt": "2026-11-13T13:58:34.257Z"
     },
     {
       "id": "cert-1793434886240",
@@ -1106,7 +1106,7 @@
       "issuer": "Coursera",
       "skillsCovered": "",
       "title": "cloud certificate",
-      "updatedAt": "2026-11-13T07:46:28.292Z"
+      "updatedAt": "2026-11-13T13:58:34.314Z"
     }
   ],
   "media": [],
@@ -1119,7 +1119,7 @@
       "message": "Hi Ayush,\n\nI came across your portfolio and was thoroughly impressed by your Wanderlust distributed architecture and full-stack systems work. Our engineering team at Stripe is expanding our platform integrations group and your background in React, Node.js, and high-performance cloud architectures stands out.\n\nWould you be open to an introductory call this week to discuss potential engineering roles?\n\nBest regards,\nSarah Jenkins",
       "status": "unread",
       "starred": true,
-      "createdAt": "2026-11-13T11:58:31.612Z",
+      "createdAt": "2026-11-13T13:52:24.899Z",
       "replies": []
     },
     {
@@ -1130,14 +1130,14 @@
       "message": "Hello Ayush,\n\nWe saw your live project build for the Autonomous Multi-Agent Workspace and were really impressed by your task decomposition and multi-agent coordination architecture.\n\nWe are building next-generation agent harnesses for enterprise engineers and would love to consult with you or explore a collaborative engagement.\n\nLooking forward to speaking,\nMichael Chang",
       "status": "read",
       "starred": false,
-      "createdAt": "2026-11-12T13:58:31.612Z",
+      "createdAt": "2026-11-12T15:52:24.899Z",
       "replies": [
         {
           "id": "reply-founder-1",
           "sender": "You (Admin)",
           "text": "Hi Michael,\n\nThank you for reaching out! The multi-agent workspace was an exciting system to architect, particularly ensuring reliable inter-agent messaging and state synchronization.\n\nI would be very happy to connect and discuss your team's work. Feel free to book a convenient slot on my calendar.\n\nBest regards,\nAyush Prajapati",
           "time": "11:30 AM",
-          "date": "11/12/2026"
+          "date": "11/13/2026"
         }
       ]
     },
@@ -1149,7 +1149,7 @@
       "message": "Dear Ayush,\n\nFollowing your successful workshop mentoring 120+ engineers at SISTec on MERN and Cloud Architecture, the organizing committee would like to invite you as a keynote guest speaker for the upcoming Central India Tech Innovation Conclave.\n\nPlease let us know if your schedule allows for a 45-minute technical keynote in December.\n\nWarm regards,\nDr. Rajiv Sharma",
       "status": "read",
       "starred": true,
-      "createdAt": "2026-11-11T13:58:31.612Z",
+      "createdAt": "2026-11-11T15:52:24.899Z",
       "replies": []
     }
   ],
@@ -1158,7 +1158,7 @@
     "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",
     "particlesEnabled": true,
     "contactNote": "Messages submitted through the contact form are validated on the server and persisted directly to the portfolio database for review in the Admin CMS. No third-party SMTP relay is fabricated; a direct mailto fallback is also available.",
-    "updatedAt": "2026-11-13T07:46:59.570Z",
+    "updatedAt": "2026-11-13T13:58:37.231Z",
     "mongodbUri": "mongodb://127.0.0.1:27017/ayush_portfolio",
     "cloudinaryCloudName": "",
     "cloudinaryUploadPreset": "",
@@ -1170,10 +1170,10 @@
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-13T13:58:33.558Z",
+      "lastLoginAt": "2026-11-13T15:52:28.054Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-13T07:47:01.254Z"
+      "updatedAt": "2026-11-13T13:58:37.547Z"
     },
     {
       "username": "ayush",
@@ -1182,7 +1182,7 @@
       "lastLoginAt": "2026-11-09T11:55:23.945Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-13T07:47:02.492Z"
+      "updatedAt": "2026-11-13T13:58:37.757Z"
     },
     {
       "createdAt": "2026-11-05T12:05:07.107Z",
@@ -1190,7 +1190,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-13T07:47:03.808Z",
+      "updatedAt": "2026-11-13T13:58:37.814Z",
       "username": "admin"
     },
     {
@@ -1199,7 +1199,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-13T07:47:04.961Z",
+      "updatedAt": "2026-11-13T13:58:38.056Z",
       "username": "Ayush7162"
     }
   ],

@@ -252,7 +252,7 @@ export function getDefaultPortfolioState() {
       "react"
     ],
     "thumbnailType": "image",
-    "thumbnailUrl": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80",
+    "thumbnailUrl": "/images/ai-chat-preview.webp",
     "title": "ai chat boat",
     "updatedAt": "2026-10-31T08:52:18.460Z"
   },
@@ -280,7 +280,7 @@ export function getDefaultPortfolioState() {
       "MongoDB"
     ],
     "thumbnailType": "image",
-    "thumbnailUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
+    "thumbnailUrl": "/images/ai-agentic-preview.webp",
     "title": "AI Agentic Workspace",
     "updatedAt": "2026-10-31T08:52:18.520Z"
   },

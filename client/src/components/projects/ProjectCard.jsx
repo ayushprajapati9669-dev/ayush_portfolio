@@ -262,10 +262,14 @@ export function ProjectCard({
 
       <div className="project-content flex-1 flex flex-col justify-between">
         <div>
-          <div className="project-meta flex items-center justify-between mb-2">
+          <div className="project-meta flex items-center justify-between mb-1.5">
             <span className="project-num">PROJECT {indexNum < 10 ? `0${indexNum}` : indexNum}</span>
-            <Link to={caseStudyUrl} className="project-link-hint flex items-center gap-1 text-[11px] text-amber-300 opacity-0 group-hover:opacity-100 transition-opacity no-underline">
-              Case Study <i className="fa-solid fa-arrow-right text-[9px]" />
+            <Link
+              to={caseStudyUrl}
+              className="project-link-hint min-h-[36px] inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono text-amber-300 rounded-full transition-all no-underline max-sm:opacity-90 max-sm:bg-white/[0.04] max-sm:border max-sm:border-white/10 opacity-0 group-hover:opacity-100 hover:bg-amber-400/10 focus-visible:opacity-100"
+            >
+              <span>Case Study</span>
+              <i className="fa-solid fa-arrow-right text-[9px] group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
 

@@ -1,0 +1,41 @@
+{
+  "publicA11y": {
+    "ariaExpandedTransitions": true,
+    "ariaControlsRelationship": true,
+    "dialogSemantics": true,
+    "focusTrapped": true,
+    "focusRestoredToTrigger": true
+  },
+  "adminA11y": {
+    "ariaExpandedTransitions": true,
+    "ariaControlsRelationship": true,
+    "responsiveDialogSemantics": true,
+    "focusTrapped": true,
+    "focusRestoredToTrigger": true
+  },
+  "scrollLockCoordination": {
+    "lockOnOpen": true,
+    "retainsLockWhileSecondaryOverlayOpen": true,
+    "restoresWhenAllClosed": true
+  },
+  "viewports": {
+    "390p": {
+      "width": 390,
+      "publicHScroll": false,
+      "adminHScroll": false,
+      "pass": true
+    },
+    "768p": {
+      "width": 768,
+      "publicHScroll": false,
+      "adminHScroll": false,
+      "pass": true
+    },
+    "1366p": {
+      "width": 1366,
+      "publicHScroll": false,
+      "adminHScroll": false,
+      "pass": true
+    }
+  }
+}

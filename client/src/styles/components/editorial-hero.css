@@ -1640,3 +1640,27 @@
     padding: 18px 0 10px;
   }
 }
+
+/* Mobile collision prevention for floating Sound FX button and hero features strip dock */
+@media (max-width: 420px) {
+  .soundscape-studio-floating {
+    bottom: 16px !important;
+    left: 14px !important;
+  }
+
+  .hero-features-strip {
+    padding-left: 54px !important;
+    padding-right: 12px !important;
+  }
+
+  .hero-feature-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .hero-feature-item {
+    font-size: 15px !important;
+    gap: 12px !important;
+    padding: 6px 2px !important;
+  }
+}

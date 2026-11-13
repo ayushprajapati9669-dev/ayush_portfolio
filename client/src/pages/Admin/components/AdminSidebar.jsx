@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { playTick } from '../../../utils/audio';
+import { useFocusTrap } from '../../../utils/focusTrap';
 
 export function AdminSidebar({
   activeTab,
@@ -15,6 +16,10 @@ export function AdminSidebar({
   const [searchQuery, setSearchQuery] = useState('');
   const navRef = useRef(null);
   const highlightRef = useRef(null);
+  const sidebarRef = useRef(null);
+
+  // Focus trapping inside mobile sidebar drawer with focus restoration
+  useFocusTrap(sidebarRef, isMobileOpen, { initialFocusSelector: '.mobile-sidebar-close-btn' });
 
   const navSections = [
     {
@@ -134,8 +139,12 @@ export function AdminSidebar({
 
   return (
     <aside
+      ref={sidebarRef}
       className={`admin-sidebar ${isCollapsed ? 'focus-mode' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}
       id="adminSidebar"
+      role={isMobileOpen ? 'dialog' : undefined}
+      aria-modal={isMobileOpen ? 'true' : undefined}
+      aria-label="Admin Navigation"
       data-lenis-prevent="true"
     >
       {/* Header with Logo and Focus Toggle */}
@@ -149,6 +158,19 @@ export function AdminSidebar({
             <span className="logo-sub">ADMIN SYSTEM</span>
           </div>
         </div>
+
+        {/* Mobile Drawer Close Button */}
+        <button
+          type="button"
+          className="mobile-sidebar-close-btn"
+          onClick={() => {
+            playTick();
+            window.dispatchEvent(new CustomEvent('admin-sidebar-toggle'));
+          }}
+          aria-label="Close admin navigation drawer"
+        >
+          <i className="fa-solid fa-xmark" />
+        </button>
 
         <button
           type="button"

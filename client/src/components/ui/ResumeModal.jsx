@@ -3,10 +3,14 @@ import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
+import { useScrollLock } from '../../utils/scrollLock';
 
 export function ResumeModal() {
   const { appState, resumeModalOpen, closeResumeModal } = usePortfolio();
   const cardRef = useRef(null);
+
+  // Shared scroll-lock coordination
+  useScrollLock(Boolean(resumeModalOpen));
 
   const p = appState.profile || {};
   const activeResume = (appState.resumes || []).find((r) => r.isActive) || (appState.resumes || [])[0];

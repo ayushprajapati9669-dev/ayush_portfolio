@@ -266,7 +266,7 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
             <span>Learning AI/ML</span>
           </div>
 
-          {/* Horizontal Scroll Navigation Arrows */}
+          {/* Horizontal Scroll Navigation Arrows (Enhanced 36x36px mobile touch targets) */}
           <div
             className={`flex items-center gap-1.5 bg-white/[0.04] p-1 rounded-full border border-white/10 transition-opacity duration-300 ${
               hasOverflow ? 'opacity-100' : 'opacity-40'
@@ -277,11 +277,11 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
               onClick={() => handleScrollBy(-300)}
               disabled={!canScrollLeft}
               aria-label="Scroll milestones left"
-              className="w-7 h-7 rounded-full flex items-center justify-center text-zinc-300 hover:text-amber-300 hover:bg-white/10 disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-zinc-500 disabled:cursor-not-allowed transition-all"
+              className="w-9 h-9 min-w-[36px] min-h-[36px] rounded-full flex items-center justify-center text-zinc-300 hover:text-amber-300 hover:bg-white/10 disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-zinc-500 disabled:cursor-not-allowed transition-all"
               title="Scroll left"
             >
               <svg
-                className="w-3.5 h-3.5"
+                className="w-4 h-4"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -297,11 +297,11 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
               onClick={() => handleScrollBy(300)}
               disabled={!canScrollRight}
               aria-label="Scroll milestones right"
-              className="w-7 h-7 rounded-full flex items-center justify-center text-zinc-300 hover:text-amber-300 hover:bg-white/10 disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-zinc-500 disabled:cursor-not-allowed transition-all"
+              className="w-9 h-9 min-w-[36px] min-h-[36px] rounded-full flex items-center justify-center text-zinc-300 hover:text-amber-300 hover:bg-white/10 disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-zinc-500 disabled:cursor-not-allowed transition-all"
               title="Scroll right"
             >
               <svg
-                className="w-3.5 h-3.5"
+                className="w-4 h-4"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

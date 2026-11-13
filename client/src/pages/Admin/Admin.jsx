@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useAuth } from '../../app/providers/AuthProvider';
 import { playTick } from '../../utils/audio';
+import { useScrollLock } from '../../utils/scrollLock';
 
 // Admin-specific CSS (only loaded when admin page is visited)
 import '../../styles/admin.css';
@@ -68,6 +69,34 @@ export function AdminPage() {
     window.addEventListener('admin-sidebar-toggle', handleSidebarToggle);
     return () => window.removeEventListener('admin-sidebar-toggle', handleSidebarToggle);
   }, []);
+
+  // Escape key listener to close mobile sidebar drawer
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isMobileSidebarOpen) {
+        setIsMobileSidebarOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileSidebarOpen]);
+
+  // Shared scroll-lock coordination (reference counted)
+  useScrollLock(isMobileSidebarOpen);
+
+  // Sync elevated stacking context and emit sidebar state for ARIA
+  useEffect(() => {
+    if (isMobileSidebarOpen) {
+      document.body.classList.add('admin-sidebar-open');
+    } else {
+      document.body.classList.remove('admin-sidebar-open');
+    }
+    window.dispatchEvent(new CustomEvent('admin-sidebar-state-changed', { detail: { isOpen: isMobileSidebarOpen } }));
+    return () => {
+      document.body.classList.remove('admin-sidebar-open');
+      window.dispatchEvent(new CustomEvent('admin-sidebar-state-changed', { detail: { isOpen: false } }));
+    };
+  }, [isMobileSidebarOpen]);
 
   // Guarantee Devicon icons stylesheet is loaded for Skills, Overview, and Projects CMS
   useEffect(() => {

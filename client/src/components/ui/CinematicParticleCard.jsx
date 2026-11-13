@@ -512,7 +512,8 @@ export function CinematicParticleCard({ className = '' }) {
       />
 
       {/* State Indicator Dots */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
+      {/* State Switcher Dots (Enhanced 44x44px accessible touch target) */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex items-center px-1.5 py-0.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md">
         {[0, 1, 2].map((idx) => (
           <button
             key={idx}
@@ -531,12 +532,16 @@ export function CinematicParticleCard({ className = '' }) {
               }, 6000);
             }}
             aria-label={`Morph to particle scene ${idx + 1}`}
-            className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-              idx === currentState
-                ? 'bg-[#e5b869] shadow-[0_0_10px_#e5b869] scale-125'
-                : 'bg-white/25 hover:bg-white/60'
-            }`}
-          />
+            className="group/btn relative flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-full cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-400/50"
+          >
+            <span
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 pointer-events-none ${
+                idx === currentState
+                  ? 'bg-[#e5b869] shadow-[0_0_10px_#e5b869] scale-125'
+                  : 'bg-white/25 group-hover/btn:bg-white/60'
+              }`}
+            />
+          </button>
         ))}
       </div>
 

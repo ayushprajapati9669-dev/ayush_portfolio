@@ -5,6 +5,8 @@ import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useAuth } from '../../app/providers/AuthProvider';
 import { playTick } from '../../utils/audio';
 import { CommandPalette } from '../ui/CommandPalette';
+import { useScrollLock } from '../../utils/scrollLock';
+import { useFocusTrap } from '../../utils/focusTrap';
 
 export function Header() {
   const { appState, showToast, openResumeModal } = usePortfolio();
@@ -14,6 +16,8 @@ export function Header() {
   const [notifOpen, setNotifOpen] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [adminSidebarOpen, setAdminSidebarOpen] = useState(false);
+  const mobileDrawerRef = useRef(null);
   const [readNotifIds, setReadNotifIds] = useState(() => {
     try {
       const stored = localStorage.getItem('admin_read_notifs_v9');
@@ -288,6 +292,41 @@ export function Header() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Escape key listener to close mobile menu and notification popover
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false);
+        setNotifOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Auto-close mobile drawer on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setNotifOpen(false);
+  }, [location.pathname]);
+
+  // Sync admin sidebar state for dynamic aria-expanded on toggle
+  useEffect(() => {
+    const handleAdminSidebarState = (e) => {
+      if (e.detail && typeof e.detail.isOpen === 'boolean') {
+        setAdminSidebarOpen(e.detail.isOpen);
+      }
+    };
+    window.addEventListener('admin-sidebar-state-changed', handleAdminSidebarState);
+    return () => window.removeEventListener('admin-sidebar-state-changed', handleAdminSidebarState);
+  }, []);
+
+  // Shared scroll-lock coordination (reference counted)
+  useScrollLock(mobileMenuOpen);
+
+  // Focus trapping inside mobile drawer with focus restoration
+  useFocusTrap(mobileDrawerRef, mobileMenuOpen, { initialFocusSelector: '.mobile-drawer-close' });
+
   // 3D Tilt, Scroll Shrink & Magnetic GSAP effects (matching uploaded HTML)
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -426,12 +465,12 @@ export function Header() {
           </div>
           <nav className="navbar" id="navbar" ref={navbarRef}>
             {/* Left: Brand / Monogram */}
-            <Link to="/" className="nav-left" onClick={() => playTick()}>
+            <Link to={isAdmin ? "/admin" : "/"} className="nav-left" onClick={() => playTick()}>
               <div className="nav-logo-box">
                 {p.monogram || 'AP'}
               </div>
               <div className="nav-logo-text">
-                {p.displayName || p.name || 'Ayush Prajapati'}
+                {isAdmin ? 'CMS Studio' : (p.displayName || p.name || 'Ayush Prajapati')}
               </div>
             </Link>
 
@@ -744,7 +783,7 @@ export function Header() {
                 </div>
               )}
 
-              {/* Mobile Drawer Toggle */}
+              {/* Mobile Drawer Toggle with ARIA Semantics */}
               <button
                 type="button"
                 className="mobile-nav-toggle"
@@ -753,12 +792,18 @@ export function Header() {
                   if (isAdmin) {
                     window.dispatchEvent(new CustomEvent('admin-sidebar-toggle'));
                   } else {
-                    setMobileMenuOpen(true);
+                    setMobileMenuOpen((prev) => !prev);
                   }
                 }}
-                aria-label={isAdmin ? 'Open admin navigation' : 'Open navigation menu'}
+                aria-label={
+                  isAdmin
+                    ? (adminSidebarOpen ? 'Close admin navigation' : 'Open admin navigation')
+                    : (mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu')
+                }
+                aria-expanded={isAdmin ? adminSidebarOpen : mobileMenuOpen}
+                aria-controls={isAdmin ? 'adminSidebar' : 'publicMobileDrawer'}
               >
-                <i className="fa-solid fa-bars" />
+                <i className={isAdmin ? (adminSidebarOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars') : (mobileMenuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars')} />
               </button>
             </div>
           </nav>
@@ -766,7 +811,14 @@ export function Header() {
       </header>
 
       {/* Mobile Drawer Menu */}
-      <div className={`mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}>
+      <div
+        id="publicMobileDrawer"
+        ref={mobileDrawerRef}
+        className={`mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation Menu"
+      >
         <div className="mobile-drawer-header">
           <div className="flex items-center gap-3">
             <div className="nav-logo-box">{p.monogram || 'AP'}</div>
@@ -774,7 +826,7 @@ export function Header() {
           </div>
           <button
             type="button"
-            className="text-slate-400 hover:text-white text-xl p-2"
+            className="mobile-drawer-close"
             aria-label="Close navigation menu"
             onClick={() => {
               playTick();
@@ -824,7 +876,7 @@ export function Header() {
           ))}
         </div>
 
-        <div className="mt-auto pt-6 border-t border-white/10 flex items-center justify-between gap-2">
+        <div className="mobile-drawer-footer">
           {!isAdmin ? (
             <button
               type="button"

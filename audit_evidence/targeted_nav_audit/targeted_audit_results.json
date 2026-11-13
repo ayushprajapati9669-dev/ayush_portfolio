@@ -1,0 +1,150 @@
+{
+  "stackingContextAnalysis": {
+    "390p": {
+      "closed": {
+        "topbarZ": "99990",
+        "topbarPos": "fixed",
+        "mainZ": "10",
+        "mainPos": "relative",
+        "sidebarZ": "100000",
+        "sidebarTransform": "matrix(1, 0, 0, 1, -280, 0)",
+        "backdropPresent": false
+      },
+      "open": {
+        "bodyClasses": "min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan has-admin-sidebar admin-sidebar-open",
+        "topbarZ": "99990",
+        "mainZ": "1000000",
+        "mainPos": "relative",
+        "sidebarZ": "100000",
+        "sidebarTransform": "matrix(1, 0, 0, 1, 0, 0)",
+        "backdropZ": "99999",
+        "backdropPresent": true,
+        "elementOverSidebar": "DIV.logo-box",
+        "elementOverCloseBtn": "<i class=\"fa-solid fa-xmark\"></i>",
+        "elementOverBackdrop": "BUTTON.admin-sidebar-backdrop",
+        "isSidebarHitAboveTopbar": true,
+        "isBackdropHitAboveTopbar": true
+      },
+      "screenshot": "targeted_admin_open_390p.png"
+    },
+    "768p": {
+      "closed": {
+        "topbarZ": "99990",
+        "topbarPos": "fixed",
+        "mainZ": "10",
+        "mainPos": "relative",
+        "sidebarZ": "100000",
+        "sidebarTransform": "matrix(1, 0, 0, 1, -280, 0)",
+        "backdropPresent": false
+      },
+      "open": {
+        "bodyClasses": "min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan has-admin-sidebar admin-sidebar-open",
+        "topbarZ": "99990",
+        "mainZ": "1000000",
+        "mainPos": "relative",
+        "sidebarZ": "100000",
+        "sidebarTransform": "matrix(1, 0, 0, 1, 0, 0)",
+        "backdropZ": "99999",
+        "backdropPresent": true,
+        "elementOverSidebar": "DIV.logo-box",
+        "elementOverCloseBtn": "<i class=\"fa-solid fa-xmark\"></i>",
+        "elementOverBackdrop": "BUTTON.admin-sidebar-backdrop",
+        "isSidebarHitAboveTopbar": true,
+        "isBackdropHitAboveTopbar": true
+      },
+      "screenshot": "targeted_admin_open_768p.png"
+    }
+  },
+  "scrollRestorationAnalysis": {
+    "initialOverflow": "scroll",
+    "openOverflow": "scroll",
+    "restoredOverflow": "scroll",
+    "preservesCustomInlineStyle": true
+  },
+  "accessibilityAnalysis": {
+    "ariaAttributes": {
+      "hasAriaLabel": true,
+      "ariaLabel": "Open navigation menu",
+      "hasAriaExpanded": false,
+      "ariaExpandedValue": null,
+      "hasAriaControls": false,
+      "ariaControlsValue": null,
+      "drawerRole": null,
+      "drawerAriaModal": null
+    },
+    "focusReturn": {
+      "isFocusedOnToggle": true,
+      "activeTagName": "BUTTON",
+      "activeClassName": "mobile-nav-toggle"
+    },
+    "focusTrap": {
+      "hasActiveFocusTrap": false,
+      "focusEscapedToBackground": true
+    }
+  },
+  "viewportFindings": [
+    {
+      "viewport": "390px Standard Mobile",
+      "width": 390,
+      "public": {
+        "hScroll": false,
+        "scrollW": 390,
+        "navCenterVisible": false,
+        "toggleVisible": true
+      },
+      "admin": {
+        "hScroll": false,
+        "scrollW": 390,
+        "toggleVisible": true,
+        "sidebarTransform": "matrix(1, 0, 0, 1, -280, 0)",
+        "cardTop": 76
+      },
+      "screenshots": {
+        "public": "targeted_public_390p.png",
+        "admin": "targeted_admin_390p.png"
+      }
+    },
+    {
+      "viewport": "768px Portrait Tablet",
+      "width": 768,
+      "public": {
+        "hScroll": false,
+        "scrollW": 768,
+        "navCenterVisible": false,
+        "toggleVisible": true
+      },
+      "admin": {
+        "hScroll": false,
+        "scrollW": 768,
+        "toggleVisible": true,
+        "sidebarTransform": "matrix(1, 0, 0, 1, -280, 0)",
+        "cardTop": 84
+      },
+      "screenshots": {
+        "public": "targeted_public_768p.png",
+        "admin": "targeted_admin_768p.png"
+      }
+    },
+    {
+      "viewport": "1366px Desktop Laptop",
+      "width": 1366,
+      "public": {
+        "hScroll": false,
+        "scrollW": 1366,
+        "navCenterVisible": true,
+        "toggleVisible": false
+      },
+      "admin": {
+        "hScroll": false,
+        "scrollW": 1366,
+        "toggleVisible": false,
+        "sidebarTransform": "none",
+        "cardTop": 92
+      },
+      "screenshots": {
+        "public": "targeted_public_1366p.png",
+        "admin": "targeted_admin_1366p.png"
+      }
+    }
+  ]
+}

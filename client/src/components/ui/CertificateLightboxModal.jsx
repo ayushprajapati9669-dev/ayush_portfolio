@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
+import { useScrollLock } from '../../utils/scrollLock';
 
 export function CertificateLightboxModal() {
   const { appState, activeCertLightbox, closeCertificateLightbox } = usePortfolio();
@@ -15,18 +16,16 @@ export function CertificateLightboxModal() {
   const dragStartRef = useRef({ x: 0, y: 0 });
   const initialTouchRef = useRef({ distance: 0, zoom: 1 });
 
+  // Shared scroll-lock coordination
+  useScrollLock(Boolean(activeCertLightbox));
+
   // Reset zoom & pan when active cert changes
   useEffect(() => {
     setZoom(1);
     setPan({ x: 0, y: 0 });
     setIsDragging(false);
 
-    if (!activeCertLightbox) {
-      document.body.style.overflow = '';
-      return;
-    }
-
-    document.body.style.overflow = 'hidden';
+    if (!activeCertLightbox) return;
 
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduceMotion && modalBoxRef.current) {
@@ -37,9 +36,7 @@ export function CertificateLightboxModal() {
       );
     }
 
-    return () => {
-      document.body.style.overflow = '';
-    };
+    
   }, [activeCertLightbox]);
 
   // Close on Escape key

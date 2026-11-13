@@ -79,10 +79,10 @@ export function SoundscapeStudio() {
   if (isAdmin) return null;
 
   return (
-    <div className="fixed bottom-6 left-6 z-[9990] font-sans" ref={panelRef}>
+    <div className="soundscape-studio-floating fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[9990] font-sans" ref={panelRef}>
       {/* Studio Popover Panel */}
       {isOpen && (
-        <div className="mb-3 w-80 rounded-2xl border border-white/10 bg-[#090e1a]/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(212,175,55,0.15)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-3 duration-200 text-white">
+        <div className="mb-3 w-80 max-w-[calc(100vw-28px)] rounded-2xl border border-white/10 bg-[#090e1a]/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(212,175,55,0.15)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-3 duration-200 text-white">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3.5">
             <div className="flex items-center gap-2">
