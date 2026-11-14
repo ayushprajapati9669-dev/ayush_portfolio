@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { playTick } from '../../utils/audio';
+import { runOnIdle, cancelIdle } from '../../utils/idle';
 
 const DEFAULT_MILESTONES = [
   {
@@ -122,18 +123,26 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
     const el = scrollContainerRef.current;
     if (!el) return undefined;
 
-    updateScrollMetrics();
+    let idleHandle = null;
+    let rafId = null;
+
+    if (inView) {
+      updateScrollMetrics();
+      rafId = requestAnimationFrame(updateScrollMetrics);
+    } else {
+      idleHandle = runOnIdle(updateScrollMetrics, { timeout: 4000 });
+    }
+
     el.addEventListener('scroll', updateScrollMetrics, { passive: true });
     window.addEventListener('resize', updateScrollMetrics, { passive: true });
 
-    const rafId = requestAnimationFrame(updateScrollMetrics);
-
     return () => {
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
+      cancelIdle(idleHandle);
       el.removeEventListener('scroll', updateScrollMetrics);
       window.removeEventListener('resize', updateScrollMetrics);
     };
-  }, [updateScrollMetrics, milestones]);
+  }, [updateScrollMetrics, milestones, inView]);
 
   // Handle Spotlight Mouse Move
   const handleMouseMove = (e) => {

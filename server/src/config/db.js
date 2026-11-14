@@ -247,15 +247,19 @@ async function connectMongoDB(mongoUri, store) {
           });
         }
         // Ensure legacy stand-in ceiling image is replaced with clean transparent hero cutout
-        const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+        const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp' || u === '/images/ayush-hero-portrait.png'));
         if (store.state.profile) {
           if (store.state.profile.photoUrl && isLegacyCeiling(store.state.profile.photoUrl)) {
-            store.state.profile.photoUrl = '/images/ayush-hero-portrait.png';
+            store.state.profile.photoUrl = '/uploads/hero_cutout_1794562459704_847.webp';
             needSync = true;
           }
           if (store.state.profile.portrait && isLegacyCeiling(store.state.profile.portrait.url)) {
-            store.state.profile.portrait.url = '/images/ayush-hero-portrait.png';
+            store.state.profile.portrait.url = '/uploads/hero_cutout_1794562459704_847.webp';
             store.state.profile.portrait.isTemporaryStandIn = false;
+            needSync = true;
+          }
+          if (typeof store.state.profile.resumeUrl === 'string' && store.state.profile.resumeUrl.startsWith('data:application/pdf')) {
+            store.state.profile.resumeUrl = '/images/Ayush_Prajapati_Resume.pdf';
             needSync = true;
           }
         }

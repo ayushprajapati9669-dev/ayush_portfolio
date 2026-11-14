@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import gsap from 'gsap';
 
 export function TiltCard({
   children,
@@ -9,46 +9,54 @@ export function TiltCard({
   ...rest
 }) {
   const cardRef = useRef(null);
+  const [glarePos, setGlarePos] = useState({ x: '50%', y: '50%' });
   const [isHovered, setIsHovered] = useState(false);
-
-  const x = useMotionValue(0.5);
-  const y = useMotionValue(0.5);
-
-  const springConfig = { damping: 20, stiffness: 200 };
-  const smoothX = useSpring(x, springConfig);
-  const smoothY = useSpring(y, springConfig);
-
-  const rotateX = useTransform(smoothY, [0, 1], [maxTilt, -maxTilt]);
-  const rotateY = useTransform(smoothX, [0, 1], [-maxTilt, maxTilt]);
-
-  const glareX = useTransform(smoothX, [0, 1], ['0%', '100%']);
-  const glareY = useTransform(smoothY, [0, 1], ['0%', '100%']);
 
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
     const rect = cardRef.current.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width;
     const py = (e.clientY - rect.top) / rect.height;
-    x.set(px);
-    y.set(py);
+
+    const rotX = (py - 0.5) * -2 * maxTilt;
+    const rotY = (px - 0.5) * 2 * maxTilt;
+
+    gsap.to(cardRef.current, {
+      rotateX: rotX,
+      rotateY: rotY,
+      transformPerspective: 1000,
+      duration: 0.35,
+      ease: 'power2.out',
+      overwrite: 'auto'
+    });
+
+    setGlarePos({ x: `${px * 100}%`, y: `${py * 100}%` });
   };
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => {
     setIsHovered(false);
-    x.set(0.5);
-    y.set(0.5);
+    if (cardRef.current) {
+      gsap.to(cardRef.current, {
+        rotateX: 0,
+        rotateY: 0,
+        duration: 0.7,
+        ease: 'elastic.out(1, 0.3)',
+        overwrite: 'auto'
+      });
+    }
   };
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
-        rotateX,
-        rotateY,
         transformStyle: 'preserve-3d',
         perspective: 1000
       }}
@@ -62,14 +70,15 @@ export function TiltCard({
 
       {/* Dynamic Cursor Spotlight Glare Sheen */}
       {isHovered && (
-        <motion.div
+        <div
           className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300"
           style={{
-            background: `radial-gradient(circle 240px at ${glareX.get()} ${glareY.get()}, rgba(255, 255, 255, ${glareOpacity}), transparent 80%)`
+            background: `radial-gradient(circle 240px at ${glarePos.x} ${glarePos.y}, rgba(255, 255, 255, ${glareOpacity}), transparent 80%)`
           }}
         />
       )}
-    </motion.div>
+    </div>
   );
 }
 
+export default TiltCard;

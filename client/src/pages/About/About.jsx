@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import '../../styles/pages/about.css';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';

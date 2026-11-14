@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import '../../styles/pages/projects.css';
 import { useParams } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
@@ -344,6 +345,7 @@ export function ProjectsPage({ viewMode = 'projects' }) {
               key={proj.id || `proj-${idx}`}
               proj={proj}
               indexNum={idx + 1}
+              priority={idx === 0}
               onCardMouseMove={handleCardMouseMove}
               onCardMouseLeave={handleCardMouseLeave}
               isSelected={highlightedId === proj.id}

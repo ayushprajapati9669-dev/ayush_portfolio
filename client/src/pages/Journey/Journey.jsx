@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useMemo } from 'react';
+import '../../styles/pages/journey.css';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';

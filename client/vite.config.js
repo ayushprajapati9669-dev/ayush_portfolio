@@ -19,7 +19,6 @@ export default defineConfig({
       'react-router-dom',
       'gsap',
       'three',
-      'framer-motion',
       'lenis',
       'dompurify',
       'marked'
@@ -40,7 +39,16 @@ export default defineConfig({
       resolveDependencies(filename, deps, { hostId, hostType }) {
         if (hostType === 'html') {
           return deps.filter((dep) => {
-            return !dep.includes('Admin') && !dep.includes('page-admin') && !dep.includes('vendor-markdown');
+            return (
+              !dep.includes('Admin') &&
+              !dep.includes('page-admin') &&
+              !dep.includes('vendor-markdown') &&
+              !dep.includes('vendor-three') &&
+              !dep.includes('vendor-motion') &&
+              !dep.includes('vendor-scrolltrigger') &&
+              !dep.includes('vendor-lenis') &&
+              !dep.includes('vendor-misc')
+            );
           });
         }
         return deps;
@@ -50,7 +58,13 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           // Split vendor libraries into separate chunks
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom') || id.includes('node_modules/scheduler')) {
+          if (
+            id.includes('node_modules/react') ||
+            id.includes('node_modules/react-dom') ||
+            id.includes('node_modules/react-router') ||
+            id.includes('node_modules/@remix-run') ||
+            id.includes('node_modules/scheduler')
+          ) {
             return 'vendor-react';
           }
           if (id.includes('node_modules/three')) {
@@ -58,6 +72,12 @@ export default defineConfig({
           }
           if (id.includes('node_modules/framer-motion')) {
             return 'vendor-motion';
+          }
+          if (
+            id.includes('node_modules/gsap/ScrollTrigger') ||
+            id.includes('node_modules/gsap/dist/ScrollTrigger')
+          ) {
+            return 'vendor-scrolltrigger';
           }
           if (id.includes('node_modules/gsap')) {
             return 'vendor-gsap';

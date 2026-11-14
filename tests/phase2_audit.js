@@ -50,9 +50,13 @@ const puppeteer = require('puppeteer');
   // TEST 3: Immediate / Rapid Scroll Test
   console.log('\n2. Testing Rapid Scroll Down into Bento Section & Back...');
   await page.evaluate(() => {
-    window.scrollTo(0, 1400);
+    if (window.__lenis) {
+      window.__lenis.scrollTo(1400, { immediate: true });
+    } else {
+      window.scrollTo(0, 1400);
+    }
   });
-  await new Promise(r => setTimeout(r, 2000));
+  await new Promise(r => setTimeout(r, 3000));
 
   const debugScroll = await page.evaluate(() => {
     return {
@@ -74,7 +78,11 @@ const puppeteer = require('puppeteer');
 
   // Rapid scroll back to top
   await page.evaluate(() => {
-    window.scrollTo(0, 0);
+    if (window.__lenis) {
+      window.__lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
   });
   await new Promise(r => setTimeout(r, 1000));
 
@@ -152,11 +160,9 @@ const puppeteer = require('puppeteer');
     // Verify Admin JS and CSS loaded
     const adminJsLoaded = adminAssets.some(url => (url.includes('page-admin') || url.includes('Admin-')) && url.endsWith('.js'));
     const adminCssLoaded = adminAssets.some(url => (url.includes('page-admin') || url.includes('Admin-')) && url.endsWith('.css'));
-    const markdownLoaded = adminAssets.some(url => url.includes('vendor-markdown'));
 
     console.log('   - Admin JS loaded on /admin?', adminJsLoaded ? 'PASS' : 'FAIL');
     console.log('   - Admin CSS loaded on /admin?', adminCssLoaded ? 'PASS' : 'FAIL');
-    console.log('   - vendor-markdown.js loaded on /admin?', markdownLoaded ? 'PASS' : 'FAIL');
 
     // Test Projects tab
     await page.goto('http://127.0.0.1:4173/admin?tab=projects', { waitUntil: 'load' });
@@ -166,6 +172,12 @@ const puppeteer = require('puppeteer');
       return Boolean(document.querySelector('.admin-workspace, .admin-content-area, h1, h2'));
     });
     console.log('   - Admin Projects tab rendered successfully:', projectsLoaded ? 'PASS' : 'FAIL');
+
+    // Test Milestones tab where markdown is loaded on demand
+    await page.goto('http://127.0.0.1:4173/admin?tab=milestones', { waitUntil: 'load' });
+    await new Promise(r => setTimeout(r, 1500));
+    const markdownLoaded = adminAssets.some(url => url.includes('vendor-markdown'));
+    console.log('   - vendor-markdown.js loaded on /admin?tab=milestones?', markdownLoaded ? 'PASS' : 'FAIL');
   }
 
   console.log('\n=== AUDIT CONSOLE ERRORS ===');

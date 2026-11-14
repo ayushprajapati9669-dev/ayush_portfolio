@@ -351,6 +351,10 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
     let circleTexture = null;
     let animate = null;
 
+    // Declared at useEffect scope so handleResize (defined inside step2) can close over them
+    let width = 0;
+    let height = 0;
+
     let handleMouseMove = null;
     let handleMouseLeave = null;
     let handleResize = null;
@@ -380,36 +384,11 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Staggered initialization on idle: allows initial DOM paint and hero text to settle first
-    const idleHandle = runOnIdle(() => {
-      if (!isMounted.current || !container) return;
+    let idleHandle = null;
+    let idleHandleStep2 = null;
 
-      // ── Scene & Camera ───────────────────────────────────────────────────────
-      scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x060812, 0.0014);
-
-      let width = container.clientWidth || window.innerWidth;
-      let height = container.clientHeight || window.innerHeight;
-
-      camera = new THREE.PerspectiveCamera(65, width / height, 1, 3000);
-      camera.position.set(0, 0, 360);
-
-      // ── WebGL Renderer ───────────────────────────────────────────────────────
-      try {
-        renderer = new THREE.WebGLRenderer({
-          alpha: true,
-          antialias: true,
-          powerPreference: 'high-performance'
-        });
-      } catch (e) {
-        console.warn('VantaBirds: WebGL unavailable:', e);
-        return;
-      }
-
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
-      renderer.setClearColor(0x000000, 0);
-      container.appendChild(renderer.domElement);
+    const step2 = () => {
+      if (!isMounted.current || !container || !scene || !renderer) return;
 
       // ── Vanta Birds Configuration (Subtle & Peaceful Flocking, 12 Birds) ────────
       const NUM_BIRDS = 12; // Tuned for tranquil, non-intrusive background ambience
@@ -477,6 +456,7 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
         }
 
         geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geo.computeVertexNormals();
 
         const mesh = new THREE.Mesh(geo, birdMaterial);
         mesh.phase = Math.random() * 6.28;
@@ -557,11 +537,20 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
       };
       window.addEventListener('resize', handleResize, { passive: true });
 
-      // ── Main 60FPS Animation Loop ────────────────────────────────────────────
+      // ── Main Animation Loop (60FPS Desktop, throttled 30FPS Mobile) ───────────
       const wanderTarget = new THREE.Vector3();
+      let lastRenderTime = 0;
+      const minFrameDelta = (typeof window !== 'undefined' && window.innerWidth < 768) ? 32 : 0;
 
       animate = () => {
         if (!isLoopRunning.current) return;
+
+        const now = performance.now();
+        if (minFrameDelta > 0 && now - lastRenderTime < minFrameDelta) {
+          animId = requestAnimationFrame(animate);
+          return;
+        }
+        lastRenderTime = now;
 
         if (prefersReducedMotion) {
           if (renderer && scene && camera) renderer.render(scene, camera);
@@ -610,7 +599,6 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
           posAttr.setY(4, 1.8 * birdSize + flapOffset);
           posAttr.setY(5, 1.8 * birdSize + flapOffset);
           posAttr.needsUpdate = true;
-          bird.geometry.computeVertexNormals();
 
           bird.position.copy(boid.position);
 
@@ -644,14 +632,71 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
 
       // Start loop cleanly
       updateLoopState();
-    }, { timeout: 4000, minBudget: 12 });
+    };
+
+    // Staggered initialization on idle: Slice 1 sets up renderer/camera, Slice 2 sets up boids/loop
+    const step1 = () => {
+      if (!isMounted.current || !container) return;
+
+      // ── Scene & Camera ───────────────────────────────────────────────────────
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x060812, 0.0014);
+
+      // Assign to the outer-scoped width/height so handleResize (in step2) has access
+      width = container.clientWidth || window.innerWidth;
+      height = container.clientHeight || window.innerHeight;
+
+      camera = new THREE.PerspectiveCamera(65, width / height, 1, 3000);
+      camera.position.set(0, 0, 360);
+
+      // ── WebGL Renderer ───────────────────────────────────────────────────────
+      try {
+        renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: true,
+          powerPreference: 'high-performance'
+        });
+      } catch (e) {
+        console.warn('VantaBirds: WebGL unavailable:', e);
+        return;
+      }
+
+      renderer.setSize(width, height);
+      const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
+      renderer.setPixelRatio(isMobileScreen ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.5));
+      renderer.setClearColor(0x000000, 0);
+      container.appendChild(renderer.domElement);
+
+      idleHandleStep2 = runOnIdle(step2, { timeout: 1200, minBudget: 10 });
+    };
+
+    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    const startVanta = () => {
+      window.removeEventListener('scroll', startVanta);
+      window.removeEventListener('touchstart', startVanta);
+      window.removeEventListener('pointerdown', startVanta);
+      if (idleHandle) cancelIdle(idleHandle);
+      idleHandle = runOnIdle(step1, { timeout: 1500, minBudget: 10 });
+    };
+
+    window.addEventListener('scroll', startVanta, { passive: true, once: true });
+    window.addEventListener('touchstart', startVanta, { passive: true, once: true });
+    window.addEventListener('pointerdown', startVanta, { passive: true, once: true });
+
+    const initTimer = setTimeout(startVanta, isMobileScreen ? 6500 : 800);
 
     // ── Memory & Resource Disposal Lifecycle ─────────────────────────────────
     return () => {
+      clearTimeout(initTimer);
+      window.removeEventListener('scroll', startVanta);
+      window.removeEventListener('touchstart', startVanta);
+      window.removeEventListener('pointerdown', startVanta);
       isMounted.current = false;
       isLoopRunning.current = false;
       loopStateRef.current = null;
       cancelIdle(idleHandle);
+      cancelIdle(idleHandleStep2);
 
       if (animId) cancelAnimationFrame(animId);
       document.removeEventListener('visibilitychange', handleVisibilityChange);

@@ -250,8 +250,8 @@ export function ScrollWriteText({
       <Tag
         ref={containerRef}
         className={`scroll-write-container scroll-write-decoder ${inline ? 'scroll-write-inline' : ''} ${className}`}
-        aria-label={cleanAria}
       >
+        <span className="sr-only">{cleanAria}</span>
         <span aria-hidden="true" className="scroll-decoder-inner font-mono">
           {scrambledText}
         </span>
@@ -264,8 +264,8 @@ export function ScrollWriteText({
     <Tag
       ref={containerRef}
       className={`scroll-write-container ${inline ? 'scroll-write-inline' : ''} ${isRevealed ? 'is-revealed' : ''} ${className}`}
-      aria-label={cleanAria}
     >
+      <span className="sr-only">{cleanAria}</span>
       <span aria-hidden="true" className="scroll-write-inner">
         {parsedTokens.map((tokenObj, index) => {
           const tokenText = tokenObj.text;

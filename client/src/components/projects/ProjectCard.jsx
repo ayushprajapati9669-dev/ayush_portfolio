@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import gsap from 'gsap';
+import '../../styles/components/cards.css';
 
 // Authentic, colorful brand tech icons for top 1% developer portfolio
 function getTechIcon(name) {
@@ -95,7 +96,8 @@ export function ProjectCard({
   onCardMouseMove,
   onCardMouseLeave,
   isSelected,
-  onSelect
+  onSelect,
+  priority = false
 }) {
   const cardRef = useRef(null);
 
@@ -238,9 +240,9 @@ export function ProjectCard({
             <img
               src={imgSrc}
               alt={proj.title}
-              loading={indexNum === 1 ? 'eager' : 'lazy'}
-              fetchpriority={indexNum === 1 ? 'high' : 'auto'}
-              decoding={indexNum === 1 ? 'sync' : 'async'}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchpriority={priority ? 'high' : 'auto'}
+              decoding="async"
               width="600"
               height="340"
               className="w-full h-[200px] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
@@ -270,9 +272,9 @@ export function ProjectCard({
             <img
               src={imgSrc}
               alt={proj.title}
-              loading={indexNum === 1 ? 'eager' : 'lazy'}
-              fetchpriority={indexNum === 1 ? 'high' : 'auto'}
-              decoding={indexNum === 1 ? 'sync' : 'async'}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchpriority={priority ? 'high' : 'auto'}
+              decoding="async"
               width="600"
               height="340"
               className="w-full h-[200px] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"

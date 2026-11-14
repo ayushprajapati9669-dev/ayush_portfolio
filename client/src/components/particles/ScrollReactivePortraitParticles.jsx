@@ -24,11 +24,83 @@ export function ScrollReactivePortraitParticles({
   const canvasRef = useRef(null);
   const imgRef = useRef(null);
   const lenis = useSmoothScroll();
+  const lenisRef = useRef(lenis);
+  const onPhotoFitRef = useRef(onPhotoFit);
 
   useEffect(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    const imgEl = imgRef.current;
+    onPhotoFitRef.current = onPhotoFit;
+  }, [onPhotoFit]);
+
+  useEffect(() => {
+    lenisRef.current = lenis;
+  }, [lenis]);
+
+  useEffect(() => {
+    if (!lenis || typeof lenis.on !== 'function') return;
+    const onScroll = (e) => {
+      if (typeof e.scroll === 'number' && typeof window !== 'undefined' && window.__portraitScrollHandler) {
+        window.__portraitScrollHandler(e.scroll);
+      }
+    };
+    lenis.on('scroll', onScroll);
+    return () => {
+      if (typeof lenis.off === 'function') lenis.off('scroll', onScroll);
+    };
+  }, [lenis]);
+
+  // Synchronize CMS-driven profile photo & alt text to DOM elements (including persistent HTML hero shell)
+  useEffect(() => {
+    if (!imageUrl) return;
+    const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
+    if (!imgEl) return;
+
+    const isDefaultCutout = imageUrl.includes('hero_cutout_1794562459704_847.webp');
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
+    if (!isDefaultCutout) {
+      const currentSrc = imgEl.getAttribute('src');
+      if (currentSrc !== imageUrl && !imgEl.src.endsWith(imageUrl)) {
+        imgEl.setAttribute('src', imageUrl);
+        imgEl.src = imageUrl;
+        const pic = imgEl.closest('picture');
+        if (pic) {
+          const sources = pic.querySelectorAll('source');
+          sources.forEach((s) => s.setAttribute('srcset', imageUrl));
+        }
+      }
+    } else {
+      // For default cutout, respect mobile vs desktop picture sources
+      const targetSrc = isMobile
+        ? '/uploads/hero_cutout_1794562459704_847_mobile.webp'
+        : '/uploads/hero_cutout_1794562459704_847.webp';
+      if (!imgEl.src.includes('hero_cutout_1794562459704_847')) {
+        imgEl.setAttribute('src', targetSrc);
+        imgEl.src = targetSrc;
+      }
+    }
+    if (alt && imgEl.alt !== alt) {
+      imgEl.alt = alt;
+    }
+  }, [imageUrl, alt]);
+
+  // Ensure photo-fit aspect calculations trigger even when using the initial HTML shell
+  useEffect(() => {
+    const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
+    if (!imgEl || !onPhotoFit) return;
+    if (imgEl.complete) {
+      onPhotoFit();
+    } else {
+      imgEl.addEventListener('load', onPhotoFit, { once: true });
+    }
+  }, [onPhotoFit]);
+
+  useEffect(() => {
+    const shell = typeof document !== 'undefined' ? document.getElementById('hero-stage-shell') : null;
+    if (shell) shell.style.display = 'block';
+
+    const container = containerRef.current || (typeof document !== 'undefined' ? document.getElementById('hero-photo-wrapper') : null);
+    const canvas = canvasRef.current || (typeof document !== 'undefined' ? document.getElementById('hero-particle-canvas') : null);
+    const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
     if (!container || !canvas || !imgEl) return;
 
     const ctx = canvas.getContext('2d', { alpha: true });
@@ -45,6 +117,12 @@ export function ScrollReactivePortraitParticles({
     const isTabVisible = { current: typeof document !== 'undefined' ? !document.hidden : true };
     const isLoopRunning = { current: false };
 
+    const initialScrollY = typeof window !== 'undefined' ? (window.pageYOffset || 0) : 0;
+    const scrollState = {
+      currentY: initialScrollY,
+      targetY: initialScrollY
+    };
+
     let width = 0;
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -53,6 +131,7 @@ export function ScrollReactivePortraitParticles({
     let isSampled = false;
     let isSampling = false;
     let samplingIdleHandle = null;
+    let samplingTimer = null;
     let samplingGen = 0; // Generation token to prevent race conditions & stale callbacks
 
     // Initialize Web Worker for off-thread pixel data processing
@@ -77,7 +156,8 @@ export function ScrollReactivePortraitParticles({
       const rect = imgEl.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) {
         // Layout bounding box not ready yet; safely reschedule for next idle frame
-        cancelIdle(samplingIdleHandle);
+        if (samplingTimer) clearTimeout(samplingTimer);
+      cancelIdle(samplingIdleHandle);
         samplingIdleHandle = runOnIdle(startSampling, { timeout: 150, minBudget: 8 });
         return;
       }
@@ -92,6 +172,7 @@ export function ScrollReactivePortraitParticles({
       }
 
       // Cancel any pending stand-by idle handles before initiating batches
+      if (samplingTimer) clearTimeout(samplingTimer);
       cancelIdle(samplingIdleHandle);
       isSampling = true;
       const currentGen = ++samplingGen;
@@ -247,6 +328,7 @@ export function ScrollReactivePortraitParticles({
               isSampled = true;
               isSampling = false;
               if (onPhotoFit) onPhotoFit();
+              updateLoopState();
             }
           }
         } catch (batchErr) {
@@ -266,6 +348,7 @@ export function ScrollReactivePortraitParticles({
             isSampled = true;
             isSampling = false;
             if (onPhotoFit) onPhotoFit();
+            updateLoopState();
           } else if (res.type === 'SAMPLING_ERROR') {
             fallbackToMainThread();
           }
@@ -303,19 +386,41 @@ export function ScrollReactivePortraitParticles({
     };
 
     // Stagger sampling on idle after image load, OR immediately on user scroll
-    const handleImageLoad = () => {
+    const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    const triggerSampling = () => {
+      if (samplingTimer) clearTimeout(samplingTimer);
       cancelIdle(samplingIdleHandle);
+      startSampling();
+    };
+
+    const scheduleSampling = () => {
       if (scrollState.targetY > 10) {
-        startSampling();
+        triggerSampling();
+        return;
+      }
+      if (samplingTimer) clearTimeout(samplingTimer);
+      if (isMobileDevice) {
+        samplingTimer = setTimeout(() => {
+          samplingIdleHandle = runOnIdle(startSampling, { timeout: 3000, minBudget: 12 });
+        }, 8000);
       } else {
-        samplingIdleHandle = runOnIdle(startSampling, { timeout: 3500, minBudget: 12 });
+        samplingIdleHandle = runOnIdle(startSampling, { timeout: 300, minBudget: 8 });
+      }
+    };
+
+    const handleImageLoad = () => {
+      if (scrollState.targetY > 10) {
+        triggerSampling();
+      } else {
+        scheduleSampling();
       }
       if (onPhotoFit) onPhotoFit();
     };
     imgEl.addEventListener('load', handleImageLoad);
 
     if (imgEl.complete && imgEl.naturalWidth > 0) {
-      samplingIdleHandle = runOnIdle(startSampling, { timeout: 3500, minBudget: 12 });
+      scheduleSampling();
     }
 
     // Pointer Tracking
@@ -345,35 +450,37 @@ export function ScrollReactivePortraitParticles({
     window.addEventListener('pointerleave', handlePointerLeave, { passive: true });
 
     // Scroll tracking
-    const scrollState = {
-      currentY: window.scrollY || 0,
-      targetY: window.scrollY || 0
-    };
-
     const onNativeScroll = () => {
       scrollState.targetY = window.scrollY || 0;
       if (scrollState.targetY > 10 && !isSampled && !isSampling) {
-        cancelIdle(samplingIdleHandle);
-        startSampling();
+        triggerSampling();
+      }
+      updateLoopState();
+    };
+
+    window.__portraitScrollHandler = (scrollY) => {
+      scrollState.targetY = scrollY;
+      if (scrollState.targetY > 10 && !isSampled && !isSampling) {
+        triggerSampling();
       }
       updateLoopState();
     };
 
     let lenisOff = null;
-    if (lenis && typeof lenis.on === 'function') {
+    const initialLenis = lenisRef.current || (typeof window !== 'undefined' ? window.__lenis : null);
+    if (initialLenis && typeof initialLenis.on === 'function') {
       const onLenisScroll = (e) => {
         if (typeof e.scroll === 'number') {
           scrollState.targetY = e.scroll;
           if (scrollState.targetY > 10 && !isSampled && !isSampling) {
-            cancelIdle(samplingIdleHandle);
-            startSampling();
+            triggerSampling();
           }
           updateLoopState();
         }
       };
-      lenis.on('scroll', onLenisScroll);
+      initialLenis.on('scroll', onLenisScroll);
       lenisOff = () => {
-        if (typeof lenis.off === 'function') lenis.off('scroll', onLenisScroll);
+        if (typeof initialLenis.off === 'function') initialLenis.off('scroll', onLenisScroll);
       };
     }
 
@@ -395,57 +502,6 @@ export function ScrollReactivePortraitParticles({
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Resize handling: debounced with immediate particle scaling & safe cancellation
-    let resizeTimer = null;
-    const onResize = () => {
-      cancelIdle(samplingIdleHandle);
-      clearTimeout(resizeTimer);
-
-      const rect = imgEl.getBoundingClientRect();
-      const newW = Math.floor(rect.width);
-      const newH = Math.floor(rect.height);
-      const newD = Math.min(window.devicePixelRatio || 1, 2);
-
-      // If dimensions haven't changed, retain existing sample without re-sampling
-      if (isSampled && newW === width && newH === height && newD === dpr) {
-        return;
-      }
-
-      // If dimensions changed, scale existing particles immediately to prevent glitching/blanking
-      if (width > 0 && height > 0 && (newW !== width || newH !== height) && particles.length > 0) {
-        const sx = newW / width;
-        const sy = newH / height;
-        for (let i = 0; i < particles.length; i++) {
-          const pt = particles[i];
-          pt.ox *= sx;
-          pt.oy *= sy;
-          pt.x *= sx;
-          pt.y *= sy;
-          pt.ampX *= sx;
-          pt.ampY *= sy;
-        }
-        width = newW;
-        height = newH;
-        dpr = newD;
-        canvas.width = Math.floor(width * dpr);
-        canvas.height = Math.floor(height * dpr);
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
-      }
-
-      // Invalidate current sample token so stale batch callbacks cannot overwrite particles
-      isSampled = false;
-      isSampling = false;
-      samplingGen++;
-
-      resizeTimer = setTimeout(() => {
-        if (isMounted.current) {
-          startSampling();
-        }
-      }, 150);
-    };
-    window.addEventListener('resize', onResize);
-
     // Complete RAF State Machine
     let animId = null;
     let lastRenderTime = 0;
@@ -457,23 +513,25 @@ export function ScrollReactivePortraitParticles({
       lastRenderTime = now;
 
       // Determine live scroll position from Lenis or window
+      const activeLenis = lenisRef.current;
       const getLiveScroll = () => {
-        if (lenis && typeof lenis.scroll === 'number') return lenis.scroll;
-        return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+        const lenisY = activeLenis && typeof activeLenis.scroll === 'number' ? activeLenis.scroll : 0;
+        const winY = typeof window !== 'undefined' ? (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0) : 0;
+        return Math.max(scrollState.targetY || 0, lenisY, winY);
       };
 
       const liveScroll = getLiveScroll();
       scrollState.targetY = liveScroll;
 
       // Smooth scroll interpolation
-      if (!lenis) {
+      if (!activeLenis) {
         scrollState.currentY += (scrollState.targetY - scrollState.currentY) * 0.16;
       } else {
         scrollState.currentY = scrollState.targetY;
       }
 
-      // RESTING STATE CHECK: If scroll is <= 25px, photo is 100% static & pristine.
-      if (scrollState.currentY <= 25) {
+      // RESTING STATE CHECK: If BOTH target and current position are <= 25px, photo is 100% static & pristine.
+      if (scrollState.targetY <= 25 && scrollState.currentY <= 25) {
         if (imgEl) {
           imgEl.style.opacity = '1';
           imgEl.style.transform = 'translate3d(0, 0, 0)';
@@ -575,14 +633,77 @@ export function ScrollReactivePortraitParticles({
       }
     };
 
+    // Resize handling: debounced with immediate particle scaling & safe cancellation
+    let resizeTimer = null;
+    const onResize = () => {
+      if (samplingTimer) clearTimeout(samplingTimer);
+      cancelIdle(samplingIdleHandle);
+      clearTimeout(resizeTimer);
+
+      const rect = imgEl.getBoundingClientRect();
+      const newW = Math.floor(rect.width);
+      const newH = Math.floor(rect.height);
+      const newD = Math.min(window.devicePixelRatio || 1, 2);
+
+      // If dimensions haven't changed, retain existing sample without re-sampling
+      if (isSampled && newW === width && newH === height && newD === dpr) {
+        return;
+      }
+
+      // If dimensions changed, scale existing particles immediately to prevent glitching/blanking
+      if (width > 0 && height > 0 && (newW !== width || newH !== height) && particles.length > 0) {
+        const sx = newW / width;
+        const sy = newH / height;
+        for (let i = 0; i < particles.length; i++) {
+          const pt = particles[i];
+          pt.ox *= sx;
+          pt.oy *= sy;
+          pt.x *= sx;
+          pt.y *= sy;
+          pt.ampX *= sx;
+          pt.ampY *= sy;
+        }
+        width = newW;
+        height = newH;
+        dpr = newD;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+
+        // If currently dissolved, immediately draw a synchronous frame so canvas is never blank during rapid resizing
+        if (scrollState.targetY > 25 || scrollState.currentY > 25) {
+          isLoopRunning.current = true;
+          render(performance.now());
+        }
+      }
+
+      // Invalidate current sample token so stale batch callbacks cannot overwrite particles
+      isSampled = false;
+      isSampling = false;
+      samplingGen++;
+
+      resizeTimer = setTimeout(() => {
+        if (isMounted.current) {
+          startSampling();
+        }
+      }, 150);
+    };
+    window.addEventListener('resize', onResize);
+
     function updateLoopState() {
-      const liveScroll = lenis && typeof lenis.scroll === 'number' ? lenis.scroll : (window.scrollY || 0);
+      const activeLenis = lenisRef.current;
+      const liveScroll = Math.max(
+        scrollState.targetY || 0,
+        activeLenis && typeof activeLenis.scroll === 'number' ? activeLenis.scroll : 0,
+        typeof window !== 'undefined' ? (window.pageYOffset || window.scrollY || 0) : 0
+      );
       const shouldRun = isMounted.current && inViewport.current && isTabVisible.current && (liveScroll > 25);
 
       if (shouldRun && !isLoopRunning.current) {
         isLoopRunning.current = true;
         lastRenderTime = performance.now();
-        animId = requestAnimationFrame(render);
+        render(lastRenderTime);
       } else if (!shouldRun && isLoopRunning.current) {
         isLoopRunning.current = false;
         if (animId) {
@@ -593,9 +714,12 @@ export function ScrollReactivePortraitParticles({
     }
 
     return () => {
+      delete window.__portraitScrollHandler;
+      if (shell) shell.style.display = 'none';
       isMounted.current = false;
       isLoopRunning.current = false;
       if (animId) cancelAnimationFrame(animId);
+      if (samplingTimer) clearTimeout(samplingTimer);
       cancelIdle(samplingIdleHandle);
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -611,7 +735,12 @@ export function ScrollReactivePortraitParticles({
       if (lenisOff) lenisOff();
       clearTimeout(resizeTimer);
     };
-  }, [lenis, onPhotoFit]);
+  }, []);
+
+  const hasExistingShell = typeof document !== 'undefined' && Boolean(document.getElementById('hero-photo-wrapper'));
+  if (hasExistingShell) {
+    return null;
+  }
 
   return (
     <div ref={containerRef} className={`hero-photo-wrapper relative ${className}`}>

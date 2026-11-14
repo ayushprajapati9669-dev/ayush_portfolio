@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { getDefaultPortfolioState, STORAGE_KEY } from '../../services/defaultPortfolioState';
 import { apiRequest, syncStateToMongoBackend } from '../../services/api';
+import { runOnIdle, cancelIdle } from '../../utils/idle';
 
 const PortfolioContext = createContext(null);
 
@@ -12,14 +13,24 @@ export function ThemeProvider({ children }) {
       if (!raw) return defaults;
       const parsed = JSON.parse(raw);
       if (!parsed.profile) return defaults;
-      // Auto-purge only the legacy base64 ceiling image from client localStorage
-      const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+      // Auto-purge legacy stand-in images and bloated base64 resumes from client localStorage
+      const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp' || u === '/images/ayush-hero-portrait.png'));
       if (parsed.profile.photoUrl && isLegacyCeiling(parsed.profile.photoUrl)) {
-        parsed.profile.photoUrl = '/images/ayush-hero-portrait.png';
+        parsed.profile.photoUrl = '/uploads/hero_cutout_1794562459704_847.webp';
       }
       if (parsed.profile.portrait && isLegacyCeiling(parsed.profile.portrait.url)) {
-        parsed.profile.portrait.url = '/images/ayush-hero-portrait.png';
+        parsed.profile.portrait.url = '/uploads/hero_cutout_1794562459704_847.webp';
         parsed.profile.portrait.isTemporaryStandIn = false;
+      }
+      if (parsed.profile.resumeUrl && typeof parsed.profile.resumeUrl === 'string' && parsed.profile.resumeUrl.startsWith('data:application/pdf')) {
+        parsed.profile.resumeUrl = '/images/Ayush_Prajapati_Resume.pdf';
+      }
+      if (Array.isArray(parsed.resumes)) {
+        parsed.resumes.forEach((r) => {
+          if (r && typeof r.fileUrl === 'string' && r.fileUrl.startsWith('data:application/pdf')) {
+            r.fileUrl = '/images/Ayush_Prajapati_Resume.pdf';
+          }
+        });
       }
       return {
         ...defaults,
@@ -110,6 +121,15 @@ export function ThemeProvider({ children }) {
             try {
               localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
             } catch (_e) {}
+            // Avoid unnecessary re-renders if state hasn't meaningfully changed
+            if (
+              prev.profile?.updatedAt === next.profile?.updatedAt &&
+              (prev.projects || []).length === next.projects.length &&
+              (prev.skills || []).length === next.skills.length &&
+              (prev.certificates || []).length === next.certificates.length
+            ) {
+              return prev;
+            }
             return next;
           });
         }
@@ -119,9 +139,34 @@ export function ThemeProvider({ children }) {
       });
   }, []);
 
-  // Initial load
+  // Initial load: revalidate from backend on idle to prevent network contention & re-renders during FCP/LCP
   useEffect(() => {
-    refreshFromBackend();
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const initialDelay = isMobile ? 6500 : 3500;
+    let idleHandle = null;
+
+    const runRevalidation = () => {
+      idleHandle = runOnIdle(() => {
+        refreshFromBackend();
+      }, { timeout: 3000 });
+      window.removeEventListener('scroll', runRevalidation);
+      window.removeEventListener('pointerdown', runRevalidation);
+      window.removeEventListener('touchstart', runRevalidation);
+    };
+
+    window.addEventListener('scroll', runRevalidation, { passive: true, once: true });
+    window.addEventListener('pointerdown', runRevalidation, { passive: true, once: true });
+    window.addEventListener('touchstart', runRevalidation, { passive: true, once: true });
+
+    const timer = setTimeout(runRevalidation, initialDelay);
+
+    return () => {
+      clearTimeout(timer);
+      cancelIdle(idleHandle);
+      window.removeEventListener('scroll', runRevalidation);
+      window.removeEventListener('pointerdown', runRevalidation);
+      window.removeEventListener('touchstart', runRevalidation);
+    };
   }, [refreshFromBackend]);
 
   // Real-time synchronization across browser tabs via BroadcastChannel & storage events

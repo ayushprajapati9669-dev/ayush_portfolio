@@ -66,6 +66,62 @@
       }
       #root { min-height: 100vh; }
       h1, h2, h3 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; line-height: 1.1; letter-spacing: -0.02em; }
+      .hero-editorial-stage { position: relative; min-height: 100vh; max-width: 1440px; margin: 0 auto; }
+      .hero-photo-container { position: absolute; top: 0; right: 0; bottom: 0; width: 52%; display: flex; align-items: flex-end; justify-content: flex-end; }
+      .hero-photo-wrapper { position: absolute; right: 3%; bottom: 0; height: 98%; max-height: 89vh; width: auto; max-width: 92%; display: flex; align-items: flex-end; justify-content: flex-end; pointer-events: none; z-index: 1; }
+      .hero-photo-img {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        height: 100%;
+        width: auto;
+        max-width: 100%;
+        aspect-ratio: 3 / 4;
+        object-fit: contain;
+        object-position: right bottom;
+        filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.85)) contrast(1.04) brightness(1.0);
+        -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.85) 6%, #000 18%), linear-gradient(to right, transparent 0%, #000 8%);
+        mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.85) 6%, #000 18%), linear-gradient(to right, transparent 0%, #000 8%);
+        image-rendering: -webkit-optimize-contrast;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        z-index: 1;
+      }
+      #hero-particle-canvas { position: absolute; inset: 0; pointer-events: none; z-index: 10; width: 100%; height: 100%; display: block; user-select: none; }
+      @media (max-width: 1000px) {
+        .hero-photo-container { position: absolute; top: 50px; left: 0; right: 0; width: 100%; max-width: 100%; height: 50vh; min-height: 270px; bottom: auto; margin: 0; display: flex; justify-content: center; align-items: flex-start; pointer-events: none; z-index: 1; }
+        .hero-photo-wrapper { position: relative; right: auto; bottom: auto; top: 0; height: 100%; max-height: 48vh; max-width: 80%; width: auto; display: flex; justify-content: center; align-items: flex-start; margin: 0 auto; }
+        .hero-photo-img {
+          position: relative;
+          right: auto;
+          bottom: auto;
+          top: 0;
+          height: 100%;
+          max-height: 48vh;
+          max-width: 80%;
+          width: auto;
+          aspect-ratio: 3 / 4;
+          object-fit: contain;
+          filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.7));
+          -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 94%);
+          mask-image: linear-gradient(to bottom, #000 52%, transparent 94%);
+          opacity: 0.72;
+        }
+        .hero-modern-desc { min-height: 7.5em; text-align: left !important; margin: 22px 0 0 0 !important; }
+        .hero-editorial-title, .hero-modern-title { min-height: 180px; text-align: left !important; margin: 0 !important; width: 100% !important; }
+        .hero-announcement-capsule { margin: 0 0 20px 0; }
+        .hero-center-showcase { align-items: flex-start !important; text-align: left !important; }
+      }
+      .hero-editorial-title, .hero-modern-title { text-align: center; margin: 0 auto; }
+      .hero-announcement-capsule {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 18px;
+        margin: 0 auto 24px;
+        height: 33px;
+        box-sizing: border-box;
+      }
+      .hero-modern-desc { min-height: 4.8em; }
     </style>
 
     <!-- High-Performance DNS Prefetch & Preconnect -->
@@ -81,38 +137,78 @@
       rel="preload"
       as="image"
       type="image/webp"
+      href="/uploads/hero_cutout_1794562459704_847_mobile.webp"
+      media="(max-width: 768px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
       href="/uploads/hero_cutout_1794562459704_847.webp"
-      imagesrcset="/uploads/hero_cutout_1794562459704_847_mobile.webp 600w, /uploads/hero_cutout_1794562459704_847.webp 1200w"
-      imagesizes="(max-width: 768px) 300px, 600px"
+      media="(min-width: 769px)"
       fetchpriority="high"
     />
 
-    <!-- Performance-Optimized Webfonts with font-display=swap (Non-render-blocking) -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
+    <!-- Performance-Optimized Webfonts (Loaded on idle after FCP/LCP to eliminate network contention) -->
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=optional"
       />
     </noscript>
 
-    <!-- FontAwesome Icons (Asynchronous Non-render-blocking) -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
+    <!-- FontAwesome Icons (Loaded on idle after FCP/LCP) -->
     <noscript>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     </noscript>
   </head>
-  <body class="min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white">
+  <body class="min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan">
+    <!-- Critical Persistent Hero Shell (Never destroyed during React hydration -> Locks LCP at frame 0) -->
+    <section id="hero-stage-shell" class="hero-editorial-stage" style="position: absolute; top: 0; left: 0; right: 0; pointer-events: none; z-index: 1; margin: 0 auto; max-width: 1440px;">
+      <div id="hero-photo-portal" class="hero-photo-container">
+        <div id="hero-photo-wrapper" class="hero-photo-wrapper relative">
+          <picture id="hero-photo-picture">
+            <source media="(max-width: 768px)" srcset="/uploads/hero_cutout_1794562459704_847_mobile.webp" type="image/webp" />
+            <source media="(min-width: 769px)" srcset="/uploads/hero_cutout_1794562459704_847.webp" type="image/webp" />
+            <img
+              id="himg"
+              src="/uploads/hero_cutout_1794562459704_847_mobile.webp"
+              width="600"
+              height="800"
+              alt="Ayush Prajapati - Hero Portrait"
+              class="hero-photo-img"
+              loading="eager"
+              fetchpriority="high"
+              decoding="sync"
+            />
+          </picture>
+          <canvas id="hero-particle-canvas" class="pointer-events-none absolute inset-0 z-10 block select-none" aria-hidden="true"></canvas>
+        </div>
+      </div>
+    </section>
+    <script>
+      if (window.location.pathname !== '/' && window.location.pathname !== '') {
+        var s = document.getElementById('hero-stage-shell');
+        if (s) s.style.display = 'none';
+      }
+      window.__earlyUserInteraction = false;
+      function _onEarlyAct() {
+        window.__earlyUserInteraction = true;
+        window.removeEventListener('scroll', _onEarlyAct);
+        window.removeEventListener('touchstart', _onEarlyAct);
+        window.removeEventListener('touchmove', _onEarlyAct);
+        window.removeEventListener('pointerdown', _onEarlyAct);
+        window.removeEventListener('wheel', _onEarlyAct);
+        window.removeEventListener('keydown', _onEarlyAct);
+      }
+      window.addEventListener('scroll', _onEarlyAct, { passive: true, once: true });
+      window.addEventListener('touchstart', _onEarlyAct, { passive: true, once: true });
+      window.addEventListener('touchmove', _onEarlyAct, { passive: true, once: true });
+      window.addEventListener('pointerdown', _onEarlyAct, { passive: true, once: true });
+      window.addEventListener('wheel', _onEarlyAct, { passive: true, once: true });
+      window.addEventListener('keydown', _onEarlyAct, { passive: true, once: true });
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

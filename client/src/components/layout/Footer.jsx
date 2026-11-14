@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
+import '../../styles/footer.css';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 
@@ -19,33 +20,44 @@ export function Footer() {
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
 
-  // Safe entrance animation with clearProps: 'all'
+  // Viewport-gated entrance animation with clearProps: 'all'
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !footerRef.current) return;
 
-    const ctx = gsap.context(() => {
-      const cols = footerRef.current.querySelectorAll('.footer-col');
-      if (cols.length > 0) {
-        gsap.fromTo(
-          cols,
-          { y: 20, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.08,
-            ease: 'power2.out',
-            clearProps: 'all'
+    let ctx = null;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry && entry.isIntersecting) {
+        observer.disconnect();
+        ctx = gsap.context(() => {
+          const cols = footerRef.current.querySelectorAll('.footer-col');
+          if (cols.length > 0) {
+            gsap.fromTo(
+              cols,
+              { y: 20, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.6,
+                stagger: 0.08,
+                ease: 'power2.out',
+                clearProps: 'all'
+              }
+            );
           }
-        );
+        }, footerRef);
       }
-    }, footerRef);
+    }, { rootMargin: '100px 0px' });
 
-    return () => ctx.revert();
+    observer.observe(footerRef.current);
+
+    return () => {
+      observer.disconnect();
+      if (ctx) ctx.revert();
+    };
   }, [location.pathname]);
 
-  // Live Clock (IST / UTC / LOCAL)
+  // Live Clock (IST / UTC / LOCAL) — active only when footer is in view
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -74,9 +86,38 @@ export function Footer() {
       setLiveTimeString(str);
     };
 
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
+    let interval = null;
+    let observer = null;
+
+    const startClock = () => {
+      updateTime();
+      if (!interval) interval = setInterval(updateTime, 1000);
+    };
+
+    const stopClock = () => {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+    };
+
+    if (footerRef.current && typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(([entry]) => {
+        if (entry && entry.isIntersecting) {
+          startClock();
+        } else {
+          stopClock();
+        }
+      }, { threshold: 0.01 });
+      observer.observe(footerRef.current);
+    } else {
+      startClock();
+    }
+
+    return () => {
+      stopClock();
+      if (observer) observer.disconnect();
+    };
   }, [timeFormat]);
 
   const handleToggleClock = () => {

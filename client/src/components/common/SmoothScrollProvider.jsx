@@ -1,10 +1,5 @@
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import Lenis from 'lenis';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const SmoothScrollContext = createContext(null);
 
@@ -54,57 +49,108 @@ export function SmoothScrollProvider({ children }) {
         lenisRef.current.destroy();
         lenisRef.current = null;
         setLenisInstance(null);
+        if (typeof window !== 'undefined') window.__lenis = null;
       }
       return;
     }
 
-    // Initialize Lenis smooth scroll on public showcase pages with luxury physics and nested scroll protection
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential curve
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1.5,
-      infinite: false,
-      autoRaf: false,
-      prevent: (node) => {
-        if (!node) return false;
-        return (
-          node.hasAttribute?.('data-lenis-prevent') ||
-          Boolean(
-            node.closest?.(
-              '[data-lenis-prevent], .sidebar-nav, .admin-sidebar, .cmd-results, .hero-media-grid, .modal-box, .premium-modal, .admin-modal-box, select, textarea, input[type="range"]'
-            )
-          )
-        );
+    // On mobile touchscreens, native compositor scrolling provides optimal 120Hz performance with zero main-thread overhead
+    const isMobileTouch =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      (window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(max-width: 768px)').matches);
+
+    if (isMobileTouch) {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+        setLenisInstance(null);
+        if (typeof window !== 'undefined') window.__lenis = null;
       }
+      return;
+    }
+
+    // Dynamically load Lenis & ScrollTrigger on public desktop without blocking critical initial paint
+    let cancelled = false;
+    let onGsapTicker = null;
+    let removeTicker = null;
+
+    Promise.all([import('lenis'), import('gsap'), import('gsap/ScrollTrigger')]).then(([lenisMod, gsapMod, stMod]) => {
+      if (cancelled) return;
+      const LenisClass = lenisMod.default || lenisMod;
+      const gsap = gsapMod.default || gsapMod;
+      const { ScrollTrigger } = stMod;
+      try {
+        gsap.registerPlugin(ScrollTrigger);
+      } catch (_e) {}
+      if (typeof window !== 'undefined') {
+        window.gsap = gsap;
+        window.ScrollTrigger = ScrollTrigger;
+      }
+
+      const lenis = new LenisClass({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 0.95,
+        touchMultiplier: 1.5,
+        infinite: false,
+        autoRaf: false,
+        prevent: (node) => {
+          if (!node) return false;
+          return (
+            node.hasAttribute?.('data-lenis-prevent') ||
+            Boolean(
+              node.closest?.(
+                '[data-lenis-prevent], .sidebar-nav, .admin-sidebar, .cmd-results, .hero-media-grid, .modal-box, .premium-modal, .admin-modal-box, select, textarea, input[type="range"]'
+              )
+            )
+          );
+        }
+      });
+
+      lenisRef.current = lenis;
+      setLenisInstance(lenis);
+      if (typeof window !== 'undefined') window.__lenis = lenis;
+
+      lenis.on('scroll', (e) => {
+        ScrollTrigger.update();
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('lenis-scroll', { detail: e }));
+        }
+      });
+      onGsapTicker = (time) => {
+        lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(onGsapTicker);
+      removeTicker = () => {
+        if (onGsapTicker) gsap.ticker.remove(onGsapTicker);
+      };
     });
 
-    lenisRef.current = lenis;
-    setLenisInstance(lenis);
-
-    // Synchronize Lenis with GSAP ScrollTrigger on every frame
-    lenis.on('scroll', ScrollTrigger.update);
-
-    const onGsapTicker = (time) => {
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(onGsapTicker);
-    gsap.ticker.lagSmoothing(0);
-
     return () => {
-      gsap.ticker.remove(onGsapTicker);
-      lenis.destroy();
-      lenisRef.current = null;
+      cancelled = true;
+      if (removeTicker) removeTicker();
+      if (typeof window !== 'undefined' && window.__lenis === lenisRef.current) window.__lenis = null;
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+      }
       setLenisInstance(null);
     };
   }, [isAdmin]);
 
+  const isInitialMount = useRef(true);
+
   // Route transition scroll reset & ScrollTrigger recalculation
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     if (lenisRef.current) {
       lenisRef.current.scrollTo(0, { immediate: true });
     } else {
@@ -113,7 +159,9 @@ export function SmoothScrollProvider({ children }) {
 
     const timer = setTimeout(() => {
       try {
-        ScrollTrigger.refresh();
+        if (typeof window !== 'undefined' && window.ScrollTrigger) {
+          window.ScrollTrigger.refresh();
+        }
       } catch (_e) {}
     }, 120);
 

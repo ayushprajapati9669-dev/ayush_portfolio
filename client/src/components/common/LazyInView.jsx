@@ -11,7 +11,7 @@ import React, { useState, useEffect, useRef } from 'react';
  */
 export function LazyInView({
   children,
-  rootMargin = '300px 0px',
+  rootMargin = '600px 0px',
   minHeight = '300px',
   className = '',
   placeholderClassName = '',
@@ -27,11 +27,15 @@ export function LazyInView({
     const el = containerRef.current;
     if (!el) return;
 
-    // Strict viewport gating: trigger ONLY upon genuine intersection
+    // Strict viewport gating: trigger ONLY upon genuine intersection or when scrolled past
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry && entry.isIntersecting) {
+        if (
+          entry &&
+          (entry.isIntersecting ||
+            (typeof window !== 'undefined' && window.scrollY > 50 && entry.boundingClientRect.top < window.innerHeight))
+        ) {
           setIsInView(true);
           observer.disconnect();
         }

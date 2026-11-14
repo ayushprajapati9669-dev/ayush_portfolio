@@ -1,6 +1,5 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useRef } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { HomePage } from '../pages/Home/Home';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
@@ -12,6 +11,9 @@ const SkillsPage = React.lazy(() => import('../pages/Skills/Skills').then(m => (
 const CertificatesPage = React.lazy(() => import('../pages/Certificates/Certificates').then(m => ({ default: m.CertificatesPage })));
 const ContactPage = React.lazy(() => import('../pages/Contact/Contact').then(m => ({ default: m.ContactPage })));
 const AdminPage = React.lazy(() => import('../pages/Admin/Admin').then(m => ({ default: m.AdminPage })));
+if (typeof window !== 'undefined' && (window.location.pathname.startsWith('/admin') || window.location.pathname.startsWith('/login'))) {
+  import('../pages/Admin/Admin');
+}
 const NotFoundPage = React.lazy(() => import('../pages/NotFound/NotFound').then(m => ({ default: m.NotFoundPage })));
 
 function RouteFallback() {
@@ -27,24 +29,34 @@ function RouteFallback() {
   );
 }
 
-// Cinematic fluid page transition variant
-const pageVariants = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
-  exit: { opacity: 0, y: -8, transition: { duration: 0.18, ease: 'easeIn' } }
-};
+// Global flag: skip transition on the initial page load so FCP/LCP paint immediately with 0 delay
+let initialPageLoaded = false;
 
 function PageTransition({ children }) {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!initialPageLoaded) {
+      initialPageLoaded = true;
+      return;
+    }
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || !containerRef.current) return;
+
+    import('gsap').then(({ default: gsap }) => {
+      if (!containerRef.current) return;
+      gsap.fromTo(
+        containerRef.current,
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', clearProps: 'all' }
+      );
+    });
+  }, []);
+
   return (
-    <motion.div
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className="w-full flex-1 flex flex-col"
-    >
+    <div ref={containerRef} className="w-full flex-1 flex flex-col">
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -57,27 +69,25 @@ export function AppRouter() {
 
   return (
     <Suspense fallback={<RouteFallback />}>
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={isAdminRoute ? 'admin-root' : location.pathname}>
-          <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
-          <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
-          <Route path="/journey" element={<PageTransition><JourneyPage /></PageTransition>} />
-          <Route path="/achievements" element={<PageTransition><JourneyPage /></PageTransition>} />
-          <Route path="/skills" element={<PageTransition><SkillsPage /></PageTransition>} />
-          <Route path="/projects" element={<PageTransition><ProjectsPage viewMode="projects" /></PageTransition>} />
-          <Route path="/projects/:slug" element={<Navigate to="/projects" replace />} />
-          <Route path="/certificates" element={<PageTransition><CertificatesPage /></PageTransition>} />
-          <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
-          <Route path="/connect" element={<PageTransition><ContactPage /></PageTransition>} />
-          <Route path="/hire" element={<PageTransition><ContactPage /></PageTransition>} />
-          <Route path="/login" element={<AdminPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/admin/guide" element={<AdminPage />} />
-          <Route path="/admin/api-docs" element={<AdminPage />} />
-          <Route path="/admin/*" element={<AdminPage />} />
-          <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
-        </Routes>
-      </AnimatePresence>
+      <Routes location={location} key={isAdminRoute ? 'admin-root' : location.pathname}>
+        <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
+        <Route path="/journey" element={<PageTransition><JourneyPage /></PageTransition>} />
+        <Route path="/achievements" element={<PageTransition><JourneyPage /></PageTransition>} />
+        <Route path="/skills" element={<PageTransition><SkillsPage /></PageTransition>} />
+        <Route path="/projects" element={<PageTransition><ProjectsPage viewMode="projects" /></PageTransition>} />
+        <Route path="/projects/:slug" element={<Navigate to="/projects" replace />} />
+        <Route path="/certificates" element={<PageTransition><CertificatesPage /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="/connect" element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="/hire" element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="/login" element={<AdminPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/guide" element={<AdminPage />} />
+        <Route path="/admin/api-docs" element={<AdminPage />} />
+        <Route path="/admin/*" element={<AdminPage />} />
+        <Route path="*" element={<PageTransition><NotFoundPage /></PageTransition>} />
+      </Routes>
     </Suspense>
   );
 }

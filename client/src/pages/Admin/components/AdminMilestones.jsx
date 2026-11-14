@@ -1,4 +1,5 @@
 import React, {  useState, useEffect, useRef, useMemo, useCallback  } from 'react';
+import '../../../styles/pages/admin-milestones.css';
 import { createPortal } from 'react-dom';
 import DOMPurify from 'dompurify';
 import { playTick } from '../../../utils/audio';

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 
 export function Toast() {
@@ -11,11 +10,14 @@ export function Toast() {
     if (!currentMsg) return;
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduceMotion && toastRef.current) {
-      gsap.fromTo(
-        toastRef.current,
-        { opacity: 0, y: 25, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.2)' }
-      );
+      import('gsap').then(({ default: gsap }) => {
+        if (!toastRef.current) return;
+        gsap.fromTo(
+          toastRef.current,
+          { opacity: 0, y: 25, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.2)' }
+        );
+      });
     }
   }, [currentMsg]);
 

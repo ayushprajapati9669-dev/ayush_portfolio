@@ -33,8 +33,8 @@ export function AdminAuthModal({
     if (!reduceMotion && cardRef.current) {
       gsap.fromTo(
         cardRef.current,
-        { scale: 0.94, opacity: 0, y: 30 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' }
+        { scale: 0.98, y: 15 },
+        { scale: 1, y: 0, duration: 0.35, ease: 'power2.out', clearProps: 'all' }
       );
     }
   }, [authMode]);

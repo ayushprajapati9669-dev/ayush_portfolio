@@ -1,0 +1,74 @@
+{
+  "results": {
+    "crit1_dissolveStartedBeforeResize": true,
+    "crit2_rapidResizeAcrossBreakpoint": true,
+    "crit3_canvasDimensionsMatch": true,
+    "crit4_particleBuffersConsistent": true,
+    "crit6_animationContinuesSmoothly": true,
+    "crit5_noRaceConditionsOrConsoleErrors": true,
+    "crit7_noBlankCanvasOrDistortion": true,
+    "crit8_responsiveLayoutsVerified": true
+  },
+  "consoleErrors": [],
+  "stepStates": [
+    {
+      "step": "760px (mobile <768px)",
+      "viewportWidth": 760,
+      "canvasW": 324,
+      "canvasH": 432,
+      "imgW": 324,
+      "imgH": 432,
+      "nonZeroPixels": 3540,
+      "isBlank": false
+    },
+    {
+      "step": "780px (tablet >768px)",
+      "viewportWidth": 780,
+      "canvasW": 324,
+      "canvasH": 432,
+      "imgW": 324,
+      "imgH": 432,
+      "nonZeroPixels": 3716,
+      "isBlank": false
+    },
+    {
+      "step": "740px (mobile <768px)",
+      "viewportWidth": 740,
+      "canvasW": 324,
+      "canvasH": 432,
+      "imgW": 324,
+      "imgH": 432,
+      "nonZeroPixels": 3687,
+      "isBlank": false
+    },
+    {
+      "step": "900px (tablet settled)",
+      "viewportWidth": 900,
+      "canvasW": 324,
+      "canvasH": 432,
+      "imgW": 324,
+      "imgH": 432,
+      "nonZeroPixels": 3832,
+      "isBlank": false
+    }
+  ],
+  "settled900State": {
+    "viewportWidth": 900,
+    "canvasW": 324,
+    "canvasH": 432,
+    "imgW": 324,
+    "imgH": 432,
+    "wrapperW": 324,
+    "wrapperH": 432,
+    "nonZeroPixels": 3755
+  },
+  "desktop1200State": {
+    "canvasW": 574,
+    "canvasH": 765,
+    "imgW": 574,
+    "imgH": 765,
+    "containerW": 624,
+    "showcaseW": 640,
+    "nonZeroPixels": 20752
+  }
+}

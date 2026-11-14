@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import gsap from 'gsap';
 import { useSmoothScroll } from '../common/SmoothScrollProvider';
 import { ErrorBoundary } from '../common/ErrorBoundary';
+import { runOnIdle, cancelIdle } from '../../utils/idle';
 const VantaBirdsBackground = React.lazy(() => import('../ui/VantaBirdsBackground').then((m) => ({ default: m.VantaBirdsBackground })));
 
 // Deterministic cosmic starfield coordinates to ensure zero SSR/hydration mismatch
@@ -38,9 +38,15 @@ const COSMIC_STARS = [
 ];
 
 export function BackgroundLayers() {
-  
   const location = useLocation();
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [show3dFx, setShow3dFx] = useState(false);
+  const [showLandscape, setShowLandscape] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+      return true;
+    }
+    return false;
+  });
   const isHome = location.pathname === '/';
 
   // Detect admin or login pages — no public background effects
@@ -48,6 +54,45 @@ export function BackgroundLayers() {
     location.pathname &&
     (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
   );
+
+  useEffect(() => {
+    if (isAdmin) return;
+
+    let cancelled = false;
+    let idleHandle = null;
+
+    const activate = () => {
+      if (cancelled) return;
+      setShow3dFx(true);
+      setShowLandscape(true);
+      window.removeEventListener('scroll', activate);
+      window.removeEventListener('pointerdown', activate);
+      window.removeEventListener('touchstart', activate);
+      window.removeEventListener('mousemove', activate);
+    };
+
+    window.addEventListener('scroll', activate, { passive: true, once: true });
+    window.addEventListener('pointerdown', activate, { passive: true, once: true });
+    window.addEventListener('touchstart', activate, { passive: true, once: true });
+    window.addEventListener('mousemove', activate, { passive: true, once: true });
+
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const initialDelay = isMobile ? 8000 : 6000;
+
+    const timer = setTimeout(() => {
+      idleHandle = runOnIdle(activate, { timeout: 3000 });
+    }, initialDelay);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      cancelIdle(idleHandle);
+      window.removeEventListener('scroll', activate);
+      window.removeEventListener('pointerdown', activate);
+      window.removeEventListener('touchstart', activate);
+      window.removeEventListener('mousemove', activate);
+    };
+  }, [isAdmin]);
 
   const lenis = useSmoothScroll();
 
@@ -116,20 +161,25 @@ export function BackgroundLayers() {
             }}
           />
 
-          {/* Layer 1: High-Resolution Cinematic Dusk Landscape (Matches Uploaded Reference Photo)
+          {/* Layer 1: High-Resolution Cinematic Dusk Landscape (Optimized WebP format)
               Softly dissolves on scroll so content sections rest on pure high-contrast obsidian */}
-          <img
-            src="/images/cinematic-dusk-landscape.jpg"
-            alt=""
-            className="w-full h-full object-cover object-bottom transition-all duration-700 ease-out"
-            style={{
-              transform: `translate3d(0, ${Math.min(100, scrollProgress * 120)}px, 0) scale(1.02)`,
-              filter: 'contrast(112%) brightness(92%) saturate(108%)',
-              opacity: isHome ? Math.max(0.08, 0.92 - scrollProgress * 2.8) : 0.16
-            }}
-            loading="eager"
-            fetchpriority="high"
-          />
+          {showLandscape && (
+            <img
+              src="/images/cinematic-dusk-landscape.webp"
+              alt=""
+              width="1920"
+              height="1080"
+              className="w-full h-full object-cover object-bottom transition-all duration-700 ease-out"
+              style={{
+                transform: `translate3d(0, ${Math.min(100, scrollProgress * 120)}px, 0) scale(1.02)`,
+                filter: 'contrast(112%) brightness(92%) saturate(108%)',
+                opacity: isHome ? Math.max(0.08, 0.92 - scrollProgress * 2.8) : 0.16
+              }}
+              loading="lazy"
+              fetchpriority="low"
+              decoding="async"
+            />
+          )}
 
           {/* Layer 2: Dynamic Living Horizon Warmth Breath */}
           <div
@@ -140,15 +190,17 @@ export function BackgroundLayers() {
 
           {/* Layer 3: Peaceful Twilight Birds Flocking Engine */}
           <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+            className="absolute inset-0 pointer-events-none transition-opacity duration-700 ease-out"
             style={{ opacity: Math.max(0, 1 - scrollProgress * 3.2) }}
             aria-hidden="true"
           >
-            <ErrorBoundary fallback={null}>
-              <React.Suspense fallback={null}>
-                <VantaBirdsBackground scrollProgress={scrollProgress} />
-              </React.Suspense>
-            </ErrorBoundary>
+            {show3dFx && (
+              <ErrorBoundary fallback={null}>
+                <React.Suspense fallback={null}>
+                  <VantaBirdsBackground scrollProgress={scrollProgress} />
+                </React.Suspense>
+              </ErrorBoundary>
+            )}
           </div>
 
           

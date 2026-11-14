@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import gsap from 'gsap';
+import '../../styles/components/cards.css';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 
@@ -108,12 +109,12 @@ export function CertificateCard({
   return (
     <article
       ref={cardRef}
-      className="cert-card"
+      className="cert-card certificate-card"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       <div className="cert-img-wrap" onClick={handleOpen} title={`View ${cert.title}`}>
-        <img src={imgSrc} alt={cert.title} loading="lazy" />
+        <img src={imgSrc} alt={cert.title} loading="lazy" decoding="async" width="400" height="280" />
         <div className="cert-overlay">
           <i className="fa-solid fa-expand" />
         </div>

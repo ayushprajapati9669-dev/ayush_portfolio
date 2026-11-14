@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import gsap from 'gsap';
+import '../../styles/navbar.css';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useAuth } from '../../app/providers/AuthProvider';
 import { playTick } from '../../utils/audio';
-import { CommandPalette } from '../ui/CommandPalette';
 import { useScrollLock } from '../../utils/scrollLock';
 import { useFocusTrap } from '../../utils/focusTrap';
+import { runOnIdle, cancelIdle } from '../../utils/idle';
+
+const CommandPalette = React.lazy(() =>
+  import('../ui/CommandPalette').then((m) => ({ default: m.CommandPalette }))
+);
 
 export function Header() {
   const { appState, showToast, openResumeModal } = usePortfolio();
@@ -66,13 +70,17 @@ export function Header() {
     if (savedTheme === 'theme-light') savedTheme = 'theme-midnight';
     const savedAccent = localStorage.getItem('portfolio_accent') || localStorage.getItem('admin_accent_v9') || 'accent-cyan';
 
-    document.body.classList.remove('theme-light', ...THEME_CLASSES);
-    document.body.classList.add(savedTheme);
-    setCurrentTheme(savedTheme);
+    if (!document.body.classList.contains(savedTheme)) {
+      document.body.classList.remove('theme-light', ...THEME_CLASSES);
+      document.body.classList.add(savedTheme);
+      setCurrentTheme(savedTheme);
+    }
 
-    document.body.classList.remove(...ACCENT_CLASSES);
-    document.body.classList.add(savedAccent);
-    setCurrentAccent(savedAccent);
+    if (!document.body.classList.contains(savedAccent)) {
+      document.body.classList.remove(...ACCENT_CLASSES);
+      document.body.classList.add(savedAccent);
+      setCurrentAccent(savedAccent);
+    }
   }, []);
 
   const handleThemeChange = (newTheme) => {
@@ -249,6 +257,7 @@ export function Header() {
 
   // Active pill sliding calculation
   const updatePill = (targetEl) => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return;
     const navCenter = navCenterRef.current;
     const pill = activePillRef.current;
     if (!navCenter || !pill) return;
@@ -279,14 +288,14 @@ export function Header() {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      updatePill();
-    }, 80);
-    return () => clearTimeout(timer);
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return;
+    const idleHandle = runOnIdle(updatePill, { timeout: 1500 });
+    return () => cancelIdle(idleHandle);
   }, [location.pathname]);
 
   // Window resize handler for pill
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return;
     const handleResize = () => updatePill();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -336,100 +345,133 @@ export function Header() {
     const navbar = navbarRef.current;
     if (!navWrapper || !navbar) return;
 
-    // In Admin mode, keep navbar solid and stable without 3D tilting
-    if (isAdmin) {
-      gsap.set(navbar, { rotateX: 0, rotateY: 0, x: 0, y: 0 });
-      return;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (isMobile) {
+      let scrollState = false;
+      const handleScroll = () => {
+        const s = window.scrollY > 50;
+        if (s === scrollState) return;
+        scrollState = s;
+        if (s) {
+          navWrapper.classList.add('scrolled');
+        } else {
+          navWrapper.classList.remove('scrolled');
+        }
+      };
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
     }
 
-    // 1. Entrance drop-in (safe fromTo)
-    gsap.fromTo(navWrapper, 
-      { y: -20, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out', clearProps: 'all' }
-    );
+    let cancelled = false;
+    let cleanups = [];
 
-    // 2. 3D Tilt on mouse move
-    const handleMouseMove = (e) => {
-      const rect = navbar.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+    import('gsap').then(({ default: gsap }) => {
+      if (cancelled || !navWrapperRef.current || !navbarRef.current) return;
+      const navWrapper = navWrapperRef.current;
+      const navbar = navbarRef.current;
 
-      gsap.to(navbar, {
-        rotateX: ((y - rect.height / 2) / rect.height) * -6,
-        rotateY: ((x - rect.width / 2) / rect.width) * 6,
-        x: (x - rect.width / 2) * 0.02,
-        y: (y - rect.height / 2) * 0.02,
-        transformPerspective: 1200,
-        duration: 0.35,
-        ease: 'power2.out'
-      });
-
-      navbar.style.setProperty('--mouse-x', `${x}px`);
-      navbar.style.setProperty('--mouse-y', `${y}px`);
-    };
-
-    const handleMouseLeave = () => {
-      gsap.to(navbar, {
-        rotateX: 0,
-        rotateY: 0,
-        x: 0,
-        y: 0,
-        duration: 0.8,
-        ease: 'elastic.out(1, 0.4)'
-      });
-    };
-
-    navWrapper.addEventListener('mousemove', handleMouseMove);
-    navWrapper.addEventListener('mouseleave', handleMouseLeave);
-
-    // 3. Navbar scroll shrink & background elevation
-    let scrollState = false;
-    const handleScroll = () => {
-      const s = window.scrollY > 50;
-      if (s === scrollState) return;
-      scrollState = s;
-
-      if (s) {
-        navWrapper.classList.add('scrolled');
-        gsap.to(navbar, { backgroundColor: 'rgba(5, 8, 12, 0.95)', duration: 0.4, ease: 'power2.out' });
-      } else {
-        navWrapper.classList.remove('scrolled');
-        gsap.to(navbar, { backgroundColor: 'rgba(10, 15, 20, 0.7)', duration: 0.4, ease: 'power2.out' });
+      // In Admin mode, keep navbar solid and stable without 3D tilting
+      if (isAdmin) {
+        gsap.set(navbar, { rotateX: 0, rotateY: 0, x: 0, y: 0 });
+        return;
       }
-    };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+      // 1. Entrance drop-in (safe fromTo)
+      gsap.fromTo(navWrapper, 
+        { y: -20, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out', clearProps: 'all' }
+      );
 
-    // 4. Magnetic buttons hover physics
-    const magneticEls = navWrapper.querySelectorAll('.magnetic');
-    const magneticCleanups = [];
+      // 2. 3D Tilt on mouse move
+      const handleMouseMove = (e) => {
+        const rect = navbar.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-    magneticEls.forEach((el) => {
-      const onMove = (e) => {
-        const rect = el.getBoundingClientRect();
-        gsap.to(el, {
-          x: (e.clientX - rect.left - rect.width / 2) * 0.25,
-          y: (e.clientY - rect.top - rect.height / 2) * 0.25,
-          duration: 0.4,
+        gsap.to(navbar, {
+          rotateX: ((y - rect.height / 2) / rect.height) * -6,
+          rotateY: ((x - rect.width / 2) / rect.width) * 6,
+          x: (x - rect.width / 2) * 0.02,
+          y: (y - rect.height / 2) * 0.02,
+          transformPerspective: 1200,
+          duration: 0.35,
           ease: 'power2.out'
         });
+
+        navbar.style.setProperty('--mouse-x', `${x}px`);
+        navbar.style.setProperty('--mouse-y', `${y}px`);
       };
-      const onLeave = () => {
-        gsap.to(el, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.3)' });
+
+      const handleMouseLeave = () => {
+        gsap.to(navbar, {
+          rotateX: 0,
+          rotateY: 0,
+          x: 0,
+          y: 0,
+          duration: 0.8,
+          ease: 'elastic.out(1, 0.4)'
+        });
       };
-      el.addEventListener('mousemove', onMove);
-      el.addEventListener('mouseleave', onLeave);
-      magneticCleanups.push(() => {
-        el.removeEventListener('mousemove', onMove);
-        el.removeEventListener('mouseleave', onLeave);
+
+      navWrapper.addEventListener('mousemove', handleMouseMove);
+      navWrapper.addEventListener('mouseleave', handleMouseLeave);
+
+      // 3. Navbar scroll shrink & background elevation
+      let scrollState = false;
+      const handleScroll = () => {
+        const s = window.scrollY > 50;
+        if (s === scrollState) return;
+        scrollState = s;
+
+        if (s) {
+          navWrapper.classList.add('scrolled');
+          gsap.to(navbar, { backgroundColor: 'rgba(5, 8, 12, 0.95)', duration: 0.4, ease: 'power2.out' });
+        } else {
+          navWrapper.classList.remove('scrolled');
+          gsap.to(navbar, { backgroundColor: 'rgba(10, 15, 20, 0.7)', duration: 0.4, ease: 'power2.out' });
+        }
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+
+      // 4. Magnetic buttons hover physics
+      const magneticEls = navWrapper.querySelectorAll('.magnetic');
+      const magneticCleanups = [];
+
+      magneticEls.forEach((el) => {
+        const onMove = (e) => {
+          const rect = el.getBoundingClientRect();
+          gsap.to(el, {
+            x: (e.clientX - rect.left - rect.width / 2) * 0.25,
+            y: (e.clientY - rect.top - rect.height / 2) * 0.25,
+            duration: 0.4,
+            ease: 'power2.out'
+          });
+        };
+        const onLeave = () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.3)' });
+        };
+        el.addEventListener('mousemove', onMove);
+        el.addEventListener('mouseleave', onLeave);
+        magneticCleanups.push(() => {
+          el.removeEventListener('mousemove', onMove);
+          el.removeEventListener('mouseleave', onLeave);
+        });
       });
+
+      cleanups = [
+        () => navWrapper.removeEventListener('mousemove', handleMouseMove),
+        () => navWrapper.removeEventListener('mouseleave', handleMouseLeave),
+        () => window.removeEventListener('scroll', handleScroll),
+        ...magneticCleanups
+      ];
     });
 
     return () => {
-      navWrapper.removeEventListener('mousemove', handleMouseMove);
-      navWrapper.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('scroll', handleScroll);
-      magneticCleanups.forEach((fn) => fn());
+      cancelled = true;
+      cleanups.forEach((fn) => fn());
     };
   }, [isAdmin]);
 
@@ -937,11 +979,15 @@ export function Header() {
         </button>
       )}
 
-      {/* Global Command Palette */}
-      <CommandPalette
-        isOpen={cmdOpen}
-        onClose={() => setCmdOpen(false)}
-      />
+      {/* Global Command Palette (Loaded on-demand only when opened) */}
+      {cmdOpen && (
+        <React.Suspense fallback={null}>
+          <CommandPalette
+            isOpen={cmdOpen}
+            onClose={() => setCmdOpen(false)}
+          />
+        </React.Suspense>
+      )}
     </>
   );
 }

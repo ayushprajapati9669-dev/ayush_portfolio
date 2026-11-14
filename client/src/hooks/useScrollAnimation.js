@@ -1,16 +1,26 @@
 import { useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { runOnIdle, cancelIdle } from '../utils/idle';
 
 export function useScrollAnimation(dependencyKey) {
   useEffect(() => {
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
+    // HomePage has its own optimized GSAP context and idle ScrollTriggers.
+    if (
+      !dependencyKey ||
+      dependencyKey === '/' ||
+      (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    ) {
+      return;
+    }
 
     let triggers = [];
+    let idleHandle = null;
 
-    const timer = setTimeout(() => {
+    const setupAnimations = async () => {
       try {
+        const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+          import('gsap'),
+          import('gsap/ScrollTrigger')
+        ]);
         gsap.registerPlugin(ScrollTrigger);
 
         // 1. Standard Scroll Reveal (Fade Up)
@@ -44,7 +54,7 @@ export function useScrollAnimation(dependencyKey) {
         staggerContainers.forEach((container) => {
           container.classList.add('scroll-animated');
           const children = Array.from(container.children).filter(
-            (el) => !el.classList.contains('no-stagger') && el.offsetHeight > 0
+            (el) => !el.classList.contains('no-stagger')
           );
           if (children.length > 0) {
             const t = gsap.fromTo(
@@ -139,14 +149,18 @@ export function useScrollAnimation(dependencyKey) {
           if (t.scrollTrigger) triggers.push(t.scrollTrigger);
         });
 
-        ScrollTrigger.refresh();
+        if (triggers.length > 0) {
+          ScrollTrigger.refresh();
+        }
       } catch (_err) {
         // Fallback if ScrollTrigger is unavailable
       }
-    }, 100);
+    };
+
+    idleHandle = runOnIdle(setupAnimations, { timeout: 1200 });
 
     return () => {
-      clearTimeout(timer);
+      cancelIdle(idleHandle);
       triggers.forEach((t) => t.kill());
     };
   }, [dependencyKey]);

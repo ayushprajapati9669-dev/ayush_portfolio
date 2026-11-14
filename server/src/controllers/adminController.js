@@ -47,6 +47,7 @@ function createAdminController({ store, config }) {
       if (body.location !== undefined) patch.location = sanitizeText(body.location, 160);
       if (body.footerTagline !== undefined) patch.footerTagline = sanitizeText(body.footerTagline, 200);
       if (body.photoUrl !== undefined) patch.photoUrl = sanitizeText(body.photoUrl, 2000000);
+      if (body.resumeUrl !== undefined) patch.resumeUrl = sanitizeText(body.resumeUrl, 2000000);
       if (body.education && typeof body.education === 'object') {
         patch.education = {
           degree: sanitizeText(body.education.degree, 160),
