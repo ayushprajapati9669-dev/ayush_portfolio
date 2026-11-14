@@ -14,8 +14,12 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
   const modalRef = useRef(null);
   const navigate = useNavigate();
 
-  const certificates = appState.certificates || [];
-  const projects = appState.projects || [];
+  const certificates = (appState.certificates || []).filter(
+    (c) => c && c.status !== 'draft' && c.published !== false
+  );
+  const projects = (appState.projects || []).filter(
+    (p) => p && p.status === 'published'
+  );
 
   // Assemble comprehensive commands list with all admin features
   const commands = useMemo(() => {
@@ -64,7 +68,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
       {
         id: 'nav-certs',
         title: 'Certificates & Verified Credentials',
-        subtitle: 'Apna College Delta, Coursera, Code With Harry',
+        subtitle: 'Verified technical credentials, accreditations, and licenses',
         icon: 'fa-certificate',
         category: 'Navigation',
         action: () => navigate('/certificates')
@@ -217,7 +221,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
       list.push({
         id: `cert-item-${c.id}`,
         title: `Inspect: ${c.title}`,
-        subtitle: `${c.issuer || 'Credential'} · ${c.issueDate || '2025'} · ${c.category || 'Certification'}`,
+        subtitle: `${c.issuer || 'Official Credential'}${Boolean(c.issueDate || c.year) ? ` · ${c.issueDate || c.year}` : ''} · ${c.category || 'Certification'}`,
         icon: 'fa-eye',
         category: 'Certificates',
         action: () => {
@@ -230,7 +234,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
       });
     });
 
-    // Dynamic Index of Existing Projects
+    // Dynamic Index of Existing Projects (links directly to project detail route)
     projects.forEach((p) => {
       list.push({
         id: `proj-item-${p.id}`,
@@ -239,11 +243,7 @@ export function CommandPalette({ isOpen, onClose, onOpenAddProject }) {
         icon: 'fa-rocket',
         category: 'Projects',
         action: () => {
-          if (p.liveDemoUrl) {
-            window.open(p.liveDemoUrl, '_blank', 'noreferrer');
-          } else {
-            navigate('/projects');
-          }
+          navigate(`/projects/${p.slug || p.id}`);
         }
       });
     });

@@ -9,65 +9,15 @@ import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { itemListSchema } from '../../utils/seo';
 
-const REFERENCE_CERTIFICATES = [
-  {
-    id: 'cert1',
-    title: 'AI & Machine Learning',
-    issuer: 'Code With Harry',
-    year: '2025',
-    issueDate: '2025',
-    imageUrl: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?q=80&w=1600&auto=format&fit=crop',
-    skillsCovered: 'PYTHON, TENSORFLOW, SCIKIT-LEARN, DATA SCIENCE, NLP',
-    downloadUrl: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?q=80&w=1600&auto=format&fit=crop'
-  },
-  {
-    id: 'cert2',
-    title: 'MERN Stack Development',
-    issuer: 'Apna College',
-    year: '2025',
-    issueDate: '2025',
-    imageUrl: 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?q=80&w=1600&auto=format&fit=crop',
-    skillsCovered: 'HTML, CSS, JAVASCRIPT, NODE.JS, EXPRESS, MONGODB',
-    downloadUrl: 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?q=80&w=1600&auto=format&fit=crop'
-  },
-  {
-    id: 'cert3',
-    title: 'Frontend Developer Professional',
-    issuer: 'Meta',
-    year: '2024',
-    issueDate: '2024',
-    imageUrl: 'https://images.unsplash.com/photo-1555529733-0e670560f7e1?q=80&w=1600&auto=format&fit=crop',
-    skillsCovered: 'REACT, REDUX, TAILWIND CSS, UI/UX PRINCIPLES',
-    downloadUrl: 'https://images.unsplash.com/photo-1555529733-0e670560f7e1?q=80&w=1600&auto=format&fit=crop'
-  },
-  {
-    id: 'cert4',
-    title: 'Delta Full-Stack Web Development',
-    issuer: 'Apna College',
-    year: '2024',
-    issueDate: '2024',
-    imageUrl: '/images/apna-college-delta-certificate.webp',
-    skillsCovered: 'FULL-STACK MERN, NODE.JS, EXPRESS, MONGODB, REACT',
-    downloadUrl: '/images/apna-college-delta-certificate.webp'
-  },
-  {
-    id: 'cert5',
-    title: 'React (Basic) Certificate',
-    issuer: 'HackerRank',
-    year: '2024',
-    issueDate: '2024',
-    imageUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1600&auto=format&fit=crop',
-    skillsCovered: 'REACT COMPONENTS, STATE MANAGEMENT, HOOKS, ROUTING',
-    downloadUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1600&auto=format&fit=crop'
-  }
-];
-
 export function CertificatesPage() {
   const { appState } = usePortfolio();
   const ui = appState.uiLabels || {};
 
-  const cmsCerts = appState.certificates || [];
-  const certList = cmsCerts.length > 0 ? cmsCerts : REFERENCE_CERTIFICATES;
+  // Public certificates must come only from published CMS data (zero fake fallbacks)
+  const cmsCerts = (appState.certificates || []).filter(
+    (c) => c && c.status !== 'draft' && c.published !== false
+  );
+  const certList = cmsCerts;
 
   const containerRef = useRef(null);
 
@@ -306,19 +256,33 @@ export function CertificatesPage() {
         </ScrollWriteText>
       </div>
 
-      {/* Dynamic Masonry Grid */}
-      <div className="cert-grid">
-        {certList.map((cert, idx) => (
-          <CertificateCard
-            key={cert.id || `cert-${idx}`}
-            cert={cert}
-            indexNum={idx + 1}
-            onOpenModal={openModal}
-            onCardMouseMove={handleCardMouseMove}
-            onCardMouseLeave={handleCardMouseLeave}
-          />
-        ))}
-      </div>
+      {/* Dynamic Masonry Grid or Honest Empty State */}
+      {certList.length === 0 ? (
+        <div className="cert-empty-state max-w-xl mx-auto text-center py-16 px-6 my-10 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 text-2xl shadow-lg shadow-yellow-500/5">
+            <i className="fa-solid fa-award" />
+          </div>
+          <h3 className="font-display text-xl sm:text-2xl font-bold text-white mb-2">
+            Accreditations Updating
+          </h3>
+          <p className="font-sans text-sm sm:text-base text-slate-400 leading-relaxed max-w-md mx-auto">
+            Professional certifications and verified technical credentials are currently being curated and will appear here once published.
+          </p>
+        </div>
+      ) : (
+        <div className="cert-grid">
+          {certList.map((cert, idx) => (
+            <CertificateCard
+              key={cert.id || `cert-${idx}`}
+              cert={cert}
+              indexNum={idx + 1}
+              onOpenModal={openModal}
+              onCardMouseMove={handleCardMouseMove}
+              onCardMouseLeave={handleCardMouseLeave}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Advanced Lightbox Modal rendered via Portal to document.body for true full-screen centering */}
       {typeof document !== 'undefined' &&
@@ -335,9 +299,9 @@ export function CertificatesPage() {
                 <div className="modal-header">
                   <div className="modal-title-wrap">
                     <span className="modal-meta">
-                      {(activeCert.issuer || 'CREDENTIAL').toUpperCase()} · {activeCert.issueDate || activeCert.year || '2025'}
+                      {(activeCert.issuer || 'CREDENTIAL').toUpperCase()}{Boolean(activeCert.issueDate || activeCert.year) ? ` · ${activeCert.issueDate || activeCert.year}` : ''}
                     </span>
-                    <h2 className="modal-title">{activeCert.title}</h2>
+                    <h2 className="modal-title">{activeCert.title || 'Certificate'}</h2>
                   </div>
                   <div className="modal-controls">
                     <div className="zoom-controls">
@@ -403,16 +367,20 @@ export function CertificatesPage() {
                       transform: `scale(${zoom}) translate(${pan.x}px, ${pan.y}px)`
                     }}
                   >
-                    <img src={activeCert.imageUrl} alt={activeCert.title} />
+                    <img
+                      src={activeCert.imageUrl || activeCert.downloadUrl || '/images/apna-college-delta-certificate.webp'}
+                      alt={activeCert.title || 'Certificate'}
+                    />
                   </div>
                 </div>
 
                 {/* Modal Footer */}
                 <div className="modal-footer">
                   <div className="modal-footer-info">
-                    <h4>{activeCert.title}</h4>
+                    <h4>{activeCert.title || 'Certificate'}</h4>
                     <p>
-                      Issued by <strong>{activeCert.issuer}</strong> ({activeCert.issueDate || activeCert.year || '2025'})
+                      Issued by <strong>{activeCert.issuer || 'Official Credential'}</strong>
+                      {Boolean(activeCert.issueDate || activeCert.year) && ` (${activeCert.issueDate || activeCert.year})`}
                     </p>
                     {skillsText && (
                       <div className="modal-skills-badge">

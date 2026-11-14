@@ -14,14 +14,14 @@ import { itemListSchema } from '../../utils/seo';
 const REFERENCE_PROJECTS = [
   {
     id: 'airbnb-clone-platform',
+    slug: 'airbnb-clone-platform',
     title: 'Airbnb Clone Platform',
     category: 'Full-Stack',
     badge: 'Flagship Full-Stack App',
     shortDescription:
       'A comprehensive property rental platform featuring secure JWT authentication, dynamic search filters, booking management, and a custom cloud image upload system.',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop',
-    liveDemoUrl: 'https://airbnb-clone-demo.vercel.app',
+    thumbnailUrl: '/images/airbnb-clone-preview.webp',
+    liveDemoUrl: 'https://airbnbclone2-8519.onrender.com',
     githubUrl: 'https://github.com/ayushprajapati9669-dev',
     technologies: ['React JS', 'Node.js', 'Express.js', 'MongoDB'],
     displayOrder: 1,
@@ -29,14 +29,14 @@ const REFERENCE_PROJECTS = [
   },
   {
     id: 'ai-conversational-workspace',
+    slug: 'ai-conversational-workspace',
     title: 'AI Conversational Workspace',
     category: 'AI / ML',
     badge: 'AI Integration',
     shortDescription:
       'A ChatGPT-inspired conversational AI interface featuring real-time streaming responses, markdown rendering, chat history persistence, and a sleek dark-mode UI.',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1000&auto=format&fit=crop',
-    liveDemoUrl: 'https://ai-workspace-demo.vercel.app',
+    thumbnailUrl: '/images/ai-agentic-preview.webp',
+    liveDemoUrl: 'https://agentic-workspace.onrender.com',
     githubUrl: 'https://github.com/ayushprajapati9669-dev',
     technologies: ['React JS', 'OpenAI API', 'MongoDB'],
     displayOrder: 2,
@@ -44,14 +44,14 @@ const REFERENCE_PROJECTS = [
   },
   {
     id: 'zerodha-trading-dashboard',
+    slug: 'zerodha-trading-dashboard',
     title: 'Zerodha Trading Dashboard',
     category: 'Frontend',
     badge: 'FinTech Dashboard',
     shortDescription:
       'A responsive trading dashboard clone featuring interactive charts, portfolio tracking, dynamic data tables, and a seamless user interface built for high-density data.',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-    liveDemoUrl: 'https://zerodha-dashboard-demo.vercel.app',
+    thumbnailUrl: '/images/ai-chat-preview.webp',
+    liveDemoUrl: 'https://airbnbclone2-8519.onrender.com',
     githubUrl: 'https://github.com/ayushprajapati9669-dev',
     technologies: ['React JS', 'Recharts', 'CSS Modules'],
     displayOrder: 3,
@@ -59,14 +59,14 @@ const REFERENCE_PROJECTS = [
   },
   {
     id: 'modern-ecommerce-storefront',
+    slug: 'modern-ecommerce-storefront',
     title: 'Modern E-Commerce Storefront',
     category: 'Frontend',
     badge: 'E-Commerce',
     shortDescription:
       'A blazing-fast headless e-commerce frontend with cart persistence, Stripe checkout integration, and fully responsive design.',
-    thumbnailUrl:
-      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000&auto=format&fit=crop',
-    liveDemoUrl: 'https://ecommerce-demo.vercel.app',
+    thumbnailUrl: '/images/airbnb-clone-preview.webp',
+    liveDemoUrl: 'https://airbnbclone2-8519.onrender.com',
     githubUrl: 'https://github.com/ayushprajapati9669-dev',
     technologies: ['Next.js', 'Stripe API', 'Tailwind'],
     displayOrder: 4,

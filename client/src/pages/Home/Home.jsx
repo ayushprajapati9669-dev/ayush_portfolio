@@ -216,7 +216,9 @@ export function HomePage() {
   }
   const showcaseProjects = (uniqueProjects.length >= 3 ? uniqueProjects : displayProjects).slice(0, 3);
   const allSkillItems = (appState.skills || []).flatMap((g) => g.items || []);
-  const certificates = appState.certificates || [];
+  const certificates = (appState.certificates || []).filter(
+    (c) => c && c.status !== 'draft' && c.published !== false
+  );
 
   const goTo = (route) => {
     playTick();

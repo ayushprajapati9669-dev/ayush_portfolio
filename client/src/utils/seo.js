@@ -57,6 +57,7 @@ export function websiteSchema(profile = {}) {
 
 export function projectSchema(project = {}) {
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://ayushprajapati.dev';
+  const img = project.thumbnailUrl || project.coverImage || project.imageUrl || '';
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -72,7 +73,7 @@ export function projectSchema(project = {}) {
     },
     url: project.liveDemoUrl || project.githubUrl || `${origin}/projects/${project.slug || project.id}`,
     codeRepository: project.githubUrl,
-    screenshot: project.thumbnailUrl ? (project.thumbnailUrl.startsWith('http') ? project.thumbnailUrl : `${origin}${project.thumbnailUrl}`) : undefined
+    screenshot: img ? (img.startsWith('http') ? img : `${origin}${img}`) : undefined
   };
 }
 

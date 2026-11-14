@@ -2227,7 +2227,7 @@ export function AdminCertificates({
               const isEditing = editingId === cert.id;
               const certImg =
                 cert.imageUrl ||
-                'https://images.unsplash.com/photo-1589330694653-ded6df03f754?q=80&w=800&auto=format&fit=crop';
+                '/images/apna-college-delta-certificate.webp';
 
               return (
                 <div

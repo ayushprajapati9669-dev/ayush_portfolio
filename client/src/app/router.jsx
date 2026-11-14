@@ -5,6 +5,7 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 // Route-level code splitting for top-tier Lighthouse performance
 const ProjectsPage = React.lazy(() => import('../pages/Projects/Projects').then(m => ({ default: m.ProjectsPage })));
+const ProjectDetailPage = React.lazy(() => import('../pages/Projects/ProjectDetail').then(m => ({ default: m.ProjectDetailPage })));
 const AboutPage = React.lazy(() => import('../pages/About/About').then(m => ({ default: m.AboutPage })));
 const JourneyPage = React.lazy(() => import('../pages/Journey/Journey').then(m => ({ default: m.JourneyPage })));
 const SkillsPage = React.lazy(() => import('../pages/Skills/Skills').then(m => ({ default: m.SkillsPage })));
@@ -76,7 +77,7 @@ export function AppRouter() {
         <Route path="/achievements" element={<PageTransition><JourneyPage /></PageTransition>} />
         <Route path="/skills" element={<PageTransition><SkillsPage /></PageTransition>} />
         <Route path="/projects" element={<PageTransition><ProjectsPage viewMode="projects" /></PageTransition>} />
-        <Route path="/projects/:slug" element={<Navigate to="/projects" replace />} />
+        <Route path="/projects/:slug" element={<PageTransition><ProjectDetailPage /></PageTransition>} />
         <Route path="/certificates" element={<PageTransition><CertificatesPage /></PageTransition>} />
         <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
         <Route path="/connect" element={<PageTransition><ContactPage /></PageTransition>} />

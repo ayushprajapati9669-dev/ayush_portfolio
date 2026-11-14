@@ -14,21 +14,11 @@ export function CertificateCard({
   const { openCertificateLightbox } = usePortfolio();
   const cardRef = useRef(null);
 
-  const imgSrc =
-    cert.imageUrl ||
-    (indexNum === 1
-      ? 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?q=80&w=1200&auto=format&fit=crop'
-      : indexNum === 2
-      ? 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?q=80&w=1000&auto=format&fit=crop'
-      : indexNum === 3
-      ? 'https://images.unsplash.com/photo-1555529733-0e670560f7e1?q=80&w=1000&auto=format&fit=crop'
-      : indexNum === 4
-      ? '/images/apna-college-delta-certificate.webp'
-      : 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1000&auto=format&fit=crop');
-
-  const issuer = cert.issuer || (indexNum === 4 ? 'Apna College' : 'Code With Harry');
-  const year = cert.issueDate || cert.year || '2025';
-  const skills = cert.skillsCovered || cert.skills || 'FULL-STACK, REACT, WEB ENGINEERING';
+  // Genuine CMS image or verified local asset fallback (no broken external Unsplash)
+  const imgSrc = cert.imageUrl || '/images/apna-college-delta-certificate.webp';
+  const issuer = cert.issuer || 'Official Credential';
+  const year = cert.issueDate || cert.year || '';
+  const skills = cert.skillsCovered || cert.skills || '';
 
   const handleOpen = () => {
     playTick();
@@ -129,12 +119,12 @@ export function CertificateCard({
           <span className="cert-issuer">{issuer}</span>
           <div className="flex items-center gap-1.5">
             {cert.category && <span className="cert-category-badge">{cert.category}</span>}
-            <span className="cert-year">{year}</span>
+            {year && <span className="cert-year">{year}</span>}
           </div>
         </div>
 
         <h3 className="cert-title">{cert.title || 'Certificate'}</h3>
-        <div className="cert-desc">Skills: {skills}</div>
+        {skills && <div className="cert-desc">Skills: {skills}</div>}
 
         <div className="cert-actions">
           <button type="button" className="btn-view" onClick={handleOpen}>
