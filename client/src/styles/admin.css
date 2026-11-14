@@ -764,7 +764,7 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s;
-  z-index: 10;
+  z-index: 0;
 }
 
 .glass-card-admin:hover::after {
@@ -1065,12 +1065,17 @@
 }
 
 /* Quick Actions */
+.quick-actions-card {
+  will-change: auto !important;
+  transform: none !important;
+}
+
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   position: relative;
-  z-index: 1;
+  z-index: 10;
 }
 
 @media (max-width: 900px) {
@@ -1095,14 +1100,19 @@
   border-radius: 14px;
   text-decoration: none;
   color: white;
-  transition: all 0.3s;
+  position: relative;
+  z-index: 11;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
 }
 
 .action-btn:hover {
-  background: rgba(212, 175, 55, 0.05);
-  border-color: rgba(212, 175, 55, 0.2);
-  transform: translateX(4px);
+  background: rgba(212, 175, 55, 0.08) !important;
+  border-color: rgba(212, 175, 55, 0.3) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 14px rgba(212, 175, 55, 0.12) !important;
 }
 
 .action-icon {
@@ -1115,26 +1125,34 @@
   justify-content: center;
   font-size: 16px;
   color: var(--accent-1);
-  transition: all 0.3s;
+  transition: all 0.2s ease;
   flex-shrink: 0;
 }
 
 .action-btn:hover .action-icon {
-  background: rgba(212, 175, 55, 0.1);
-  color: #fff;
+  background: rgba(212, 175, 55, 0.15) !important;
+  color: #fff !important;
 }
 
 .action-info h4 {
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 2px;
-  color: white;
+  color: #ffffff !important;
+}
+
+.action-btn:hover .action-info h4 {
+  color: #ffffff !important;
 }
 
 .action-info p {
   font-size: 12px;
   color: var(--text-muted);
   margin: 0;
+}
+
+.action-btn:hover .action-info p {
+  color: #cbd5e1 !important;
 }
 
 /* Command Palette */

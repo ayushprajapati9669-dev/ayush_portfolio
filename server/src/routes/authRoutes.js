@@ -11,6 +11,10 @@ async function handleAuthRoutes(req, res, pathname, authController) {
     await authController.changePassword(req, res);
     return true;
   }
+  if (req.method === 'POST' && (pathname === '/api/auth/reset-password' || pathname === '/api/auth/forgot-password')) {
+    await authController.resetPassword(req, res);
+    return true;
+  }
   if (req.method === 'GET' && pathname === '/api/auth/session') {
     authController.session(req, res);
     return true;

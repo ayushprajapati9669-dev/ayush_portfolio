@@ -407,7 +407,7 @@ export function HomeBelowTheFold({
             </div>
 
             <div className="count-pill">
-              <span>{certificates.length}</span>
+              {certificates.length > 0 && <span>{certificates.length}</span>}
               <span className="arrow">→</span>
             </div>
           </button>
@@ -475,10 +475,10 @@ export function HomeBelowTheFold({
 
         <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-emerald-400/30 transition-all group backdrop-blur-sm">
           <span className="font-mono text-3xl sm:text-4xl font-extrabold text-emerald-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
-            {certificates.length}
+            {certificates.length > 0 ? certificates.length : '8.42'}
           </span>
           <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
-            Verified Accreditations
+            {certificates.length > 0 ? 'Verified Accreditations' : 'B.Tech CSE CGPA'}
           </span>
         </div>
 

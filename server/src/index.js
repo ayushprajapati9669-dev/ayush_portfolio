@@ -15,7 +15,7 @@ server.on('error', (err) => {
 });
 
 connectMongoDB(config.mongoUri, store).finally(() => {
-  server.listen(config.port, () => {
+  server.listen(config.port, '0.0.0.0', () => {
     console.log(`[Argon Portfolio Server] Listening on http://localhost:${config.port}`);
     console.log(`[Argon Portfolio Server] Storage engine: ${store.mode}`);
     console.log(`[Argon Portfolio Server] Admin configured: ${store.hasAnyAdmin()}`);

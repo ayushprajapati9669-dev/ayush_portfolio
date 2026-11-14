@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useSmoothScroll } from '../common/SmoothScrollProvider';
 import { runOnIdle, cancelIdle } from '../../utils/idle';
+import { usePortfolio } from '../../app/providers/ThemeProvider';
 
 /**
  * ScrollReactivePortraitParticles — Razorpay AI Builders Image Particle Dissolve Engine
@@ -20,12 +21,39 @@ export function ScrollReactivePortraitParticles({
   imgClassName = '',
   onPhotoFit
 }) {
+  let portfolioContext = null;
+  try {
+    portfolioContext = usePortfolio();
+  } catch (_e) {
+    portfolioContext = null;
+  }
+  const particlesEnabled = portfolioContext?.appState?.settings?.particlesEnabled !== false;
+  const particlesEnabledRef = useRef(particlesEnabled);
+
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const imgRef = useRef(null);
   const lenis = useSmoothScroll();
   const lenisRef = useRef(lenis);
   const onPhotoFitRef = useRef(onPhotoFit);
+
+  useEffect(() => {
+    particlesEnabledRef.current = particlesEnabled;
+    const canvas = canvasRef.current || (typeof document !== 'undefined' ? document.getElementById('hero-particle-canvas') : null);
+    const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
+    if (!particlesEnabled) {
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      if (imgEl) {
+        imgEl.style.opacity = '1';
+        imgEl.style.transform = 'none';
+      }
+    } else if (typeof window !== 'undefined' && window.__portraitScrollHandler) {
+      window.__portraitScrollHandler(window.pageYOffset || window.scrollY || 0);
+    }
+  }, [particlesEnabled]);
 
   useEffect(() => {
     onPhotoFitRef.current = onPhotoFit;
@@ -150,7 +178,7 @@ export function ScrollReactivePortraitParticles({
 
     // Bounded-batch sampling function
     const startSampling = () => {
-      if (isSampling) return;
+      if (!particlesEnabledRef.current || isSampling) return;
       if (!imgEl.complete || imgEl.naturalWidth === 0) return;
 
       const rect = imgEl.getBoundingClientRect();
@@ -530,6 +558,19 @@ export function ScrollReactivePortraitParticles({
         scrollState.currentY = scrollState.targetY;
       }
 
+      // Check if particles are disabled via CMS appearance settings
+      if (!particlesEnabledRef.current) {
+        if (imgEl) {
+          imgEl.style.opacity = '1';
+          imgEl.style.transform = 'translate3d(0, 0, 0)';
+        }
+        ctx.clearRect(0, 0, width, height);
+        isLoopRunning.current = false;
+        if (animId) cancelAnimationFrame(animId);
+        animId = null;
+        return;
+      }
+
       // RESTING STATE CHECK: If BOTH target and current position are <= 25px, photo is 100% static & pristine.
       if (scrollState.targetY <= 25 && scrollState.currentY <= 25) {
         if (imgEl) {
@@ -698,7 +739,7 @@ export function ScrollReactivePortraitParticles({
         activeLenis && typeof activeLenis.scroll === 'number' ? activeLenis.scroll : 0,
         typeof window !== 'undefined' ? (window.pageYOffset || window.scrollY || 0) : 0
       );
-      const shouldRun = isMounted.current && inViewport.current && isTabVisible.current && (liveScroll > 25);
+      const shouldRun = particlesEnabledRef.current && isMounted.current && inViewport.current && isTabVisible.current && (liveScroll > 25);
 
       if (shouldRun && !isLoopRunning.current) {
         isLoopRunning.current = true;
@@ -709,6 +750,13 @@ export function ScrollReactivePortraitParticles({
         if (animId) {
           cancelAnimationFrame(animId);
           animId = null;
+        }
+        if (!particlesEnabledRef.current) {
+          if (imgEl) {
+            imgEl.style.opacity = '1';
+            imgEl.style.transform = 'translate3d(0, 0, 0)';
+          }
+          ctx.clearRect(0, 0, width, height);
         }
       }
     }

@@ -19,6 +19,10 @@ export function Footer() {
 
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
+  const s = appState.settings || {};
+  const brandName = s.siteName || p.displayName || p.name || 'Ayush Prajapati';
+  const effectiveEmail = s.contactEmail || p.email || 'ayushprajapati9669@gmail.com';
+  const effectivePhone = s.contactPhone || p.phone || '(+91) 9669802554';
 
   // Viewport-gated entrance animation with clearProps: 'all'
   useEffect(() => {
@@ -206,7 +210,7 @@ export function Footer() {
           <div className="footer-col">
             <div className="footer-brand-row">
               <div className="footer-monogram">{p.monogram || 'AP'}</div>
-              <div className="footer-brand-name">{p.displayName || p.name || 'Ayush Prajapati'}</div>
+              <div className="footer-brand-name">{brandName}</div>
             </div>
 
             <p className="footer-bio-text">
@@ -217,20 +221,20 @@ export function Footer() {
 
             <div className="footer-contact-list">
               <a
-                href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}
+                href={`mailto:${effectiveEmail}`}
                 className="footer-contact-item"
                 onClick={() => playTick()}
               >
                 <i className="fa-regular fa-envelope" />
-                <span>{p.email || 'ayushprajapati9669@gmail.com'}</span>
+                <span>{effectiveEmail}</span>
               </a>
               <a
-                href={`tel:${p.phone || '+919669802554'}`}
+                href={`tel:${effectivePhone}`}
                 className="footer-contact-item"
                 onClick={() => playTick()}
               >
                 <i className="fa-solid fa-phone" />
-                <span>{p.phone || '(+91) 9669802554'}</span>
+                <span>{effectivePhone}</span>
               </a>
               <div className="footer-contact-item">
                 <i className="fa-solid fa-location-dot" />
@@ -402,7 +406,7 @@ export function Footer() {
         {/* Footer Bottom Bar */}
         <div className="footer-bottom-bar">
           <div className="footer-copyright">
-            © 2026 {p.displayName || p.name || 'Ayush Prajapati'}. All rights reserved.
+            {s.copyrightText || `© ${new Date().getFullYear()} ${brandName}. All rights reserved.`}
             <span className="hidden sm:inline" style={{ color: '#444' }}> · </span>
             <span className="hidden sm:inline" style={{ color: '#888' }}>
               Engineered with MERN Stack & VSLFlow Design System.

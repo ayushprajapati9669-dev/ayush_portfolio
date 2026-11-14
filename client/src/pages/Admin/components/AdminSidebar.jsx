@@ -42,6 +42,9 @@ export function AdminSidebar({
       items: [
         { id: 'profile', label: 'Profile & About', icon: 'fa-user-pen', badge: null },
         { id: 'media', label: 'Hero Portrait', icon: 'fa-image', badge: null },
+        { id: 'appearance', label: 'Appearance', icon: 'fa-palette', badge: null },
+        { id: 'seo', label: 'SEO & Metadata', icon: 'fa-magnifying-glass', badge: null },
+        { id: 'settings', label: 'Site Settings', icon: 'fa-sliders', badge: null },
         { id: 'security', label: 'Security', icon: 'fa-lock', badge: null }
       ]
     },

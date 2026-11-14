@@ -17,12 +17,22 @@ function FormErrorMessage({ message }) {
 export function AdminAuthModal({
   loginAdmin,
   resetAdminPassword,
+  recoverAdminPassword,
   showToast
 }) {
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'forgot'
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [authErrors, setAuthErrors] = useState({});
+  const [resetSuccessBanner, setResetSuccessBanner] = useState('');
+
+  // Recovery Form State
+  const [recoveryUser, setRecoveryUser] = useState('ayushprajapati9669@gmail.com');
+  const [recoveryKey, setRecoveryKey] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showResetPass, setShowResetPass] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   const cardRef = useRef(null);
 
@@ -81,47 +91,198 @@ export function AdminAuthModal({
     }
   };
 
+  const handleRecoverySubmit = async (e) => {
+    e.preventDefault();
+    const errs = {};
+
+    if (!recoveryUser.trim()) {
+      errs.recoveryUser = 'Admin email or username is required.';
+    }
+
+    if (!recoveryKey.trim()) {
+      errs.recoveryKey = 'Recovery mobile number or passkey is required.';
+    }
+
+    if (!newPassword) {
+      errs.newPassword = 'New password is required.';
+    } else if (newPassword.length < 10) {
+      errs.newPassword = 'Password must be at least 10 characters long.';
+    }
+
+    if (!confirmPassword) {
+      errs.confirmPassword = 'Please confirm your new password.';
+    } else if (newPassword !== confirmPassword) {
+      errs.confirmPassword = 'Confirmation password does not match.';
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setAuthErrors(errs);
+      shakeCard();
+      return;
+    }
+
+    setIsResetting(true);
+    setAuthErrors({});
+    playTick();
+
+    if (typeof recoverAdminPassword !== 'function') {
+      setIsResetting(false);
+      setAuthErrors({ banner: 'Password recovery handler is unavailable. Please check server.' });
+      shakeCard();
+      return;
+    }
+
+    const res = await recoverAdminPassword({
+      usernameOrEmail: recoveryUser.trim(),
+      recoveryKey: recoveryKey.trim(),
+      newPassword
+    });
+
+    setIsResetting(false);
+
+    if (!res.ok) {
+      shakeCard();
+      setAuthErrors({
+        banner: res.error || 'Failed to reset password. Please verify your credentials.'
+      });
+    } else {
+      setLoginUser(recoveryUser.trim());
+      setRecoveryKey('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setAuthMode('login');
+      setResetSuccessBanner('Password reset successfully! Please sign in with your new password.');
+      setAuthErrors({});
+      if (typeof showToast === 'function') {
+        showToast('Password reset successfully! You can now sign in.', 'fa-check');
+      }
+    }
+  };
+
   return (
     <div className="admin-auth-content mx-auto max-w-md px-4">
       <div ref={cardRef} className="glass-card-admin rounded-3xl p-7 sm:p-9 space-y-6 border border-yellow-400/30">
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-2 rounded-full bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 font-mono text-[10px] font-bold text-yellow-400">
-            <i className="fa-solid fa-lock text-xs" />
-            <span>PROTECTED ADMIN PORTAL</span>
+            <i className={`fa-solid ${authMode === 'forgot' ? 'fa-key' : 'fa-lock'} text-xs`} />
+            <span>{authMode === 'forgot' ? 'ADMIN CREDENTIAL RECOVERY' : 'PROTECTED ADMIN PORTAL'}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-            {authMode === 'forgot' ? 'Admin Credential Recovery' : 'Administrator Sign In'}
+            {authMode === 'forgot' ? 'Reset Admin Password' : 'Administrator Sign In'}
           </h1>
           <p className="text-xs leading-relaxed text-slate-400">
             {authMode === 'forgot'
-              ? 'CLI-based master credential management and password reset procedure.'
+              ? 'Verify your registered recovery details to set a new administrator password.'
               : 'Authorized access only. Sign in with your administrator credentials to manage portfolio content.'}
           </p>
         </div>
 
+        {resetSuccessBanner && authMode === 'login' && (
+          <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3.5 text-xs text-emerald-300 font-medium flex items-center gap-2">
+            <i className="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0" />
+            <span>{resetSuccessBanner}</span>
+          </div>
+        )}
+
         {authErrors.banner && (
-          <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3.5 text-xs text-red-300 font-medium">
-            {authErrors.banner}
+          <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3.5 text-xs text-red-300 font-medium flex items-start gap-2">
+            <i className="fa-solid fa-triangle-exclamation text-red-400 text-sm shrink-0 mt-0.5" />
+            <span>{authErrors.banner}</span>
           </div>
         )}
 
         {authMode === 'forgot' ? (
-          <div className="space-y-4">
-            <div className="rounded-2xl border border-yellow-400/30 bg-yellow-400/10 p-5 text-xs text-slate-300 space-y-3">
-              <div className="flex items-center gap-2 text-yellow-400 font-bold text-sm">
-                <i className="fa-solid fa-terminal" />
-                <span>Direct CLI Credential Recovery</span>
-              </div>
-              <p className="text-slate-300 leading-relaxed">
-                For security isolation, administrator credential updates and password resets must be executed directly on the host server environment via the admin CLI utility:
-              </p>
-              <div className="rounded-xl border border-white/10 bg-black/70 p-3 font-mono text-xs text-yellow-400 select-all">
-                npm run setup:admin
-              </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Run this command in the project terminal to securely reconfigure credentials or generate a new administrator session without exposing reset endpoints to the public web.
-              </p>
+          <form onSubmit={handleRecoverySubmit} noValidate className="space-y-4">
+            <div>
+              <label className="block font-mono text-xs text-slate-400 mb-1">
+                Admin Username or Email *
+              </label>
+              <input
+                type="text"
+                name="recoveryUser"
+                autoComplete="username"
+                value={recoveryUser}
+                onChange={(e) => setRecoveryUser(e.target.value)}
+                placeholder="ayushprajapati9669@gmail.com"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
+              />
+              <FormErrorMessage message={authErrors.recoveryUser} />
             </div>
+
+            <div>
+              <label className="block font-mono text-xs text-slate-400 mb-1">
+                Recovery Mobile Number / Passkey *
+              </label>
+              <input
+                type="text"
+                name="recoveryKey"
+                value={recoveryKey}
+                onChange={(e) => setRecoveryKey(e.target.value)}
+                placeholder="e.g. 9669802554 or Master Recovery Key"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
+              />
+              <p className="mt-1 text-[11px] text-slate-500">
+                Enter your registered mobile number or master recovery passkey.
+              </p>
+              <FormErrorMessage message={authErrors.recoveryKey} />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block font-mono text-xs text-slate-400">New Password *</label>
+                <button
+                  type="button"
+                  onClick={() => setShowResetPass((prev) => !prev)}
+                  className="font-mono text-[11px] text-yellow-400/90 hover:text-yellow-300 transition-colors"
+                >
+                  {showResetPass ? 'Hide' : 'Show'}
+                </button>
+              </div>
+              <input
+                type={showResetPass ? 'text' : 'password'}
+                name="newPassword"
+                autoComplete="new-password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Minimum 10 characters"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
+              />
+              <FormErrorMessage message={authErrors.newPassword} />
+            </div>
+
+            <div>
+              <label className="block font-mono text-xs text-slate-400 mb-1">
+                Confirm New Password *
+              </label>
+              <input
+                type={showResetPass ? 'text' : 'password'}
+                name="confirmPassword"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Re-enter new password"
+                className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
+              />
+              <FormErrorMessage message={authErrors.confirmPassword} />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isResetting}
+              className="btn-save w-full py-3 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isResetting ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin" />
+                  <span>Verifying & Resetting...</span>
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-shield-halved" />
+                  <span>Reset Password & Sign In</span>
+                </>
+              )}
+            </button>
 
             <div className="text-center pt-2">
               <button
@@ -136,7 +297,7 @@ export function AdminAuthModal({
                 ← Back to Administrator Sign In
               </button>
             </div>
-          </div>
+          </form>
         ) : (
           <form onSubmit={handleLoginSubmit} noValidate className="space-y-4">
             <div>

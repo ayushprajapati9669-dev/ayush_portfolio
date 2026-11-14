@@ -41,11 +41,6 @@
     "heroDescription": "Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42) skilled in C, Java, JavaScript, Python, React.js, Node.js, Express.js, MySQL, and MongoDB. Winner of a college website-making competition.",
     "learningJourney": [
       {
-        "phase": "",
-        "title": "🎤 Lead Speaker & Instructor: MERN Stack & Cloud Architecture Workshop",
-        "description": ""
-      },
-      {
         "phase": "EDUCATION · 2024 – 2028",
         "title": "B.Tech CSE — SISTec, Bhopal (CGPA: 8.42)",
         "description": "Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022)."
@@ -79,7 +74,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "From blank screen to live product. That’s Ayush Prajapati.",
-    "updatedAt": "2026-11-14T10:05:39.796Z",
+    "updatedAt": "2026-10-18T10:00:00.000Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -159,29 +154,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-11-14T09:41:56.870Z",
-      "caseStudy": {
-        "problem": "",
-        "approach": "",
-        "techDecisions": "",
-        "learnings": "",
-        "architectureDiagramUrl": "",
-        "beforeScreenshots": [],
-        "afterScreenshots": [],
-        "result": {
-          "summary": "",
-          "metrics": [
-            {
-              "label": "API Endpoints",
-              "value": "15+"
-            },
-            {
-              "label": "Lighthouse",
-              "value": "92"
-            }
-          ]
-        }
-      }
+      "updatedAt": "2026-10-31T08:52:18.375Z"
     },
     {
       "id": "proj-1792430599188",
@@ -209,7 +182,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
-      "updatedAt": "2026-11-14T09:41:56.870Z"
+      "updatedAt": "2026-10-31T08:52:18.407Z"
     },
     {
       "id": "proj-1792496192331",
@@ -234,35 +207,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-chat-preview.webp",
       "title": "ai chat boat",
-      "updatedAt": "2026-11-14T09:41:56.870Z"
-    },
-    {
-      "id": "proj-1792781601076",
-      "approachArchitecture": "",
-      "category": "Full-Stack Web App",
-      "createdAt": "2026-10-31T08:13:37.348Z",
-      "disclaimer": "",
-      "displayOrder": 4,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
-      "problemContext": "",
-      "shortDescription": "hi this is a testing project",
-      "slug": "airbnb-clone",
-      "status": "published",
-      "technologies": [
-        "React JS",
-        "Node.js",
-        "Express.js",
-        "MongoDB"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
-      "title": "airbnb clone",
-      "updatedAt": "2026-11-14T09:41:56.870Z"
+      "updatedAt": "2026-10-31T08:52:18.460Z"
     },
     {
       "id": "proj-1792669669594",
@@ -290,50 +235,71 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-agentic-preview.webp",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-11-14T09:41:56.870Z"
+      "updatedAt": "2026-10-31T08:52:18.520Z"
+    },
+    {
+      "id": "proj-1792781601076",
+      "approachArchitecture": "",
+      "category": "Full-Stack Web App",
+      "createdAt": "2026-10-31T08:13:37.348Z",
+      "disclaimer": "",
+      "displayOrder": 4,
+      "featured": true,
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "implementedFeatures": [],
+      "lessonsLearned": "",
+      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
+      "problemContext": "",
+      "shortDescription": "hi this is a testing project",
+      "slug": "airbnb-clone",
+      "status": "published",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
+      "title": "airbnb clone",
+      "updatedAt": "2026-10-31T08:52:18.494Z"
     }
   ],
   "skills": [
     {
       "id": "skill-languages",
       "category": "Languages",
-      "createdAt": "2026-11-14T05:37:16.697Z",
+      "tabIcon": "languages",
       "description": "Programming languages used for DSA and full-stack engineering.",
       "displayOrder": 1,
       "items": [
         {
           "name": "C",
-          "logoKey": "c",
-          "note": ""
+          "logoKey": "c"
         },
         {
           "name": "C++",
-          "logoKey": "cpp",
-          "note": ""
+          "logoKey": "cpp"
         },
         {
           "name": "Java",
-          "logoKey": "java",
-          "note": ""
+          "logoKey": "java"
         },
         {
           "name": "JavaScript",
-          "logoKey": "javascript",
-          "note": ""
+          "logoKey": "javascript"
         },
         {
           "name": "Python",
-          "logoKey": "python",
-          "note": ""
+          "logoKey": "python"
         }
-      ],
-      "tabIcon": "languages",
-      "updatedAt": "2026-11-14T10:54:14.577Z"
+      ]
     },
     {
       "id": "skill-frontend",
       "category": "Frontend",
-      "createdAt": "2026-11-14T05:37:16.697Z",
+      "tabIcon": "frontend",
       "description": "Frontend web technologies for responsive, modern user interfaces.",
       "displayOrder": 2,
       "items": [
@@ -369,14 +335,12 @@
           "name": "Next.js",
           "logoKey": "nextjs"
         }
-      ],
-      "tabIcon": "frontend",
-      "updatedAt": "2026-11-14T09:41:56.898Z"
+      ]
     },
     {
       "id": "skill-backend",
       "category": "Backend",
-      "createdAt": "2026-11-14T05:37:16.697Z",
+      "tabIcon": "backend",
       "description": "Server runtimes and REST API architecture.",
       "displayOrder": 3,
       "items": [
@@ -392,14 +356,12 @@
           "name": "REST APIs",
           "logoKey": "api"
         }
-      ],
-      "tabIcon": "backend",
-      "updatedAt": "2026-11-14T09:41:56.898Z"
+      ]
     },
     {
       "id": "skill-databases",
       "category": "Databases",
-      "createdAt": "2026-11-14T05:37:16.697Z",
+      "tabIcon": "databases",
       "description": "Relational and NoSQL document database management.",
       "displayOrder": 4,
       "items": [
@@ -411,14 +373,12 @@
           "name": "MySQL",
           "logoKey": "mysql"
         }
-      ],
-      "tabIcon": "databases",
-      "updatedAt": "2026-11-14T09:41:56.898Z"
+      ]
     },
     {
       "id": "skill-tools",
       "category": "Tools & Workflow",
-      "createdAt": "2026-11-14T05:37:16.697Z",
+      "tabIcon": "tools",
       "description": "Version control, cloud media storage, and developer workflow tools.",
       "displayOrder": 5,
       "items": [
@@ -442,14 +402,12 @@
           "name": "Cloudinary",
           "logoKey": "cloudinary"
         }
-      ],
-      "tabIcon": "tools",
-      "updatedAt": "2026-11-14T09:41:56.898Z"
+      ]
     },
     {
       "id": "skill-dsa",
       "category": "Problem Solving",
-      "createdAt": "2026-11-14T05:37:16.697Z",
+      "tabIcon": "dsa",
       "description": "Data structures, algorithms, and core computer science fundamentals.",
       "displayOrder": 6,
       "items": [
@@ -457,44 +415,60 @@
           "name": "Data Structures & Algorithms",
           "logoKey": "dsa"
         }
-      ],
-      "tabIcon": "dsa",
-      "updatedAt": "2026-11-14T09:41:56.898Z"
+      ]
     }
   ],
   "certificates": [],
   "media": [],
   "messages": [],
   "settings": {
+    "siteName": "Ayush Prajapati",
     "siteTitle": "Ayush Prajapati — Full-Stack Developer Portfolio",
+    "seoTitle": "Ayush Prajapati | Full-Stack Developer & Software Engineer",
     "seoDescription": "Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB.",
+    "ogTitle": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+    "ogDescription": "Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB.",
+    "ogImage": "/og-image.png",
+    "canonicalUrl": "https://ayushprajapati.dev",
+    "contactEmail": "ayushprajapati9669@gmail.com",
+    "contactPhone": "(+91) 9669802554",
+    "contactNote": "",
+    "copyrightText": "© 2026 Ayush Prajapati. All rights reserved.",
+    "accentColor": "#dfb740",
+    "themeMode": "dark",
+    "bgBase": "#000000",
+    "bgSurface": "#0a0a0f",
+    "glowIntensity": "medium",
+    "maintenanceMode": false,
     "particlesEnabled": true,
-    "contactNote": "Messages submitted through the contact form are validated on the server and persisted directly to the portfolio database for review in the Admin CMS. No third-party SMTP relay is fabricated; a direct mailto fallback is also available.",
-    "updatedAt": "2026-11-14T09:41:57.904Z",
+    "robotsIndex": "index, follow",
+    "updatedAt": "2026-11-14T16:57:25.087Z",
+    "fontHeading": "'Plus Jakarta Sans', sans-serif",
+    "fontBody": "'Plus Jakarta Sans', sans-serif",
+    "seoKeywords": "Ayush Prajapati, Full-Stack Developer, MERN Stack, React.js, Node.js, SISTec Bhopal, Software Engineer, Portfolio",
+    "author": "Ayush Prajapati",
     "cloudinaryCloudName": "",
     "cloudinaryUploadPreset": "",
-    "maintenanceMode": false,
-    "createdAt": "2026-10-18T15:13:45.375Z",
-    "mongodbUri": "mongodb://127.0.0.1:27017/ayush_portfolio"
+    "createdAt": "2026-10-18T15:13:45.375Z"
   },
   "users": [
     {
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-14T10:55:11.710Z",
-      "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
+      "lastLoginAt": "2026-11-14T17:11:55.070Z",
+      "passwordHash": "scrypt$16384$8$1$ac62bb5a6b1efa02848bdb68fa2e515d$aaa9097098e9e1d53e92cef579ad02adf335565525de2e11e63a590141ce9a5c1118fb5ec7ba169964d24b66423c3786fd11cdd9a100f7d607db0b0ff7dafa7e",
       "role": "admin",
-      "updatedAt": "2026-11-14T09:41:57.420Z"
+      "updatedAt": "2026-11-14T17:11:52.401Z"
     },
     {
       "username": "ayush",
       "createdAt": "2026-10-31T08:52:17.838Z",
       "id": "usr-24ebcb8842aa",
-      "lastLoginAt": "2026-11-09T11:55:23.945Z",
+      "lastLoginAt": "2026-11-14T17:43:35.079Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T09:41:57.420Z"
+      "updatedAt": "2026-11-14T16:31:35.545Z"
     },
     {
       "createdAt": "2026-11-05T12:05:07.107Z",
@@ -502,7 +476,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T09:41:57.420Z",
+      "updatedAt": "2026-11-14T16:31:35.545Z",
       "username": "admin"
     },
     {
@@ -511,7 +485,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T09:41:57.420Z",
+      "updatedAt": "2026-11-14T16:31:35.545Z",
       "username": "Ayush7162"
     }
   ],

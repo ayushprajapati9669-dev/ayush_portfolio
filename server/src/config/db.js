@@ -142,7 +142,7 @@ async function connectMongoDB(mongoUri, store) {
 
   try {
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 8000
+      serverSelectionTimeoutMS: 15000
     });
 
     console.log('[Argon Portfolio Server] [MongoDB] Successfully connected to database.');

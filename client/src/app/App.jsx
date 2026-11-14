@@ -145,29 +145,56 @@ function LazyFooter() {
   );
 }
 
+function MaintenanceBanner() {
+  const { appState } = usePortfolio();
+  const isMaintenance = Boolean(appState.settings?.maintenanceMode);
+  const isExcluded = typeof window !== 'undefined' && (window.location.pathname.startsWith('/admin') || window.location.pathname.startsWith('/login'));
+  if (!isMaintenance || isExcluded) return null;
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="maintenance-banner bg-amber-500/15 border-b border-amber-500/30 text-amber-200 text-xs py-2 px-4 text-center font-mono flex items-center justify-center gap-2 z-50 sticky top-0 backdrop-blur-md"
+    >
+      <i className="fa-solid fa-triangle-exclamation text-amber-400" />
+      <span>
+        <strong>Scheduled Maintenance Mode:</strong> Content updates and sandbox optimizations are in progress. Direct inquiries remain active at {appState.settings?.contactEmail || appState.profile?.email || 'ayushprajapati9669@gmail.com'}.
+      </span>
+    </div>
+  );
+}
+
+function AppContent() {
+  return (
+    <div className="min-h-screen text-alabaster selection:bg-yellow-500/30 selection:text-yellow-100 flex flex-col relative overflow-x-clip">
+      <BackgroundLayers />
+      <MaintenanceBanner />
+      <TelemetryTracker />
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-yellow-400 focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:font-semibold text-black"
+      >
+        Skip to main content
+      </a>
+      <Header />
+      <Toast />
+      <ConfirmModal />
+      <LazyModals />
+      <main id="main-content" className="flex-1 relative z-10">
+        <AppRouter />
+      </main>
+      <LazyFooter />
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <SmoothScrollProvider>
-          <div className="min-h-screen text-alabaster selection:bg-yellow-500/30 selection:text-yellow-100 flex flex-col relative overflow-x-clip">
-            <BackgroundLayers />
-            <TelemetryTracker />
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-yellow-400 focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:font-semibold text-black"
-            >
-              Skip to main content
-            </a>
-            <Header />
-            <Toast />
-            <ConfirmModal />
-            <LazyModals />
-            <main id="main-content" className="flex-1 relative z-10">
-              <AppRouter />
-            </main>
-            <LazyFooter />
-          </div>
+          <AppContent />
         </SmoothScrollProvider>
       </AuthProvider>
     </ThemeProvider>

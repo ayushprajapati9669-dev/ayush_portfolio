@@ -13,6 +13,9 @@ import { InteractiveGlobe3D } from '../../components/ui/InteractiveGlobe3D';
 export function ContactPage() {
   const { appState, updateAppState, showToast } = usePortfolio();
   const p = appState.profile || {};
+  const s = appState.settings || {};
+  const effectiveEmail = s.contactEmail || p.email || 'ayushprajapati9669@gmail.com';
+  const effectivePhone = s.contactPhone || p.phone || '(+91) 9669802554';
 
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [errors, setErrors] = useState({});
@@ -201,8 +204,8 @@ export function ContactPage() {
           Get In *Touch*
         </ScrollWriteText>
         <p className="page-desc mt-4">
-          Reach out directly at <strong>{p.email || 'ayushprajapati9669@gmail.com'}</strong> or{' '}
-          <strong>{p.phone || '(+91) 9669802554'}</strong> or send a message below.
+          Reach out directly at <strong>{effectiveEmail}</strong> or{' '}
+          <strong>{effectivePhone}</strong> or send a message below.
         </p>
       </div>
 
@@ -216,6 +219,13 @@ export function ContactPage() {
             onMouseLeave={handleCardMouseLeave}
           >
             <h3 className="card-title">Send a Message</h3>
+
+            {s.contactNote && (
+              <div className="contact-note-box mb-4 p-3 rounded-lg border border-yellow-500/20 bg-yellow-500/5 text-xs text-yellow-200/90 font-mono flex items-start gap-2.5">
+                <i className="fa-solid fa-circle-info text-yellow-400 mt-0.5" />
+                <div className="leading-relaxed">{s.contactNote}</div>
+              </div>
+            )}
 
             {/* Top Status Alert Banners */}
             {success && (
@@ -441,11 +451,11 @@ export function ContactPage() {
                 <div className="info-text">
                   <span className="label">EMAIL ADDRESS</span>
                   <span className="value">
-                    {p.email || 'ayushprajapati9669@gmail.com'}
+                    {effectiveEmail}
                     <button
                       type="button"
                       className={`copy-btn ${copiedField === 'email' ? 'copied' : ''}`}
-                      onClick={() => copyText(p.email || 'ayushprajapati9669@gmail.com', 'email')}
+                      onClick={() => copyText(effectiveEmail, 'email')}
                       title="Copy Email"
                     >
                       <i className={copiedField === 'email' ? 'fa-solid fa-check' : 'fa-regular fa-copy'} />
@@ -462,11 +472,11 @@ export function ContactPage() {
                 <div className="info-text">
                   <span className="label">PHONE NUMBER</span>
                   <span className="value">
-                    {p.phone || '(+91) 9669802554'}
+                    {effectivePhone}
                     <button
                       type="button"
                       className={`copy-btn ${copiedField === 'phone' ? 'copied' : ''}`}
-                      onClick={() => copyText(p.phone || '+919669802554', 'phone')}
+                      onClick={() => copyText(effectivePhone, 'phone')}
                       title="Copy Phone"
                     >
                       <i className={copiedField === 'phone' ? 'fa-solid fa-check' : 'fa-regular fa-copy'} />

@@ -50,13 +50,21 @@ export function CertificateLightboxModal() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeCertLightbox, closeCertificateLightbox]);
 
+  const isCanonicalCert = (c) =>
+    Boolean(
+      c &&
+      typeof c === 'object' &&
+      c.id &&
+      !/^cert[1-5]$/i.test(String(c.id)) &&
+      c.published === true &&
+      ['verified', 'accredited', 'published'].includes(String(c.status || '').toLowerCase())
+    );
+
   // Resolve certificate strictly from published CMS state (no fake reference fallbacks or draft leakage)
   const cert =
     typeof activeCertLightbox === 'object' && activeCertLightbox !== null
-      ? (activeCertLightbox.status !== 'draft' && activeCertLightbox.published !== false ? activeCertLightbox : null)
-      : (appState.certificates || []).find(
-          (c) => c && c.id === activeCertLightbox && c.status !== 'draft' && c.published !== false
-        );
+      ? (isCanonicalCert(activeCertLightbox) ? activeCertLightbox : null)
+      : (appState.certificates || []).find((c) => c && c.id === activeCertLightbox && isCanonicalCert(c));
 
   // Zoom controls
   const handleZoomIn = () => {

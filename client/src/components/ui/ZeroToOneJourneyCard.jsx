@@ -25,13 +25,37 @@ const DEFAULT_MILESTONES = [
   }
 ];
 
-// Helper to strip HTML tags from descriptions (e.g. from rich-text CMS inputs)
-const stripHtml = (html) => {
+// Helper to strip HTML tags and decode entities from descriptions (e.g. from rich-text CMS inputs)
+const decodeEntities = (str) => {
+  if (!str) return '';
+  return String(str)
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+};
+
+const cleanJourneyText = (html, maxChars = 110) => {
   if (!html) return '';
-  return String(html)
-    .replace(/<[^>]*>?/gm, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  const plain = decodeEntities(
+    String(html)
+      .replace(/<[^>]*>?/gm, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+  );
+  if (!plain) return '';
+  if (plain.length <= maxChars) return plain;
+  // If text is long, extract the first sentence or truncate at word boundary
+  const firstSentenceMatch = plain.match(/^([^.!?]+[.!?])/);
+  if (firstSentenceMatch && firstSentenceMatch[1].length >= 35 && firstSentenceMatch[1].length <= maxChars) {
+    return firstSentenceMatch[1].trim();
+  }
+  const truncated = plain.slice(0, maxChars);
+  const lastSpace = truncated.lastIndexOf(' ');
+  return (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated) + '...';
 };
 
 export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }) {
@@ -69,9 +93,9 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
         .filter((item) => item && item.published !== false)
         .map((item, idx) => ({
           id: item.id || `ms-${idx}`,
-          year: item.year || item.yearBadge || item.phase || `Year ${idx + 1}`,
-          title: item.title || item.name || 'Milestone',
-          desc: stripHtml(item.desc || item.description || item.detail || '')
+          year: decodeEntities(item.year || item.yearBadge || item.phase || `Year ${idx + 1}`),
+          title: decodeEntities(item.title || item.name || 'Milestone'),
+          desc: cleanJourneyText(item.desc || item.description || item.detail || '', 115)
         }));
     }
     // Only fall back to baseline defaults if source is strictly undefined (unloaded/initial fallback)
@@ -202,6 +226,17 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
     }
   };
 
+  const handleThumbTouchStart = (e) => {
+    if (e.touches && e.touches[0]) {
+      e.stopPropagation();
+      setIsDragging(true);
+      setDragStartX(e.touches[0].clientX);
+      if (scrollContainerRef.current) {
+        setDragStartScrollLeft(scrollContainerRef.current.scrollLeft);
+      }
+    }
+  };
+
   useEffect(() => {
     if (!isDragging) return undefined;
 
@@ -222,12 +257,34 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
       setIsDragging(false);
     };
 
+    const handleTouchMove = (e) => {
+      if (!e.touches || !e.touches[0]) return;
+      const el = scrollContainerRef.current;
+      const track = trackRef.current;
+      if (!el || !track) return;
+
+      const trackRect = track.getBoundingClientRect();
+      const deltaX = e.touches[0].clientX - dragStartX;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const scrollDelta = (deltaX / trackRect.width) * maxScroll;
+
+      el.scrollLeft = dragStartScrollLeft + scrollDelta;
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isDragging, dragStartX, dragStartScrollLeft]);
 
@@ -383,26 +440,31 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
               aria-hidden="true"
             />
 
-            {/* Horizontally scrollable flex container */}
+            {/* Horizontally scrollable flex container (Native browser scrollbar hidden; luxury custom track rendered below) */}
             <div
               ref={scrollContainerRef}
-              className="flex gap-4 sm:gap-6 overflow-x-auto zero-journey-scrollbar pb-2 pt-1 scroll-smooth"
+              className="flex gap-4 sm:gap-6 overflow-x-auto zero-journey-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-2 pt-1 scroll-smooth"
             >
               {milestones.map((m, idx) => (
                 <div
                   key={m.id || idx}
-                  className="group/m p-5 rounded-2xl transition-all duration-300 bg-white/[0.03] border border-white/10 hover:border-amber-400/40 hover:bg-white/[0.06] hover:-translate-y-1 shadow-lg min-w-[250px] sm:min-w-[260px] max-w-[340px] flex-1 flex-shrink-0"
+                  className="group/m p-5 rounded-2xl transition-all duration-300 bg-white/[0.03] border border-white/10 hover:border-amber-400/40 hover:bg-white/[0.06] hover:-translate-y-1 shadow-lg w-[285px] min-w-[270px] max-w-[300px] h-[210px] flex flex-col justify-between flex-shrink-0"
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-xs sm:text-sm font-bold text-[#e5b869] tracking-wider">
-                      {m.year}
-                    </span>
-                    <span className="w-2 h-2 rounded-full bg-[#e5b869] shadow-[0_0_8px_#e5b869]" />
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-mono text-xs font-bold text-[#e5b869] tracking-wider">
+                        {m.year}
+                      </span>
+                      <span className="w-2 h-2 rounded-full bg-[#e5b869] shadow-[0_0_8px_#e5b869]" />
+                    </div>
+                    <h3
+                      className="font-display text-sm sm:text-base font-semibold text-white group-hover/m:text-amber-200 transition-colors line-clamp-2 leading-snug mb-1.5"
+                      title={m.title}
+                    >
+                      {m.title}
+                    </h3>
                   </div>
-                  <h3 className="font-display text-base font-semibold text-white group-hover/m:text-amber-200 transition-colors mb-1.5">
-                    {m.title}
-                  </h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed font-sans font-normal">
+                  <p className="text-xs text-zinc-400 leading-relaxed font-sans font-normal line-clamp-3 overflow-hidden">
                     {m.desc}
                   </p>
                 </div>
@@ -430,6 +492,7 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
                   {/* Glowing Gold Luxury Thumb */}
                   <div
                     onMouseDown={handleThumbMouseDown}
+                    onTouchStart={handleThumbTouchStart}
                     className="absolute top-0 bottom-0 rounded-full cursor-grab active:cursor-grabbing transition-transform duration-75"
                     style={{
                       left: `${scrollProgress * (100 - thumbWidthPercent)}%`,

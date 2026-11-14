@@ -1,8 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { runOnIdle, cancelIdle } from '../../utils/idle';
+import { usePortfolio } from '../../app/providers/ThemeProvider';
 
 export function CinematicParticleCard({ className = '' }) {
+  let portfolioContext = null;
+  try {
+    portfolioContext = usePortfolio();
+  } catch (_e) {
+    portfolioContext = null;
+  }
+  const particlesEnabled = portfolioContext?.appState?.settings?.particlesEnabled !== false;
+  const particlesEnabledRef = useRef(particlesEnabled);
+
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [currentState, setCurrentState] = useState(0);
@@ -18,8 +28,29 @@ export function CinematicParticleCard({ className = '' }) {
     material: null,
     geometry: null,
     texture: null,
-    resizeTimeout: null
+    resizeTimeout: null,
+    updateLoop: null
   });
+
+  useEffect(() => {
+    particlesEnabledRef.current = particlesEnabled;
+    const canvas = canvasRef.current;
+    if (!particlesEnabled) {
+      const state = stateRef.current;
+      if (state.autoCycleId) {
+        clearInterval(state.autoCycleId);
+        state.autoCycleId = null;
+      }
+      if (state.renderer) {
+        state.renderer.clear();
+      } else if (canvas) {
+        const ctx2d = canvas.getContext('2d');
+        if (ctx2d) ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    } else if (stateRef.current.updateLoop) {
+      stateRef.current.updateLoop();
+    }
+  }, [particlesEnabled]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -149,6 +180,10 @@ export function CinematicParticleCard({ className = '' }) {
       let time2D = 0;
       const render2D = () => {
         if (!isMounted.current) return;
+        if (!particlesEnabledRef.current) {
+          ctx2d.clearRect(0, 0, width, height);
+          return;
+        }
         time2D += 0.03;
         ctx2d.clearRect(0, 0, width, height);
 
@@ -287,7 +322,7 @@ export function CinematicParticleCard({ className = '' }) {
 
     // Complete RAF State Machine
     function updateLoopState() {
-      const shouldAnimate = isMounted.current && inViewport.current && isTabVisible.current;
+      const shouldAnimate = particlesEnabledRef.current && isMounted.current && inViewport.current && isTabVisible.current;
       if (shouldAnimate && !isLoopRunning.current && renderer && material) {
         isLoopRunning.current = true;
         clock.start();
@@ -303,13 +338,17 @@ export function CinematicParticleCard({ className = '' }) {
           cancelAnimationFrame(animId);
           animId = null;
         }
-        // Pause autoCycle while offscreen to avoid wasted background cycles
+        // Pause autoCycle while offscreen or disabled to avoid wasted background cycles
         if (state.autoCycleId) {
           clearInterval(state.autoCycleId);
           state.autoCycleId = null;
         }
+        if (renderer && scene && camera) {
+          renderer.clear();
+        }
       }
     }
+    state.updateLoop = updateLoopState;
 
     const handleVisibilityChange = () => {
       isTabVisible.current = !document.hidden;
@@ -334,7 +373,17 @@ export function CinematicParticleCard({ className = '' }) {
     };
 
     const animate = () => {
-      if (!isLoopRunning.current) return;
+      if (!isLoopRunning.current || !particlesEnabledRef.current) {
+        isLoopRunning.current = false;
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+        if (renderer && scene && camera) {
+          renderer.clear();
+        }
+        return;
+      }
 
       const time = clock.getElapsedTime();
       if (material) {
@@ -620,6 +669,7 @@ export function CinematicParticleCard({ className = '' }) {
       if (geometry) geometry.dispose();
       if (material) material.dispose();
       if (particleTexture) particleTexture.dispose();
+      state.updateLoop = null;
     };
   }, []);
 

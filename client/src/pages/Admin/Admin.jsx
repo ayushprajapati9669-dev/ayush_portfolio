@@ -19,6 +19,9 @@ const AdminSkills = React.lazy(() => import('./components/AdminSkills').then((m)
 const AdminMilestones = React.lazy(() => import('./components/AdminMilestones').then((m) => ({ default: m.AdminMilestones })));
 const AdminProfile = React.lazy(() => import('./components/AdminProfile').then((m) => ({ default: m.AdminProfile })));
 const AdminHeroPortrait = React.lazy(() => import('./components/AdminHeroPortrait').then((m) => ({ default: m.AdminHeroPortrait })));
+const AdminAppearance = React.lazy(() => import('./components/AdminAppearance').then((m) => ({ default: m.AdminAppearance })));
+const AdminSeo = React.lazy(() => import('./components/AdminSeo').then((m) => ({ default: m.AdminSeo })));
+const AdminSiteSettings = React.lazy(() => import('./components/AdminSiteSettings').then((m) => ({ default: m.AdminSiteSettings })));
 const AdminMessages = React.lazy(() => import('./components/AdminMessages').then((m) => ({ default: m.AdminMessages })));
 const AdminSecurity = React.lazy(() => import('./components/AdminSecurity').then((m) => ({ default: m.AdminSecurity })));
 const AdminUserGuide = React.lazy(() => import('./components/AdminUserGuide').then((m) => ({ default: m.AdminUserGuide })));
@@ -34,7 +37,7 @@ import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
 export function AdminPage() {
   const { appState, updateAppState, showToast, openConfirmModal } = usePortfolio();
-  const { session, loginAdmin, logoutAdmin, resetAdminPassword, checkCurrentPassword } = useAuth();
+  const { session, loginAdmin, logoutAdmin, resetAdminPassword, recoverAdminPassword, checkCurrentPassword } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -208,6 +211,7 @@ export function AdminPage() {
         <AdminAuthModal
           loginAdmin={loginAdmin}
           resetAdminPassword={resetAdminPassword}
+          recoverAdminPassword={recoverAdminPassword}
           showToast={showToast}
         />
       </div>
@@ -380,6 +384,33 @@ export function AdminPage() {
 
             {(activeTab === 'media' || activeTab === 'hero' || activeTab === 'portrait') && (
               <AdminHeroPortrait
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+              />
+            )}
+
+            {activeTab === 'appearance' && (
+              <AdminAppearance
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+              />
+            )}
+
+            {activeTab === 'seo' && (
+              <AdminSeo
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+              />
+            )}
+
+            {(activeTab === 'settings' || activeTab === 'site-settings') && (
+              <AdminSiteSettings
                 appState={appState}
                 updateAppState={updateAppState}
                 session={session}

@@ -288,39 +288,14 @@ img {
 .zero-journey-scrollbar {
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(229, 184, 105, 0.6) rgba(255, 255, 255, 0.04);
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
 
 .zero-journey-scrollbar::-webkit-scrollbar {
-  height: 6px;
-  width: 6px;
-  display: block;
-}
-
-.zero-journey-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  margin: 0 4px;
-}
-
-.zero-journey-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, rgba(229, 184, 105, 0.5) 0%, #e5b869 50%, rgba(229, 184, 105, 0.5) 100%);
-  border-radius: 9999px;
-  box-shadow: 0 0 10px rgba(229, 184, 105, 0.4);
-  border: 1px solid rgba(229, 184, 105, 0.35);
-  transition: all 0.25s ease;
-}
-
-.zero-journey-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, #e5b869 0%, #fbbf24 50%, #e5b869 100%);
-  box-shadow: 0 0 16px rgba(229, 184, 105, 0.75);
-  border-color: rgba(251, 191, 36, 0.7);
-}
-
-.zero-journey-scrollbar::-webkit-scrollbar-thumb:active {
-  background: #f59e0b;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }

@@ -126,6 +126,10 @@ class PortfolioDataStore {
             mutated = true;
           }
         }
+        if (this.state.settings && this.state.settings.mongodbUri) {
+          delete this.state.settings.mongodbUri;
+          mutated = true;
+        }
         if (mutated) {
           this._persist();
           console.log('[PortfolioDataStore] Auto-optimized portfolio.json: stripped heavy base64 strings and seeded Workshop milestone!');
@@ -374,6 +378,52 @@ class PortfolioDataStore {
     return JSON.parse(JSON.stringify(this.state.certificates || []));
   }
 
+  getPublicCertificates() {
+    if (!Array.isArray(this.state?.certificates)) {
+      return [];
+    }
+
+    const CANONICAL_PUBLIC_STATUSES = new Set(['verified', 'accredited', 'published']);
+    const DISALLOWED_STATUSES = new Set(['draft', 'pending', 'in review', 'in_review', 'unpublished', 'archived']);
+
+    return this.state.certificates
+      .filter((cert) => {
+        // 1. Must be a valid, non-null object
+        if (!cert || typeof cert !== 'object') return false;
+
+        // 2. Must possess valid, non-empty title and issuer
+        if (typeof cert.title !== 'string' || !cert.title.trim()) return false;
+        if (typeof cert.issuer !== 'string' || !cert.issuer.trim()) return false;
+
+        // 3. published === false or explicit draft flags are strictly rejected
+        if (cert.published === false || cert.isDraft === true || cert.draft === true) return false;
+
+        // 4. Status must be an explicit, non-empty string.
+        // Unknown, missing, or empty statuses are strictly rejected, even when published === true.
+        if (typeof cert.status !== 'string' || !cert.status.trim()) return false;
+        const normalizedStatus = cert.status.trim().toLowerCase();
+
+        // 5. Explicitly reject draft, pending, review, unpublished, archived
+        if (DISALLOWED_STATUSES.has(normalizedStatus)) {
+          return false;
+        }
+
+        // 6. Only explicitly allowed canonical statuses are accepted ('verified', 'accredited', 'published').
+        // Unknown statuses are rejected, even when published === true.
+        if (!CANONICAL_PUBLIC_STATUSES.has(normalizedStatus)) {
+          return false;
+        }
+
+        // 7. If published boolean is provided, it must be explicitly true
+        if (cert.published !== undefined && cert.published !== true) {
+          return false;
+        }
+
+        return true;
+      })
+      .map((c) => JSON.parse(JSON.stringify(c)));
+  }
+
   upsertCertificate(certPayload) {
     if (!Array.isArray(this.state.certificates)) this.state.certificates = [];
     const now = new Date().toISOString();
@@ -381,12 +431,20 @@ class PortfolioDataStore {
     if (cleanedCert.imageUrl && typeof cleanedCert.imageUrl === 'string' && cleanedCert.imageUrl.startsWith('data:image/')) {
       cleanedCert.imageUrl = this._saveBase64ToUploads(cleanedCert.imageUrl, 'cert_img');
     }
+
+    const certStatus = certPayload.status ? String(certPayload.status).trim() : 'Verified';
+    const isExplicitlyPublished = typeof certPayload.published === 'boolean'
+      ? certPayload.published
+      : ['published', 'verified', 'accredited'].includes(certStatus.toLowerCase());
+
     if (cleanedCert.id) {
       const idx = this.state.certificates.findIndex(c => c.id === certPayload.id);
       if (idx !== -1) {
         this.state.certificates[idx] = {
           ...this.state.certificates[idx],
           ...certPayload,
+          status: certStatus,
+          published: isExplicitlyPublished,
           updatedAt: now
         };
         this._persist();
@@ -394,14 +452,17 @@ class PortfolioDataStore {
       }
     }
     const created = {
-      id: `cert-${crypto.randomBytes(4).toString('hex')}`,
+      id: certPayload.id || `cert-${crypto.randomBytes(4).toString('hex')}`,
       title: certPayload.title,
       issuer: certPayload.issuer,
-      issueDate: certPayload.issueDate || '2025',
+      issueDate: certPayload.issueDate || '',
       credentialId: certPayload.credentialId || '',
       credentialUrl: certPayload.credentialUrl || '',
       skillsCovered: certPayload.skillsCovered || '',
       imageUrl: certPayload.imageUrl || '',
+      downloadUrl: certPayload.downloadUrl || certPayload.imageUrl || '',
+      status: certStatus,
+      published: isExplicitlyPublished,
       createdAt: now,
       updatedAt: now
     };
@@ -528,10 +589,29 @@ class PortfolioDataStore {
     const raw = this.state.settings || {};
     const PUBLIC_SETTINGS_ALLOWLIST = [
       'siteTitle',
+      'siteName',
+      'seoTitle',
       'seoDescription',
+      'seoKeywords',
+      'ogTitle',
+      'ogDescription',
+      'ogImage',
+      'canonicalUrl',
+      'robotsIndex',
+      'author',
+      'themeMode',
+      'accentColor',
+      'bgBase',
+      'bgSurface',
+      'fontHeading',
+      'fontBody',
+      'glowIntensity',
       'particlesEnabled',
+      'contactEmail',
+      'contactPhone',
       'contactNote',
       'maintenanceMode',
+      'copyrightText',
       'updatedAt'
     ];
     const filtered = {};
@@ -544,11 +624,14 @@ class PortfolioDataStore {
   }
 
   updateSettings(patch) {
+    const cleanedPatch = { ...patch };
+    delete cleanedPatch.mongodbUri;
     this.state.settings = {
       ...this.state.settings,
-      ...patch,
+      ...cleanedPatch,
       updatedAt: new Date().toISOString()
     };
+    if (this.state.settings.mongodbUri) delete this.state.settings.mongodbUri;
     this._persist();
     return this.getSettings();
   }
@@ -677,7 +760,10 @@ class PortfolioDataStore {
       this.state.messages = payload.messages;
     }
     if (payload.settings && typeof payload.settings === 'object') {
-      this.state.settings = { ...this.state.settings, ...payload.settings };
+      const cleanedSettings = { ...payload.settings };
+      delete cleanedSettings.mongodbUri;
+      this.state.settings = { ...this.state.settings, ...cleanedSettings };
+      if (this.state.settings.mongodbUri) delete this.state.settings.mongodbUri;
     }
     if (payload.uiLabels && typeof payload.uiLabels === 'object') {
       this.state.uiLabels = { ...(this.state.uiLabels || {}), ...payload.uiLabels };

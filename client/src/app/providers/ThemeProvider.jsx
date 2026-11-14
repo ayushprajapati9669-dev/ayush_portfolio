@@ -59,8 +59,69 @@ export function ThemeProvider({ children }) {
           }
         });
       }
+
+      let storageNeedsUpdate = false;
+
+      // Auto-purge dummy/reference certificates from localStorage (cert1..cert5, drafts, unverified)
+      if (Array.isArray(parsed.certificates)) {
+        const cleanCerts = parsed.certificates.filter(
+          (c) =>
+            c &&
+            typeof c === 'object' &&
+            c.id &&
+            !/^cert[1-5]$/i.test(String(c.id)) &&
+            c.published === true &&
+            ['verified', 'accredited', 'published'].includes(String(c.status || '').toLowerCase())
+        );
+        if (cleanCerts.length !== parsed.certificates.length) {
+          parsed.certificates = cleanCerts;
+          storageNeedsUpdate = true;
+        }
+      }
+
+      // Auto-clean test strings or polluted test values from localStorage settings
+      if (parsed.settings) {
+        if (parsed.settings.siteName === 'AP Systems Studio') {
+          parsed.settings.siteName = defaults.settings?.siteName || 'Ayush Prajapati';
+          storageNeedsUpdate = true;
+        }
+        if (parsed.settings.copyrightText && parsed.settings.copyrightText.includes('AP Systems Studio')) {
+          parsed.settings.copyrightText = `© ${new Date().getFullYear()} Ayush Prajapati. All rights reserved.`;
+          storageNeedsUpdate = true;
+        }
+        if (
+          parsed.settings.contactNote &&
+          parsed.settings.contactNote.includes('Messages submitted through the contact form are validated')
+        ) {
+          parsed.settings.contactNote = '';
+          storageNeedsUpdate = true;
+        }
+        if (parsed.settings.seoTitle && parsed.settings.seoTitle.includes('Cloud Architect')) {
+          parsed.settings.seoTitle = defaults.settings?.seoTitle || 'Ayush Prajapati | Full-Stack Developer & Software Engineer';
+          parsed.settings.ogTitle = defaults.settings?.ogTitle || 'Ayush Prajapati — Full-Stack Developer & Software Engineer';
+          parsed.settings.ogDescription = defaults.settings?.ogDescription || 'Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB.';
+          storageNeedsUpdate = true;
+        }
+      }
+
+      // Auto-clean test overrides on skills
+      if (Array.isArray(parsed.skills)) {
+        parsed.skills.forEach((s) => {
+          if (s && s.id === 'skill-frontend' && (s.color === '#06b6d4' || s.name === 'Advanced Frontend Architecture')) {
+            delete s.color;
+            delete s.subtitle;
+            s.name = 'Frontend';
+            storageNeedsUpdate = true;
+          }
+        });
+      }
+
       if (parsed.adminConfig) {
         delete parsed.adminConfig;
+        storageNeedsUpdate = true;
+      }
+
+      if (storageNeedsUpdate) {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
         } catch (_e) {}
@@ -130,6 +191,50 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     document.title = appState.settings?.siteTitle || `${appState.profile?.name || 'Ayush Prajapati'} — Portfolio`;
   }, [appState.settings?.siteTitle, appState.profile?.name]);
+
+  // Dynamic CSS Variables and Appearance Tokens synchronization
+  useEffect(() => {
+    const s = appState.settings || {};
+    const root = document.documentElement;
+
+    if (s.accentColor && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s.accentColor)) {
+      root.style.setProperty('--brand-color', s.accentColor);
+      root.style.setProperty('--accent-primary', s.accentColor);
+      root.style.setProperty('--gold', s.accentColor);
+      root.style.setProperty('--brand-cyan', s.accentColor);
+    }
+    if (s.bgBase && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s.bgBase)) {
+      root.style.setProperty('--bg-base', s.bgBase);
+      root.style.setProperty('--bg-obsidian', s.bgBase);
+      root.style.setProperty('--bg-dark', s.bgBase);
+    }
+    if (s.bgSurface && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(s.bgSurface)) {
+      root.style.setProperty('--bg-surface', s.bgSurface);
+      root.style.setProperty('--bg-panel', s.bgSurface);
+    }
+    if (s.fontHeading) {
+      root.style.setProperty('--font-heading', s.fontHeading);
+    }
+    if (s.fontBody) {
+      root.style.setProperty('--font-sans', s.fontBody);
+    }
+    if (s.themeMode) {
+      root.setAttribute('data-theme', s.themeMode);
+    }
+
+    // Dynamic metallic glow intensity mapping
+    const glowLevel = s.glowIntensity || 'medium';
+    const glowMap = {
+      subtle: { opacity: '0.35', blur: '12px', spread: '0.6' },
+      medium: { opacity: '0.70', blur: '20px', spread: '1.0' },
+      vibrant: { opacity: '1.00', blur: '32px', spread: '1.4' }
+    };
+    const activeGlow = glowMap[glowLevel] || glowMap.medium;
+    root.style.setProperty('--glow-opacity', activeGlow.opacity);
+    root.style.setProperty('--glow-blur', activeGlow.blur);
+    root.style.setProperty('--glow-spread', activeGlow.spread);
+    root.setAttribute('data-glow', glowLevel);
+  }, [appState.settings]);
 
   // Primary loader & revalidator from MongoDB Atlas
   const refreshFromBackend = useCallback(() => {

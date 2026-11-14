@@ -170,9 +170,9 @@ const SKILL_PILL_COLORS = {
   node: '#4ade80',
   'express.js': '#d4d4d8',
   express: '#d4d4d8',
-  'rest api development': '#fbbf24',
-  'rest api': '#fbbf24',
-  api: '#fbbf24',
+  'rest api development': '#38bdf8',
+  'rest api': '#38bdf8',
+  api: '#38bdf8',
   mongodb: '#22c55e',
   mongo: '#22c55e',
   mysql: '#38bdf8',
@@ -224,8 +224,20 @@ const normalizeSkillKey = (name) => {
 
 export const getSkillVisuals = (item) => {
   const key = normalizeSkillKey(item?.name || item?.logoKey || '');
-  const color = SKILL_PILL_COLORS[key] || item?.color || '#e8c547';
+  const color = SKILL_PILL_COLORS[key] || item?.color || '#38bdf8';
   return { key, color, svg: SKILL_SVGS[key] || null };
+};
+
+const getCanonicalCategoryColor = (name, customColor) => {
+  if (customColor && customColor !== '#d4af37' && customColor !== '#e8c547') return customColor;
+  const n = String(name || '').toLowerCase();
+  if (/front/i.test(n)) return '#38bdf8'; // Sky Cyan
+  if (/back/i.test(n)) return '#4ade80'; // Emerald Green
+  if (/data.*base|db/i.test(n)) return '#10b981'; // Forest Green
+  if (/lang/i.test(n)) return '#818cf8'; // Indigo Blue
+  if (/tool/i.test(n)) return '#f97316'; // Coral Orange
+  if (/problem|dsa|algo|structure/i.test(n)) return '#a855f7'; // Purple
+  return '#38bdf8';
 };
 
 export function SkillsSection({ isStandalonePage = false, showCta = false, onCtaClick = null }) {
@@ -246,14 +258,14 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
         if (!catGroup) return;
         const catName = catGroup.category || catGroup.categoryName || catGroup.name || `Category ${cIdx + 1}`;
         const catId = String(catGroup.id || `cat-${cIdx}`);
-        const catColor = catGroup.color || '#d4af37';
+        const catColor = getCanonicalCategoryColor(catName, catGroup.color);
         const items = Array.isArray(catGroup.items) ? catGroup.items : [];
         const visibleItems = items.filter((item) => item && item.isVisible !== false);
 
         const mappedItems = visibleItems.map((item, iIdx) => {
           const name = item.name || '';
           const normKey = normalizeSkillKey(name);
-          const brandColor = SKILL_PILL_COLORS[normKey] || item.color || '#e8c547';
+          const brandColor = SKILL_PILL_COLORS[normKey] || (item.color && item.color !== '#e8c547' && item.color !== '#d4af37' ? item.color : catColor);
           return {
             id: item.id || `skill-${catId}-${iIdx}`,
             name,
@@ -286,7 +298,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
           : ((match.description && typeof match.description === 'string' && match.description.trim())
             ? match.description.trim()
             : fallback.subtitle);
-        const resolvedColor = (match.color && typeof match.color === 'string' && match.color.trim())
+        const resolvedColor = (match.color && typeof match.color === 'string' && match.color.trim() && match.color !== '#d4af37' && match.color !== '#e8c547')
           ? match.color.trim()
           : fallback.color;
 
@@ -322,7 +334,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
       items: [
         { id: 'b-1', name: 'Node.js', normKey: 'node', color: '#4ade80' },
         { id: 'b-2', name: 'Express.js', normKey: 'express', color: '#d4d4d8' },
-        { id: 'b-3', name: 'REST API Development', normKey: 'api', color: '#fbbf24' }
+        { id: 'b-3', name: 'REST API Development', normKey: 'api', color: '#38bdf8' }
       ]
     });
 
@@ -341,7 +353,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
       id: 'languages',
       name: 'Languages',
       subtitle: 'What I write code in',
-      color: '#e8c547',
+      color: '#818cf8',
       items: [
         { id: 'l-1', name: 'TypeScript', normKey: 'typescript', color: '#3178c6' },
         { id: 'l-2', name: 'Python', normKey: 'python', color: '#3776ab' },
@@ -550,7 +562,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
 
   // Render individual skill pill
   const renderPill = (skill, layerDefaultColor) => {
-    const pillColor = skill.color || layerDefaultColor || '#e8c547';
+    const pillColor = skill.color || layerDefaultColor || '#38bdf8';
     const isSearchActive = Boolean(searchQuery.trim());
     const isSearchMatch = isSearchActive
       ? skill.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
@@ -745,7 +757,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
           {languagesCat && (
             <section
               className="flow-layer"
-              style={{ '--c': languagesCat.color || '#e8c547' }}
+              style={{ '--c': languagesCat.color || '#818cf8' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
             >
@@ -757,7 +769,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                 <p>{languagesCat.subtitle}</p>
               </div>
               <div className="flow-pills">
-                {languagesCat.items.map((skill) => renderPill(skill, languagesCat.color || '#e8c547'))}
+                {languagesCat.items.map((skill) => renderPill(skill, languagesCat.color || '#818cf8'))}
               </div>
             </section>
           )}
@@ -806,7 +818,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
 
           {/* Extra CMS Categories if created by admin */}
           {extraCategories.map((cat, idx) => {
-            const catColor = cat.color || '#d4af37';
+            const catColor = cat.color || '#38bdf8';
             return (
               <section
                 key={cat.id || idx}

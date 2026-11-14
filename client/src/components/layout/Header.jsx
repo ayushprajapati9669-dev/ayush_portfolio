@@ -262,8 +262,10 @@ export function Header() {
     const pill = activePillRef.current;
     if (!navCenter || !pill) return;
 
-    const el = targetEl || navCenter.querySelector('.nav-link.active');
-    if (!el) {
+    // Validate that targetEl is a real DOM element (guard against IdleDeadline or Event objects)
+    const validTarget = targetEl && typeof targetEl.getBoundingClientRect === 'function' ? targetEl : null;
+    const el = validTarget || navCenter.querySelector('.nav-link.active');
+    if (!el || typeof el.getBoundingClientRect !== 'function') {
       pill.style.opacity = '0';
       return;
     }
@@ -278,7 +280,7 @@ export function Header() {
     pill.style.left = `${elRect.left - navRect.left}px`;
 
     // Smooth double-pill hover system matching 3D liquid droplets theme
-    if (targetEl && !targetEl.classList.contains('active')) {
+    if (validTarget && !validTarget.classList.contains('active')) {
       pill.style.background = 'rgba(255, 255, 255, 0.2)';
       pill.style.boxShadow = 'none';
     } else {
@@ -289,7 +291,7 @@ export function Header() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) return;
-    const idleHandle = runOnIdle(updatePill, { timeout: 1500 });
+    const idleHandle = runOnIdle(() => updatePill(), { timeout: 1500 });
     return () => cancelIdle(idleHandle);
   }, [location.pathname]);
 

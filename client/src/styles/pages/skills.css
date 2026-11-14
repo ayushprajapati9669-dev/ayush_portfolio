@@ -480,9 +480,9 @@
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.72rem !important;
   font-weight: 600 !important;
-  color: #d4af37 !important;
-  background: rgba(212, 175, 55, 0.08) !important;
-  border: 1px solid rgba(212, 175, 55, 0.25) !important;
+  color: var(--c, #38bdf8) !important;
+  background: color-mix(in srgb, var(--c, #38bdf8) 12%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--c, #38bdf8) 30%, transparent) !important;
   border-radius: 9999px !important;
   padding: 1px 9px !important;
 }
@@ -536,14 +536,14 @@
 .flow-pill:hover,
 .flow-pill.on {
   transform: translateY(-2px);
-  border-color: var(--c, #e8c547);
-  box-shadow: 0 4px 14px -3px var(--c, #e8c547), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  border-color: var(--c, #38bdf8);
+  box-shadow: 0 4px 14px -3px var(--c, #38bdf8), 0 0 0 1px rgba(255, 255, 255, 0.06);
   background: #1f1f2a;
   color: #ffffff;
 }
 
 .flow-pill:focus-visible {
-  outline: 2px solid #e8c547;
+  outline: 2px solid var(--c, #38bdf8);
   outline-offset: 3px;
 }
 

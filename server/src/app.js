@@ -44,6 +44,11 @@ function injectSocialOpenGraph(html, { title, description, image, url }) {
     modified = modified.replace(/<title>.*<\/title>/i, `<title>${safeTitle}</title>`);
   }
 
+  // Strip conflicting static meta tags before injecting dynamic CMS values
+  // Targets only the specific OpenGraph, Twitter, and description tags being dynamically supplied
+  const conflictingMetaRegex = /<meta\s+[^>]*?(?:property=["']og:(?:title|description|image|url|type)["']|name=["'](?:twitter:(?:card|title|description|image)|description)["'])[^>]*?\/?>\s*/gi;
+  modified = modified.replace(conflictingMetaRegex, '');
+
   const ogTags = [
     `<meta property="og:title" content="${safeTitle}" />`,
     `<meta property="og:description" content="${safeDesc}" />`,
@@ -140,9 +145,10 @@ function createPortfolioServer(customOptions = {}) {
             const isCrawler = CRAWLER_REGEX.test(userAgent);
 
             if (isCrawler) {
-              let title = 'Ayush Prajapati | Full-Stack & Systems Engineer';
-              let description = 'Portfolio of Ayush Prajapati: Full-Stack Developer specializing in MERN, Cloud & AI Systems.';
-              let image = '/images/ayush-hero-portrait.jpg';
+              const liveSettings = typeof store.getPublicSettings === 'function' ? (store.getPublicSettings() || {}) : {};
+              let title = liveSettings.seoTitle || liveSettings.ogTitle || liveSettings.siteTitle || 'Ayush Prajapati | Full-Stack & Systems Engineer';
+              let description = liveSettings.seoDescription || liveSettings.ogDescription || 'Portfolio of Ayush Prajapati: Full-Stack Developer specializing in MERN, Cloud & AI Systems.';
+              let image = liveSettings.ogImage || '/images/ayush-hero-portrait.jpg';
 
               if (pathname.startsWith('/projects/')) {
                 const slug = pathname.replace(/^\/projects\//, '').split('/')[0];

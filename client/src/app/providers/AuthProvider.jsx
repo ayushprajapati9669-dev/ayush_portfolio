@@ -77,6 +77,18 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const recoverAdminPassword = useCallback(async ({ usernameOrEmail, recoveryKey, newPassword }) => {
+    try {
+      const res = await apiRequest('/api/auth/reset-password', {
+        method: 'POST',
+        body: { usernameOrEmail, recoveryKey, newPassword }
+      });
+      return { ok: true, message: res?.message || 'Password reset successfully!' };
+    } catch (err) {
+      return { ok: false, error: err.message || 'Failed to reset password.' };
+    }
+  }, []);
+
   const checkCurrentPassword = useCallback(async () => Boolean(session), [session]);
 
   return (
@@ -86,6 +98,7 @@ export function AuthProvider({ children }) {
         loginAdmin,
         logoutAdmin,
         resetAdminPassword,
+        recoverAdminPassword,
         checkCurrentPassword
       }}
     >

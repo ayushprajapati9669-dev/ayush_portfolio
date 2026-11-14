@@ -106,7 +106,7 @@ async function handleAdminRoutes(req, res, pathname, config, adminController) {
     adminController.getSettings(req, res);
     return true;
   }
-  if (req.method === 'PUT' && pathname === '/api/admin/settings') {
+  if ((req.method === 'PUT' || req.method === 'POST') && pathname === '/api/admin/settings') {
     await adminController.updateSettings(req, res);
     return true;
   }

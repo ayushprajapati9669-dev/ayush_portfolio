@@ -9,14 +9,20 @@ import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { itemListSchema } from '../../utils/seo';
 
+export const isCanonicalPublishedCertificate = (c) => {
+  if (!c || typeof c !== 'object') return false;
+  if (typeof c.id === 'string' && /^cert[1-5]$/i.test(c.id)) return false;
+  if (c.published !== true) return false;
+  const status = String(c.status || '').trim().toLowerCase();
+  return ['verified', 'accredited', 'published'].includes(status);
+};
+
 export function CertificatesPage() {
   const { appState } = usePortfolio();
   const ui = appState.uiLabels || {};
 
-  // Public certificates must come only from published CMS data (zero fake fallbacks)
-  const cmsCerts = (appState.certificates || []).filter(
-    (c) => c && c.status !== 'draft' && c.published !== false
-  );
+  // Public certificates must come only from verified, accredited, published CMS data (zero fake fallbacks or dummy data)
+  const cmsCerts = (appState.certificates || []).filter(isCanonicalPublishedCertificate);
   const certList = cmsCerts;
 
   const containerRef = useRef(null);
@@ -263,10 +269,10 @@ export function CertificatesPage() {
             <i className="fa-solid fa-award" />
           </div>
           <h3 className="font-display text-xl sm:text-2xl font-bold text-white mb-2">
-            Accreditations Updating
+            Accreditations in Progress
           </h3>
           <p className="font-sans text-sm sm:text-base text-slate-400 leading-relaxed max-w-md mx-auto">
-            Professional certifications and verified technical credentials are currently being curated and will appear here once published.
+            Verified course completions and technical accreditations will appear here once published.
           </p>
         </div>
       ) : (

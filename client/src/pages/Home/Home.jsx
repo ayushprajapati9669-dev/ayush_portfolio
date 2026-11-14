@@ -69,14 +69,11 @@ export function HomePage() {
   const { appState, openResumeModal, showToast } = usePortfolio();
   const lenis = useSmoothScroll();
   const navigate = useNavigate();
+  const p = appState.profile || {};
+  const s = appState.settings || {};
   const [highlightedProjectId, setHighlightedProjectId] = useState(null);
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [shouldRenderBelowFold, setShouldRenderBelowFold] = useState(() => {
-    if (typeof window !== 'undefined' && (window.location.hash || window.scrollY > 10 || window.__earlyUserInteraction)) {
-      return true;
-    }
-    return false;
-  });
+  const [shouldRenderBelowFold, setShouldRenderBelowFold] = useState(true);
 
   useEffect(() => {
     if (shouldRenderBelowFold) return;
@@ -184,7 +181,6 @@ export function HomePage() {
     };
   }, []);
 
-  const p = appState.profile || {};
   const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
   const heroPortraitUrl =
     (p.portrait?.url && !isLegacyCeiling(p.portrait.url))
@@ -217,7 +213,13 @@ export function HomePage() {
   const showcaseProjects = (uniqueProjects.length >= 3 ? uniqueProjects : displayProjects).slice(0, 3);
   const allSkillItems = (appState.skills || []).flatMap((g) => g.items || []);
   const certificates = (appState.certificates || []).filter(
-    (c) => c && c.status !== 'draft' && c.published !== false
+    (c) =>
+      c &&
+      typeof c === 'object' &&
+      c.id &&
+      !/^cert[1-5]$/i.test(String(c.id)) &&
+      c.published === true &&
+      ['verified', 'accredited', 'published'].includes(String(c.status || '').toLowerCase())
   );
 
   const goTo = (route) => {
@@ -419,8 +421,8 @@ export function HomePage() {
   return (
     <div ref={containerRef} className="relative overflow-hidden">
       <SEO
-        title="Ayush Prajapati | Full-Stack Developer & Software Engineer"
-        description={p.headline || p.heroDescription || 'Full-Stack Developer crafting high-performance web products, scalable backend systems, and interactive architectures.'}
+        title={s.seoTitle || s.siteTitle || "Ayush Prajapati | Full-Stack Developer & Software Engineer"}
+        description={s.seoDescription || p.headline || p.heroDescription || 'Full-Stack Developer crafting high-performance web products, scalable backend systems, and interactive architectures.'}
         schema={[personSchema(p), websiteSchema(p)]}
       />
 
@@ -438,12 +440,17 @@ export function HomePage() {
 
         {/* Hero Right-Side Portrait with Scroll-Reactive Particle Dissolve Engine (Razorpay AI Builders Inspired) */}
         <div ref={heroPhotoBoxRef} className="hero-photo-container">
+          <div className="hero-photo-ambient-aura" aria-hidden="true" />
           <ScrollReactivePortraitParticles
             imageUrl={heroPortraitUrl}
             alt={p.portrait?.alt || p.name || 'Ayush Prajapati'}
             imgClassName={`hero-photo-img ${isPhotoWide ? 'wide' : ''}`}
             onPhotoFit={checkPhotoFit}
           />
+          <div className="hero-photo-status-badge" aria-hidden="true">
+            <span className="hero-photo-pulse-dot" />
+            <span className="hero-photo-badge-text">{p.availabilityLabel ? (p.availabilityLabel.length > 25 ? 'Available for hire' : p.availabilityLabel) : 'Available for hire'}</span>
+          </div>
         </div>
 
         {/* Top Eyebrow Meta Row */}

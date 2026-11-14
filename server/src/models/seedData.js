@@ -63,9 +63,9 @@ const INITIAL_SEED_DATA = {
     },
     portrait: {
       url: "/uploads/portrait_transparent.png",
-      alt: "Temporary stand-in studio portrait used to demonstrate real-time pixel-to-particle dispersion (not a photograph of Ayush Prajapati)",
-      caption: "Temporary Studio Stand-In · Replaceable in Admin CMS",
-      isTemporaryStandIn: true,
+      alt: "Ayush Prajapati — Full-Stack Developer",
+      caption: "Ayush Prajapati · B.Tech CSE (2028)",
+      isTemporaryStandIn: false,
       scale: 1.0,
       offsetX: 0,
       offsetY: 0,
@@ -149,7 +149,7 @@ const INITIAL_SEED_DATA = {
     siteTitle: "Ayush Prajapati — Developer Portfolio",
     seoDescription: "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",
     particlesEnabled: true,
-    contactNote: "Messages submitted through the contact form are validated on the server and persisted directly to the portfolio database for review in the Admin CMS. No third-party SMTP relay is fabricated; a direct mailto fallback is also available.",
+    contactNote: "Feel free to send a message here or connect directly via email or LinkedIn. I usually respond within 24 hours.",
     updatedAt: "2026-10-17T16:00:00.000Z"
   },
   users: []

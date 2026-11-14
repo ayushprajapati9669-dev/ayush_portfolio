@@ -3,10 +3,12 @@ import { runOnIdle, cancelIdle } from '../utils/idle';
 
 export function useScrollAnimation(dependencyKey) {
   useEffect(() => {
-    // HomePage has its own optimized GSAP context and idle ScrollTriggers.
+    // HomePage and Admin dashboard have their own optimized GSAP contexts and entrance animations.
     if (
       !dependencyKey ||
       dependencyKey === '/' ||
+      dependencyKey.startsWith('/admin') ||
+      dependencyKey.startsWith('/login') ||
       (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
     ) {
       return;

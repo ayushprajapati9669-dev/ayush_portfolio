@@ -418,6 +418,8 @@ export function AdminCertificates({
       ...form,
       year: form.issueDate,
       downloadUrl: form.downloadUrl || form.imageUrl,
+      status: form.status || 'Verified',
+      published: form.status !== 'In Review' && form.status !== 'draft',
       updatedAt: new Date().toISOString()
     };
 

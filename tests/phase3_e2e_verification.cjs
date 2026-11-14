@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const http = require('http');
 
 const API_BASE = 'http://127.0.0.1:6000';
-const CLIENT_BASE = 'http://localhost:4173';
+const CLIENT_BASE = process.env.CLIENT_BASE || 'http://localhost:5174';
 
 function apiCall(endpoint, method = 'GET', data = null, token = null, cookie = null, csrf = null) {
   return new Promise((resolve, reject) => {
@@ -51,7 +51,7 @@ async function runPhase3Verification() {
   // Step 1: Login as Admin
   console.log('[Step 1] Authenticating as Admin...');
   const loginRes = await apiCall('/api/auth/login', 'POST', {
-    username: 'ayushprajapati9669@gmail.com',
+    username: 'ayush',
     password: 'Ayush7162@'
   });
   if (loginRes.status !== 200 || !loginRes.data?.token) {
@@ -158,12 +158,18 @@ async function runPhase3Verification() {
   await new Promise((r) => setTimeout(r, 600));
 
   const modalState = await page.evaluate(() => {
+    const overlay = document.querySelector('.modal-overlay');
+    if (overlay && typeof overlay.getAnimations === 'function') {
+      overlay.getAnimations().forEach((a) => {
+        try { a.finish(); } catch (_e) {}
+      });
+    }
     const modal = document.querySelector('.modal-content') || document.querySelector('[role="dialog"]');
     const modalImg = modal ? modal.querySelector('img') : null;
     return {
       hasModal: Boolean(modal),
       imgSrc: modalImg ? modalImg.getAttribute('src') : null,
-      modalText: modal ? modal.innerText : ''
+      modalText: modal ? (modal.innerText || modal.textContent) : ''
     };
   });
 
@@ -205,6 +211,19 @@ async function runPhase3Verification() {
   );
   const draftCertId = draftCertRes.data?.certificate?.id;
 
+  // Verify server-side public API endpoints strictly exclude draft certificate
+  const publicCertsApi = await apiCall('/api/public/certificates', 'GET');
+  const pubCertsList = publicCertsApi.data?.certificates || [];
+  if (pubCertsList.some((c) => c.id === draftCertId || c.title === 'DRAFT_SECRET_CERTIFICATE')) {
+    throw new Error('FAIL: /api/public/certificates leaked draft certificate over HTTP!');
+  }
+  const bootstrapApi = await apiCall('/api/public/bootstrap', 'GET');
+  const bootstrapCertsList = bootstrapApi.data?.certificates || [];
+  if (bootstrapCertsList.some((c) => c.id === draftCertId || c.title === 'DRAFT_SECRET_CERTIFICATE')) {
+    throw new Error('FAIL: /api/public/bootstrap leaked draft certificate over HTTP!');
+  }
+  console.log('     Server-side API verification: draft excluded from /api/public/certificates and /api/public/bootstrap');
+
   // Refresh home page
   await page.goto(`${CLIENT_BASE}/`, { waitUntil: 'networkidle2' });
   const countAfterDraft = await page.evaluate(() => {
@@ -219,7 +238,7 @@ async function runPhase3Verification() {
 
   // Clean up draft cert
   await apiCall(`/api/admin/certificates/${draftCertId}`, 'DELETE', null, token, cookieHeader, csrfToken);
-  console.log('  ✓ PASS [Test 1.3]: Public home page counter strictly excludes unpublished draft certificates.\n');
+  console.log('  ✓ PASS [Test 1.3]: Public home page counter & server APIs strictly exclude unpublished draft certificates.\n');
 
   // --------------------------------------------------------------------------
   // TEST SUITE 2: Dynamic Project Detail Route (/projects/:slug)
@@ -524,12 +543,14 @@ async function runPhase3Verification() {
     console.log('  ✓ PASS [Test 2.11]: Command Palette correctly links directly to /projects/:slug.\n');
   }
 
-  // Test 2.6: Console errors check
-  console.log('  -> Test 2.6: Checking browser console errors...');
+  // Test 2.12: Console errors check
+  console.log('  -> Test 2.12: Checking browser console errors across all test scenarios...');
   console.log('     Critical console errors detected:', consoleErrors.length);
   if (consoleErrors.length > 0) {
     console.warn('     Warnings/Errors:', consoleErrors);
+    throw new Error(`FAIL: ${consoleErrors.length} critical console errors detected during testing!`);
   }
+  console.log('  ✓ PASS [Test 2.12]: Zero console errors detected across all public routes & modal interactions.\n');
 
   await browser.close();
 
