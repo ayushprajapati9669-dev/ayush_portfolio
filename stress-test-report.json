@@ -18,7 +18,7 @@
       "canvasH": 432,
       "imgW": 324,
       "imgH": 432,
-      "nonZeroPixels": 3540,
+      "nonZeroPixels": 3535,
       "isBlank": false
     },
     {
@@ -28,7 +28,7 @@
       "canvasH": 432,
       "imgW": 324,
       "imgH": 432,
-      "nonZeroPixels": 3716,
+      "nonZeroPixels": 3660,
       "isBlank": false
     },
     {
@@ -38,7 +38,7 @@
       "canvasH": 432,
       "imgW": 324,
       "imgH": 432,
-      "nonZeroPixels": 3687,
+      "nonZeroPixels": 3686,
       "isBlank": false
     },
     {
@@ -48,7 +48,7 @@
       "canvasH": 432,
       "imgW": 324,
       "imgH": 432,
-      "nonZeroPixels": 3832,
+      "nonZeroPixels": 3683,
       "isBlank": false
     }
   ],
@@ -60,7 +60,7 @@
     "imgH": 432,
     "wrapperW": 324,
     "wrapperH": 432,
-    "nonZeroPixels": 3755
+    "nonZeroPixels": 3717
   },
   "desktop1200State": {
     "canvasW": 574,
@@ -69,6 +69,6 @@
     "imgH": 765,
     "containerW": 624,
     "showcaseW": 640,
-    "nonZeroPixels": 20752
+    "nonZeroPixels": 20794
   }
 }

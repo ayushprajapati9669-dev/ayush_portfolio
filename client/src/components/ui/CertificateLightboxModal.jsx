@@ -86,14 +86,14 @@ export function CertificateLightboxModal() {
     },
     {
       id: 'cert4',
-      title: 'AWS Cloud Practitioner',
-      issuer: 'Amazon Web Services',
+      title: 'Delta Full-Stack Web Development',
+      issuer: 'Apna College',
       year: '2024',
       issueDate: '2024',
-      category: 'Cloud Computing',
-      imageUrl: 'https://images.unsplash.com/photo-1542744094-24638ea0b3b8?q=80&w=1600&auto=format&fit=crop',
-      skillsCovered: 'CLOUD COMPUTING, AWS EC2, S3, LAMBDA, IAM',
-      downloadUrl: 'https://images.unsplash.com/photo-1542744094-24638ea0b3b8?q=80&w=1600&auto=format&fit=crop'
+      category: 'Full-Stack Development',
+      imageUrl: '/images/apna-college-delta-certificate.webp',
+      skillsCovered: 'FULL-STACK MERN, NODE.JS, EXPRESS, MONGODB, REACT',
+      downloadUrl: '/images/apna-college-delta-certificate.webp'
     },
     {
       id: 'cert5',
@@ -324,16 +324,29 @@ export function CertificateLightboxModal() {
             )}
 
             {/* Download */}
-            <a
-              href={imgSrc}
-              target="_blank"
-              rel="noreferrer"
-              download={`${(cert.title || 'Certificate').replace(/[^a-z0-9]+/gi, '_')}.jpg`}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-yellow-400 to-emerald-400 px-3.5 py-1.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-500/20"
-            >
-              <i className="fa-solid fa-arrow-down" />
-              <span>Download</span>
-            </a>
+            {Boolean(cert.downloadUrl || imgSrc) ? (
+              <a
+                href={cert.downloadUrl || imgSrc}
+                target="_blank"
+                rel="noreferrer"
+                download={`${(cert.title || 'Certificate').replace(/[^a-z0-9]+/gi, '_')}.jpg`}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-yellow-400 to-emerald-400 px-3.5 py-1.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-500/20"
+              >
+                <i className="fa-solid fa-arrow-down" />
+                <span>Download</span>
+              </a>
+            ) : (
+              <button
+                type="button"
+                disabled
+                aria-disabled="true"
+                title="Download unavailable: no certificate file attached"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-white/5 border border-white/10 px-3.5 py-1.5 font-mono text-xs font-medium text-slate-500 cursor-not-allowed opacity-50"
+              >
+                <i className="fa-solid fa-arrow-down" />
+                <span>Download</span>
+              </button>
+            )}
 
             {/* Close Button */}
             <button

@@ -95,12 +95,18 @@ export function AboutPage() {
     return () => ctx.revert();
   }, []);
 
+  const fullName = (p.displayName || p.name || 'Ayush Prajapati').trim();
+  const nameParts = fullName ? fullName.split(/\s+/) : ['Ayush', 'Prajapati'];
+  const firstWord = nameParts[0] || 'Ayush';
+  const secondWord = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
   // 3D Cinzel Infinite Loop Reveal + Mouse Parallax Tilt for Name Heading
   useEffect(() => {
-    function splitTextIntoChars(element) {
+    function splitTextIntoChars(element, textContent) {
       if (!element) return [];
-      const text = element.innerText;
+      const text = textContent !== undefined ? textContent : element.innerText;
       element.innerHTML = '';
+      if (!text) return [];
       const wordSpan = document.createElement('span');
       wordSpan.style.display = 'inline-block';
       wordSpan.style.overflow = 'hidden';
@@ -117,12 +123,15 @@ export function AboutPage() {
 
     const word1El = document.getElementById('word1');
     const word2El = document.getElementById('word2');
-    if (!word1El || !word2El) return;
+    if (!word1El) return undefined;
 
-    const charsAyush = splitTextIntoChars(word1El);
-    const charsPrajapati = splitTextIntoChars(word2El);
+    const charsAyush = splitTextIntoChars(word1El, firstWord);
+    const charsPrajapati = word2El && secondWord ? splitTextIntoChars(word2El, secondWord) : [];
 
-    gsap.set([charsAyush, charsPrajapati], { y: '100%', opacity: 0, rotateX: -90 });
+    const animatableChars = [...charsAyush, ...charsPrajapati];
+    if (animatableChars.length > 0) {
+      gsap.set(animatableChars, { y: '100%', opacity: 0, rotateX: -90 });
+    }
 
     const tl = gsap.timeline({
       delay: 0.2,
@@ -130,15 +139,19 @@ export function AboutPage() {
       repeatDelay: 2.5
     });
 
-    tl.to(charsAyush, {
-      y: '0%',
-      opacity: 1,
-      rotateX: 0,
-      duration: 1.2,
-      stagger: 0.05,
-      ease: 'power4.out'
-    })
-      .to(
+    if (charsAyush.length > 0) {
+      tl.to(charsAyush, {
+        y: '0%',
+        opacity: 1,
+        rotateX: 0,
+        duration: 1.2,
+        stagger: 0.05,
+        ease: 'power4.out'
+      });
+    }
+
+    if (charsPrajapati && charsPrajapati.length > 0) {
+      tl.to(
         charsPrajapati,
         {
           y: '0%',
@@ -149,8 +162,12 @@ export function AboutPage() {
           ease: 'power4.out'
         },
         '-=1.0'
-      )
-      .to([charsAyush, charsPrajapati], { duration: 1.5 });
+      );
+    }
+
+    if (animatableChars.length > 0) {
+      tl.to(animatableChars, { duration: 1.5 });
+    }
 
     const nameHeading = document.getElementById('mainName');
     const handleMouseMove = (e) => {
@@ -169,9 +186,13 @@ export function AboutPage() {
 
     return () => {
       tl.kill();
+      gsap.killTweensOf([nameHeading, ...animatableChars]);
       document.removeEventListener('mousemove', handleMouseMove);
+      if (word1El) word1El.textContent = firstWord;
+      if (word2El) word2El.textContent = secondWord;
+      if (nameHeading) gsap.set(nameHeading, { clearProps: 'transform,rotationX,rotationY' });
     };
-  }, []);
+  }, [fullName, firstWord, secondWord]);
 
   const githubUrl = p.socialLinks?.github || 'https://github.com/ayushprajapati9669-dev';
   const linkedinUrl = p.socialLinks?.linkedin || 'https://www.linkedin.com/in/ayush-prajapati-b9042424a/';
@@ -196,8 +217,12 @@ export function AboutPage() {
           {p.aboutEyebrow || '01 · BACKGROUND & PHILOSOPHY'}
         </ScrollWriteText>
         <h1 className="name-heading" id="mainName">
-          <span className="word-wrapper" id="word1">Ayush</span>
-          <span className="word-wrapper gold-text" id="word2">Prajapati</span>
+          <span className="word-wrapper" id="word1">{firstWord}</span>
+          {secondWord ? (
+            <span className="word-wrapper gold-text" id="word2">{secondWord}</span>
+          ) : (
+            <span className="word-wrapper gold-text" id="word2" style={{ display: 'none' }} />
+          )}
         </h1>
         <div className="page-contact-info">
           <a

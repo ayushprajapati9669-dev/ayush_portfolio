@@ -50,12 +50,7 @@ export function AuthProvider({ children }) {
       // Ignore storage error
     }
     updateAppState((prev) => ({
-      ...prev,
-      adminConfig: {
-        ...prev.adminConfig,
-        failedAttempts: 0,
-        lockoutUntil: 0
-      }
+      ...prev
     }), csrfToken);
     showToast('Welcome back, Ayush! Signed in to Admin CMS.');
     return { ok: true };

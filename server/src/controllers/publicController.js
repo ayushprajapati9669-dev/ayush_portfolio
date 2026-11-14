@@ -16,13 +16,36 @@ function createPublicController({ store, contactLimiter }) {
     },
 
     getBootstrap(req, res) {
+      const SAFE_PUBLIC_SETTINGS_KEYS = [
+        'siteTitle',
+        'seoDescription',
+        'particlesEnabled',
+        'contactNote',
+        'maintenanceMode',
+        'updatedAt'
+      ];
+      let publicSettings = {};
+      try {
+        if (typeof store.getPublicSettings === 'function') {
+          const raw = store.getPublicSettings() || {};
+          for (const key of SAFE_PUBLIC_SETTINGS_KEYS) {
+            if (raw[key] !== undefined) {
+              publicSettings[key] = raw[key];
+            }
+          }
+        }
+      } catch (_err) {
+        // Fail closed safely: return empty settings without logging or exposing secrets
+        publicSettings = {};
+      }
+
       return sendJson(res, 200, {
         profile: store.getProfile(),
         projects: store.getPublicProjects(),
         skills: store.getSkills(),
         certificates: store.getCertificates(),
         resumes: store.getResumes ? store.getResumes() : (store.state.resumes || []),
-        settings: store.getSettings(),
+        settings: publicSettings,
         uiLabels: store.state.uiLabels || {}
       });
     },

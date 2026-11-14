@@ -524,6 +524,25 @@ class PortfolioDataStore {
     return JSON.parse(JSON.stringify(this.state.settings || {}));
   }
 
+  getPublicSettings() {
+    const raw = this.state.settings || {};
+    const PUBLIC_SETTINGS_ALLOWLIST = [
+      'siteTitle',
+      'seoDescription',
+      'particlesEnabled',
+      'contactNote',
+      'maintenanceMode',
+      'updatedAt'
+    ];
+    const filtered = {};
+    for (const key of PUBLIC_SETTINGS_ALLOWLIST) {
+      if (raw[key] !== undefined) {
+        filtered[key] = raw[key];
+      }
+    }
+    return filtered;
+  }
+
   updateSettings(patch) {
     this.state.settings = {
       ...this.state.settings,

@@ -23,10 +23,10 @@ export function CertificateCard({
       : indexNum === 3
       ? 'https://images.unsplash.com/photo-1555529733-0e670560f7e1?q=80&w=1000&auto=format&fit=crop'
       : indexNum === 4
-      ? 'https://images.unsplash.com/photo-1542744094-24638ea0b3b8?q=80&w=1000&auto=format&fit=crop'
+      ? '/images/apna-college-delta-certificate.webp'
       : 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1000&auto=format&fit=crop');
 
-  const issuer = cert.issuer || 'Code With Harry';
+  const issuer = cert.issuer || (indexNum === 4 ? 'Apna College' : 'Code With Harry');
   const year = cert.issueDate || cert.year || '2025';
   const skills = cert.skillsCovered || cert.skills || 'FULL-STACK, REACT, WEB ENGINEERING';
 
@@ -133,7 +133,7 @@ export function CertificateCard({
           </div>
         </div>
 
-        <h3 className="cert-title">{cert.title}</h3>
+        <h3 className="cert-title">{cert.title || 'Certificate'}</h3>
         <div className="cert-desc">Skills: {skills}</div>
 
         <div className="cert-actions">

@@ -1,9 +1,36 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { getDefaultPortfolioState, STORAGE_KEY } from '../../services/defaultPortfolioState';
 import { apiRequest, syncStateToMongoBackend } from '../../services/api';
 import { runOnIdle, cancelIdle } from '../../utils/idle';
 
 const PortfolioContext = createContext(null);
+
+function isDeepEqual(a, b) {
+  if (a === b) return true;
+  if (typeof a === 'number' && typeof b === 'number' && Number.isNaN(a) && Number.isNaN(b)) return true;
+  if (a == null || b == null) return false;
+  if (typeof a !== 'object' || typeof b !== 'object') return false;
+
+  if (Array.isArray(a)) {
+    if (!Array.isArray(b) || a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!isDeepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+  if (Array.isArray(b)) return false;
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+
+  for (let i = 0; i < keysA.length; i++) {
+    const key = keysA[i];
+    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+    if (!isDeepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
 
 export function ThemeProvider({ children }) {
   const [appState, setAppState] = useState(() => {
@@ -32,6 +59,12 @@ export function ThemeProvider({ children }) {
           }
         });
       }
+      if (parsed.adminConfig) {
+        delete parsed.adminConfig;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+        } catch (_e) {}
+      }
       return {
         ...defaults,
         ...parsed,
@@ -39,12 +72,7 @@ export function ThemeProvider({ children }) {
         skills: Array.isArray(parsed.skills) && parsed.skills.length > 0 ? parsed.skills : defaults.skills,
         certificates: Array.isArray(parsed.certificates) ? parsed.certificates : defaults.certificates,
         uiLabels: { ...defaults.uiLabels, ...(parsed.uiLabels || {}) },
-        settings: { ...defaults.settings, ...(parsed.settings || {}) },
-        adminConfig: {
-          ...defaults.adminConfig,
-          ...(parsed.adminConfig || {}),
-          passwordHash: parsed.adminConfig?.passwordHash || defaults.adminConfig.passwordHash
-        }
+        settings: { ...defaults.settings, ...(parsed.settings || {}) }
       };
     } catch (_err) {
       return defaults;
@@ -55,6 +83,7 @@ export function ThemeProvider({ children }) {
   const [confirmState, setConfirmState] = useState({ open: false, title: '', desc: '', onConfirm: null });
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
   const [activeCertLightbox, setActiveCertLightbox] = useState(null);
+  const latestRequestIdRef = useRef(0);
 
   const showToast = useCallback((msg, type = null) => {
     if (!msg) {
@@ -104,32 +133,60 @@ export function ThemeProvider({ children }) {
 
   // Primary loader & revalidator from MongoDB Atlas
   const refreshFromBackend = useCallback(() => {
+    const requestId = ++latestRequestIdRef.current;
     return apiRequest('/api/public/bootstrap')
       .then((res) => {
+        // Drop stale response if a newer revalidation or local mutation was initiated
+        if (requestId !== latestRequestIdRef.current) {
+          return null;
+        }
+
         if (res && res.profile) {
           setAppState((prev) => {
+            // Re-check inside updater callback to guard against interleaved updates
+            if (requestId !== latestRequestIdRef.current) {
+              return prev;
+            }
+
+            // Published projects come from backend res.projects
+            // Preserve local non-published projects (e.g. drafts/trash in admin) unless now published
+            const publishedIds = new Set((res.projects || []).map((p) => p.id));
+            const nonPublishedPrev = (prev.projects || []).filter(
+              (p) => p && p.status && p.status !== 'published' && !publishedIds.has(p.id)
+            );
+            const resolvedProjects = Array.isArray(res.projects)
+              ? [...res.projects, ...nonPublishedPrev]
+              : (prev.projects || []);
+
             const next = {
               ...prev,
               profile: { ...prev.profile, ...res.profile },
-              projects: Array.isArray(res.projects) ? res.projects : [],
-              skills: Array.isArray(res.skills) && res.skills.length > 0 ? res.skills : prev.skills,
+              projects: resolvedProjects,
+              skills: Array.isArray(res.skills) ? res.skills : (prev.skills || []),
               certificates: Array.isArray(res.certificates) ? res.certificates : [],
               resumes: Array.isArray(res.resumes) ? res.resumes : (prev.resumes || []),
               settings: { ...prev.settings, ...(res.settings || {}) },
               uiLabels: { ...prev.uiLabels, ...(res.uiLabels || {}) }
             };
+
+            // Avoid unnecessary re-renders if state hasn't meaningfully changed
+            const isUnchanged =
+              isDeepEqual(prev.profile, next.profile) &&
+              isDeepEqual(prev.projects, next.projects) &&
+              isDeepEqual(prev.skills, next.skills) &&
+              isDeepEqual(prev.certificates, next.certificates) &&
+              isDeepEqual(prev.resumes, next.resumes) &&
+              isDeepEqual(prev.settings, next.settings) &&
+              isDeepEqual(prev.uiLabels, next.uiLabels);
+
+            if (isUnchanged) {
+              return prev;
+            }
+
             try {
               localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
             } catch (_e) {}
-            // Avoid unnecessary re-renders if state hasn't meaningfully changed
-            if (
-              prev.profile?.updatedAt === next.profile?.updatedAt &&
-              (prev.projects || []).length === next.projects.length &&
-              (prev.skills || []).length === next.skills.length &&
-              (prev.certificates || []).length === next.certificates.length
-            ) {
-              return prev;
-            }
+
             return next;
           });
         }
@@ -206,6 +263,8 @@ export function ThemeProvider({ children }) {
   }, [refreshFromBackend]);
 
   const updateAppState = useCallback((updater, sessionToken = null) => {
+    // Invalidate any in-flight revalidation requests so stale responses cannot overwrite this new state
+    latestRequestIdRef.current++;
     setAppState((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
       try {

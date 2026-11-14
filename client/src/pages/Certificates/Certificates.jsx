@@ -42,13 +42,13 @@ const REFERENCE_CERTIFICATES = [
   },
   {
     id: 'cert4',
-    title: 'AWS Cloud Practitioner',
-    issuer: 'Amazon Web Services',
+    title: 'Delta Full-Stack Web Development',
+    issuer: 'Apna College',
     year: '2024',
     issueDate: '2024',
-    imageUrl: 'https://images.unsplash.com/photo-1542744094-24638ea0b3b8?q=80&w=1600&auto=format&fit=crop',
-    skillsCovered: 'CLOUD COMPUTING, AWS EC2, S3, LAMBDA, IAM',
-    downloadUrl: 'https://images.unsplash.com/photo-1542744094-24638ea0b3b8?q=80&w=1600&auto=format&fit=crop'
+    imageUrl: '/images/apna-college-delta-certificate.webp',
+    skillsCovered: 'FULL-STACK MERN, NODE.JS, EXPRESS, MONGODB, REACT',
+    downloadUrl: '/images/apna-college-delta-certificate.webp'
   },
   {
     id: 'cert5',
@@ -358,15 +358,27 @@ export function CertificatesPage() {
                         <i className="fa-solid fa-rotate-left" />
                       </button>
                     </div>
-                    <a
-                      href={activeCert.downloadUrl || activeCert.imageUrl}
-                      download
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-modal"
-                    >
-                      <i className="fa-solid fa-download" /> Download
-                    </a>
+                    {Boolean(activeCert.downloadUrl || activeCert.imageUrl) ? (
+                      <a
+                        href={activeCert.downloadUrl || activeCert.imageUrl}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-modal"
+                      >
+                        <i className="fa-solid fa-download" /> Download
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled
+                        aria-disabled="true"
+                        className="btn-modal opacity-40 cursor-not-allowed"
+                        title="Download unavailable: no certificate file attached"
+                      >
+                        <i className="fa-solid fa-download" /> Download
+                      </button>
+                    )}
                     <button type="button" className="btn-modal-close" onClick={closeModal}>
                       <i className="fa-solid fa-xmark" /> Close
                     </button>

@@ -408,18 +408,8 @@ export function getDefaultPortfolioState() {
       siteTitle: 'Ayush Prajapati — Full-Stack Developer Portfolio',
       seoDescription: 'Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB.',
       particlesEnabled: true,
-      mongodbUri: 'mongodb://127.0.0.1:27017/ayush_portfolio',
       cloudinaryCloudName: '',
       cloudinaryUploadPreset: ''
-    },
-    adminConfig: {
-      username: 'ayushprajapati9669@gmail.com',
-      passwordHash: 'sha256$6811db276104288014ad87e84e6320c6ecbc3fd6e315da2c44dbd1efbf573412',
-      passwordFnvFallback: 'fnv$a15227e0',
-      recoveryEmail: 'ayushprajapati9669@gmail.com',
-      recoveryPhone: '9669802554',
-      failedAttempts: 0,
-      lockoutUntil: 0
     }
   };
   return cachedDefaultState;

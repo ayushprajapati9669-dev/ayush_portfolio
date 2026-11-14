@@ -469,18 +469,39 @@ export function HomePage() {
 
           {/* Hero Editorial Headline matching Image 1 & index (14).html */}
           <h1 className="hero-modern-title hero-editorial-title">
-            <span className="hero-title-line">
-              From <em className="hero-title-accent">blank screen</em>
-            </span>
-            <span className="hero-title-line">
-              to <em className="hero-title-accent">live product.</em>
-            </span>
+            {(!p.headline || /from\s+blank\s+screen/i.test(p.headline)) ? (
+              <>
+                <span className="hero-title-line">
+                  From <em className="hero-title-accent">blank screen</em>
+                </span>
+                <span className="hero-title-line">
+                  to <em className="hero-title-accent">live product.</em>
+                </span>
+              </>
+            ) : (
+              (() => {
+                const cleanHeadline = (p.headline || '').replace(/(?:,\s*|\.\s*|\s+)(?:That’s|That's)[\s\S]*$/i, '').trim();
+                const parts = cleanHeadline.split(/\n+|\.\s+/).filter(Boolean);
+                if (parts.length > 1) {
+                  return parts.map((part, idx) => (
+                    <span key={idx} className="hero-title-line">
+                      {part}{idx === parts.length - 1 && !part.endsWith('.') ? '.' : ''}
+                    </span>
+                  ));
+                }
+                return (
+                  <span className="hero-title-line">
+                    {cleanHeadline}
+                  </span>
+                );
+              })()
+            )}
             <span className="hero-title-name">
               That’s{' '}
               <span className="hero-name-shimmer">
-                <span className="sr-only">{p.name || 'Ayush Prajapati'}</span>
+                <span className="sr-only">{p.displayName || p.name || 'Ayush Prajapati'}</span>
                 <span aria-hidden="true">
-                  {(p.name || 'Ayush Prajapati').split('').map((char, i) => (
+                  {(p.displayName || p.name || 'Ayush Prajapati').split('').map((char, i) => (
                     <span
                       key={i}
                       className={`hero-name-letter${char === ' ' ? ' hero-name-space' : ''}`}
@@ -520,7 +541,7 @@ export function HomePage() {
                 <rect x="14" y="14" width="7" height="7" rx="1" />
               </svg>
             </span>
-            <span>See my <strong>projects</strong></span>
+            <span>{p.primaryCtaText ? p.primaryCtaText : <>See my <strong>projects</strong></>}</span>
           </button>
 
           <button
@@ -541,7 +562,7 @@ export function HomePage() {
                 <polyline points="10 9 9 9 8 9" />
               </svg>
             </span>
-            <span>Download my <strong>resume</strong></span>
+            <span>{p.secondaryCtaText ? p.secondaryCtaText : <>Download my <strong>resume</strong></>}</span>
           </button>
 
           <button

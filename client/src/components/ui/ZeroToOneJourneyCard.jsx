@@ -62,9 +62,10 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
 
   // Normalize milestone list: dynamic > passed items > default
   const milestones = useMemo(() => {
-    const source = dynamicMilestones || items;
-    if (Array.isArray(source) && source.length > 0) {
-      const valid = source
+    const source = dynamicMilestones !== null ? dynamicMilestones : items;
+    // Explicit array provided by CMS/admin: respect it (including empty array [])
+    if (Array.isArray(source)) {
+      return source
         .filter((item) => item && item.published !== false)
         .map((item, idx) => ({
           id: item.id || `ms-${idx}`,
@@ -72,8 +73,8 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
           title: item.title || item.name || 'Milestone',
           desc: stripHtml(item.desc || item.description || item.detail || '')
         }));
-      if (valid.length > 0) return valid;
     }
+    // Only fall back to baseline defaults if source is strictly undefined (unloaded/initial fallback)
     return DEFAULT_MILESTONES;
   }, [dynamicMilestones, items]);
 
@@ -354,86 +355,102 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
 
       {/* Milestones Container with Edge Gradient Masks */}
       <div className="relative z-10">
-        {/* Subtle Fade Edge Masks when overflow is present */}
-        <div
-          className={`pointer-events-none absolute left-0 top-0 bottom-2 w-8 sm:w-12 bg-gradient-to-r from-[rgba(12,13,18,0.95)] to-transparent z-20 rounded-l-2xl transition-opacity duration-300 ${
-            canScrollLeft ? 'opacity-100' : 'opacity-0'
-          }`}
-          aria-hidden="true"
-        />
-        <div
-          className={`pointer-events-none absolute right-0 top-0 bottom-2 w-8 sm:w-12 bg-gradient-to-l from-[rgba(12,13,18,0.95)] to-transparent z-20 rounded-r-2xl transition-opacity duration-300 ${
-            canScrollRight ? 'opacity-100' : 'opacity-0'
-          }`}
-          aria-hidden="true"
-        />
-
-        {/* Horizontally scrollable flex container */}
-        <div
-          ref={scrollContainerRef}
-          className="flex gap-4 sm:gap-6 overflow-x-auto zero-journey-scrollbar pb-2 pt-1 scroll-smooth"
-        >
-          {milestones.map((m, idx) => (
-            <div
-              key={m.id || idx}
-              className="group/m p-5 rounded-2xl transition-all duration-300 bg-white/[0.03] border border-white/10 hover:border-amber-400/40 hover:bg-white/[0.06] hover:-translate-y-1 shadow-lg min-w-[250px] sm:min-w-[260px] max-w-[340px] flex-1 flex-shrink-0"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-mono text-xs sm:text-sm font-bold text-[#e5b869] tracking-wider">
-                  {m.year}
-                </span>
-                <span className="w-2 h-2 rounded-full bg-[#e5b869] shadow-[0_0_8px_#e5b869]" />
-              </div>
-              <h3 className="font-display text-base font-semibold text-white group-hover/m:text-amber-200 transition-colors mb-1.5">
-                {m.title}
-              </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed font-sans font-normal">
-                {m.desc}
-              </p>
+        {milestones.length === 0 ? (
+          <div className="py-12 px-4 text-center flex flex-col items-center justify-center rounded-2xl bg-white/[0.02] border border-white/5 my-2">
+            <div className="w-10 h-10 rounded-full bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-[#e5b869] mb-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80 animate-pulse" />
             </div>
-          ))}
-        </div>
-
-        {/* Custom Luxury Scrollbar: Appears gracefully when content overflows or on smaller screens */}
-        {hasOverflow && (
-          <div className="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-3 sm:gap-4 transition-all duration-300">
-            {/* Label with amber pulsing dot */}
-            <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-zinc-400 select-none">
-              <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24] animate-pulse" />
-              <span className="text-[11px] uppercase tracking-wider text-amber-400/90 font-medium">
-                Scroll Timeline
-              </span>
-            </div>
-
-            {/* Clickable & Draggable Luxury Glass Track */}
-            <div
-              ref={trackRef}
-              onClick={handleTrackClick}
-              className="relative flex-1 h-2 rounded-full bg-white/[0.06] border border-white/10 cursor-pointer overflow-hidden group/track"
-              title="Click or drag to scroll timeline"
-            >
-              {/* Glowing Gold Luxury Thumb */}
-              <div
-                onMouseDown={handleThumbMouseDown}
-                className="absolute top-0 bottom-0 rounded-full cursor-grab active:cursor-grabbing transition-transform duration-75"
-                style={{
-                  left: `${scrollProgress * (100 - thumbWidthPercent)}%`,
-                  width: `${thumbWidthPercent}%`,
-                  background:
-                    'linear-gradient(90deg, rgba(229,184,105,0.7) 0%, #e5b869 50%, #fbbf24 100%)',
-                  boxShadow:
-                    '0 0 12px rgba(229, 184, 105, 0.6), inset 0 1px 0 rgba(255,255,255,0.4)'
-                }}
-              />
-            </div>
-
-            {/* Milestone Position Indicator */}
-            <div className="text-[11px] font-mono text-zinc-400 select-none flex items-center gap-1">
-              <span className="text-amber-300 font-bold">{activeMilestoneIndex}</span>
-              <span>/</span>
-              <span>{milestones.length} Milestones</span>
-            </div>
+            <h3 className="font-display text-base font-semibold text-white/90 mb-1">
+              Career Roadmap in Progress
+            </h3>
+            <p className="text-xs text-zinc-400 font-sans max-w-md leading-relaxed">
+              New engineering milestones and key project highlights are currently being updated.
+            </p>
           </div>
+        ) : (
+          <>
+            {/* Subtle Fade Edge Masks when overflow is present */}
+            <div
+              className={`pointer-events-none absolute left-0 top-0 bottom-2 w-8 sm:w-12 bg-gradient-to-r from-[rgba(12,13,18,0.95)] to-transparent z-20 rounded-l-2xl transition-opacity duration-300 ${
+                canScrollLeft ? 'opacity-100' : 'opacity-0'
+              }`}
+              aria-hidden="true"
+            />
+            <div
+              className={`pointer-events-none absolute right-0 top-0 bottom-2 w-8 sm:w-12 bg-gradient-to-l from-[rgba(12,13,18,0.95)] to-transparent z-20 rounded-r-2xl transition-opacity duration-300 ${
+                canScrollRight ? 'opacity-100' : 'opacity-0'
+              }`}
+              aria-hidden="true"
+            />
+
+            {/* Horizontally scrollable flex container */}
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-4 sm:gap-6 overflow-x-auto zero-journey-scrollbar pb-2 pt-1 scroll-smooth"
+            >
+              {milestones.map((m, idx) => (
+                <div
+                  key={m.id || idx}
+                  className="group/m p-5 rounded-2xl transition-all duration-300 bg-white/[0.03] border border-white/10 hover:border-amber-400/40 hover:bg-white/[0.06] hover:-translate-y-1 shadow-lg min-w-[250px] sm:min-w-[260px] max-w-[340px] flex-1 flex-shrink-0"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-mono text-xs sm:text-sm font-bold text-[#e5b869] tracking-wider">
+                      {m.year}
+                    </span>
+                    <span className="w-2 h-2 rounded-full bg-[#e5b869] shadow-[0_0_8px_#e5b869]" />
+                  </div>
+                  <h3 className="font-display text-base font-semibold text-white group-hover/m:text-amber-200 transition-colors mb-1.5">
+                    {m.title}
+                  </h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed font-sans font-normal">
+                    {m.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Custom Luxury Scrollbar: Appears gracefully when content overflows or on smaller screens */}
+            {hasOverflow && (
+              <div className="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-3 sm:gap-4 transition-all duration-300">
+                {/* Label with amber pulsing dot */}
+                <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-zinc-400 select-none">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24] animate-pulse" />
+                  <span className="text-[11px] uppercase tracking-wider text-amber-400/90 font-medium">
+                    Scroll Timeline
+                  </span>
+                </div>
+
+                {/* Clickable & Draggable Luxury Glass Track */}
+                <div
+                  ref={trackRef}
+                  onClick={handleTrackClick}
+                  className="relative flex-1 h-2 rounded-full bg-white/[0.06] border border-white/10 cursor-pointer overflow-hidden group/track"
+                  title="Click or drag to scroll timeline"
+                >
+                  {/* Glowing Gold Luxury Thumb */}
+                  <div
+                    onMouseDown={handleThumbMouseDown}
+                    className="absolute top-0 bottom-0 rounded-full cursor-grab active:cursor-grabbing transition-transform duration-75"
+                    style={{
+                      left: `${scrollProgress * (100 - thumbWidthPercent)}%`,
+                      width: `${thumbWidthPercent}%`,
+                      background:
+                        'linear-gradient(90deg, rgba(229,184,105,0.7) 0%, #e5b869 50%, #fbbf24 100%)',
+                      boxShadow:
+                        '0 0 12px rgba(229, 184, 105, 0.6), inset 0 1px 0 rgba(255,255,255,0.4)'
+                    }}
+                  />
+                </div>
+
+                {/* Milestone Position Indicator */}
+                <div className="text-[11px] font-mono text-zinc-400 select-none flex items-center gap-1">
+                  <span className="text-amber-300 font-bold">{activeMilestoneIndex}</span>
+                  <span>/</span>
+                  <span>{milestones.length} Milestones</span>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

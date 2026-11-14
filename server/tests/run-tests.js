@@ -287,10 +287,72 @@ async function runTests() {
     assert.strictEqual(crawlerRes.status, 200);
     const crawlerHtml = await crawlerRes.text();
     assert.ok(crawlerHtml.includes('og:title') || crawlerHtml.includes('Trading Platform'), 'Social crawler must receive OpenGraph tags');
-    console.log('✓ [13/13] Social crawler OpenGraph meta tag pre-injection verified');
+    console.log('✓ [13/14] Social crawler OpenGraph meta tag pre-injection verified');
     passed++;
 
-    console.log(`\nALL ${passed}/13 BACKEND & SECURITY TESTS PASSED.`);
+    // Test 14: Public bootstrap settings allowlist isolation (never leaks private configuration or secrets)
+    store.state.settings = {
+      ...store.state.settings,
+      siteTitle: 'Ayush Prajapati — Portfolio',
+      particlesEnabled: true,
+      mongodbUri: 'mongodb+srv://admin:superSecretAtlasPass99@cluster0.mongodb.net/prod_portfolio?retryWrites=true',
+      jwtSecret: 'super-sensitive-jwt-production-secret-key-32chars',
+      sessionSecret: 'super-sensitive-session-secret-key',
+      cloudinaryApiKey: '987654321012345',
+      cloudinaryApiSecret: 'aB1cD2eF3gH4iJ5kL6mN7oP8qR9sT0',
+      internalCredential: 'doNotExposeMe'
+    };
+    store._persist();
+
+    const bootstrapRes = await requestJson(baseUrl, '/api/public/bootstrap');
+    assert.strictEqual(bootstrapRes.status, 200);
+    const publicSettings = bootstrapRes.data.settings;
+    assert.ok(publicSettings, 'Bootstrap must return settings object');
+    assert.strictEqual(publicSettings.siteTitle, 'Ayush Prajapati — Portfolio');
+    assert.strictEqual(publicSettings.particlesEnabled, true);
+    assert.strictEqual(publicSettings.mongodbUri, undefined, 'mongodbUri must never be exposed');
+    assert.strictEqual(publicSettings.jwtSecret, undefined, 'jwtSecret must never be exposed');
+    assert.strictEqual(publicSettings.sessionSecret, undefined, 'sessionSecret must never be exposed');
+    assert.strictEqual(publicSettings.cloudinaryApiKey, undefined, 'cloudinaryApiKey must never be exposed');
+    assert.strictEqual(publicSettings.cloudinaryApiSecret, undefined, 'cloudinaryApiSecret must never be exposed');
+    assert.strictEqual(publicSettings.internalCredential, undefined, 'internal credentials must never be exposed');
+    console.log('✓ [14/15] Public bootstrap settings allowlist strictly blocks private credentials');
+    passed++;
+
+    // Test 15: Fail-closed public settings isolation (when getPublicSettings is unavailable, never falls back to getSettings)
+    const originalGetPublicSettings = store.getPublicSettings;
+    try {
+      store.getPublicSettings = undefined;
+      const failClosedRes = await requestJson(baseUrl, '/api/public/bootstrap');
+      assert.strictEqual(failClosedRes.status, 200);
+      assert.ok(failClosedRes.data.settings, 'Bootstrap must return safe object');
+      assert.deepStrictEqual(failClosedRes.data.settings, {}, 'Must fail closed to empty object');
+      assert.strictEqual(failClosedRes.data.settings.mongodbUri, undefined, 'mongodbUri must never leak');
+      assert.strictEqual(failClosedRes.data.settings.jwtSecret, undefined, 'jwtSecret must never leak');
+      console.log('✓ [15/16] Fail-closed public settings isolation verified (zero fallback leakage)');
+      passed++;
+    } finally {
+      store.getPublicSettings = originalGetPublicSettings;
+    }
+
+    // Test 16: Exception resilience in getPublicSettings (when method throws, fails closed to {} and avoids leakage)
+    try {
+      store.getPublicSettings = () => {
+        throw new Error('Simulated internal store corruption failure');
+      };
+      const exceptionRes = await requestJson(baseUrl, '/api/public/bootstrap');
+      assert.strictEqual(exceptionRes.status, 200);
+      assert.ok(exceptionRes.data.settings, 'Bootstrap must return safe settings object');
+      assert.deepStrictEqual(exceptionRes.data.settings, {}, 'Must fail closed to empty object upon thrown exception');
+      assert.strictEqual(exceptionRes.data.settings.mongodbUri, undefined, 'mongodbUri must never leak');
+      assert.strictEqual(exceptionRes.data.settings.jwtSecret, undefined, 'jwtSecret must never leak');
+      console.log('✓ [16/16] getPublicSettings exception resilience verified (fails closed to {})');
+      passed++;
+    } finally {
+      store.getPublicSettings = originalGetPublicSettings;
+    }
+
+    console.log(`\nALL ${passed}/16 BACKEND & SECURITY TESTS PASSED.`);
   } finally {
     server.close();
     if (fs.existsSync(TEST_DB_PATH)) fs.unlinkSync(TEST_DB_PATH);

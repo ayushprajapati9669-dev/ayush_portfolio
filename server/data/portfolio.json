@@ -1,605 +1,64 @@
 {
   "profile": {
     "aboutBio": [
-      "I am a third-year B.Tech Computer Science and Engineering student at SISTec, Bhopal, focused on building full-stack web applications with the MERN stack and strengthening my core software engineering fundamentals.",
-      "Alongside developing full-stack interfaces and REST APIs with React, Node.js, Express, and MongoDB, I actively practice Data Structures and Algorithms in C, Java, and Python to sharpen how I reason about time complexity, state, and system design.",
-      "I am also exploring Artificial Intelligence and Machine Learning—specifically how modern conversational workflows and intelligent tooling can be integrated cleanly into practical web software."
+      "I am Ayush Prajapati, a Computer Science & Engineering (CSE) undergraduate at SISTec, Bhopal (2024–2028 batch) maintaining a CGPA of 8.42, after completing my Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani, Madhya Pradesh with 83.5% in 2022.",
+      "My core technical stack spans programming in C, Java, JavaScript, and Python alongside full-stack web engineering with HTML, CSS, Bootstrap, React.js, Node.js, Express.js, MySQL, MongoDB, Git, and GitHub.",
+      "I have built and deployed real-world full-stack applications—including a live Airbnb Clone on Render, a Stock Trading Platform with Market/Limit order execution, and a ChatGPT Clone powered by the Gemini API—and won a website-making competition at my college."
     ],
-    "availabilityLabel": "Open to Full-Time & Remote Roles",
+    "availabilityLabel": "CSE @ SISTec, Bhopal · CGPA: 8.42 (2028)",
     "createdAt": "2026-10-18T15:13:45.304Z",
-    "displayName": "Ayush Prajapati",
+    "displayName": "AYUSH PRAJAPATI",
     "education": {
-      "degree": "B.Tech in Computer Science and Engineering",
-      "college": "SISTec (Sagar Institute of Science and Technology)",
+      "degree": "B.Tech in Computer Science & Engineering (CSE)",
+      "college": "SISTec (Sagar Institute of Science and Technology), Bhopal",
+      "cgpa": "CGPA: 8.42 | (2028)",
+      "schoolBoard": "Class XII (MP Board)",
+      "schoolXII": "Kasturba Vidhya Mandir, Jamani, Madhya Pradesh",
+      "schoolScore": "83.5% | 2022",
       "location": "Bhopal, Madhya Pradesh, India",
-      "stage": "Third-year undergraduate student",
-      "schoolBoard": "MP board",
-      "cgpa": "8.42",
-      "schoolXII": "Higher Secondary (Class XII)",
-      "schoolScore": "80%"
+      "stage": "CGPA: 8.42 · Batch of 2024–2028"
     },
-    "eyebrow": "COMPUTER  SCIENCE STUDENT  ·  DEVELOPER  ·  BUILDER",
+    "eyebrow": "FULL-STACK MERN DEVELOPER · B.TECH CSE (2028)",
     "focusAreas": [
       {
-        "title": "MERN-Stack Engineering",
-        "detail": "Building end-to-end web applications with React.js, Node.js, Express.js, MongoDB, and structured REST APIs."
+        "title": "College Website Competition Winner",
+        "detail": "Won 1st place in a college website-making competition for modern responsive UI design and full-stack execution."
       },
       {
-        "title": "Data Structures & Algorithms",
-        "detail": "Consistent problem-solving practice across arrays, trees, graphs, recursion, and dynamic programming."
+        "title": "Full-Stack MERN & Cloud Storage",
+        "detail": "Building end-to-end applications with React.js, Node.js, Express.js, MongoDB Atlas, and Cloudinary media pipelines."
       },
       {
-        "title": "AI & ML Exploration",
-        "detail": "Studying foundational machine learning concepts and building conversational AI web interfaces."
+        "title": "Strong Academic Record (8.42 CGPA)",
+        "detail": "Consistent academic excellence in B.Tech CSE at SISTec, Bhopal (8.42 CGPA) and 83.5% in MP Board Class XII."
       },
       {
-        "title": "Engineering Goal",
-        "detail": "Preparing for software engineering internships and full-time roles at engineering-driven product companies."
+        "title": "Core Programming & AI APIs",
+        "detail": "Problem solving in C, Java, JavaScript, and Python, plus integrating Gemini AI REST APIs into full-stack apps."
       }
     ],
     "headline": "From blank screen to live product. That’s Ayush Prajapati.",
-    "heroDescription": "I’m a Computer Science student exploring the intersection of web engineering, problem solving, and intelligent applications. I enjoy turning ideas into useful digital products and continuously improving how I build them.",
+    "heroDescription": "Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42) skilled in C, Java, JavaScript, Python, React.js, Node.js, Express.js, MySQL, and MongoDB. Winner of a college website-making competition.",
     "learningJourney": [
       {
-        "id": "li-1793592919780-1",
-        "title": "Apna College Delta Full-Stack Web Development",
-        "desc": "<h3>Certification Verification</h3><p>Successfully completed comprehensive full-stack training covering frontend engineering, Node.js backend systems, relational & NoSQL databases, and cloud deployments.</p>",
-        "year": "Year 2",
-        "status": "completed",
-        "metaLabel": "LinkedIn · Certification",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "MERN",
-          "React",
-          "NodeJS",
-          "MongoDB"
-        ],
-        "icon": "fa-certificate",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "",
-        "link": "",
-        "metric": "",
-        "badgeText": "",
-        "badgeIcon": "",
-        "challenge": "",
-        "solution": "",
-        "outcome": "",
-        "metrics": [],
-        "links": [],
-        "deepdive": "",
-        "proofs": [],
-        "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 110,
-        "createdAt": "2026-11-02T04:15:19.780Z"
-      },
-      {
-        "id": "li-1793592919780-2",
-        "title": "College Website Making Competition (1st Place)",
-        "desc": "<h3>First Place Award</h3><p>Awarded 1st place in college-wide website creation competition recognized on professional LinkedIn profile.</p>",
-        "year": "Year 2",
-        "status": "completed",
-        "metaLabel": "LinkedIn · Award",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "UI/UX",
-          "HTML5",
-          "CSS3",
-          "JavaScript"
-        ],
-        "icon": "fa-trophy",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "",
-        "link": "",
-        "metric": "",
-        "badgeText": "",
-        "badgeIcon": "",
-        "challenge": "",
-        "solution": "",
-        "outcome": "",
-        "metrics": [],
-        "links": [],
-        "deepdive": "",
-        "proofs": [],
-        "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 95,
-        "createdAt": "2026-11-02T04:15:19.780Z"
-      },
-      {
-        "id": "li-1793592905629-1",
-        "title": "Apna College Delta Full-Stack Web Development",
-        "desc": "<h3>Certification Verification</h3><p>Successfully completed comprehensive full-stack training covering frontend engineering, Node.js backend systems, relational & NoSQL databases, and cloud deployments.</p>",
-        "year": "Year 2",
-        "status": "completed",
-        "metaLabel": "LinkedIn · Certification",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "MERN",
-          "React",
-          "NodeJS",
-          "MongoDB"
-        ],
-        "icon": "fa-certificate",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "",
-        "link": "",
-        "metric": "",
-        "badgeText": "",
-        "badgeIcon": "",
-        "challenge": "",
-        "solution": "",
-        "outcome": "",
-        "metrics": [],
-        "links": [],
-        "deepdive": "",
-        "proofs": [],
-        "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 110,
-        "createdAt": "2026-11-02T04:15:05.629Z"
-      },
-      {
-        "id": "li-1793592905629-2",
-        "title": "College Website Making Competition (1st Place)",
-        "desc": "<h3>First Place Award</h3><p>Awarded 1st place in college-wide website creation competition recognized on professional LinkedIn profile.</p>",
-        "year": "Year 2",
-        "status": "completed",
-        "metaLabel": "LinkedIn · Award",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "UI/UX",
-          "HTML5",
-          "CSS3",
-          "JavaScript"
-        ],
-        "icon": "fa-trophy",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "",
-        "link": "",
-        "metric": "",
-        "badgeText": "",
-        "badgeIcon": "",
-        "challenge": "",
-        "solution": "",
-        "outcome": "",
-        "metrics": [],
-        "links": [],
-        "deepdive": "",
-        "proofs": [],
-        "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 95,
-        "createdAt": "2026-11-02T04:15:05.629Z"
-      },
-      {
-        "id": "m-1792870162021",
-        "title": "🏆 1st Place Winner: State Web Innovation Hackathon",
-        "desc": "<h3>Challenge &amp; Problem</h3><p>Designed and built a scalable real-time solution tackling student learning and resource-sharing bottlenecks under strict 36-hour sprint constraints.</p><h3>Architecture</h3><p>Leveraged MERN stack with WebSocket event-driven communication, Redis-backed pub/sub, and intuitive responsive UI.</p><h3>Outcome</h3><p>Awarded 1st place among 40+ participating engineering teams.</p>",
-        "year": "Year 3",
-        "status": "completed",
-        "metaLabel": "Hackathon · 1st Place Achievement",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "Hackathon",
-          "React",
-          "NodeJS",
-          "Socket.io",
-          "MongoDB"
-        ],
-        "icon": "fa-trophy",
-        "image": "/uploads/journey_3_0_1793438989767_504.jpg",
-        "images": [
-          "/uploads/journey_3_0_1793438989767_504.jpg",
-          "/uploads/journey_3_1_1793438989768_800.jpg"
-        ],
-        "hdImages": [],
-        "imageAlt": "Hackathon 1st place award celebration and project demo",
-        "link": "https://github.com/ayushprajapati9669-dev",
-        "metric": "Rank #1 / 40+ Competing Teams",
-        "badgeText": "STATE CHAMPION",
-        "badgeIcon": "fa-award",
-        "challenge": "Construct a fault-tolerant collaborative workspace under a rigid 36-hour sprint deadline.",
-        "solution": "Engineered real-time state synchronization using WebSocket channels and optimistic UI updates.",
-        "outcome": "Secured unanimous 1st place recognition from industry judging panel.",
-        "metrics": [
-          {
-            "value": "1st",
-            "label": "Overall Rank"
-          },
-          {
-            "value": "40+",
-            "label": "Colleges Competed"
-          },
-          {
-            "value": "36 Hrs",
-            "label": "Sprint Duration"
-          }
-        ],
-        "links": [
-          {
-            "type": "demo",
-            "label": "Live Demo",
-            "icon": "fa-solid fa-arrow-up-right-from-square",
-            "url": "https://github.com/ayushprajapati9669-dev"
-          }
-        ],
-        "deepdive": "Architected end-to-end full-stack prototype with real-time notifications and JWT authentication.",
-        "proofs": [],
-        "published": true,
-        "pinned": true,
-        "spotlight": true,
-        "views": 290,
-        "createdAt": "2026-10-24T19:29:22.021Z",
-        "updatedAt": "2026-11-02T11:20:38.243Z"
-      },
-      {
-        "id": "m-workshop-mern-lead",
+        "phase": "",
         "title": "🎤 Lead Speaker & Instructor: MERN Stack & Cloud Architecture Workshop",
-        "desc": "<h3>Hands-on Architecture Workshop</h3><p>Organized and conducted a flagship 2-day technical bootcamp on <strong>MERN Stack Engineering and Cloud Deployment</strong> at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.</p><h3>Live Demo & Lab Outcomes</h3><ul><li>Live-coded a full-stack real-time collaboration app with Socket.io on stage.</li><li>Guided students through Git branching workflows and live cloud deployment on Render and Vercel.</li><li>Rated 4.9/5 across attendee feedback surveys.</li></ul>",
-        "year": "Year 3",
-        "status": "completed",
-        "metaLabel": "Workshop · Technical Leadership",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "React JS",
-          "Node.js",
-          "MongoDB",
-          "Socket.io",
-          "Express.js",
-          "Tailwind CSS"
-        ],
-        "icon": "fa-chalkboard-user",
-        "image": "/images/ayush-workshop-lead.jpg",
-        "images": [
-          "/images/ayush-workshop-lead.jpg",
-          "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop",
-          "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop"
-        ],
-        "hdImages": [],
-        "imageAlt": "Ayush Prajapati delivering MERN Stack Workshop on stage in front of students",
-        "link": "https://github.com/ayushprajapati9669-dev",
-        "metric": "120+ Attendees · SISTec Bhopal",
-        "badgeText": "FLAGSHIP MILESTONE",
-        "badgeIcon": "fa-trophy",
-        "challenge": "Deliver production full-stack engineering paradigms to 120+ students within a fast-paced 48-hour hands-on curriculum.",
-        "solution": "Structured modular micro-lectures paired with real-time live coding labs and automated deployment verifications.",
-        "outcome": "120+ functional web apps successfully deployed live to Render and Vercel by student cohorts.",
-        "metrics": [
-          {
-            "value": "120+",
-            "label": "Engineers Mentored"
-          },
-          {
-            "value": "48 Hrs",
-            "label": "Intensive Bootcamp"
-          },
-          {
-            "value": "4.9/5",
-            "label": "Participant Rating"
-          }
-        ],
-        "links": [
-          {
-            "url": "https://github.com/ayushprajapati9669-dev",
-            "label": "Workshop Curriculum"
-          }
-        ],
-        "deepdive": "Spearheaded curriculum development encompassing authentication security, MongoDB indexing, and reactive front-end architectures.",
-        "proofs": [],
-        "published": true,
-        "pinned": true,
-        "spotlight": true,
-        "views": 450,
-        "createdAt": "2026-10-24T19:30:00.000Z"
+        "description": ""
       },
       {
-        "id": "m-1792870175334",
-        "title": "💼 Software Engineering Intern — Full-Stack Systems",
-        "desc": "<h3>Role & Responsibilities</h3><p>Delivered production features, code reviews, and RESTful API integrations across React.js and Node.js microservices.</p><h3>Key Impact</h3><ul><li>Optimized database queries and API response times by 35%.</li><li>Engineered modular, reusable UI components with responsive UX and robust error boundaries.</li></ul>",
-        "year": "Year 3",
-        "status": "completed",
-        "metaLabel": "Internship · Professional Experience",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "Internship",
-          "FullStack",
-          "React.js",
-          "Node.js",
-          "REST APIs"
-        ],
-        "icon": "fa-briefcase",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "Software Engineering Internship",
-        "link": "https://github.com/ayushprajapati9669-dev",
-        "metric": "35% Faster Response Times · Production APIs",
-        "badgeText": "PRODUCTION IMPACT",
-        "badgeIcon": "fa-briefcase",
-        "challenge": "Legacy endpoints had unindexed query bottlenecks causing high latency under concurrent load.",
-        "solution": "Restructured MongoDB compound indexes, implemented query caching, and normalized JSON responses.",
-        "outcome": "Achieved sub-100ms average latency across core public endpoints.",
-        "metrics": [
-          {
-            "value": "35%",
-            "label": "Latency Reduction"
-          },
-          {
-            "value": "12+",
-            "label": "PRs Merged"
-          },
-          {
-            "value": "99.8%",
-            "label": "Uptime"
-          }
-        ],
-        "links": [],
-        "deepdive": "Collaborated in an Agile sprint cycle delivering scalable front-end and back-end modules.",
-        "proofs": [],
-        "published": true,
-        "pinned": true,
-        "spotlight": true,
-        "views": 180,
-        "createdAt": "2026-10-24T19:29:35.334Z"
+        "phase": "EDUCATION · 2024 – 2028",
+        "title": "B.Tech CSE — SISTec, Bhopal (CGPA: 8.42)",
+        "description": "Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022)."
       },
       {
-        "id": "m-1792908995865",
-        "title": "🚀 Cloud Architecture & CI/CD Deployment Specialization",
-        "desc": "<h3>Overview</h3><p>Architected automated CI/CD deployment pipelines using GitHub Actions, Docker containerization, and cloud deployment workflows on Render, Vercel, and AWS.</p><h3>Key Outcomes</h3><ul><li>Automated build, test, and container packaging pipelines with zero downtime.</li><li>Configured reverse-proxy headers, SSL termination, and environment security guards.</li></ul>",
-        "year": "Year 3",
-        "status": "completed",
-        "metaLabel": "DevOps · Cloud Engineering",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "DevOps",
-          "Docker",
-          "CI/CD",
-          "AWS",
-          "Render"
-        ],
-        "icon": "fa-server",
-        "image": "/uploads/journey_3_1793438989765_854.jpg",
-        "images": [
-          "/uploads/journey_3_0_1793438989767_504.jpg",
-          "/uploads/journey_3_1_1793438989768_800.jpg",
-          "/uploads/journey_3_2_1793438989801_732.jpg",
-          "/uploads/journey_3_3_1793438989803_353.jpg"
-        ],
-        "hdImages": [],
-        "imageAlt": "Cloud DevOps Architecture and CI/CD pipelines",
-        "link": "https://github.com/ayushprajapati9669-dev",
-        "metric": "Automated Zero-Downtime Deployments",
-        "badgeText": "DEVOPS EXCELLENCE",
-        "badgeIcon": "fa-server",
-        "challenge": "Eliminate manual deployment friction and safeguard production releases against regressions.",
-        "solution": "Engineered multi-stage GitHub Actions workflows with linting, unit testing, and Docker builds.",
-        "outcome": "100% automated release pipeline with instant rollbacks on health check failures.",
-        "metrics": [
-          {
-            "value": "0",
-            "label": "Downtime Incidents"
-          },
-          {
-            "value": "< 3 Min",
-            "label": "Build to Deploy"
-          },
-          {
-            "value": "100%",
-            "label": "Automated Tests"
-          }
-        ],
-        "links": [],
-        "deepdive": "Streamlined infrastructure configuration with secure environment isolation and Docker multi-stage builds.",
-        "proofs": [],
-        "published": true,
-        "pinned": true,
-        "spotlight": true,
-        "views": 215,
-        "createdAt": "2026-10-25T06:16:35.865Z"
+        "phase": "ACADEMIC PROJECTS · MERN & AI",
+        "title": "Stock Trading Platform & Gemini AI ChatGPT Clone",
+        "description": "Engineered a full-stack Stock Trading Platform (holdings, orders, positions, funds, Market/Limit Buy & Sell) and a ChatGPT Clone using React.js, Node.js, Express.js, MongoDB, and Gemini API."
       },
       {
-        "id": "m-1792942230394",
-        "title": "📜 Full-Stack Web Development Delta Certification",
-        "desc": "<h3>Certification Overview</h3><p>Completed intensive full-stack curriculum covering JavaScript ES6+, React.js, Express.js REST APIs, MongoDB schema design, relational concepts, and authentication architectures.</p><h3>Key Highlights</h3><ul><li>Built and deployed multiple production-ready full-stack applications.</li><li>Mastered responsive layouts, asynchronous state management, and MVC backend patterns.</li></ul>",
-        "year": "Year 3",
-        "status": "completed",
-        "metaLabel": "Apna College · Verified Credential",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "MERN Stack",
-          "React.js",
-          "Node.js",
-          "MongoDB",
-          "JavaScript"
-        ],
-        "icon": "fa-certificate",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "Apna College Delta Full-Stack Certification",
-        "link": "https://github.com/ayushprajapati9669-dev",
-        "metric": "100% Curriculum Completed",
-        "badgeText": "VERIFIED CREDENTIAL",
-        "badgeIcon": "fa-certificate",
-        "challenge": "Master complex full-stack web technologies from fundamentals to production architecture.",
-        "solution": "Completed comprehensive coursework with real-world capstone projects and code reviews.",
-        "outcome": "Awarded certified credential in Full-Stack Web Development.",
-        "metrics": [
-          {
-            "value": "100%",
-            "label": "Completion"
-          },
-          {
-            "value": "4+",
-            "label": "Capstone Projects"
-          }
-        ],
-        "links": [],
-        "deepdive": "Delved into React hooks, state lifting, Redux Toolkit, Express middleware, and MongoDB aggregations.",
-        "proofs": [],
-        "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 120,
-        "createdAt": "2026-10-25T15:30:30.394Z"
-      },
-      {
-        "id": "m-1792835816020",
-        "title": "🧠 Artificial Intelligence & LLM Application Engineering",
-        "desc": "<h3>Exploration & Implementation</h3><p>Developing conversational AI integrations and neural architectures using Google Gemini API, OpenAI APIs, and Python. Engineered real-time streaming chat interfaces with token optimizations.</p><h3>Focus Areas</h3><ul><li>LLM prompt chaining, streaming token parser, and multimodal input handling.</li><li>Applied machine learning algorithms for predictive analytics and classification.</li></ul>",
-        "year": "Year 3",
-        "status": "focus",
-        "metaLabel": "AI / ML · Advanced Exploration",
-        "progress": 85,
-        "rating": 5,
-        "tags": [
-          "Python",
-          "Gemini API",
-          "AI / ML",
-          "LLMs"
-        ],
-        "icon": "fa-brain",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "AI and LLM exploration",
-        "link": "https://github.com/ayushprajapati9669-dev",
-        "metric": "Conversational AI & LLM Streaming Integration",
-        "badgeText": "INTELLIGENT SYSTEMS",
-        "badgeIcon": "fa-brain",
-        "challenge": "Implement low-latency streaming responses with resilient fallbacks for conversational AI.",
-        "solution": "Integrated Server-Sent Events (SSE) and token-buffering parsers for instant typing effects.",
-        "outcome": "Production-ready AI chat workspace integrated directly into personal portfolio.",
-        "metrics": [
-          {
-            "value": "85%",
-            "label": "Mastery"
-          },
-          {
-            "value": "SSE",
-            "label": "Streaming"
-          }
-        ],
-        "links": [],
-        "deepdive": "Fine-tuning prompt engineering pipelines and experimenting with retrieval-augmented generation (RAG).",
-        "proofs": [],
-        "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 95,
-        "createdAt": "2026-10-24T09:56:56.020Z"
-      },
-      {
-        "id": "m-1-1792835712842",
-        "title": "Core Programming & Computer Science Fundamentals",
-        "desc": "<ol><li>Built a strong foundation in C, Java, Python, object-oriented programming, relational databases (MySQL), and HTML/CSS layouts at SISTec, Bhopal.</li></ol>",
-        "year": "Year 1-2",
-        "status": "completed",
-        "metaLabel": "Foundation · Year 1–2",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "C",
-          "Java",
-          "Python",
-          "MySQL",
-          "OOP"
-        ],
-        "icon": "fa-graduation-cap",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "Computer Science Fundamentals",
-        "link": "",
-        "metric": "8.42 CGPA · Top Tier Standing",
-        "badgeText": "ACADEMIC FOUNDATION",
-        "badgeIcon": "fa-graduation-cap",
-        "challenge": "Master low-level programming concepts, memory pointers, and algorithmic complexity.",
-        "solution": "Solved foundational DSA problems and built CLI tools in C and Java.",
-        "outcome": "Built rock-solid foundation for scalable software engineering.",
-        "metrics": [
-          {
-            "value": "8.42",
-            "label": "B.Tech CGPA"
-          }
-        ],
-        "links": [],
-        "deepdive": "Coursework in Data Structures, Algorithms, OS, DBMS, Computer Networks, and Discrete Math.",
-        "proofs": [],
-        "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 85,
-        "createdAt": "2026-10-24T09:55:12.842Z"
-      },
-      {
-        "id": "m-2-1792835712842",
-        "title": "MERN Stack & Interactive Systems",
-        "desc": "<p>Transitioned to full-stack JavaScript engineering with React.js, Node.js, Express.js, and MongoDB—building a Zerodha-inspired trading dashboard and a ChatGPT-inspired conversational AI workspace.</p>",
-        "year": "Year 3",
-        "status": "completed",
-        "metaLabel": "Full-Stack Practice · Year 3",
-        "progress": 100,
-        "rating": 5,
-        "tags": [
-          "React.js",
-          "Node.js",
-          "MongoDB",
-          "Express.js"
-        ],
-        "icon": "fa-layer-group",
-        "image": null,
-        "images": [],
-        "hdImages": [],
-        "imageAlt": "MERN Stack Practice",
-        "link": "https://github.com/ayushprajapati9669-dev",
-        "metric": "Production-Grade Full-Stack Applications",
-        "badgeText": "FULL-STACK RIGOR",
-        "badgeIcon": "fa-layer-group",
-        "challenge": "Design robust state management and REST architecture for complex interactive dashboards.",
-        "solution": "Combined reactive React hooks, Context API, modular Express routes, and Mongoose models.",
-        "outcome": "Shipped two flagship portfolio projects with full live demos and GitHub repositories.",
-        "metrics": [
-          {
-            "value": "2",
-            "label": "Flagship Platforms"
-          },
-          {
-            "value": "100%",
-            "label": "Responsive"
-          }
-        ],
-        "links": [],
-        "deepdive": "Implemented real-time charting, order execution simulations, and multi-threaded AI chat handling.",
-        "proofs": [],
-        "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 110,
-        "createdAt": "2026-10-24T09:55:12.842Z"
+        "phase": "ACHIEVEMENTS & LIVE DEPLOYMENTS",
+        "title": "Airbnb Clone Live Deployment & Competition Winner",
+        "description": "Won a website-making competition at college, completed the Apna College Delta Full-Stack Web Development course, and deployed a live Airbnb Clone on Render."
       }
     ],
     "monogram": "AP",
@@ -607,9 +66,12 @@
     "portrait": {
       "url": "/uploads/hero_cutout_1794562459704_847.webp",
       "alt": "Ayush Prajapati - Hero Portrait",
-      "isTemporaryStandIn": false
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "particleDensity": 4
     },
-    "primaryCtaText": "View Live Demos",
+    "primaryCtaText": "Explore Live Projects",
     "secondaryCtaText": "Let's Connect",
     "socialLinks": {
       "github": "https://github.com/ayushprajapati9669-dev",
@@ -617,7 +79,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "From blank screen to live product. That’s Ayush Prajapati.",
-    "updatedAt": "2026-11-13T19:36:48.144Z",
+    "updatedAt": "2026-11-14T10:05:39.796Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -672,40 +134,12 @@
   },
   "projects": [
     {
-      "id": "proj-1792430599188",
-      "approachArchitecture": "",
-      "category": "Full-Stack Web App",
-      "createdAt": "2026-10-31T08:13:37.215Z",
-      "disclaimer": "",
-      "displayOrder": 1,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
-      "problemContext": "",
-      "shortDescription": "this is a second testing project",
-      "slug": "airbnb-clone-2",
-      "status": "published",
-      "technologies": [
-        "React JS",
-        "Node.js",
-        "Express.js",
-        "MongoDB"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
-      "title": "airbnb clone 2",
-      "updatedAt": "2026-11-13T19:26:47.924Z"
-    },
-    {
       "id": "proj-1792430568297",
       "approachArchitecture": "",
       "category": "Full-Stack Web App",
       "createdAt": "2026-10-31T08:13:37.186Z",
       "disclaimer": "",
-      "displayOrder": 2,
+      "displayOrder": 1,
       "featured": true,
       "galleryImages": [],
       "githubUrl": "https://github.com/ayushprajapati9669-dev",
@@ -720,13 +154,12 @@
         "React JS",
         "Node.js",
         "Express.js",
-        "MongoDB",
-        "TypeScript"
+        "MongoDB"
       ],
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-11-13T19:26:47.924Z",
+      "updatedAt": "2026-11-14T09:41:56.870Z",
       "caseStudy": {
         "problem": "",
         "approach": "",
@@ -751,6 +184,34 @@
       }
     },
     {
+      "id": "proj-1792430599188",
+      "approachArchitecture": "",
+      "category": "Full-Stack Web App",
+      "createdAt": "2026-10-31T08:13:37.215Z",
+      "disclaimer": "",
+      "displayOrder": 2,
+      "featured": true,
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "implementedFeatures": [],
+      "lessonsLearned": "",
+      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
+      "problemContext": "",
+      "shortDescription": "this is a second testing project",
+      "slug": "airbnb-clone-2",
+      "status": "published",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
+      "title": "airbnb clone 2",
+      "updatedAt": "2026-11-14T09:41:56.870Z"
+    },
+    {
       "id": "proj-1792496192331",
       "approachArchitecture": "",
       "category": "Full-Stack Web App",
@@ -773,7 +234,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-chat-preview.webp",
       "title": "ai chat boat",
-      "updatedAt": "2026-11-13T19:26:47.924Z"
+      "updatedAt": "2026-11-14T09:41:56.870Z"
     },
     {
       "id": "proj-1792781601076",
@@ -801,7 +262,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
-      "updatedAt": "2026-11-13T19:26:47.924Z"
+      "updatedAt": "2026-11-14T09:41:56.870Z"
     },
     {
       "id": "proj-1792669669594",
@@ -829,332 +290,202 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-agentic-preview.webp",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-11-13T19:26:47.924Z"
+      "updatedAt": "2026-11-14T09:41:56.870Z"
     }
   ],
   "skills": [
     {
-      "id": "skill-cat-languages",
+      "id": "skill-languages",
       "category": "Languages",
-      "createdAt": "2026-10-19T12:13:02.408Z",
-      "description": "Core programming languages used for data structures, coursework, scripting, and full-stack development.",
+      "createdAt": "2026-11-14T05:37:16.697Z",
+      "description": "Programming languages used for DSA and full-stack engineering.",
       "displayOrder": 1,
       "items": [
         {
-          "id": "skill_1792603472386",
-          "name": "TypeScript",
-          "logoKey": "typescript",
-          "icon": "devicon-typescript-plain",
-          "isVisible": true,
-          "createdAt": 1792603472386
-        },
-        {
-          "id": "skill-skill-cat-languages-0-c",
           "name": "C",
           "logoKey": "c",
-          "icon": "devicon-c-plain",
-          "isVisible": false,
-          "createdAt": 1792600883119
+          "note": ""
         },
         {
-          "id": "skill-skill-cat-languages-2-python",
-          "name": "Python",
-          "logoKey": "python",
-          "icon": "devicon-python-plain",
-          "isVisible": true,
-          "createdAt": 1792600873119
+          "name": "C++",
+          "logoKey": "cpp",
+          "note": ""
         },
         {
-          "id": "skill-skill-cat-languages-1-java",
           "name": "Java",
           "logoKey": "java",
-          "icon": "devicon-java-plain",
-          "isVisible": true,
-          "createdAt": 1792600878119
+          "note": ""
         },
         {
-          "id": "skill-skill-cat-languages-3-javascript",
           "name": "JavaScript",
           "logoKey": "javascript",
-          "icon": "devicon-javascript-plain",
-          "isVisible": true,
-          "createdAt": 1792600868119
+          "note": ""
         },
         {
-          "id": "skill-skill-cat-languages-4-c",
-          "name": "c++",
-          "logoKey": "c",
-          "icon": "devicon-c-plain",
-          "isVisible": true,
-          "createdAt": 1792600863119
+          "name": "Python",
+          "logoKey": "python",
+          "note": ""
         }
       ],
-      "updatedAt": "2026-11-13T19:26:47.925Z"
+      "tabIcon": "languages",
+      "updatedAt": "2026-11-14T10:07:01.766Z"
     },
     {
-      "id": "skill-cat-frontend",
+      "id": "skill-frontend",
       "category": "Frontend",
-      "createdAt": "2026-10-19T12:13:02.791Z",
-      "description": "Building responsive, accessible, and interactive user interfaces.",
+      "createdAt": "2026-11-14T05:37:16.697Z",
+      "description": "Frontend web technologies for responsive, modern user interfaces.",
       "displayOrder": 2,
       "items": [
         {
-          "id": "skill-skill-cat-frontend-0-html",
+          "name": "React JS",
+          "logoKey": "react"
+        },
+        {
           "name": "HTML",
-          "logoKey": "html5",
-          "icon": "devicon-html5-plain",
-          "isVisible": true,
-          "createdAt": 1792600883119
+          "logoKey": "html"
         },
         {
-          "id": "skill-skill-cat-frontend-1-css",
           "name": "CSS",
-          "logoKey": "css3",
-          "icon": "devicon-css3-plain",
-          "isVisible": true,
-          "createdAt": 1792600878119
+          "logoKey": "css"
         },
         {
-          "id": "skill-skill-cat-frontend-2-reactjs",
-          "name": "React.js",
-          "logoKey": "react",
-          "icon": "devicon-react-original",
-          "isVisible": true,
-          "createdAt": 1792600873119
+          "name": "Tailwind CSS",
+          "logoKey": "tailwind"
         },
         {
-          "id": "skill-skill-cat-frontend-3-responsiveuidevelopment",
-          "name": "Responsive UI Development",
-          "logoKey": "responsive",
-          "icon": null,
-          "isVisible": true,
-          "createdAt": 1792600868119
+          "name": "Bootstrap",
+          "logoKey": "bootstrap"
+        },
+        {
+          "name": "Responsive UI",
+          "logoKey": "responsive"
+        },
+        {
+          "name": "Vite JS",
+          "logoKey": "vite"
+        },
+        {
+          "name": "Next.js",
+          "logoKey": "nextjs"
         }
       ],
-      "updatedAt": "2026-11-13T19:26:47.925Z"
+      "tabIcon": "frontend",
+      "updatedAt": "2026-11-14T09:41:56.898Z"
     },
     {
-      "id": "skill-cat-backend",
+      "id": "skill-backend",
       "category": "Backend",
-      "createdAt": "2026-10-19T12:13:02.914Z",
-      "description": "Server-side application architecture, routing, authentication, and API validation.",
+      "createdAt": "2026-11-14T05:37:16.697Z",
+      "description": "Server runtimes and REST API architecture.",
       "displayOrder": 3,
       "items": [
         {
-          "id": "skill-skill-cat-backend-0-nodejs",
           "name": "Node.js",
-          "logoKey": "nodejs",
-          "icon": "devicon-nodejs-plain",
-          "isVisible": true,
-          "createdAt": 1792600883119
+          "logoKey": "nodejs"
         },
         {
-          "id": "skill-skill-cat-backend-1-expressjs",
           "name": "Express.js",
-          "logoKey": "express",
-          "icon": "devicon-express-original",
-          "isVisible": true,
-          "createdAt": 1792600878119
+          "logoKey": "express"
         },
         {
-          "id": "skill-skill-cat-backend-2-restapidevelopment",
-          "name": "REST API Development",
-          "logoKey": "postman",
-          "icon": "devicon-postman-plain",
-          "isVisible": true,
-          "createdAt": 1792600873119
+          "name": "REST APIs",
+          "logoKey": "api"
         }
       ],
-      "updatedAt": "2026-11-13T19:26:47.925Z"
+      "tabIcon": "backend",
+      "updatedAt": "2026-11-14T09:41:56.898Z"
     },
     {
-      "id": "skill-cat-databases",
+      "id": "skill-databases",
       "category": "Databases",
-      "createdAt": "2026-10-19T12:13:03.034Z",
-      "description": "Document and relational data modeling.",
+      "createdAt": "2026-11-14T05:37:16.697Z",
+      "description": "Relational and NoSQL document database management.",
       "displayOrder": 4,
       "items": [
         {
-          "id": "skill-skill-cat-databases-0-mongodb",
           "name": "MongoDB",
-          "logoKey": "mongodb",
-          "icon": "devicon-mongodb-plain",
-          "isVisible": true,
-          "createdAt": 1792600883119
+          "logoKey": "mongodb"
         },
         {
-          "id": "skill-skill-cat-databases-1-mysql",
           "name": "MySQL",
-          "logoKey": "mysql",
-          "icon": "devicon-mysql-plain",
-          "isVisible": true,
-          "createdAt": 1792600878119
+          "logoKey": "mysql"
         }
       ],
-      "updatedAt": "2026-11-13T19:26:47.925Z"
+      "tabIcon": "databases",
+      "updatedAt": "2026-11-14T09:41:56.898Z"
     },
     {
-      "id": "skill-cat-tools",
+      "id": "skill-tools",
       "category": "Tools & Workflow",
-      "createdAt": "2026-10-19T12:13:03.117Z",
-      "description": "Version control, collaborative repositories, and API debugging.",
+      "createdAt": "2026-11-14T05:37:16.697Z",
+      "description": "Version control, cloud media storage, and developer workflow tools.",
       "displayOrder": 5,
       "items": [
         {
-          "id": "skill-skill-cat-tools-0-git",
           "name": "Git",
-          "logoKey": "git",
-          "icon": "devicon-git-plain",
-          "isVisible": true,
-          "createdAt": 1792600883119
+          "logoKey": "git"
         },
         {
-          "id": "skill-skill-cat-tools-1-github",
           "name": "GitHub",
-          "logoKey": "github",
-          "icon": "devicon-github-original",
-          "isVisible": true,
-          "createdAt": 1792600878119
+          "logoKey": "github"
         },
         {
-          "id": "skill-skill-cat-tools-2-postman",
           "name": "Postman",
-          "logoKey": "postman",
-          "icon": "devicon-postman-plain",
-          "isVisible": true,
-          "createdAt": 1792600873119
+          "logoKey": "postman"
+        },
+        {
+          "name": "VS Code",
+          "logoKey": "vscode"
+        },
+        {
+          "name": "Cloudinary",
+          "logoKey": "cloudinary"
         }
       ],
-      "updatedAt": "2026-11-13T19:26:47.925Z"
+      "tabIcon": "tools",
+      "updatedAt": "2026-11-14T09:41:56.898Z"
     },
     {
-      "id": "skill-cat-dsa",
+      "id": "skill-dsa",
       "category": "Problem Solving",
-      "createdAt": "2026-10-19T12:13:03.233Z",
-      "description": "Algorithmic thinking and core computer science foundations.",
+      "createdAt": "2026-11-14T05:37:16.697Z",
+      "description": "Data structures, algorithms, and core computer science fundamentals.",
       "displayOrder": 6,
       "items": [
         {
-          "id": "skill-skill-cat-dsa-0-datastructuresalgorithms",
           "name": "Data Structures & Algorithms",
-          "logoKey": "dsa",
-          "icon": "devicon-c-plain",
-          "isVisible": true,
-          "createdAt": 1792600883119
+          "logoKey": "dsa"
         }
       ],
-      "updatedAt": "2026-11-13T19:26:47.925Z"
+      "tabIcon": "dsa",
+      "updatedAt": "2026-11-14T09:41:56.898Z"
     }
   ],
-  "certificates": [
-    {
-      "id": "cert-1792434069380",
-      "createdAt": "2026-10-31T08:13:37.405Z",
-      "credentialId": "",
-      "credentialUrl": "",
-      "imageUrl": "/images/apna-college-delta-certificate.jpg",
-      "issueDate": "2025",
-      "issuer": "apna college",
-      "skillsCovered": "HTML,CSS,JAVASCRIPT,NODEJS,EXPRESS",
-      "title": "mern stack certificate ",
-      "updatedAt": "2026-11-13T19:26:47.925Z"
-    },
-    {
-      "id": "cert-1792434116249",
-      "createdAt": "2026-10-31T08:13:37.438Z",
-      "credentialId": "",
-      "credentialUrl": "",
-      "imageUrl": "/images/apna-college-delta-certificate.jpg",
-      "issueDate": "2025",
-      "issuer": "code with harry",
-      "skillsCovered": "",
-      "title": "ai-ml certificate",
-      "updatedAt": "2026-11-13T19:26:47.925Z"
-    },
-    {
-      "id": "cert-1792578230937",
-      "createdAt": "2026-10-31T08:13:37.470Z",
-      "credentialId": "",
-      "credentialUrl": "",
-      "imageUrl": "/images/apna-college-delta-certificate.jpg",
-      "issueDate": "2026",
-      "issuer": "Apna college",
-      "skillsCovered": "html, css, javasript, nodejs, react, mongodb, express",
-      "title": "Full Stack Development (Copy)",
-      "updatedAt": "2026-11-13T19:26:47.925Z"
-    },
-    {
-      "id": "cert-1792588849135",
-      "createdAt": "2026-10-31T08:13:37.500Z",
-      "credentialId": "",
-      "credentialUrl": "",
-      "imageUrl": "/images/apna-college-delta-certificate.jpg",
-      "issueDate": "2025",
-      "issuer": "Apna College",
-      "skillsCovered": "React, Node.js, Express, MongoDB, Python, GraphQL",
-      "title": "mern stack",
-      "updatedAt": "2026-11-13T19:26:47.925Z"
-    },
-    {
-      "id": "cert-1792595305806",
-      "createdAt": "2026-10-31T08:13:37.533Z",
-      "credentialId": "",
-      "credentialUrl": "",
-      "imageUrl": "/images/apna-college-delta-certificate.jpg",
-      "issueDate": "2026",
-      "issuer": "Apna College",
-      "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
-      "title": "cyber security",
-      "updatedAt": "2026-11-13T19:26:47.925Z"
-    },
-    {
-      "id": "cert-1792663342696",
-      "createdAt": "2026-10-31T08:13:37.562Z",
-      "credentialId": "",
-      "credentialUrl": "",
-      "imageUrl": "/images/apna-college-delta-certificate.jpg",
-      "issueDate": "2026",
-      "issuer": "Apna College",
-      "skillsCovered": "React, Node.js, Express, MongoDB, Python, TensorFlow, AWS",
-      "title": "mern stack",
-      "updatedAt": "2026-11-13T19:26:47.925Z"
-    },
-    {
-      "id": "cert-1793434886240",
-      "createdAt": "2026-10-31T08:21:26.684Z",
-      "credentialId": "",
-      "credentialUrl": "",
-      "imageUrl": "/images/apna-college-delta-certificate.jpg",
-      "issueDate": "2026",
-      "issuer": "Coursera",
-      "skillsCovered": "",
-      "title": "cloud certificate",
-      "updatedAt": "2026-11-13T19:26:47.925Z"
-    }
-  ],
+  "certificates": [],
   "media": [],
   "messages": [],
   "settings": {
-    "siteTitle": "Ayush Prajapati — Developer Portfolio",
-    "seoDescription": "Portfolio of Ayush Prajapati, third-year B.Tech Computer Science Engineering student at SISTec, Bhopal, building MERN-stack web experiences and exploring AI/ML.",
+    "siteTitle": "Ayush Prajapati — Full-Stack Developer Portfolio",
+    "seoDescription": "Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB.",
     "particlesEnabled": true,
     "contactNote": "Messages submitted through the contact form are validated on the server and persisted directly to the portfolio database for review in the Admin CMS. No third-party SMTP relay is fabricated; a direct mailto fallback is also available.",
-    "updatedAt": "2026-11-13T19:26:48.425Z",
-    "mongodbUri": "mongodb://127.0.0.1:27017/ayush_portfolio",
+    "updatedAt": "2026-11-14T09:41:57.904Z",
     "cloudinaryCloudName": "",
     "cloudinaryUploadPreset": "",
     "maintenanceMode": false,
-    "createdAt": "2026-10-18T15:13:45.375Z"
+    "createdAt": "2026-10-18T15:13:45.375Z",
+    "mongodbUri": "mongodb://127.0.0.1:27017/ayush_portfolio"
   },
   "users": [
     {
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-14T05:15:04.189Z",
+      "lastLoginAt": "2026-11-14T10:06:58.371Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-13T19:26:48.139Z"
+      "updatedAt": "2026-11-14T09:41:57.420Z"
     },
     {
       "username": "ayush",
@@ -1163,7 +494,7 @@
       "lastLoginAt": "2026-11-09T11:55:23.945Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-13T19:26:48.139Z"
+      "updatedAt": "2026-11-14T09:41:57.420Z"
     },
     {
       "createdAt": "2026-11-05T12:05:07.107Z",
@@ -1171,7 +502,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-13T19:26:48.139Z",
+      "updatedAt": "2026-11-14T09:41:57.420Z",
       "username": "admin"
     },
     {
@@ -1180,14 +511,14 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-13T19:26:48.139Z",
+      "updatedAt": "2026-11-14T09:41:57.420Z",
       "username": "Ayush7162"
     }
   ],
   "resumes": [],
   "uiLabels": {
-    "homeProjectsEyebrow": "02 · LIVE DEPLOYED PROJECTS",
-    "homeProjectsHeading": "Featured Full-Stack Applications ",
+    "homeProjectsEyebrow": "03 · LIVE DEPLOYED PROJECTS",
+    "homeProjectsHeading": "Featured Full-Stack Applications",
     "aboutJourneyHeading": "ACHIEVEMENTS & ACADEMIC PROJECTS",
     "navHome": "Home",
     "navAbout": "About",
@@ -1208,7 +539,7 @@
     "homeIntroEyebrow": "01 · ABOUT & EDUCATION",
     "homeIntroHeading": "Full-Stack MERN Developer & B.Tech CSE Undergraduate at SISTec, Bhopal.",
     "homeProjectsCta": "View All Projects",
-    "homeSkillsEyebrow": "03 · TECHNICAL CAPABILITIES",
+    "homeSkillsEyebrow": "02 · TECHNICAL CAPABILITIES",
     "homeSkillsHeading": "Interactive Skills & Tech Stack",
     "homeSkillsCta": "Open Full Skills View",
     "homeCertsEyebrow": "04 · VERIFIED CREDENTIALS",

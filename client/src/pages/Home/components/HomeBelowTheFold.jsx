@@ -265,7 +265,7 @@ export function HomeBelowTheFold({
           ========================================================================= */}
       <section className="pt-2">
         <ZeroToOneJourneyCard
-          items={p.zeroToOneMilestones || p.learningJourneyBrief}
+          items={p.learningJourney}
           onExploreJourney={() => goTo('/journey')}
         />
       </section>

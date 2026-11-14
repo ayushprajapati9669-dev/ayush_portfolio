@@ -8,7 +8,7 @@ import { TechLogo } from '../common/TechLogos';
 
 try {
   gsap.registerPlugin(ScrollTrigger);
-} catch (_e) {}
+} catch (_e) { }
 
 // SVG Icon Render Map - Ultra-Crisp, High-Contrast Vector Emblems from Reference Architecture
 const SKILL_SVGS = {
@@ -277,12 +277,25 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
     // Baseline fallbacks matching skills-pro.html exactly
     const findCategory = (regex, fallback) => {
       const match = allCategories.find((c) => regex.test(c.name || ''));
-      if (match && match.items.length > 0) {
+      if (match && Array.isArray(match.items) && match.items.length > 0) {
+        const resolvedName = (match.name && typeof match.name === 'string' && match.name.trim())
+          ? match.name.trim()
+          : fallback.name;
+        const resolvedSubtitle = (match.subtitle && typeof match.subtitle === 'string' && match.subtitle.trim())
+          ? match.subtitle.trim()
+          : ((match.description && typeof match.description === 'string' && match.description.trim())
+            ? match.description.trim()
+            : fallback.subtitle);
+        const resolvedColor = (match.color && typeof match.color === 'string' && match.color.trim())
+          ? match.color.trim()
+          : fallback.color;
+
         return {
+          ...fallback,
           ...match,
-          name: fallback.name,
-          subtitle: fallback.subtitle,
-          color: fallback.color
+          name: resolvedName,
+          subtitle: resolvedSubtitle,
+          color: resolvedColor
         };
       }
       return fallback;

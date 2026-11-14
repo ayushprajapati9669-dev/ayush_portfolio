@@ -6,13 +6,23 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function runLighthouse(url, outputPath, isDesktop = false) {
   console.log(`Running Lighthouse for ${isDesktop ? 'DESKTOP' : 'MOBILE'}: ${outputPath}...`);
   const presetFlag = isDesktop ? '--preset=desktop' : '';
-  const cmd = `npx --no-install lighthouse ${url} ${presetFlag} --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=${outputPath} --chrome-flags="--headless=new --no-sandbox" --quiet`;
+  const cmd = `npx --no-install lighthouse ${url} ${presetFlag} --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=${outputPath} --chrome-flags="--headless=new --no-sandbox --no-first-run --no-default-browser-check --disable-features=SafeBrowsing --ignore-certificate-errors --allow-insecure-localhost --disable-dev-shm-usage" --quiet`;
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       execSync(cmd, { stdio: 'inherit' });
       const raw = fs.readFileSync(outputPath, 'utf8');
+      try {
+        if (process.platform === 'win32') {
+          execSync('powershell -Command "Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { -not $_.MainWindowTitle } | Stop-Process -Force"', { stdio: 'ignore' });
+        }
+      } catch (_e) {}
       return JSON.parse(raw);
     } catch (e) {
+      try {
+        if (process.platform === 'win32') {
+          execSync('powershell -Command "Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { -not $_.MainWindowTitle } | Stop-Process -Force"', { stdio: 'ignore' });
+        }
+      } catch (_e) {}
       if (attempt < 2) {
         console.warn(`Lighthouse run failed (attempt ${attempt}), cooling down for 2.5s before retry...`);
         await sleep(2500);
@@ -86,7 +96,7 @@ function median(values) {
     const m = extractMetrics(report);
     mobileMetrics.push(m);
     console.log(`  [Mobile Run ${i}] Score: ${m.performance} | FCP: ${m.fcpDisplay} | LCP: ${m.lcpDisplay} | TBT: ${m.tbtDisplay} | CLS: ${m.clsDisplay} | CSS: ${m.cssTransferKb}KB | MT: ${m.mainThreadWorkDisplay}`);
-    await sleep(3000);
+    await sleep(4500);
   }
 
   // DESKTOP AUDITS
@@ -97,7 +107,7 @@ function median(values) {
     const m = extractMetrics(report);
     desktopMetrics.push(m);
     console.log(`  [Desktop Run ${i}] Score: ${m.performance} | FCP: ${m.fcpDisplay} | LCP: ${m.lcpDisplay} | TBT: ${m.tbtDisplay} | CLS: ${m.clsDisplay} | CSS: ${m.cssTransferKb}KB | MT: ${m.mainThreadWorkDisplay}`);
-    await sleep(3000);
+    await sleep(4500);
   }
 
   // ADMIN CMS AUDITS
@@ -109,7 +119,7 @@ function median(values) {
     const m = extractMetrics(report);
     adminMetrics.push(m);
     console.log(`  [Admin Run ${i}] Score: ${m.performance} | FCP: ${m.fcpDisplay} | LCP: ${m.lcpDisplay} | TBT: ${m.tbtDisplay} | CLS: ${m.clsDisplay} | CSS: ${m.cssTransferKb}KB | MT: ${m.mainThreadWorkDisplay}`);
-    await sleep(3000);
+    await sleep(4500);
   }
 
   const mobileMedian = {
