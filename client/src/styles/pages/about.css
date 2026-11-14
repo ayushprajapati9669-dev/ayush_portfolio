@@ -447,40 +447,27 @@
   line-height: 1.4 !important;
 }
 
-/* ── Timeline List ── */
+/* ── Timeline List (Unconstrained, Scrollbar-Free, Non-Trapping) ── */
 .about-page .timeline-list {
   display: flex !important;
   flex-direction: column !important;
-  gap: 16px !important;
+  gap: 20px !important;
   margin-top: 16px !important;
   position: relative !important;
-  max-height: 420px !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-y !important;
-  padding-right: 12px !important;
-  scrollbar-width: thin !important;
-  scrollbar-color: rgba(212, 175, 55, 0.4) rgba(0, 0, 0, 0.2) !important;
+  max-height: none !important;
+  overflow: visible !important;
+  overscroll-behavior: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  padding-right: 0 !important;
 }
 
-.about-page .timeline-list::-webkit-scrollbar {
-  width: 5px !important;
-}
-
-.about-page .timeline-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02) !important;
-  border-radius: 9999px !important;
-}
-
+.about-page .timeline-list::-webkit-scrollbar,
+.about-page .timeline-list::-webkit-scrollbar-track,
 .about-page .timeline-list::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.35) !important;
-  border-radius: 9999px !important;
-  transition: background 0.2s ease !important;
-}
-
-.about-page .timeline-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 175, 55, 0.7) !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .about-page .timeline-item {

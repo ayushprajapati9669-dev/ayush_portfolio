@@ -266,7 +266,19 @@ export function CertificatesPage() {
       {certList.length === 0 ? (
         <div className="cert-empty-state max-w-xl mx-auto text-center py-16 px-6 my-10 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl">
           <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 text-2xl shadow-lg shadow-yellow-500/5">
-            <i className="fa-solid fa-award" />
+            <svg
+              className="w-8 h-8 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="8" r="6" />
+              <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+            </svg>
           </div>
           <h3 className="font-display text-xl sm:text-2xl font-bold text-white mb-2">
             Accreditations in Progress

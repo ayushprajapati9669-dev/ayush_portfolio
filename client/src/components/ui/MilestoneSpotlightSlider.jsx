@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import '../../styles/components/spotlight-slider.css';
 import { playTick } from '../../utils/audio';
 import { TechLogo } from '../common/TechLogos';
 import { sanitizeHtml } from '../../utils/sanitize';
@@ -117,14 +118,13 @@ export function MilestoneSpotlightSlider({ milestones = [] }) {
   // Filter & Normalize Spotlight Items
   const spotlightSlides = useMemo(() => {
     const list = Array.isArray(milestones) ? milestones : [];
-    // Prioritize items marked with spotlight === true or pinned === true or having high rating/photos
-    const filtered = list.filter((m) => {
-      if (!m || m.published === false) return false;
-      return m.spotlight === true || m.pinned === true || Boolean(m.image);
-    });
+    const published = list.filter((m) => m && m.published !== false);
+    if (published.length === 0) return [];
 
-    // If no items match, take first published items
-    const candidates = filtered.length > 0 ? filtered : list.filter((m) => m && m.published !== false);
+    // Prioritize items marked with spotlight === true or pinned === true or having high rating/photos
+    const featured = published.filter((m) => m.spotlight === true || m.pinned === true || Boolean(m.image));
+    const nonFeatured = published.filter((m) => !m.spotlight && !m.pinned && !Boolean(m.image));
+    const candidates = featured.length > 0 ? [...featured, ...nonFeatured] : published;
 
     return candidates.map((m, idx) => {
       const fallbackPool = FALLBACK_GALLERY_POOLS[idx % FALLBACK_GALLERY_POOLS.length];

@@ -37,58 +37,64 @@ export function AdminOverview({
     } catch (_e) {}
 
     const ctx = gsap.context(() => {
-      // 1. Stat cards entrance stagger with ScrollTrigger
+      // On mobile/tablet or touchscreens, ensure cards are immediately visible with zero delay or scroll-blocking
+      const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+      // 1. Stat cards entrance stagger
       if (statsGridRef.current) {
         const cards = statsGridRef.current.querySelectorAll('.stat-card');
-        gsap.from(cards, {
-          y: 30,
-          opacity: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'back.out(1.2)',
-          delay: 0.15,
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: statsGridRef.current,
-            start: 'top 92%',
-            once: true,
-            toggleActions: 'play none none none'
+        gsap.fromTo(
+          cards,
+          { y: 20, opacity: 0.7 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: 'power2.out',
+            clearProps: 'all'
           }
-        });
+        );
       }
 
-      // 2. Recent Activity glass card entrance with ScrollTrigger
+      // 2. Recent Activity glass card entrance
       if (recentActivityRef.current) {
-        gsap.from(recentActivityRef.current, {
-          y: 30,
-          opacity: 0,
-          duration: 0.6,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: recentActivityRef.current,
-            start: 'top 90%',
-            once: true,
-            toggleActions: 'play none none none'
-          }
-        });
+        if (isMobileOrTablet) {
+          gsap.set(recentActivityRef.current, { clearProps: 'all' });
+        } else {
+          gsap.from(recentActivityRef.current, {
+            y: 20,
+            opacity: 0.8,
+            duration: 0.5,
+            ease: 'power2.out',
+            clearProps: 'all',
+            scrollTrigger: {
+              trigger: recentActivityRef.current,
+              start: 'top 95%',
+              once: true
+            }
+          });
+        }
       }
 
-      // 3. Quick Actions glass card entrance with ScrollTrigger
+      // 3. Quick Actions glass card entrance
       if (quickActionsRef.current) {
-        gsap.from(quickActionsRef.current, {
-          y: 30,
-          opacity: 0,
-          duration: 0.6,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: quickActionsRef.current,
-            start: 'top 95%',
-            once: true,
-            toggleActions: 'play none none none'
-          }
-        });
+        if (isMobileOrTablet) {
+          gsap.set(quickActionsRef.current, { clearProps: 'all' });
+        } else {
+          gsap.from(quickActionsRef.current, {
+            y: 20,
+            opacity: 0.8,
+            duration: 0.5,
+            ease: 'power2.out',
+            clearProps: 'all',
+            scrollTrigger: {
+              trigger: quickActionsRef.current,
+              start: 'top 98%',
+              once: true
+            }
+          });
+        }
       }
     });
 

@@ -46,6 +46,7 @@ export function HomeBelowTheFold({
 
     let ctx = null;
     let cancelled = false;
+    let refreshTimer = null;
 
     Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([gsapMod, stMod]) => {
       if (cancelled || !foldRef.current) return;
@@ -54,7 +55,20 @@ export function HomeBelowTheFold({
       gsap.registerPlugin(ScrollTrigger);
       if (typeof window !== 'undefined') window.ScrollTrigger = ScrollTrigger;
 
+      const isMobileOrTablet = typeof window !== 'undefined' && (window.innerWidth < 1024 || ('ontouchstart' in window));
+
       ctx = gsap.context(() => {
+        if (isMobileOrTablet) {
+          // On mobile & touch devices, fail open immediately to prevent stuck opacity:0 during fast touch scrolling
+          gsap.set(
+            foldRef.current.querySelectorAll(
+              '.bento-section .bento-header > *, .bento-bio-card, .particle-container, .home-nav-executive-btn, .home-nav-btn, #featured-projects .project-card, #featured-projects .project-card-v2, .home-cta-banner'
+            ),
+            { clearProps: 'opacity,transform,visibility' }
+          );
+          return;
+        }
+
         // 1. Bento Intro & Focus Areas
         gsap.from('.bento-section .bento-header > *', {
           scrollTrigger: {
@@ -152,10 +166,14 @@ export function HomeBelowTheFold({
       }, foldRef);
 
       ScrollTrigger.refresh();
+      refreshTimer = setTimeout(() => {
+        if (!cancelled && ScrollTrigger) ScrollTrigger.refresh();
+      }, 500);
     }).catch(() => {});
 
     return () => {
       cancelled = true;
+      if (refreshTimer) clearTimeout(refreshTimer);
       if (ctx) ctx.revert();
     };
   }, []);

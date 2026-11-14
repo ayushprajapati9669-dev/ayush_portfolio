@@ -27,7 +27,7 @@ export function ScrollWriteText({
   className = '',
   stagger = 0.032,
   delay = 0.08,
-  threshold = 0.15,
+  threshold = 0.02,
   once = true,
   highlightWords = [],
   cursor = true,
@@ -136,7 +136,7 @@ export function ScrollWriteText({
           }
         });
       },
-      { threshold }
+      { threshold, rootMargin: '60px 0px 60px 0px' }
     );
 
     observer.observe(el);

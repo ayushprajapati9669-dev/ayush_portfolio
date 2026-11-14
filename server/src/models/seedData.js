@@ -41,19 +41,91 @@ const INITIAL_SEED_DATA = {
     ],
     learningJourney: [
       {
+        id: "m-workshop-mern-lead",
+        phase: "Workshop · Technical Leadership",
+        metaLabel: "Workshop · Technical Leadership",
+        yearBadge: "Year 3",
+        year: "Year 3",
+        title: "🎤 Lead Speaker & Instructor: MERN Stack & Cloud Architecture Workshop",
+        desc: "<h3>Hands-on Architecture Workshop</h3><p>Organized and conducted a flagship 2-day technical bootcamp on <strong>MERN Stack Engineering and Cloud Deployment</strong> at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.</p><h3>Live Demo & Lab Outcomes</h3><ul><li>Live-coded a full-stack real-time collaboration app with Socket.io on stage.</li><li>Guided students through Git branching workflows and live cloud deployment on Render and Vercel.</li><li>Rated 4.9/5 across attendee feedback surveys.</li></ul>",
+        description: "Organized and conducted a flagship 2-day technical bootcamp on MERN Stack Engineering and Cloud Deployment at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.",
+        status: "completed",
+        progress: 100,
+        rating: 5,
+        metric: "120+ Attendees · 2-Day Live Coding Lab & Project Deployment",
+        tags: [
+          "React JS",
+          "Node.js",
+          "MongoDB",
+          "Socket.io",
+          "Express.js",
+          "Tailwind CSS"
+        ],
+        skills: [
+          "React JS",
+          "Node.js",
+          "MongoDB",
+          "Socket.io",
+          "Express.js",
+          "Tailwind CSS"
+        ],
+        icon: "fa-chalkboard-user",
+        image: "/images/ayush-workshop-lead.jpg",
+        imageAlt: "Ayush Prajapati delivering MERN Stack Workshop on stage in front of students",
+        link: "https://github.com/ayushprajapati9669-dev",
+        published: true,
+        pinned: true,
+        spotlight: true,
+        views: 320,
+        createdAt: "2026-10-24T19:30:00.000Z"
+      },
+      {
+        id: "m-1",
         phase: "EDUCATION · 2024 – 2028",
+        metaLabel: "EDUCATION · 2024 – 2028",
+        yearBadge: "Year 3",
+        year: "Year 3",
         title: "B.Tech CSE — SISTec, Bhopal (CGPA: 8.42)",
-        description: "Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022)."
+        desc: "Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022).",
+        description: "Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022).",
+        status: "focus",
+        progress: 70,
+        rating: 4,
+        published: true,
+        pinned: false,
+        spotlight: false
       },
       {
+        id: "m-2",
         phase: "ACADEMIC PROJECTS · MERN & AI",
+        metaLabel: "ACADEMIC PROJECTS · MERN & AI",
+        yearBadge: "Year 1-2",
+        year: "Year 1-2",
         title: "Stock Trading Platform & Gemini AI ChatGPT Clone",
-        description: "Engineered a full-stack Stock Trading Platform (holdings, orders, positions, funds, Market/Limit Buy & Sell) and a ChatGPT Clone using React.js, Node.js, Express.js, MongoDB, and Gemini API."
+        desc: "Engineered a full-stack Stock Trading Platform (holdings, orders, positions, funds, Market/Limit Buy & Sell) and a ChatGPT Clone using React.js, Node.js, Express.js, MongoDB, and Gemini API.",
+        description: "Engineered a full-stack Stock Trading Platform (holdings, orders, positions, funds, Market/Limit Buy & Sell) and a ChatGPT Clone using React.js, Node.js, Express.js, MongoDB, and Gemini API.",
+        status: "completed",
+        progress: 100,
+        rating: 5,
+        published: true,
+        pinned: false,
+        spotlight: false
       },
       {
+        id: "m-3",
         phase: "ACHIEVEMENTS & LIVE DEPLOYMENTS",
+        metaLabel: "ACHIEVEMENTS & LIVE DEPLOYMENTS",
+        yearBadge: "Present",
+        year: "Present",
         title: "Airbnb Clone Live Deployment & Competition Winner",
-        description: "Won a website-making competition at college, completed the Apna College Delta Full-Stack Web Development course, and deployed a live Airbnb Clone on Render."
+        desc: "Won a website-making competition at college, completed the Apna College Delta Full-Stack Web Development course, and deployed a live Airbnb Clone on Render.",
+        description: "Won a website-making competition at college, completed the Apna College Delta Full-Stack Web Development course, and deployed a live Airbnb Clone on Render.",
+        status: "completed",
+        progress: 100,
+        rating: 5,
+        published: true,
+        pinned: false,
+        spotlight: false
       }
     ],
     socialLinks: {

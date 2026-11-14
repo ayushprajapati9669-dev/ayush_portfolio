@@ -65,10 +65,15 @@ function createAdminController({ store, config }) {
       }
       if (Array.isArray(body.learningJourney)) {
         patch.learningJourney = body.learningJourney.map(item => ({
-          phase: sanitizeText(item.phase || '', 120),
+          ...item,
+          phase: sanitizeText(item.phase || item.metaLabel || '', 120),
+          metaLabel: sanitizeText(item.metaLabel || item.phase || '', 120),
+          year: sanitizeText(item.year || item.yearBadge || '', 60),
+          yearBadge: sanitizeText(item.yearBadge || item.year || '', 60),
           title: sanitizeText(item.title || '', 200),
-          description: sanitizeText(item.description || '', 1000)
-        })).filter(item => item.title || item.description);
+          description: sanitizeText(item.description || item.desc || '', 3000),
+          desc: sanitizeText(item.desc || item.description || '', 3000)
+        })).filter(item => item.title || item.description || item.desc);
       }
       if (body.socialLinks && typeof body.socialLinks === 'object') {
         for (const k of ['github', 'linkedin', 'instagram']) {

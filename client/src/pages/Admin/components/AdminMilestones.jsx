@@ -104,9 +104,12 @@ export function AdminMilestones({
       id: item.id || `m-${idx + 1}`,
       title: item.title || 'Untitled Milestone',
       desc: item.desc || item.description || item.detail || '',
+      description: item.description || item.desc || item.detail || '',
       year: item.year || item.yearBadge || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
+      yearBadge: item.yearBadge || item.year || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
       status: item.status || (idx === 0 ? 'focus' : 'completed'),
       metaLabel: item.metaLabel || item.phase || 'Milestone',
+      phase: item.phase || item.metaLabel || 'Milestone',
       progress: item.progress !== undefined ? Number(item.progress) : (item.status === 'completed' ? 100 : 70),
       rating: item.rating !== undefined ? Number(item.rating) : 4,
       tags: Array.isArray(item.tags)
@@ -117,6 +120,11 @@ export function AdminMilestones({
         ? item.tags.split(',').map((t) => t.trim()).filter(Boolean)
         : item.skills
         ? item.skills.split(',').map((t) => t.trim()).filter(Boolean)
+        : [],
+      skills: Array.isArray(item.skills)
+        ? item.skills
+        : Array.isArray(item.tags)
+        ? item.tags
         : [],
       icon: item.icon || 'fa-layer-group',
       image: item.image || (Array.isArray(item.images) && item.images[0]) || null,
@@ -1576,7 +1584,9 @@ export function AdminMilestones({
               ...m,
               title: wizardTitle.trim(),
               metaLabel: wizardMeta.trim() || 'Milestone',
+              phase: wizardMeta.trim() || 'Milestone',
               year: wizardYear,
+              yearBadge: wizardYear,
               status: wizardStatus,
               progress: Number(wizardProgress) || 0,
               rating: Number(wizardRating) || 0,
@@ -1584,7 +1594,9 @@ export function AdminMilestones({
               pinned: wizardPinned || wizardSpotlight,
               spotlight: wizardSpotlight,
               desc: sanitizedDesc,
+              description: sanitizedDesc,
               tags: parsedTags,
+              skills: parsedTags,
               link: wizardLink.trim(),
               icon: wizardIcon,
               image: finalPrimaryImage || m.image || null,
@@ -1610,13 +1622,17 @@ export function AdminMilestones({
           id: `m-${Date.now()}`,
           title: wizardTitle.trim(),
           metaLabel: wizardMeta.trim() || 'Milestone',
+          phase: wizardMeta.trim() || 'Milestone',
           year: wizardYear,
+          yearBadge: wizardYear,
           status: wizardStatus,
           progress: Number(wizardProgress) || 0,
           rating: Number(wizardRating) || 0,
           metric: wizardMetric.trim(),
           desc: sanitizedDesc,
+          description: sanitizedDesc,
           tags: parsedTags,
+          skills: parsedTags,
           link: wizardLink.trim(),
           icon: wizardIcon,
           image: finalPrimaryImage,

@@ -13,11 +13,17 @@ import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { sanitizeHtml } from '../../utils/sanitize';
 
 export function JourneyPage() {
-  const { appState } = usePortfolio();
+  const { appState, refreshFromBackend } = usePortfolio();
   const navigate = useNavigate();
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof refreshFromBackend === 'function') {
+      refreshFromBackend();
+    }
+  }, [refreshFromBackend]);
 
   // Default / Baseline Milestones matching Portfolio Data
   const defaultMilestones = [
@@ -48,13 +54,15 @@ export function JourneyPage() {
   const milestones =
     p.learningJourney && Array.isArray(p.learningJourney) && p.learningJourney.length > 0
       ? p.learningJourney
-          .filter((m) => m.published !== false)
+          .filter((m) => m && m.published !== false)
           .map((m, idx) => ({
             ...m,
             id: m.id || `m-${idx}`,
             phase: m.phase || m.metaLabel || `Phase ${idx + 1}`,
+            metaLabel: m.metaLabel || m.phase || `Phase ${idx + 1}`,
             yearBadge: m.yearBadge || m.year || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
-            title: m.title,
+            year: m.year || m.yearBadge || (idx === 0 ? 'Year 3' : idx === 1 ? 'Year 1-2' : 'Present'),
+            title: m.title || 'Untitled Milestone',
             description: m.description || m.desc || m.detail || '',
             desc: m.desc || m.description || m.detail || '',
             icon: m.icon || 'fa-layer-group',
@@ -68,27 +76,31 @@ export function JourneyPage() {
             rating: m.rating !== undefined ? Number(m.rating) : 0,
             spotlight: m.spotlight !== undefined ? Boolean(m.spotlight) : Boolean(m.pinned),
             pinned: Boolean(m.pinned),
-            skills: Array.isArray(m.skills)
+            skills: Array.isArray(m.skills) && m.skills.length > 0
               ? m.skills
-              : Array.isArray(m.tags)
+              : Array.isArray(m.tags) && m.tags.length > 0
               ? m.tags
-              : m.skills
+              : typeof m.skills === 'string' && m.skills.trim()
               ? m.skills.split(',').map((s) => s.trim()).filter(Boolean)
-              : m.tags
+              : typeof m.tags === 'string' && m.tags.trim()
               ? m.tags.split(',').map((s) => s.trim()).filter(Boolean)
+              : [],
+            tags: Array.isArray(m.tags) && m.tags.length > 0
+              ? m.tags
+              : Array.isArray(m.skills) && m.skills.length > 0
+              ? m.skills
               : []
           }))
       : defaultMilestones;
 
-  // Separate into spotlight highlights vs journey timeline items
-  const spotlightMilestones = useMemo(() => {
-    const list = milestones.filter((m) => m.spotlight === true || (m.spotlight === undefined && m.pinned === true));
-    return list.length > 0 ? list : milestones;
+  // All verified milestones and achievements are rendered in the comprehensive timeline
+  const timelineMilestones = useMemo(() => {
+    return milestones;
   }, [milestones]);
 
-  const timelineMilestones = useMemo(() => {
-    const nonSpotlight = milestones.filter((m) => !m.spotlight && !m.pinned);
-    return nonSpotlight.length > 0 ? nonSpotlight : milestones;
+  // Pass all verified milestones to spotlight slider (it prioritizes featured first)
+  const spotlightMilestones = useMemo(() => {
+    return milestones;
   }, [milestones]);
 
   // 3D Card Tilt Physics
@@ -249,24 +261,17 @@ export function JourneyPage() {
             </span>
           </div>
 
-          <div
-            className="timeline-list"
-            data-lenis-prevent="true"
-            data-lenis-prevent-wheel="true"
-            tabIndex={0}
-            onWheel={(e) => {
-              e.stopPropagation();
-              e.currentTarget.scrollTop += e.deltaY;
-            }}
-          >
+          <div className="timeline-list">
             {timelineMilestones.map((item, idx) => {
-              const cleanPhase = (item.phase || '').replace(/\s*·\s*Year\s*[\d–-]+/i, '').trim();
-              const showYear = item.yearBadge && !cleanPhase.toLowerCase().includes(item.yearBadge.toLowerCase());
+              const cleanPhase = (item.phase || item.metaLabel || '').replace(/\s*·\s*Year\s*[\d–-]+/i, '').trim();
+              const showYear = item.yearBadge && !cleanPhase.toLowerCase().includes(String(item.yearBadge).toLowerCase());
+              const displayPhase = cleanPhase || item.phase || item.metaLabel || 'Milestone';
+              const displayDesc = item.description || item.desc || '';
               return (
-                <div key={idx} className="timeline-item">
+                <div key={item.id || idx} className="timeline-item">
                   <div className="timeline-dot" />
                   <div className="timeline-year">
-                    <span>{cleanPhase || item.phase}</span>
+                    <span>{displayPhase}</span>
                     {showYear && <span> · {item.yearBadge}</span>}
                     {item.status && (
                       <span
@@ -325,10 +330,12 @@ export function JourneyPage() {
                       </span>
                     )}
                   </div>
-                  <div
-                    className="timeline-desc"
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.description) }}
-                  />
+                  {displayDesc && (
+                    <div
+                      className="timeline-desc"
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDesc) }}
+                    />
+                  )}
                   {item.image && (
                     <img
                       src={item.image}
