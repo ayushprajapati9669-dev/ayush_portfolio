@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useMemo } from 'react';
 import '../../styles/pages/journey.css';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
@@ -135,6 +135,34 @@ export function JourneyPage() {
     });
   };
 
+  // Seamless non-trapping scrollbar interaction for Achievements & Journey
+  const handleTimelineWheel = (e) => {
+    const el = e.currentTarget;
+    if (!el) return;
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    const maxScroll = scrollHeight - clientHeight;
+    const isDown = e.deltaY > 0;
+    const isUp = e.deltaY < 0;
+
+    const canScrollDown = isDown && scrollTop < maxScroll - 1;
+    const canScrollUp = isUp && scrollTop > 1;
+
+    if (canScrollDown || canScrollUp) {
+      // Container has remaining scroll distance; allow native container scrolling
+      return;
+    }
+
+    // Container reached edge: seamlessly bubble scroll to page/Lenis so user is never trapped
+    if (typeof window !== 'undefined') {
+      if (window.__lenis && typeof window.__lenis.scrollTo === 'function') {
+        const current = typeof window.__lenis.targetScroll === 'number' ? window.__lenis.targetScroll : window.__lenis.scroll;
+        window.__lenis.scrollTo(current + e.deltaY * 0.9, { immediate: false });
+      } else {
+        window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+      }
+    }
+  };
+
   // Magnetic Button Physics
   const handleMagneticMouseMove = (e) => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -159,13 +187,13 @@ export function JourneyPage() {
     if (reduceMotion || !containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo('.page-header > *', 
-        { y: 30, opacity: 0 }, 
+      gsap.fromTo('.page-header > *',
+        { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'power2.out', clearProps: 'all' }
       );
 
-      gsap.fromTo('.spotlight-section .spotlight-card', 
-        { y: 30, opacity: 0 }, 
+      gsap.fromTo('.spotlight-section .spotlight-card',
+        { y: 30, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', delay: 0.08, clearProps: 'all' }
       );
 
@@ -174,8 +202,8 @@ export function JourneyPage() {
         { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', delay: 0.12, clearProps: 'all' }
       );
 
-      gsap.fromTo('.bottom-section .about-card', 
-        { y: 35, opacity: 0, scale: 0.96 }, 
+      gsap.fromTo('.bottom-section .about-card',
+        { y: 35, opacity: 0, scale: 0.96 },
         { y: 0, opacity: 1, scale: 1, duration: 0.65, ease: 'power2.out', delay: 0.15, clearProps: 'all' }
       );
 
@@ -190,7 +218,7 @@ export function JourneyPage() {
   }, []);
 
   return (
-    <main className="journey-page about-page" ref={containerRef}>
+    <main className="journey-page" ref={containerRef}>
       <SEO
         title="Journey & Career Milestones | Ayush Prajapati"
         description="Explore Ayush Prajapati's software engineering journey, verified milestones, LeetCode progress, and academic timeline."
@@ -261,7 +289,13 @@ export function JourneyPage() {
             </span>
           </div>
 
-          <div className="timeline-list">
+          <div
+            className="timeline-list custom-scrollbar"
+            data-lenis-prevent="true"
+            tabIndex={0}
+            aria-label="Achievements and journey timeline list"
+            onWheel={handleTimelineWheel}
+          >
             {timelineMilestones.map((item, idx) => {
               const cleanPhase = (item.phase || item.metaLabel || '').replace(/\s*·\s*Year\s*[\d–-]+/i, '').trim();
               const showYear = item.yearBadge && !cleanPhase.toLowerCase().includes(String(item.yearBadge).toLowerCase());
@@ -285,28 +319,27 @@ export function JourneyPage() {
                             item.status === 'completed'
                               ? 'rgba(16, 185, 129, 0.15)'
                               : item.status === 'planned'
-                              ? 'rgba(168, 85, 247, 0.15)'
-                              : 'rgba(212, 175, 55, 0.15)',
+                                ? 'rgba(168, 85, 247, 0.15)'
+                                : 'rgba(212, 175, 55, 0.15)',
                           color:
                             item.status === 'completed'
                               ? '#34d399'
                               : item.status === 'planned'
-                              ? '#c084fc'
-                              : '#d4af37',
-                          border: `1px solid ${
-                            item.status === 'completed'
-                              ? 'rgba(16, 185, 129, 0.3)'
-                              : item.status === 'planned'
+                                ? '#c084fc'
+                                : '#d4af37',
+                          border: `1px solid ${item.status === 'completed'
+                            ? 'rgba(16, 185, 129, 0.3)'
+                            : item.status === 'planned'
                               ? 'rgba(168, 85, 247, 0.3)'
                               : 'rgba(212, 175, 55, 0.3)'
-                          }`
+                            }`
                         }}
                       >
                         {item.status === 'completed'
                           ? 'Completed'
                           : item.status === 'planned'
-                          ? 'Target'
-                          : 'Current Focus'}
+                            ? 'Target'
+                            : 'Current Focus'}
                       </span>
                     )}
                   </div>

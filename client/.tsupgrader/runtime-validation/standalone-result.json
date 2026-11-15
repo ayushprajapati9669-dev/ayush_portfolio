@@ -1,0 +1,83 @@
+{
+  "planHash": "dead21e5c2994744698e0774a68cf8c67b0568edfd8553b946e0dea0ca9ec7a1",
+  "phase": "standalone",
+  "recordedAtUtc": "2026-11-14T19:45:22.6822826Z",
+  "retryCount": 0,
+  "resetBaseline": false,
+  "complete": true,
+  "result": {
+    "setupSucceeded": true,
+    "setupDurationMs": 0,
+    "setupFailureOutput": null,
+    "assertions": [
+      {
+        "name": "client-builds",
+        "kind": "process",
+        "verificationMethod": "exit-code",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": 0,
+        "outputSample": "\r\n\u003E argon-portfolio-client@1.0.0 build\r\n\u003E vite build\r\n\r\n\u001B[36mvite v5.4.21 \u001B[32mbuilding for production...\u001B[36m\u001B[39m\r\ntransforming...\r\n\u001B[32m\u2713\u001B[39m 139 modules transformed.\r\nrendering chunks...\r\n\u001B[2mdist/\u001B[22m\u001B[32massets/cinematicParticleWorker-B3WR2hOd.js   \u001B[39m\u001B[1m\u001B[2m  1.15 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[32massets/portraitParticleWorker-D6YAsvjx.js    \u001B[39m\u001B[1m\u001B[2m  1.26 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[32mindex.html                                   \u001B[39m\u001B[1m\u001B[2m 11.93 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/HomeBelowTheFold-Djfm0ZDt.css         \u001B[39m\u001B[1m\u001B[2m  4.12 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/ProjectDetail-GZv0wL7x.css            \u001B[39m\u001B[1m\u001B[2m  7.27 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/Projects-B3vpM5Eb.css                 \u001B[39m\u001B[1m\u001B[2m  7.68 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/Certificates-e4brEyRi.css             \u001B[39m\u001B[1m\u001B[2m  9.63 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/Footer-y16NXVya.css                   \u001B[39m\u001B[1m\u001B[2m 10.03 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/Contact-Du-sFETc.css                  \u001B[39m\u001B[1m\u001B[2m 10.67 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/Skills-vSHUH5_X.css                   \u001B[39m\u001B[1m\u001B[2m 13.38 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/cards-Dre2rc_G.css                    \u001B[39m\u001B[1m\u001B[2m 19.53 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/Journey-5K_1ezYE.css                  \u001B[39m\u001B[1m\u001B[2m 35.66 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/About-D5n0LvSC.css                    \u001B[39m\u001B[1m\u001B[2m 36.26 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/AdminMilestones-BMiXUGTe.css          \u001B[39m\u001B[1m\u001B[2m 43.73 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/Admin-qj2-xE2u.css                    \u001B[39m\u001B[1m\u001B[2m 71.46 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[35massets/index-DV6_Qcgu.css                    \u001B[39m\u001B[1m\u001B[2m208.24 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/sanitize-xDaRXgLP.js                  \u001B[39m\u001B[1m\u001B[2m  0.42 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/MarkdownView-CiZuvYCm.js              \u001B[39m\u001B[1m\u001B[2m  0.79 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/QuickProjectModal-gTm7GUjc.js         \u001B[39m\u001B[1m\u001B[2m  1.89 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/validation-DuIUfWZO.js                \u001B[39m\u001B[1m\u001B[2m  2.22 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/ActivityDetailModal-CVN4fcKl.js       \u001B[39m\u001B[1m\u001B[2m  2.48 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/NotFound-BB3GGnSJ.js                  \u001B[39m\u001B[1m\u001B[2m  3.61 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/ScrollWriteText-Bw4t7_04.js           \u001B[39m\u001B[1m\u001B[2m  4.06 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/AdminSecurity-CPfZt6QJ.js             \u001B[39m\u001B[1m\u001B[2m  4.17 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/ResumeModal-CFiI-OoL.js               \u001B[39m\u001B[1m\u001B[2m  4.33 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/InteractiveMeshWave-SDxvRw5x.js       \u001B[39m\u001B[1m\u001B[2m  6.02 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/SoundscapeStudio-doFj2eBF.js          \u001B[39m\u001B[1m\u001B[2m  6.26 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/AdminSidebar-CtU8jBuh.js              \u001B[39m\u001B[1m\u001B[2m  6.45 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/ProjectCard-85j2svPg.js               \u001B[39m\u001B[1m\u001B[2m  8.15 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/AskAyushAiWidget-DVnAoD8E.js          \u001B[39m\u001B[1m\u001B[2m  8.36 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/Projects-DzYFxywf.js                  \u001B[39m\u001B[1m\u001B[2m  8.36 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/CertificateLightboxModal-BsH-KtMQ.js  \u001B[39m\u001B[1m\u001B[2m  8.97 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/About-CxxJWCzF.js                     \u001B[39m\u001B[1m\u001B[2m  9.80 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/Footer-DKwCv97i.js                    \u001B[39m\u001B[1m\u001B[2m 10.51 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/VantaBirdsBackground-D2MPq61R.js      \u001B[39m\u001B[1m\u001B[2m 10.65 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/Certificates-JklMuSbJ.js              \u001B[39m\u001B[1m\u001B[2m 11.01 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/ProjectDetail-CBLIlsb9.js             \u001B[39m\u001B[1m\u001B[2m 11.37 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/ZeroToOneJourneyCard-DsJpQZpP.js      \u001B[39m\u001B[1m\u001B[2m 11.78 kB\u001B[22m\u001B[1m\u001B[22m\r\n\u001B[2mdist/\u001B[22m\u001B[36massets/C\n\u2026[truncated]",
+        "durationMs": 11005
+      },
+      {
+        "name": "dev-server-serves-home",
+        "kind": "http-probe",
+        "verificationMethod": "http-status",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": null,
+        "outputSample": "HTTP 200\n\u003C!DOCTYPE html\u003E\r\n\u003Chtml lang=\u0022en\u0022 class=\u0022dark\u0022\u003E\r\n  \u003Chead\u003E\n    \u003Cscript type=\u0022module\u0022\u003Eimport { injectIntoGlobalHook } from \u0022/@react-refresh\u0022;\ninjectIntoGlobalHook(window);\nwindow.$RefreshReg$ = () =\u003E {};\nwindow.$RefreshSig$ = () =\u003E (type) =\u003E type;\u003C/script\u003E\n\n    \u003Cscript type=\u0022module\u0022 src=\u0022/@vite/client\u0022\u003E\u003C/script\u003E\n\r\n    \u003Cmeta charset=\u0022UTF-8\u0022 /\u003E\r\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022width=device-width, initial-scale=1.0\u0022 /\u003E\r\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/svg\u002Bxml\u0022 href=\u0022/favicon.svg\u0022 /\u003E\r\n\r\n    \u003C!-- Primary SEO Meta Tags --\u003E\r\n    \u003Ctitle\u003EAyush Prajapati \u2014 Full-Stack Developer \u0026amp; Software Engineer\u003C/title\u003E\r\n    \u003Cmeta\r\n      name=\u0022description\u0022\r\n      content=\u0022Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, and scalable full-stack web applications.\u0022\r\n    /\u003E\r\n    \u003Cmeta name=\u0022keywords\u0022 content=\u0022Ayush Prajapati, Full-Stack Developer, MERN Stack, React, Node.js, SISTec Bhopal, Software Engineer, Portfolio\u0022 /\u003E\r\n    \u003Cmeta name=\u0022author\u0022 content=\u0022Ayush Prajapati\u0022 /\u003E\r\n    \u003Cmeta name=\u0022robots\u0022 content=\u0022index, follow\u0022 /\u003E\r\n    \u003Cmeta name=\u0022googlebot\u0022 content=\u0022index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\u0022 /\u003E\r\n    \u003Clink rel=\u0022canonical\u0022 href=\u0022https://ayushprajapati.dev/\u0022 /\u003E\r\n\r\n    \u003C!-- Open Graph \u0026 Social Cards --\u003E\r\n    \u003Cmeta property=\u0022og:title\u0022 content=\u0022Ayush Prajapati \u2014 Full-Stack Developer \u0026amp; Software Engineer\u0022 /\u003E\r\n    \u003Cmeta property=\u0022og:description\u0022 content=\u0022Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, and scalable full-stack web applications.\u0022 /\u003E\r\n    \u003Cmeta property=\u0022og:type\u0022 content=\u0022website\u0022 /\u003E\r\n    \u003Cmeta property=\u0022og:url\u0022 content=\u0022https://ayushprajapati.dev/\u0022 /\u003E\r\n    \u003Cmeta property=\u0022og:image\u0022 content=\u0022https://ayushprajapati.dev/og-image.png\u0022 /\u003E\r\n    \u003Cmeta property=\u0022og:image:width\u0022 content=\u00221200\u0022 /\u003E\r\n    \u003Cmeta property=\u0022og:image:height\u0022 content=\u0022630\u0022 /\u003E\r\n    \u003Cmeta property=\u0022og:site_name\u0022 content=\u0022Ayush Prajapati Portfolio\u0022 /\u003E\r\n    \u003Cmeta name=\u0022twitter:card\u0022 content=\u0022summary_large_image\u0022 /\u003E\r\n    \u003Cmeta name=\u0022twitter:title\u0022 content=\u0022Ayush Prajapati \u2014 Full-Stack Developer Portfolio\u0022 /\u003E\r\n    \u003Cmeta name=\u0022twitter:description\u0022 content=\u0022Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development and scalable architectures.\u0022 /\u003E\r\n    \u003Cmeta name=\u0022twitter:image\u0022 content=\u0022https://ayushprajapati.dev/og-image.png\u0022 /\u003E\r\n\r\n    \u003C!-- Schema.org Structured Data for Google Rich Snippets --\u003E\r\n    \u003Cscript type=\u0022application/ld\u002Bjson\u0022\u003E\r\n      {\r\n        \u0022@context\u0022: \u0022https://schema.org\u0022,\r\n        \u0022@type\u0022: \u0022Person\u0022,\r\n        \u0022name\u0022: \u0022Ayush Prajapati\u0022,\r\n        \u0022url\u0022: \u0022https://ayushprajapati.dev\u0022,\r\n        \u0022jobTitle\u0022: \u0022Full-Stack Developer\u0022,\r\n        \u0022description\u0022: \u0022B.Tech CSE student at SISTec, Bhopal specializing in MERN stack development\u0022,\r\n        \u0022alumniOf\u0022: {\r\n          \u0022@type\u0022: \u0022CollegeOrUniversity\u0022,\r\n          \u0022name\u0022: \u0022Sagar Institute of Science and Technology (SISTec), Bhopal\u0022\r\n        },\r\n        \u0022sameAs\u0022: [\r\n          \u0022https://github.com/ayushprajapati9669-dev\u0022,\r\n          \u0022https://linkedin.com/in/ayushprajapati\u0022\r\n        ],\r\n        \u0022knowsAbout\u0022: [\u0022React.js\u0022, \u0022Node.js\u0022, \u0022MongoDB\u0022, \u0022Express.js\u0022, \u0022C\u0022, \u0022Java\u0022, \u0022Python\u0022, \u0022Full-Stack Architecture\u0022]\r\n      }\r\n    \u003C/script\u003E\r\n\r\n    \u003C!-- Critical Inline CSS for above-the-fold content (eliminates render-blocking \u0026 CLS) --\u003E\r\n    \u003Cstyle\u003E\n      *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }\n      html { color-scheme: dark; scroll-behavior: smooth; }\n      body {\n        background: #000000;\n        color: #ffffff;\n        font-family: \u0027Plus Jakarta Sans\u0027, -apple-system, BlinkMacSystemFont, \u0027Segoe UI\u0027, Roboto, sans-serif;\n        min-height: 100vh;\n        overflow-x: hidden;\n        -webkit-font-smoothing: antialiased;\n      }\n      #root { min-height: 100vh; }\n      h1, h2, h3 { font-family: \u0027Plus Jakarta Sans\u0027, system-ui, sans-serif; line-height: 1.1; letter-spacing: -0.02em; }\n      .hero-editorial-stage { position:\n\u2026[truncated]",
+        "durationMs": 47
+      }
+    ],
+    "executions": [
+      {
+        "source": "devServer",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
+        "args": [
+          "run",
+          "dev",
+          "--",
+          "--host",
+          "127.0.0.1"
+        ],
+        "cwd": "D:\\MY_PROJECT\\FULL_STACK_PROJECT\\ayush_portfolio_main\\client",
+        "env": {},
+        "prependPath": [],
+        "platform": "win32"
+      },
+      {
+        "source": "client-builds",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
+        "args": [
+          "run",
+          "build"
+        ],
+        "cwd": "D:\\MY_PROJECT\\FULL_STACK_PROJECT\\ayush_portfolio_main\\client",
+        "env": {},
+        "prependPath": [],
+        "platform": "win32"
+      },
+      {
+        "source": "dev-server-serves-home",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
+        "args": [
+          "run",
+          "dev",
+          "--",
+          "--host",
+          "127.0.0.1"
+        ],
+        "cwd": "D:\\MY_PROJECT\\FULL_STACK_PROJECT\\ayush_portfolio_main\\client",
+        "env": {},
+        "prependPath": [],
+        "platform": "win32"
+      }
+    ]
+  }
+}

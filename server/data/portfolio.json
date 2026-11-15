@@ -41,28 +41,44 @@
     "heroDescription": "Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42) skilled in C, Java, JavaScript, Python, React.js, Node.js, Express.js, MySQL, and MongoDB. Winner of a college website-making competition.",
     "learningJourney": [
       {
-        "id": "m-1794680135540",
-        "title": "mern stack 2",
-        "desc": "",
-        "description": "",
+        "id": "m-workshop-mern-lead",
+        "title": "🎤 Lead Speaker & Instructor: MERN Stack & Cloud Architecture Workshop",
+        "desc": "<h3>Hands-on Architecture Workshop</h3><p>Organized and conducted a flagship 2-day technical bootcamp on <strong>MERN Stack Engineering and Cloud Deployment</strong> at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.</p><h3>Live Demo & Lab Outcomes</h3><ul><li>Live-coded a full-stack real-time collaboration app with Socket.io on stage.</li><li>Guided students through Git branching workflows and live cloud deployment on Render and Vercel.</li><li>Rated 4.9/5 across attendee feedback surveys.</li></ul>",
+        "description": "<h3>Hands-on Architecture Workshop</h3><p>Organized and conducted a flagship 2-day technical bootcamp on <strong>MERN Stack Engineering and Cloud Deployment</strong> at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.</p><h3>Live Demo & Lab Outcomes</h3><ul><li>Live-coded a full-stack real-time collaboration app with Socket.io on stage.</li><li>Guided students through Git branching workflows and live cloud deployment on Render and Vercel.</li><li>Rated 4.9/5 across attendee feedback surveys.</li></ul>",
         "year": "Year 3",
         "yearBadge": "Year 3",
-        "status": "focus",
-        "metaLabel": "year 2",
-        "phase": "year 2",
-        "progress": 70,
-        "rating": 4,
-        "tags": [],
-        "skills": [],
-        "icon": "fa-layer-group",
-        "image": null,
-        "images": [],
+        "status": "completed",
+        "metaLabel": "Workshop · Technical Leadership",
+        "phase": "Workshop · Technical Leadership",
+        "progress": 100,
+        "rating": 5,
+        "tags": [
+          "React JS",
+          "Node.js",
+          "MongoDB",
+          "Socket.io",
+          "Express.js",
+          "Tailwind CSS"
+        ],
+        "skills": [
+          "React JS",
+          "Node.js",
+          "MongoDB",
+          "Socket.io",
+          "Express.js",
+          "Tailwind CSS"
+        ],
+        "icon": "fa-chalkboard-user",
+        "image": "/images/ayush-workshop-lead.jpg",
+        "images": [
+          "/images/ayush-workshop-lead.jpg"
+        ],
         "hdImages": [],
-        "imageAlt": "",
-        "link": "",
-        "metric": "",
+        "imageAlt": "Ayush Prajapati delivering MERN Stack Workshop on stage in front of students",
+        "link": "https://github.com/ayushprajapati9669-dev",
+        "metric": "120+ Attendees · 2-Day Live Coding Lab & Project Deployment",
         "badgeText": "",
-        "badgeIcon": "fa-trophy",
+        "badgeIcon": "",
         "challenge": "",
         "solution": "",
         "outcome": "",
@@ -71,10 +87,10 @@
         "deepdive": "",
         "proofs": [],
         "published": true,
-        "pinned": false,
-        "spotlight": false,
-        "views": 0,
-        "createdAt": "2026-11-14T18:15:35.540Z"
+        "pinned": true,
+        "spotlight": true,
+        "views": 320,
+        "createdAt": "2026-10-24T19:30:00.000Z"
       },
       {
         "id": "m-1",
@@ -111,6 +127,42 @@
         "spotlight": false,
         "views": 100,
         "createdAt": "2026-11-14T18:14:50.016Z"
+      },
+      {
+        "id": "m-1794686654523",
+        "title": "ai-ml completed",
+        "desc": "<h3>Overview</h3><p>Successfully completed <b>ai-ml completed </b> demonstrating rigorous engineering and methodical execution.</p><h3>Key Highlights</h3><ul><li>Applied algorithmic problem-solving and modern development tools.</li><li>Engineered modular architecture with comprehensive test coverage.</li><li>Ensured intuitive responsive interfaces and optimized execution speed.</li></ul>",
+        "description": "<h3>Overview</h3><p>Successfully completed <b>ai-ml completed </b> demonstrating rigorous engineering and methodical execution.</p><h3>Key Highlights</h3><ul><li>Applied algorithmic problem-solving and modern development tools.</li><li>Engineered modular architecture with comprehensive test coverage.</li><li>Ensured intuitive responsive interfaces and optimized execution speed.</li></ul>",
+        "year": "Year 3",
+        "yearBadge": "Year 3",
+        "status": "completed",
+        "metaLabel": "ai-ml practice year-3",
+        "phase": "ai-ml practice year-3",
+        "progress": 70,
+        "rating": 4,
+        "tags": [],
+        "skills": [],
+        "icon": "fa-layer-group",
+        "image": null,
+        "images": [],
+        "hdImages": [],
+        "imageAlt": "",
+        "link": "",
+        "metric": "",
+        "badgeText": "",
+        "badgeIcon": "fa-trophy",
+        "challenge": "",
+        "solution": "",
+        "outcome": "",
+        "metrics": [],
+        "links": [],
+        "deepdive": "",
+        "proofs": [],
+        "published": true,
+        "pinned": true,
+        "spotlight": true,
+        "views": 0,
+        "createdAt": "2026-11-14T20:04:14.523Z"
       },
       {
         "id": "m-2",
@@ -203,7 +255,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "From blank screen to live product. That’s Ayush Prajapati.",
-    "updatedAt": "2026-10-18T10:00:00.000Z",
+    "updatedAt": "2026-11-14T20:05:33.420Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -283,7 +335,29 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-10-31T08:52:18.375Z"
+      "updatedAt": "2026-11-14T20:05:33.202Z",
+      "caseStudy": {
+        "problem": "",
+        "approach": "",
+        "techDecisions": "",
+        "learnings": "",
+        "architectureDiagramUrl": "",
+        "beforeScreenshots": [],
+        "afterScreenshots": [],
+        "result": {
+          "summary": "",
+          "metrics": [
+            {
+              "label": "API Endpoints",
+              "value": "15+"
+            },
+            {
+              "label": "Lighthouse",
+              "value": "92"
+            }
+          ]
+        }
+      }
     },
     {
       "id": "proj-1792430599188",
@@ -311,7 +385,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
-      "updatedAt": "2026-10-31T08:52:18.407Z"
+      "updatedAt": "2026-11-14T20:05:33.202Z"
     },
     {
       "id": "proj-1792496192331",
@@ -336,7 +410,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-chat-preview.webp",
       "title": "ai chat boat",
-      "updatedAt": "2026-10-31T08:52:18.460Z"
+      "updatedAt": "2026-11-14T20:05:33.202Z"
     },
     {
       "id": "proj-1792781601076",
@@ -364,7 +438,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
-      "updatedAt": "2026-10-31T08:52:18.494Z"
+      "updatedAt": "2026-11-14T20:05:33.202Z"
     },
     {
       "id": "proj-1792669669594",
@@ -392,14 +466,14 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-agentic-preview.webp",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-10-31T08:52:18.520Z"
+      "updatedAt": "2026-11-14T20:05:33.202Z"
     }
   ],
   "skills": [
     {
       "id": "skill-languages",
       "category": "Languages",
-      "tabIcon": "languages",
+      "createdAt": "2026-11-14T17:32:55.993Z",
       "description": "Programming languages used for DSA and full-stack engineering.",
       "displayOrder": 1,
       "items": [
@@ -423,12 +497,14 @@
           "name": "Python",
           "logoKey": "python"
         }
-      ]
+      ],
+      "tabIcon": "languages",
+      "updatedAt": "2026-11-14T20:05:33.205Z"
     },
     {
       "id": "skill-frontend",
       "category": "Frontend",
-      "tabIcon": "frontend",
+      "createdAt": "2026-11-14T17:32:55.993Z",
       "description": "Frontend web technologies for responsive, modern user interfaces.",
       "displayOrder": 2,
       "items": [
@@ -464,12 +540,14 @@
           "name": "Next.js",
           "logoKey": "nextjs"
         }
-      ]
+      ],
+      "tabIcon": "frontend",
+      "updatedAt": "2026-11-14T20:05:33.205Z"
     },
     {
       "id": "skill-backend",
       "category": "Backend",
-      "tabIcon": "backend",
+      "createdAt": "2026-11-14T17:32:55.993Z",
       "description": "Server runtimes and REST API architecture.",
       "displayOrder": 3,
       "items": [
@@ -485,12 +563,14 @@
           "name": "REST APIs",
           "logoKey": "api"
         }
-      ]
+      ],
+      "tabIcon": "backend",
+      "updatedAt": "2026-11-14T20:05:33.205Z"
     },
     {
       "id": "skill-databases",
       "category": "Databases",
-      "tabIcon": "databases",
+      "createdAt": "2026-11-14T17:32:55.993Z",
       "description": "Relational and NoSQL document database management.",
       "displayOrder": 4,
       "items": [
@@ -502,12 +582,14 @@
           "name": "MySQL",
           "logoKey": "mysql"
         }
-      ]
+      ],
+      "tabIcon": "databases",
+      "updatedAt": "2026-11-14T20:05:33.205Z"
     },
     {
       "id": "skill-tools",
       "category": "Tools & Workflow",
-      "tabIcon": "tools",
+      "createdAt": "2026-11-14T17:32:55.993Z",
       "description": "Version control, cloud media storage, and developer workflow tools.",
       "displayOrder": 5,
       "items": [
@@ -531,12 +613,14 @@
           "name": "Cloudinary",
           "logoKey": "cloudinary"
         }
-      ]
+      ],
+      "tabIcon": "tools",
+      "updatedAt": "2026-11-14T20:05:33.205Z"
     },
     {
       "id": "skill-dsa",
       "category": "Problem Solving",
-      "tabIcon": "dsa",
+      "createdAt": "2026-11-14T17:32:55.993Z",
       "description": "Data structures, algorithms, and core computer science fundamentals.",
       "displayOrder": 6,
       "items": [
@@ -544,49 +628,14 @@
           "name": "Data Structures & Algorithms",
           "logoKey": "dsa"
         }
-      ]
+      ],
+      "tabIcon": "dsa",
+      "updatedAt": "2026-11-14T20:05:33.205Z"
     }
   ],
   "certificates": [],
   "media": [],
-  "messages": [
-    {
-      "id": "msg-1792813214696",
-      "name": "ajit kumar",
-      "email": "ajit@gmail.com",
-      "subject": "help",
-      "message": "i need some help from you please support me",
-      "status": "read",
-      "createdAt": "2026-10-24T03:40:14.696Z"
-    },
-    {
-      "id": "msg-1792776034240",
-      "name": "ajay prajapati",
-      "email": "ajay@gmail.com",
-      "subject": "personal",
-      "message": "you can aaply for the tcs",
-      "status": "read",
-      "createdAt": "2026-10-23T17:20:34.240Z"
-    },
-    {
-      "id": "msg-1792775992794",
-      "name": "sonali prajapati",
-      "email": "sonali@gmail.com",
-      "subject": "connect",
-      "message": "i am connect to you",
-      "status": "read",
-      "createdAt": "2026-10-23T17:19:52.794Z"
-    },
-    {
-      "id": "msg-1792775905527",
-      "name": "rohit prajapati",
-      "email": "rohti626861@gmail.com",
-      "subject": "hiring",
-      "message": "i hired you",
-      "status": "read",
-      "createdAt": "2026-10-23T17:18:25.527Z"
-    }
-  ],
+  "messages": [],
   "settings": {
     "siteName": "Ayush Prajapati",
     "siteTitle": "Ayush Prajapati — Full-Stack Developer Portfolio",
@@ -600,15 +649,15 @@
     "contactPhone": "(+91) 9669802554",
     "contactNote": "",
     "copyrightText": "© 2026 Ayush Prajapati. All rights reserved.",
-    "accentColor": "#dfb740",
+    "accentColor": "#06b6d4",
     "themeMode": "dark",
     "bgBase": "#000000",
     "bgSurface": "#0a0a0f",
-    "glowIntensity": "medium",
+    "glowIntensity": "subtle",
     "maintenanceMode": false,
     "particlesEnabled": true,
     "robotsIndex": "index, follow",
-    "updatedAt": "2026-11-14T16:57:25.087Z",
+    "updatedAt": "2026-11-15T03:52:00.589Z",
     "fontHeading": "'Plus Jakarta Sans', sans-serif",
     "fontBody": "'Plus Jakarta Sans', sans-serif",
     "seoKeywords": "Ayush Prajapati, Full-Stack Developer, MERN Stack, React.js, Node.js, SISTec Bhopal, Software Engineer, Portfolio",
@@ -622,10 +671,10 @@
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-14T17:11:55.070Z",
-      "passwordHash": "scrypt$16384$8$1$ac62bb5a6b1efa02848bdb68fa2e515d$aaa9097098e9e1d53e92cef579ad02adf335565525de2e11e63a590141ce9a5c1118fb5ec7ba169964d24b66423c3786fd11cdd9a100f7d607db0b0ff7dafa7e",
+      "lastLoginAt": "2026-11-15T03:34:19.451Z",
+      "passwordHash": "scrypt$16384$8$1$4239cdd5ea09a3af47a1ef70e7251af9$a879a3326e425702bfceff0e6670507b88b6bf5e0db1daed20ac3c15adf277ad33fad93c85fd3e8afdbbe88859afba4b254129a99d4137ee3770075f29dd77d6",
       "role": "admin",
-      "updatedAt": "2026-11-14T17:11:52.401Z"
+      "updatedAt": "2026-11-14T20:05:33.347Z"
     },
     {
       "username": "ayush",
@@ -634,7 +683,7 @@
       "lastLoginAt": "2026-11-14T18:09:37.910Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T16:31:35.545Z"
+      "updatedAt": "2026-11-14T20:05:33.347Z"
     },
     {
       "createdAt": "2026-11-05T12:05:07.107Z",
@@ -642,7 +691,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T16:31:35.545Z",
+      "updatedAt": "2026-11-14T20:05:33.347Z",
       "username": "admin"
     },
     {
@@ -651,7 +700,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T16:31:35.545Z",
+      "updatedAt": "2026-11-14T20:05:33.347Z",
       "username": "Ayush7162"
     }
   ],
