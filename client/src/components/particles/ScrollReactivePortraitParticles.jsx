@@ -12,8 +12,6 @@ import { usePortfolio } from '../../app/providers/ThemeProvider';
  * 3. Graceful early scroll handling: if user scrolls before sampling completes, existing batch dissolves seamlessly.
  */
 
-const MATRIX_GLYPHS = ['0', '1', '+', '*', '·', 'x', ':', '•', '◇', '▲'];
-
 export function ScrollReactivePortraitParticles({
   imageUrl,
   alt = 'Ayush Prajapati',
@@ -292,10 +290,6 @@ export function ScrollReactivePortraitParticles({
                   const angle = -Math.PI * 0.5 + ((x / width) - 0.5) * 1.1 + (Math.random() - 0.5) * 0.6;
                   const speed = 0.8 + Math.random() * 1.1;
 
-                  // 18% matrix glyphs, 82% circular stardust points
-                  const isChar = Math.random() < 0.18;
-                  const char = isChar ? MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)] : null;
-
                   // Subtle warm golden highlight tint for celestial AI builder theme
                   let finalR = r;
                   let finalG = g;
@@ -317,7 +311,6 @@ export function ScrollReactivePortraitParticles({
                     b: finalB,
                     baseAlpha: Math.min(1, (a / 255) * (0.65 + (luma / 255) * 0.35)),
                     radius: 1.1 + (luma / 255) * 1.7 * z,
-                    char,
                     angle,
                     speed,
                     freq: 0.5 + Math.random() * 0.8,
@@ -541,12 +534,11 @@ export function ScrollReactivePortraitParticles({
       const timeDelta = Math.min(0.05, (now - lastRenderTime) * 0.001);
       lastRenderTime = now;
 
-      // Determine live scroll position from Lenis or window
+      // Determine live scroll position from Lenis or window (no Math.max — must track actual scroll direction)
       const activeLenis = lenisRef.current;
       const getLiveScroll = () => {
-        const lenisY = activeLenis && typeof activeLenis.scroll === 'number' ? activeLenis.scroll : 0;
-        const winY = typeof window !== 'undefined' ? (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0) : 0;
-        return Math.max(scrollState.targetY || 0, lenisY, winY);
+        if (activeLenis && typeof activeLenis.scroll === 'number') return activeLenis.scroll;
+        return typeof window !== 'undefined' ? (window.pageYOffset || window.scrollY || document.documentElement.scrollTop || 0) : 0;
       };
 
       const liveScroll = getLiveScroll();
@@ -602,7 +594,6 @@ export function ScrollReactivePortraitParticles({
         ctx.scale(dpr, dpr);
         ctx.clearRect(0, 0, width, height);
         ctx.globalCompositeOperation = 'screen';
-        ctx.font = '9px "JetBrains Mono", monospace';
 
         const mouseRadius = 140;
         const count = particles.length;
@@ -655,16 +646,10 @@ export function ScrollReactivePortraitParticles({
           if (alpha < 0.01) continue;
 
           ctx.globalAlpha = alpha;
-
-          if (pt.char) {
-            ctx.fillStyle = `rgb(${pt.r}, ${pt.g}, ${pt.b})`;
-            ctx.fillText(pt.char, pt.x, pt.y);
-          } else {
-            ctx.fillStyle = `rgb(${pt.r}, ${pt.g}, ${pt.b})`;
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
-            ctx.fill();
-          }
+          ctx.fillStyle = `rgb(${pt.r}, ${pt.g}, ${pt.b})`;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+          ctx.fill();
         }
 
         ctx.restore();
@@ -735,11 +720,10 @@ export function ScrollReactivePortraitParticles({
 
     function updateLoopState() {
       const activeLenis = lenisRef.current;
-      const liveScroll = Math.max(
-        scrollState.targetY || 0,
-        activeLenis && typeof activeLenis.scroll === 'number' ? activeLenis.scroll : 0,
-        typeof window !== 'undefined' ? (window.pageYOffset || window.scrollY || 0) : 0
-      );
+      // No Math.max — must accurately track actual scroll direction (up AND down)
+      const liveScroll = (activeLenis && typeof activeLenis.scroll === 'number')
+        ? activeLenis.scroll
+        : (typeof window !== 'undefined' ? (window.pageYOffset || window.scrollY || 0) : 0);
       const shouldRun = particlesEnabledRef.current && isMounted.current && inViewport.current && isTabVisible.current && (liveScroll > 25);
 
       if (shouldRun && !isLoopRunning.current) {
@@ -752,12 +736,16 @@ export function ScrollReactivePortraitParticles({
           cancelAnimationFrame(animId);
           animId = null;
         }
-        if (!particlesEnabledRef.current) {
-          if (imgEl) {
-            imgEl.style.opacity = '1';
-            imgEl.style.transform = 'translate3d(0, 0, 0)';
-          }
+        // Always restore pristine photo when animation stops (scroll-back-to-top OR particles disabled)
+        if (imgEl) {
+          imgEl.style.opacity = '1';
+          imgEl.style.transform = 'translate3d(0, 0, 0)';
+        }
+        if (ctx && width > 0 && height > 0) {
+          ctx.save();
+          ctx.scale(dpr, dpr);
           ctx.clearRect(0, 0, width, height);
+          ctx.restore();
         }
       }
     }

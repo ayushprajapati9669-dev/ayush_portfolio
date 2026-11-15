@@ -3,6 +3,7 @@ import '../../styles/components/editorial-hero.css';
 import { useNavigate } from 'react-router-dom';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useSmoothScroll } from '../../components/common/SmoothScrollProvider';
+import { ScrollReactivePortraitParticles } from '../../components/particles/ScrollReactivePortraitParticles';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 
 const loadHomeBelowTheFold = () => {
@@ -437,18 +438,14 @@ export function HomePage() {
           <div />
         </div>
 
-        {/* Hero Right-Side Portrait with Ambient Aura & Status Badge (Original Pristine Composition) */}
+        {/* Hero Right-Side Portrait with Scroll-Reactive Particle Dissolve Engine (Razorpay AI Builders Inspired) */}
         <div ref={heroPhotoBoxRef} className="hero-photo-container">
           <div className="hero-photo-ambient-aura" aria-hidden="true" />
-          <img
-            ref={heroImgRef}
-            id="himg"
-            src={heroPortraitUrl}
+          <ScrollReactivePortraitParticles
+            imageUrl={heroPortraitUrl}
             alt={p.portrait?.alt || p.name || 'Ayush Prajapati'}
-            className={`hero-photo-img ${isPhotoWide ? 'wide' : ''}`}
-            onLoad={checkPhotoFit}
-            decoding="async"
-            fetchpriority="high"
+            imgClassName={`hero-photo-img ${isPhotoWide ? 'wide' : ''}`}
+            onPhotoFit={checkPhotoFit}
           />
           <div className="hero-photo-status-badge" aria-hidden="true">
             <span className="hero-photo-pulse-dot" />

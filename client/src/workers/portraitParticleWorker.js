@@ -2,9 +2,8 @@
  * Portrait Particle Sampling Web Worker
  * Offloads pixel data scanning, alpha filtering, and particle trajectory generation
  * off the main UI thread to eliminate main-thread blocking during bootstrap and resize.
+ * Pure stardust circles only — no matrix glyph characters.
  */
-
-const MATRIX_GLYPHS = ['0', '1', '+', '*', '·', 'x', ':', '•', '◇', '▲'];
 
 self.onmessage = function (e) {
   const data = e.data;
@@ -24,7 +23,6 @@ self.onmessage = function (e) {
   try {
     const imgData = new Uint8ClampedArray(imgBuffer);
     const pts = [];
-    const glyphCount = MATRIX_GLYPHS.length;
 
     for (let y = 0; y < height; y += step) {
       for (let x = 0; x < width; x += step) {
@@ -44,10 +42,6 @@ self.onmessage = function (e) {
           // Scatter trajectory: outward and upward fan
           const angle = -Math.PI * 0.5 + ((x / width) - 0.5) * 1.1 + (Math.random() - 0.5) * 0.6;
           const speed = 0.8 + Math.random() * 1.1;
-
-          // 18% matrix glyphs, 82% circular stardust points
-          const isChar = Math.random() < 0.18;
-          const char = isChar ? MATRIX_GLYPHS[Math.floor(Math.random() * glyphCount)] : null;
 
           // Warm golden highlight tint for celestial AI builder theme
           let finalR = r;
@@ -70,7 +64,6 @@ self.onmessage = function (e) {
             b: finalB,
             baseAlpha: Math.min(1, (a / 255) * (0.65 + (luma / 255) * 0.35)),
             radius: 1.1 + (luma / 255) * 1.7 * z,
-            char,
             angle,
             speed,
             freq: 0.5 + Math.random() * 0.8,
