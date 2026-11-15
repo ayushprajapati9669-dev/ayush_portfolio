@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { runOnIdle, cancelIdle } from '../../utils/idle';
 
 /**
  * VantaBirdsBackground — Top 0.001% Luxury Vanta.js BIRDS 3D Background Engine
@@ -98,6 +99,14 @@ function createSoftCircleTexture() {
   return texture;
 }
 
+// Reusable module-level vectors to eliminate per-frame GC allocations
+const _tempSteer = new THREE.Vector3();
+const _alignSum = new THREE.Vector3();
+const _cohesionSum = new THREE.Vector3();
+const _cohesionSteer = new THREE.Vector3();
+const _totalRepulse = new THREE.Vector3();
+const _repulseSub = new THREE.Vector3();
+
 // ── 3. Low-Poly Aerodynamic 3D Bird Geometry ─────────────────────────────────
 function createBirdGeometry(birdSize = 1.25, wingSpan = 28) {
   const geo = new THREE.BufferGeometry();
@@ -157,9 +166,8 @@ class Boid {
 
   run(boids, wanderTarget, mousePos) {
     // 1. Text Readability Shield (Aerodynamic Deflection Zone)
-    // Completely protects the central hero typography & action buttons
     const dx = this.position.x;
-    const dy = this.position.y - 5; // Centered across the headline & subtitle
+    const dy = this.position.y - 5;
     const normX = dx / 320;
     const normY = (dy + 12) / 65;
     const distSq = normX * normX + normY * normY;
@@ -167,20 +175,17 @@ class Boid {
     if (distSq < 1.0) {
       const dist = Math.sqrt(distSq);
       const force = (1.0 - dist) * 0.55;
-      // Gently deflect birds sideways and soar upward into the open sky!
       this._acceleration.x += (dx >= 0 ? 1 : -1) * force * 1.6;
-      this._acceleration.y += force * 2.0; // Soar gracefully into upper sky
+      this._acceleration.y += force * 2.0;
     }
 
     // 2. Strict Boundary Constraints & Navbar Clearance
     const marginX = this._width * 0.85;
     const marginZ = this._depth * 0.82;
 
-    // Hard ceiling at Y = 65: NEVER flies behind the top navbar
     if (this.position.y > 65) {
       this._acceleration.y -= 0.5;
     } else if (this.position.y < -100) {
-      // Floor constraint: keeps birds soaring in twilight sky above desert dunes
       this._acceleration.y += 0.35;
     }
 
@@ -194,7 +199,7 @@ class Boid {
     // 3. Flocking Physics (Reynolds Boids)
     this.flock(boids);
 
-    // 4. Swarm Attractor (Unifies flock into majestic sweeping murmuration)
+    // 4. Swarm Attractor
     if (wanderTarget) {
       const wanderSteer = new THREE.Vector3().subVectors(wanderTarget, this.position);
       const distWander = wanderSteer.length();
@@ -231,78 +236,78 @@ class Boid {
   repulse(target) {
     const dist = this.position.distanceTo(target);
     if (dist < 140 && dist > 0.001) {
-      const steer = new THREE.Vector3().subVectors(this.position, target);
-      steer.normalize();
-      steer.multiplyScalar((1.0 - dist / 140) * 0.75);
-      this._acceleration.add(steer);
+      _tempSteer.subVectors(this.position, target);
+      _tempSteer.normalize();
+      _tempSteer.multiplyScalar((1.0 - dist / 140) * 0.75);
+      this._acceleration.add(_tempSteer);
     }
   }
 
   alignment(boids) {
-    const velSum = new THREE.Vector3();
+    _alignSum.set(0, 0, 0);
     let count = 0;
     const len = boids.length;
     for (let i = 0; i < len; i++) {
       const other = boids[i];
       const dist = this.position.distanceTo(other.position);
       if (dist > 0 && dist <= this.alignmentDist) {
-        velSum.add(other.velocity);
+        _alignSum.add(other.velocity);
         count++;
       }
     }
     if (count > 0) {
-      velSum.divideScalar(count);
-      const l = velSum.length();
+      _alignSum.divideScalar(count);
+      const l = _alignSum.length();
       if (l > this._maxSteerForce) {
-        velSum.divideScalar(l / this._maxSteerForce);
+        _alignSum.divideScalar(l / this._maxSteerForce);
       }
-      return velSum.multiplyScalar(0.055);
+      return _alignSum.multiplyScalar(0.055);
     }
-    return velSum;
+    return _alignSum;
   }
 
   cohesion(boids) {
-    const posSum = new THREE.Vector3();
+    _cohesionSum.set(0, 0, 0);
     let count = 0;
     const len = boids.length;
     for (let i = 0; i < len; i++) {
       const other = boids[i];
       const dist = this.position.distanceTo(other.position);
       if (dist > 0 && dist <= this.cohesionDist) {
-        posSum.add(other.position);
+        _cohesionSum.add(other.position);
         count++;
       }
     }
     if (count > 0) {
-      posSum.divideScalar(count);
-      const steer = new THREE.Vector3().subVectors(posSum, this.position);
-      const l = steer.length();
+      _cohesionSum.divideScalar(count);
+      _cohesionSteer.subVectors(_cohesionSum, this.position);
+      const l = _cohesionSteer.length();
       if (l > this._maxSteerForce) {
-        steer.divideScalar(l / this._maxSteerForce);
+        _cohesionSteer.divideScalar(l / this._maxSteerForce);
       }
-      return steer.multiplyScalar(0.045);
+      return _cohesionSteer.multiplyScalar(0.045);
     }
-    return posSum;
+    return _cohesionSum;
   }
 
   separation(boids) {
-    const totalRepulse = new THREE.Vector3();
+    _totalRepulse.set(0, 0, 0);
     const len = boids.length;
     for (let i = 0; i < len; i++) {
       const other = boids[i];
       const dist = this.position.distanceTo(other.position);
       if (dist > 0 && dist <= this.separationDist) {
-        const repulse = new THREE.Vector3().subVectors(this.position, other.position);
-        repulse.normalize();
-        repulse.divideScalar(dist);
-        totalRepulse.add(repulse);
+        _repulseSub.subVectors(this.position, other.position);
+        _repulseSub.normalize();
+        _repulseSub.divideScalar(dist);
+        _totalRepulse.add(_repulseSub);
       }
     }
-    const l = totalRepulse.length();
+    const l = _totalRepulse.length();
     if (l > this._maxSteerForce * 1.5) {
-      totalRepulse.divideScalar(l / (this._maxSteerForce * 1.5));
+      _totalRepulse.divideScalar(l / (this._maxSteerForce * 1.5));
     }
-    return totalRepulse.multiplyScalar(0.085);
+    return _totalRepulse.multiplyScalar(0.085);
   }
 }
 
@@ -311,6 +316,14 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
   const mountRef = useRef(null);
   const scrollRef = useRef(scrollProgress);
   scrollRef.current = scrollProgress;
+  const loopStateRef = useRef(null);
+
+  // Sync scroll changes with loop state
+  useEffect(() => {
+    if (loopStateRef.current) {
+      loopStateRef.current();
+    }
+  }, [scrollProgress]);
 
   useEffect(() => {
     const container = mountRef.current;
@@ -321,304 +334,395 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // ── Scene & Camera ───────────────────────────────────────────────────────
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x060812, 0.0014);
+    // State machine flags
+    const isMounted = { current: true };
+    const isTabVisible = { current: typeof document !== 'undefined' ? !document.hidden : true };
+    const isLoopRunning = { current: false };
 
-    let width = container.clientWidth || window.innerWidth;
-    let height = container.clientHeight || window.innerHeight;
+    let renderer = null;
+    let scene = null;
+    let camera = null;
+    let animId = null;
+    const clock = new THREE.Clock();
+    let birds = [];
+    let birdMaterial = null;
+    let wakeGeo = null;
+    let wakeMat = null;
+    let circleTexture = null;
+    let animate = null;
 
-    const camera = new THREE.PerspectiveCamera(65, width / height, 1, 3000);
-    camera.position.set(0, 0, 360);
+    // Declared at useEffect scope so handleResize (defined inside step2) can close over them
+    let width = 0;
+    let height = 0;
 
-    // ── WebGL Renderer ───────────────────────────────────────────────────────
-    let renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance'
-      });
-    } catch (e) {
-      console.warn('VantaBirds: WebGL unavailable:', e);
-      return;
-    }
+    let handleMouseMove = null;
+    let handleMouseLeave = null;
+    let handleResize = null;
+    let handleVisibilityChange = null;
 
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
-    renderer.setClearColor(0x000000, 0);
-    container.appendChild(renderer.domElement);
+    function updateLoopState() {
+      const isVisibleRange = scrollRef.current < 0.70;
+      const shouldAnimate = isMounted.current && isTabVisible.current && isVisibleRange;
 
-    // ── Vanta Birds Configuration (Optimal 80 Boids Swarm) ───────────────────
-    // ── Vanta Birds Configuration (Subtle & Peaceful Flocking, 12 Birds) ────────
-    const NUM_BIRDS = 12; // Tuned for tranquil, non-intrusive background ambience
-    const birdSize = 1.35;
-    const wingSpan = 30;
-
-    // Vanta.js Dual Variance Gradient Palette Harmonized with Dark & Gold Obsidian
-    const cCoral  = new THREE.Color('#ff3366'); // Sunset Coral Flame
-    const cGold   = new THREE.Color('#f5d77f'); // 24k Champagne Gold (Primary)
-    const cAmber  = new THREE.Color('#f59e0b'); // Warm Horizon Amber
-    const cCyan   = new THREE.Color('#00f0ff'); // Electric Twilight Sky Cyan
-    const cWhite  = new THREE.Color('#ffffff'); // Diamond Starlight Sparkle
-
-    const birds = [];
-    const boids = [];
-
-    // Shared Shader Material for Crystalline Starlight Birds
-    const birdMaterial = new THREE.ShaderMaterial({
-      vertexShader: birdVertexShader,
-      fragmentShader: birdFragmentShader,
-      side: THREE.DoubleSide,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending
-    });
-
-    for (let i = 0; i < NUM_BIRDS; i++) {
-      const boid = new Boid({
-        speedLimit: 2.2
-      });
-
-      // Scatter naturally across upper sky (Y between -40 and +55)
-      boid.position.x = (Math.random() - 0.5) * 520;
-      boid.position.y = (Math.random() - 0.5) * 110 + 10;
-      boid.position.z = (Math.random() - 0.5) * 260;
-
-      boid.velocity.x = (Math.random() - 0.5) * 3.4;
-      boid.velocity.y = (Math.random() - 0.5) * 1.8;
-      boid.velocity.z = (Math.random() - 0.5) * 3.4;
-
-      boid.setWorldBounds(640, 380, 300);
-      boids.push(boid);
-
-      // Create Individual Bird 3D Mesh
-      const geo = createBirdGeometry(birdSize, wingSpan);
-      const numVertices = geo.attributes.position.count;
-      const colors = new Float32Array(numVertices * 3);
-
-      // VarianceGradient Color Distribution (Vanta.js Style)
-      const ratio = i / NUM_BIRDS;
-      let baseColor;
-      if (ratio < 0.45) {
-        // Champagne Gold to Amber
-        baseColor = cGold.clone().lerp(cAmber, Math.random() * 0.4);
-      } else if (ratio < 0.75) {
-        // Sunset Coral Flame to Gold
-        baseColor = cCoral.clone().lerp(cGold, Math.random() * 0.4);
-      } else {
-        // Electric Cyan to Diamond White
-        baseColor = cCyan.clone().lerp(cWhite, Math.random() * 0.45);
-      }
-
-      for (let v = 0; v < numVertices; v++) {
-        // Vertices 0 (beak tip) and 6 (chest) shine crystalline diamond white
-        if (v === 0 || v === 6) {
-          colors[v * 3 + 0] = cWhite.r;
-          colors[v * 3 + 1] = cWhite.g;
-          colors[v * 3 + 2] = cWhite.b;
-        } else {
-          const variance = (Math.random() - 0.5) * 0.12;
-          colors[v * 3 + 0] = THREE.MathUtils.clamp(baseColor.r + variance, 0, 1);
-          colors[v * 3 + 1] = THREE.MathUtils.clamp(baseColor.g + variance, 0, 1);
-          colors[v * 3 + 2] = THREE.MathUtils.clamp(baseColor.b + variance, 0, 1);
+      if (shouldAnimate && !isLoopRunning.current && renderer && typeof animate === 'function') {
+        isLoopRunning.current = true;
+        clock.start();
+        animId = requestAnimationFrame(animate);
+      } else if (!shouldAnimate && isLoopRunning.current) {
+        isLoopRunning.current = false;
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
         }
       }
-      geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-      const bird = new THREE.Mesh(geo, birdMaterial);
-      bird.phase = Math.random() * Math.PI * 2;
-      bird.position.copy(boid.position);
-
-      scene.add(bird);
-      birds.push(bird);
     }
+    loopStateRef.current = updateLoopState;
 
-    // ── Dynamic Stardust Flight Wake Particle System (Soft Circular Motes) ───
-    const circleTexture = createSoftCircleTexture();
-    const WAKE_PARTICLES = 36;
-    const wakePositions = new Float32Array(WAKE_PARTICLES * 3);
-    const wakeColors = new Float32Array(WAKE_PARTICLES * 3);
-    const wakeAges = new Float32Array(WAKE_PARTICLES);
+    handleVisibilityChange = () => {
+      isTabVisible.current = !document.hidden;
+      updateLoopState();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    for (let k = 0; k < WAKE_PARTICLES; k++) {
-      wakePositions[k * 3 + 0] = 0;
-      wakePositions[k * 3 + 1] = -500;
-      wakePositions[k * 3 + 2] = 0;
+    let idleHandle = null;
+    let idleHandleStep2 = null;
 
-      const pick = Math.random();
-      const col = pick < 0.6 ? cGold : (pick < 0.85 ? cAmber : cWhite);
-      wakeColors[k * 3 + 0] = col.r;
-      wakeColors[k * 3 + 1] = col.g;
-      wakeColors[k * 3 + 2] = col.b;
+    const step2 = () => {
+      if (!isMounted.current || !container || !scene || !renderer) return;
 
-      wakeAges[k] = Math.random();
-    }
+      // ── Vanta Birds Configuration (Subtle & Peaceful Flocking, 12 Birds) ────────
+      const NUM_BIRDS = 12; // Tuned for tranquil, non-intrusive background ambience
+      const birdSize = 1.35;
+      const wingSpan = 30;
 
-    const wakeGeo = new THREE.BufferGeometry();
-    wakeGeo.setAttribute('position', new THREE.BufferAttribute(wakePositions, 3));
-    wakeGeo.setAttribute('color', new THREE.BufferAttribute(wakeColors, 3));
+      // Vanta.js Dual Variance Gradient Palette Harmonized with Dark & Gold Obsidian
+      const cCoral  = new THREE.Color('#ff3366'); // Sunset Coral Flame
+      const cGold   = new THREE.Color('#f5d77f'); // 24k Champagne Gold (Primary)
+      const cAmber  = new THREE.Color('#f59e0b'); // Warm Horizon Amber
+      const cCyan   = new THREE.Color('#00f0ff'); // Electric Twilight Sky Cyan
+      const cWhite  = new THREE.Color('#ffffff'); // Diamond Starlight Sparkle
 
-    const wakeMat = new THREE.PointsMaterial({
-      size: 5.5,
-      map: circleTexture,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.65,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false
-    });
+      const boids = [];
 
-    const wakePoints = new THREE.Points(wakeGeo, wakeMat);
-    scene.add(wakePoints);
+      // Shared Shader Material for Crystalline Starlight Birds
+      birdMaterial = new THREE.ShaderMaterial({
+        vertexShader: birdVertexShader,
+        fragmentShader: birdFragmentShader,
+        side: THREE.DoubleSide,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      });
 
-    let wakeEmitIndex = 0;
+      for (let i = 0; i < NUM_BIRDS; i++) {
+        const boid = new Boid({
+          speedLimit: 2.2
+        });
 
-    // ── Interactive Mouse Tracking ───────────────────────────────────────────
-    const mouseTarget = new THREE.Vector3(10000, 10000, 0);
-    const mouseWorld = new THREE.Vector3(10000, 10000, 0);
+        // Generous spatial dispersion across horizon
+        boid.position.set(
+          (Math.random() - 0.5) * 580,
+          Math.random() * 80 - 40,
+          (Math.random() - 0.5) * 260
+        );
 
-    const handleMouseMove = (e) => {
-      const nx = (e.clientX / window.innerWidth) * 2 - 1;
-      const ny = -(e.clientY / window.innerHeight) * 2 + 1;
-      mouseTarget.x = nx * 260;
-      mouseTarget.y = ny * 170;
-      mouseTarget.z = 0;
+        boid.velocity.set(
+          (Math.random() - 0.5) * 1.5,
+          (Math.random() - 0.5) * 0.4,
+          (Math.random() - 0.5) * 1.2
+        );
+
+        const geo = createBirdGeometry(birdSize, wingSpan);
+
+        // Gradient color variance per bird
+        const colors = new Float32Array(8 * 3);
+        const ratio = i / (NUM_BIRDS - 1);
+        let baseCol;
+
+        if (ratio < 0.35) {
+          baseCol = new THREE.Color().lerpColors(cGold, cAmber, ratio / 0.35);
+        } else if (ratio < 0.7) {
+          baseCol = new THREE.Color().lerpColors(cAmber, cCoral, (ratio - 0.35) / 0.35);
+        } else {
+          baseCol = new THREE.Color().lerpColors(cCoral, cCyan, (ratio - 0.7) / 0.3);
+        }
+
+        for (let j = 0; j < 8; j++) {
+          const isWingTip = j === 4 || j === 5;
+          const col = isWingTip ? new THREE.Color().lerpColors(baseCol, cWhite, 0.45) : baseCol;
+          colors[j * 3 + 0] = col.r;
+          colors[j * 3 + 1] = col.g;
+          colors[j * 3 + 2] = col.b;
+        }
+
+        geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geo.computeVertexNormals();
+
+        const mesh = new THREE.Mesh(geo, birdMaterial);
+        mesh.phase = Math.random() * 6.28;
+        scene.add(mesh);
+
+        birds.push(mesh);
+        boids.push(boid);
+      }
+
+      // ── Soft Stardust Particle Flight Wake ───────────────────────────────────
+      const WAKE_PARTICLES = 40;
+      const wakePositions = new Float32Array(WAKE_PARTICLES * 3);
+      const wakeColors = new Float32Array(WAKE_PARTICLES * 3);
+      const wakeAges = new Float32Array(WAKE_PARTICLES);
+
+      circleTexture = createSoftCircleTexture();
+
+      for (let k = 0; k < WAKE_PARTICLES; k++) {
+        wakePositions[k * 3 + 0] = 0;
+        wakePositions[k * 3 + 1] = -9999;
+        wakePositions[k * 3 + 2] = 0;
+
+        const pick = Math.random();
+        const col = pick < 0.6 ? cGold : (pick < 0.85 ? cAmber : cWhite);
+        wakeColors[k * 3 + 0] = col.r;
+        wakeColors[k * 3 + 1] = col.g;
+        wakeColors[k * 3 + 2] = col.b;
+
+        wakeAges[k] = Math.random();
+      }
+
+      wakeGeo = new THREE.BufferGeometry();
+      wakeGeo.setAttribute('position', new THREE.BufferAttribute(wakePositions, 3));
+      wakeGeo.setAttribute('color', new THREE.BufferAttribute(wakeColors, 3));
+
+      wakeMat = new THREE.PointsMaterial({
+        size: 5.5,
+        map: circleTexture,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.65,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      const wakePoints = new THREE.Points(wakeGeo, wakeMat);
+      scene.add(wakePoints);
+
+      let wakeEmitIndex = 0;
+
+      // ── Interactive Mouse Tracking ───────────────────────────────────────────
+      const mouseTarget = new THREE.Vector3(10000, 10000, 0);
+      const mouseWorld = new THREE.Vector3(10000, 10000, 0);
+
+      handleMouseMove = (e) => {
+        const nx = (e.clientX / window.innerWidth) * 2 - 1;
+        const ny = -(e.clientY / window.innerHeight) * 2 + 1;
+        mouseTarget.x = nx * 260;
+        mouseTarget.y = ny * 170;
+        mouseTarget.z = 0;
+      };
+
+      handleMouseLeave = () => {
+        mouseTarget.set(10000, 10000, 0);
+      };
+
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
+      window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+
+      handleResize = () => {
+        if (!container || !renderer || !camera) return;
+        width = container.clientWidth || window.innerWidth;
+        height = container.clientHeight || window.innerHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+      };
+      window.addEventListener('resize', handleResize, { passive: true });
+
+      // ── Main Animation Loop (60FPS Desktop, throttled 30FPS Mobile) ───────────
+      const wanderTarget = new THREE.Vector3();
+      let lastRenderTime = 0;
+      const minFrameDelta = (typeof window !== 'undefined' && window.innerWidth < 768) ? 32 : 0;
+
+      animate = () => {
+        if (!isLoopRunning.current) return;
+
+        const now = performance.now();
+        if (minFrameDelta > 0 && now - lastRenderTime < minFrameDelta) {
+          animId = requestAnimationFrame(animate);
+          return;
+        }
+        lastRenderTime = now;
+
+        if (prefersReducedMotion) {
+          if (renderer && scene && camera) renderer.render(scene, camera);
+          return;
+        }
+
+        const delta = Math.min(0.04, clock.getDelta());
+        const time = clock.getElapsedTime();
+
+        // Smooth mouse lerping
+        mouseWorld.lerp(mouseTarget, 0.08);
+
+        const scrollVal = scrollRef.current;
+
+        // Camera parallax & scroll tracking
+        camera.position.x += ((mouseWorld.x < 5000 ? mouseWorld.x * 0.12 : 0) - camera.position.x) * 0.035;
+        camera.position.y += ((mouseWorld.y < 5000 ? mouseWorld.y * 0.08 : 0) - scrollVal * 80 - camera.position.y) * 0.035;
+        camera.lookAt(0, -scrollVal * 30, 0);
+
+        wanderTarget.set(
+          Math.sin(time * 0.28) * 240 + Math.cos(time * 0.14) * 80,
+          48 + Math.sin(time * 0.22) * 12,
+          Math.sin(time * 0.18) * 100
+        );
+
+        // Update Boids & Bird Meshes
+        for (let i = 0; i < NUM_BIRDS; i++) {
+          const boid = boids[i];
+          const bird = birds[i];
+
+          boid.run(boids, wanderTarget, mouseWorld);
+
+          const speed = boid.velocity.length();
+          if (speed > 0.001) {
+            bird.rotation.y = Math.atan2(-boid.velocity.z, boid.velocity.x);
+            bird.rotation.z = Math.asin(boid.velocity.y / speed);
+
+            const turn = -boid._acceleration.x * 0.55;
+            bird.rotation.x = THREE.MathUtils.lerp(bird.rotation.x, turn, 0.08);
+          }
+
+          bird.phase = (bird.phase + (Math.max(0, bird.rotation.z) + 0.1) * 1.1) % 62.83;
+          const flapOffset = Math.sin(bird.phase) * (4.8 * birdSize);
+
+          const posAttr = bird.geometry.attributes.position;
+          posAttr.setY(4, 1.8 * birdSize + flapOffset);
+          posAttr.setY(5, 1.8 * birdSize + flapOffset);
+          posAttr.needsUpdate = true;
+
+          bird.position.copy(boid.position);
+
+          if (i % 2 === 0 && Math.random() > 0.5) {
+            const wIdx = wakeEmitIndex * 3;
+            wakePositions[wIdx + 0] = boid.position.x + (Math.random() - 0.5) * 4;
+            wakePositions[wIdx + 1] = boid.position.y + (Math.random() - 0.5) * 4;
+            wakePositions[wIdx + 2] = boid.position.z + (Math.random() - 0.5) * 4;
+            wakeAges[wakeEmitIndex] = 0;
+            wakeEmitIndex = (wakeEmitIndex + 1) % WAKE_PARTICLES;
+          }
+        }
+
+        // Age & Drift Stardust Wake Motes
+        for (let k = 0; k < WAKE_PARTICLES; k++) {
+          wakeAges[k] += delta * 0.85;
+          if (wakeAges[k] < 1.0) {
+            wakePositions[k * 3 + 1] += 0.22;
+          }
+        }
+        wakeGeo.attributes.position.needsUpdate = true;
+
+        if (renderer && scene && camera) {
+          renderer.render(scene, camera);
+        }
+
+        if (isLoopRunning.current) {
+          animId = requestAnimationFrame(animate);
+        }
+      };
+
+      // Start loop cleanly
+      updateLoopState();
     };
 
-    const handleMouseLeave = () => {
-      mouseTarget.set(10000, 10000, 0);
-    };
+    // Staggered initialization on idle: Slice 1 sets up renderer/camera, Slice 2 sets up boids/loop
+    const step1 = () => {
+      if (!isMounted.current || !container) return;
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+      // ── Scene & Camera ───────────────────────────────────────────────────────
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x060812, 0.0014);
 
-    const handleResize = () => {
-      if (!container) return;
+      // Assign to the outer-scoped width/height so handleResize (in step2) has access
       width = container.clientWidth || window.innerWidth;
       height = container.clientHeight || window.innerHeight;
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
-    };
-    window.addEventListener('resize', handleResize, { passive: true });
 
-    // ── Main 60FPS Animation Loop ────────────────────────────────────────────
-    let animId;
-    const clock = new THREE.Clock();
-    const wanderTarget = new THREE.Vector3();
+      camera = new THREE.PerspectiveCamera(65, width / height, 1, 3000);
+      camera.position.set(0, 0, 360);
 
-    const animate = () => {
-      animId = requestAnimationFrame(animate);
-
-      if (prefersReducedMotion) {
-        renderer.render(scene, camera);
+      // ── WebGL Renderer ───────────────────────────────────────────────────────
+      try {
+        renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: true,
+          powerPreference: 'high-performance'
+        });
+      } catch (e) {
+        console.warn('VantaBirds: WebGL unavailable:', e);
         return;
       }
 
-      const delta = Math.min(0.04, clock.getDelta());
-      const time = clock.getElapsedTime();
+      renderer.setSize(width, height);
+      const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
+      renderer.setPixelRatio(isMobileScreen ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.5));
+      renderer.setClearColor(0x000000, 0);
+      container.appendChild(renderer.domElement);
 
-      // Smooth mouse lerping
-      mouseWorld.lerp(mouseTarget, 0.08);
-
-      const scrollVal = scrollRef.current;
-
-      // Camera parallax & scroll tracking
-      camera.position.x += ((mouseWorld.x < 5000 ? mouseWorld.x * 0.12 : 0) - camera.position.x) * 0.035;
-      camera.position.y += ((mouseWorld.y < 5000 ? mouseWorld.y * 0.08 : 0) - scrollVal * 80 - camera.position.y) * 0.035;
-      camera.lookAt(0, -scrollVal * 30, 0);
-
-      // Dynamic Lissajous Attractor (Sweeps flock in majestic murmuration across upper sky)
-      // Keeps the flock soaring comfortably in the clear twilight band between navbar (Y=70) and title (Y=25)
-      wanderTarget.set(
-        Math.sin(time * 0.28) * 240 + Math.cos(time * 0.14) * 80,
-        48 + Math.sin(time * 0.22) * 12,
-        Math.sin(time * 0.18) * 100
-      );
-
-      // Update Boids & Bird Meshes
-      for (let i = 0; i < NUM_BIRDS; i++) {
-        const boid = boids[i];
-        const bird = birds[i];
-
-        boid.run(boids, wanderTarget, mouseWorld);
-
-        // Update 3D Flight Orientation (Yaw Heading, Pitch, and Aerodynamic Banking)
-        const speed = boid.velocity.length();
-        if (speed > 0.001) {
-          bird.rotation.y = Math.atan2(-boid.velocity.z, boid.velocity.x);
-          bird.rotation.z = Math.asin(boid.velocity.y / speed);
-
-          // Bank roll into the turn
-          const turn = -boid._acceleration.x * 0.55;
-          bird.rotation.x = THREE.MathUtils.lerp(bird.rotation.x, turn, 0.08);
-        }
-
-        // Synchronous Wing Flapping (Both wings 4 and 5 flap up & down together)
-        bird.phase = (bird.phase + (Math.max(0, bird.rotation.z) + 0.1) * 1.1) % 62.83;
-        const flapOffset = Math.sin(bird.phase) * (4.8 * birdSize);
-
-        const posAttr = bird.geometry.attributes.position;
-        posAttr.setY(4, 1.8 * birdSize + flapOffset);
-        posAttr.setY(5, 1.8 * birdSize + flapOffset);
-        posAttr.needsUpdate = true;
-        bird.geometry.computeVertexNormals();
-
-        bird.position.copy(boid.position);
-
-        // Emit Stardust Wake Motes behind select birds
-        if (i % 2 === 0 && Math.random() > 0.5) {
-          const wIdx = wakeEmitIndex * 3;
-          wakePositions[wIdx + 0] = boid.position.x + (Math.random() - 0.5) * 4;
-          wakePositions[wIdx + 1] = boid.position.y + (Math.random() - 0.5) * 4;
-          wakePositions[wIdx + 2] = boid.position.z + (Math.random() - 0.5) * 4;
-          wakeAges[wakeEmitIndex] = 0;
-          wakeEmitIndex = (wakeEmitIndex + 1) % WAKE_PARTICLES;
-        }
-      }
-
-      // Age & Drift Stardust Wake Motes
-      for (let k = 0; k < WAKE_PARTICLES; k++) {
-        wakeAges[k] += delta * 0.85;
-        if (wakeAges[k] < 1.0) {
-          wakePositions[k * 3 + 1] += 0.22; // gentle upward drift
-        }
-      }
-      wakeGeo.attributes.position.needsUpdate = true;
-
-      renderer.render(scene, camera);
+      idleHandleStep2 = runOnIdle(step2, { timeout: 1200, minBudget: 10 });
     };
 
-    animate();
+    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    const startVanta = () => {
+      window.removeEventListener('scroll', startVanta);
+      window.removeEventListener('touchstart', startVanta);
+      window.removeEventListener('pointerdown', startVanta);
+      if (idleHandle) cancelIdle(idleHandle);
+      idleHandle = runOnIdle(step1, { timeout: 1500, minBudget: 10 });
+    };
+
+    window.addEventListener('scroll', startVanta, { passive: true, once: true });
+    window.addEventListener('touchstart', startVanta, { passive: true, once: true });
+    window.addEventListener('pointerdown', startVanta, { passive: true, once: true });
+
+    const initTimer = setTimeout(startVanta, isMobileScreen ? 6500 : 800);
 
     // ── Memory & Resource Disposal Lifecycle ─────────────────────────────────
     return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('resize', handleResize);
+      clearTimeout(initTimer);
+      window.removeEventListener('scroll', startVanta);
+      window.removeEventListener('touchstart', startVanta);
+      window.removeEventListener('pointerdown', startVanta);
+      isMounted.current = false;
+      isLoopRunning.current = false;
+      loopStateRef.current = null;
+      cancelIdle(idleHandle);
+      cancelIdle(idleHandleStep2);
 
-      if (renderer.domElement && container.contains(renderer.domElement)) {
+      if (animId) cancelAnimationFrame(animId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (handleMouseMove) window.removeEventListener('mousemove', handleMouseMove);
+      if (handleMouseLeave) window.removeEventListener('mouseleave', handleMouseLeave);
+      if (handleResize) window.removeEventListener('resize', handleResize);
+
+      if (renderer && renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
 
       for (let i = 0; i < birds.length; i++) {
-        birds[i].geometry.dispose();
+        if (birds[i].geometry) birds[i].geometry.dispose();
       }
-      birdMaterial.dispose();
-      wakeGeo.dispose();
-      wakeMat.dispose();
+      if (birdMaterial) birdMaterial.dispose();
+      if (wakeGeo) wakeGeo.dispose();
+      if (wakeMat) wakeMat.dispose();
       if (circleTexture) circleTexture.dispose();
-      renderer.dispose();
+      if (renderer) renderer.dispose();
     };
   }, []);
 
   return (
     <div
       ref={mountRef}
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none transition-opacity duration-500 ease-out"
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none transition-opacity duration-700 ease-out"
       style={{ opacity: Math.max(0.22, 0.98 - scrollProgress * 1.6) }}
       aria-hidden="true"
     />

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { playTick } from '../../utils/audio';
+import { runOnIdle, cancelIdle } from '../../utils/idle';
 
 const DEFAULT_MILESTONES = [
   {
@@ -24,13 +25,37 @@ const DEFAULT_MILESTONES = [
   }
 ];
 
-// Helper to strip HTML tags from descriptions (e.g. from rich-text CMS inputs)
-const stripHtml = (html) => {
+// Helper to strip HTML tags and decode entities from descriptions (e.g. from rich-text CMS inputs)
+const decodeEntities = (str) => {
+  if (!str) return '';
+  return String(str)
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+};
+
+const cleanJourneyText = (html, maxChars = 110) => {
   if (!html) return '';
-  return String(html)
-    .replace(/<[^>]*>?/gm, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  const plain = decodeEntities(
+    String(html)
+      .replace(/<[^>]*>?/gm, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+  );
+  if (!plain) return '';
+  if (plain.length <= maxChars) return plain;
+  // If text is long, extract the first sentence or truncate at word boundary
+  const firstSentenceMatch = plain.match(/^([^.!?]+[.!?])/);
+  if (firstSentenceMatch && firstSentenceMatch[1].length >= 35 && firstSentenceMatch[1].length <= maxChars) {
+    return firstSentenceMatch[1].trim();
+  }
+  const truncated = plain.slice(0, maxChars);
+  const lastSpace = truncated.lastIndexOf(' ');
+  return (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated) + '...';
 };
 
 export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }) {
@@ -61,18 +86,19 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
 
   // Normalize milestone list: dynamic > passed items > default
   const milestones = useMemo(() => {
-    const source = dynamicMilestones || items;
-    if (Array.isArray(source) && source.length > 0) {
-      const valid = source
+    const source = dynamicMilestones !== null ? dynamicMilestones : items;
+    // Explicit array provided by CMS/admin: respect it (including empty array [])
+    if (Array.isArray(source)) {
+      return source
         .filter((item) => item && item.published !== false)
         .map((item, idx) => ({
           id: item.id || `ms-${idx}`,
-          year: item.year || item.yearBadge || item.phase || `Year ${idx + 1}`,
-          title: item.title || item.name || 'Milestone',
-          desc: stripHtml(item.desc || item.description || item.detail || '')
+          year: decodeEntities(item.year || item.yearBadge || item.phase || `Year ${idx + 1}`),
+          title: decodeEntities(item.title || item.name || 'Milestone'),
+          desc: cleanJourneyText(item.desc || item.description || item.detail || '', 115)
         }));
-      if (valid.length > 0) return valid;
     }
+    // Only fall back to baseline defaults if source is strictly undefined (unloaded/initial fallback)
     return DEFAULT_MILESTONES;
   }, [dynamicMilestones, items]);
 
@@ -122,18 +148,26 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
     const el = scrollContainerRef.current;
     if (!el) return undefined;
 
-    updateScrollMetrics();
+    let idleHandle = null;
+    let rafId = null;
+
+    if (inView) {
+      updateScrollMetrics();
+      rafId = requestAnimationFrame(updateScrollMetrics);
+    } else {
+      idleHandle = runOnIdle(updateScrollMetrics, { timeout: 4000 });
+    }
+
     el.addEventListener('scroll', updateScrollMetrics, { passive: true });
     window.addEventListener('resize', updateScrollMetrics, { passive: true });
 
-    const rafId = requestAnimationFrame(updateScrollMetrics);
-
     return () => {
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
+      cancelIdle(idleHandle);
       el.removeEventListener('scroll', updateScrollMetrics);
       window.removeEventListener('resize', updateScrollMetrics);
     };
-  }, [updateScrollMetrics, milestones]);
+  }, [updateScrollMetrics, milestones, inView]);
 
   // Handle Spotlight Mouse Move
   const handleMouseMove = (e) => {
@@ -192,6 +226,17 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
     }
   };
 
+  const handleThumbTouchStart = (e) => {
+    if (e.touches && e.touches[0]) {
+      e.stopPropagation();
+      setIsDragging(true);
+      setDragStartX(e.touches[0].clientX);
+      if (scrollContainerRef.current) {
+        setDragStartScrollLeft(scrollContainerRef.current.scrollLeft);
+      }
+    }
+  };
+
   useEffect(() => {
     if (!isDragging) return undefined;
 
@@ -212,12 +257,34 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
       setIsDragging(false);
     };
 
+    const handleTouchMove = (e) => {
+      if (!e.touches || !e.touches[0]) return;
+      const el = scrollContainerRef.current;
+      const track = trackRef.current;
+      if (!el || !track) return;
+
+      const trackRect = track.getBoundingClientRect();
+      const deltaX = e.touches[0].clientX - dragStartX;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const scrollDelta = (deltaX / trackRect.width) * maxScroll;
+
+      el.scrollLeft = dragStartScrollLeft + scrollDelta;
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isDragging, dragStartX, dragStartScrollLeft]);
 
@@ -345,86 +412,108 @@ export function ZeroToOneJourneyCard({ items, onExploreJourney, className = '' }
 
       {/* Milestones Container with Edge Gradient Masks */}
       <div className="relative z-10">
-        {/* Subtle Fade Edge Masks when overflow is present */}
-        <div
-          className={`pointer-events-none absolute left-0 top-0 bottom-2 w-8 sm:w-12 bg-gradient-to-r from-[rgba(12,13,18,0.95)] to-transparent z-20 rounded-l-2xl transition-opacity duration-300 ${
-            canScrollLeft ? 'opacity-100' : 'opacity-0'
-          }`}
-          aria-hidden="true"
-        />
-        <div
-          className={`pointer-events-none absolute right-0 top-0 bottom-2 w-8 sm:w-12 bg-gradient-to-l from-[rgba(12,13,18,0.95)] to-transparent z-20 rounded-r-2xl transition-opacity duration-300 ${
-            canScrollRight ? 'opacity-100' : 'opacity-0'
-          }`}
-          aria-hidden="true"
-        />
-
-        {/* Horizontally scrollable flex container */}
-        <div
-          ref={scrollContainerRef}
-          className="flex gap-4 sm:gap-6 overflow-x-auto zero-journey-scrollbar pb-2 pt-1 scroll-smooth"
-        >
-          {milestones.map((m, idx) => (
-            <div
-              key={m.id || idx}
-              className="group/m p-5 rounded-2xl transition-all duration-300 bg-white/[0.03] border border-white/10 hover:border-amber-400/40 hover:bg-white/[0.06] hover:-translate-y-1 shadow-lg min-w-[250px] sm:min-w-[260px] max-w-[340px] flex-1 flex-shrink-0"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-mono text-xs sm:text-sm font-bold text-[#e5b869] tracking-wider">
-                  {m.year}
-                </span>
-                <span className="w-2 h-2 rounded-full bg-[#e5b869] shadow-[0_0_8px_#e5b869]" />
-              </div>
-              <h3 className="font-display text-base font-semibold text-white group-hover/m:text-amber-200 transition-colors mb-1.5">
-                {m.title}
-              </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed font-sans font-normal">
-                {m.desc}
-              </p>
+        {milestones.length === 0 ? (
+          <div className="py-12 px-4 text-center flex flex-col items-center justify-center rounded-2xl bg-white/[0.02] border border-white/5 my-2">
+            <div className="w-10 h-10 rounded-full bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-[#e5b869] mb-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80 animate-pulse" />
             </div>
-          ))}
-        </div>
-
-        {/* Custom Luxury Scrollbar: Appears gracefully when content overflows or on smaller screens */}
-        {hasOverflow && (
-          <div className="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-3 sm:gap-4 transition-all duration-300">
-            {/* Label with amber pulsing dot */}
-            <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-zinc-400 select-none">
-              <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24] animate-pulse" />
-              <span className="text-[11px] uppercase tracking-wider text-amber-400/90 font-medium">
-                Scroll Timeline
-              </span>
-            </div>
-
-            {/* Clickable & Draggable Luxury Glass Track */}
-            <div
-              ref={trackRef}
-              onClick={handleTrackClick}
-              className="relative flex-1 h-2 rounded-full bg-white/[0.06] border border-white/10 cursor-pointer overflow-hidden group/track"
-              title="Click or drag to scroll timeline"
-            >
-              {/* Glowing Gold Luxury Thumb */}
-              <div
-                onMouseDown={handleThumbMouseDown}
-                className="absolute top-0 bottom-0 rounded-full cursor-grab active:cursor-grabbing transition-transform duration-75"
-                style={{
-                  left: `${scrollProgress * (100 - thumbWidthPercent)}%`,
-                  width: `${thumbWidthPercent}%`,
-                  background:
-                    'linear-gradient(90deg, rgba(229,184,105,0.7) 0%, #e5b869 50%, #fbbf24 100%)',
-                  boxShadow:
-                    '0 0 12px rgba(229, 184, 105, 0.6), inset 0 1px 0 rgba(255,255,255,0.4)'
-                }}
-              />
-            </div>
-
-            {/* Milestone Position Indicator */}
-            <div className="text-[11px] font-mono text-zinc-400 select-none flex items-center gap-1">
-              <span className="text-amber-300 font-bold">{activeMilestoneIndex}</span>
-              <span>/</span>
-              <span>{milestones.length} Milestones</span>
-            </div>
+            <h3 className="font-display text-base font-semibold text-white/90 mb-1">
+              Career Roadmap in Progress
+            </h3>
+            <p className="text-xs text-zinc-400 font-sans max-w-md leading-relaxed">
+              New engineering milestones and key project highlights are currently being updated.
+            </p>
           </div>
+        ) : (
+          <>
+            {/* Subtle Fade Edge Masks when overflow is present */}
+            <div
+              className={`pointer-events-none absolute left-0 top-0 bottom-2 w-8 sm:w-12 bg-gradient-to-r from-[rgba(12,13,18,0.95)] to-transparent z-20 rounded-l-2xl transition-opacity duration-300 ${
+                canScrollLeft ? 'opacity-100' : 'opacity-0'
+              }`}
+              aria-hidden="true"
+            />
+            <div
+              className={`pointer-events-none absolute right-0 top-0 bottom-2 w-8 sm:w-12 bg-gradient-to-l from-[rgba(12,13,18,0.95)] to-transparent z-20 rounded-r-2xl transition-opacity duration-300 ${
+                canScrollRight ? 'opacity-100' : 'opacity-0'
+              }`}
+              aria-hidden="true"
+            />
+
+            {/* Horizontally scrollable flex container (Native browser scrollbar hidden; luxury custom track rendered below) */}
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-4 sm:gap-6 overflow-x-auto zero-journey-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-2 pt-1 scroll-smooth"
+            >
+              {milestones.map((m, idx) => (
+                <div
+                  key={m.id || idx}
+                  className="group/m p-5 rounded-2xl transition-all duration-300 bg-white/[0.03] border border-white/10 hover:border-amber-400/40 hover:bg-white/[0.06] hover:-translate-y-1 shadow-lg w-[285px] min-w-[270px] max-w-[300px] h-[210px] flex flex-col justify-between flex-shrink-0"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-mono text-xs font-bold text-[#e5b869] tracking-wider">
+                        {m.year}
+                      </span>
+                      <span className="w-2 h-2 rounded-full bg-[#e5b869] shadow-[0_0_8px_#e5b869]" />
+                    </div>
+                    <h3
+                      className="font-display text-sm sm:text-base font-semibold text-white group-hover/m:text-amber-200 transition-colors line-clamp-2 leading-snug mb-1.5"
+                      title={m.title}
+                    >
+                      {m.title}
+                    </h3>
+                  </div>
+                  <p className="text-xs text-zinc-400 leading-relaxed font-sans font-normal line-clamp-3 overflow-hidden">
+                    {m.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Custom Luxury Scrollbar: Appears gracefully when content overflows or on smaller screens */}
+            {hasOverflow && (
+              <div className="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-3 sm:gap-4 transition-all duration-300">
+                {/* Label with amber pulsing dot */}
+                <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-zinc-400 select-none">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24] animate-pulse" />
+                  <span className="text-[11px] uppercase tracking-wider text-amber-400/90 font-medium">
+                    Scroll Timeline
+                  </span>
+                </div>
+
+                {/* Clickable & Draggable Luxury Glass Track */}
+                <div
+                  ref={trackRef}
+                  onClick={handleTrackClick}
+                  className="relative flex-1 h-2 rounded-full bg-white/[0.06] border border-white/10 cursor-pointer overflow-hidden group/track"
+                  title="Click or drag to scroll timeline"
+                >
+                  {/* Glowing Gold Luxury Thumb */}
+                  <div
+                    onMouseDown={handleThumbMouseDown}
+                    onTouchStart={handleThumbTouchStart}
+                    className="absolute top-0 bottom-0 rounded-full cursor-grab active:cursor-grabbing transition-transform duration-75"
+                    style={{
+                      left: `${scrollProgress * (100 - thumbWidthPercent)}%`,
+                      width: `${thumbWidthPercent}%`,
+                      background:
+                        'linear-gradient(90deg, rgba(229,184,105,0.7) 0%, #e5b869 50%, #fbbf24 100%)',
+                      boxShadow:
+                        '0 0 12px rgba(229, 184, 105, 0.6), inset 0 1px 0 rgba(255,255,255,0.4)'
+                    }}
+                  />
+                </div>
+
+                {/* Milestone Position Indicator */}
+                <div className="text-[11px] font-mono text-zinc-400 select-none flex items-center gap-1">
+                  <span className="text-amber-300 font-bold">{activeMilestoneIndex}</span>
+                  <span>/</span>
+                  <span>{milestones.length} Milestones</span>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

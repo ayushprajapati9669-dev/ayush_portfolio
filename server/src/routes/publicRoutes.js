@@ -19,6 +19,10 @@ async function handlePublicRoutes(req, res, pathname, parsedUrl, publicControlle
     publicController.getCertificates(req, res);
     return true;
   }
+  if (req.method === 'GET' && pathname === '/api/public/settings') {
+    publicController.getSettings(req, res);
+    return true;
+  }
   if (req.method === 'GET' && pathname === '/api/public/projects') {
     publicController.getProjects(req, res, parsedUrl);
     return true;

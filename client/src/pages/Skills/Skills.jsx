@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import '../../styles/pages/skills.css';
 import { InteractiveSkillsWidget } from '../../components/ui/InteractiveSkillsWidget';
 import { ScrollWriteText } from '../../components/common/ScrollWriteText';
 import { usePortfolio } from '../../app/providers/ThemeProvider';

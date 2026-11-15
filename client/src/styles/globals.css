@@ -1,17 +1,18 @@
 @import './variables.css';
 @import './layout.css';
 @import './effects.css';
-@import './navbar.css';
-@import './footer.css';
-@import './components/cards.css';
-@import './components/editorial-hero.css';
-@import './pages/skills.css';
-@import './pages/about.css';
-@import './pages/journey.css';
-@import './pages/projects.css';
-@import './pages/certificates.css';
-@import './pages/contact.css';
-/* admin.css and admin-milestones.css are imported lazily in Admin.jsx */
+/* Page- and component-specific stylesheets are imported dynamically inside their respective components:
+   navbar.css -> Header.jsx
+   footer.css -> Footer.jsx
+   cards.css -> ProjectCard.jsx, CertificateCard.jsx, ResumeModal.jsx
+   skills.css -> Skills.jsx
+   about.css -> About.jsx
+   journey.css -> Journey.jsx
+   projects.css -> Projects.jsx
+   certificates.css -> Certificates.jsx
+   contact.css -> Contact.jsx
+   admin.css & admin-milestones.css -> Admin.jsx
+*/
 
 @tailwind base;
 @tailwind components;
@@ -99,7 +100,7 @@ h4, h5, h6 {
 .page-title .token-highlight,
 .page-title span.highlight,
 .page-title .gold-accent {
-  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
   font-style: italic !important;
   font-weight: 500 !important;
   color: #fcd34d !important;
@@ -190,33 +191,6 @@ h4, h5, h6 {
 
 .hairline-border {
   border-color: rgba(255, 255, 255, 0.07) !important;
-}
-
-.projects-page .filter-btn.active {
-  background: var(--gold, #d4af37) !important;
-  color: #000000 !important;
-  font-weight: 600 !important;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25) !important;
-  border-color: transparent !important;
-}
-
-/* Universal Sleek Dark Scrollbars */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: #000000;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.3);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 175, 55, 0.5);
 }
 
 /* Tailwind bg/text class overrides for gold theme */
@@ -314,39 +288,14 @@ img {
 .zero-journey-scrollbar {
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(229, 184, 105, 0.6) rgba(255, 255, 255, 0.04);
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
 
 .zero-journey-scrollbar::-webkit-scrollbar {
-  height: 6px;
-  width: 6px;
-  display: block;
-}
-
-.zero-journey-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  margin: 0 4px;
-}
-
-.zero-journey-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, rgba(229, 184, 105, 0.5) 0%, #e5b869 50%, rgba(229, 184, 105, 0.5) 100%);
-  border-radius: 9999px;
-  box-shadow: 0 0 10px rgba(229, 184, 105, 0.4);
-  border: 1px solid rgba(229, 184, 105, 0.35);
-  transition: all 0.25s ease;
-}
-
-.zero-journey-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, #e5b869 0%, #fbbf24 50%, #e5b869 100%);
-  box-shadow: 0 0 16px rgba(229, 184, 105, 0.75);
-  border-color: rgba(251, 191, 36, 0.7);
-}
-
-.zero-journey-scrollbar::-webkit-scrollbar-thumb:active {
-  background: #f59e0b;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }

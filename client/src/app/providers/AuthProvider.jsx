@@ -50,12 +50,7 @@ export function AuthProvider({ children }) {
       // Ignore storage error
     }
     updateAppState((prev) => ({
-      ...prev,
-      adminConfig: {
-        ...prev.adminConfig,
-        failedAttempts: 0,
-        lockoutUntil: 0
-      }
+      ...prev
     }), csrfToken);
     showToast('Welcome back, Ayush! Signed in to Admin CMS.');
     return { ok: true };
@@ -82,6 +77,18 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const recoverAdminPassword = useCallback(async ({ usernameOrEmail, recoveryKey, newPassword }) => {
+    try {
+      const res = await apiRequest('/api/auth/reset-password', {
+        method: 'POST',
+        body: { usernameOrEmail, recoveryKey, newPassword }
+      });
+      return { ok: true, message: res?.message || 'Password reset successfully!' };
+    } catch (err) {
+      return { ok: false, error: err.message || 'Failed to reset password.' };
+    }
+  }, []);
+
   const checkCurrentPassword = useCallback(async () => Boolean(session), [session]);
 
   return (
@@ -91,6 +98,7 @@ export function AuthProvider({ children }) {
         loginAdmin,
         logoutAdmin,
         resetAdminPassword,
+        recoverAdminPassword,
         checkCurrentPassword
       }}
     >

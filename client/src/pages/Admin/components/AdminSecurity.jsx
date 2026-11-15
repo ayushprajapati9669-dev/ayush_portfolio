@@ -103,7 +103,7 @@ export function AdminSecurity({
               type="password"
               value={form.curPass}
               onChange={(e) => setForm({ ...form, curPass: e.target.value })}
-              placeholder="Enter current admin password"
+              placeholder="••••••••"
               className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
             />
             <FormErrorMessage message={errors.curPass} />
@@ -117,7 +117,7 @@ export function AdminSecurity({
               type="password"
               value={form.newPass}
               onChange={(e) => setForm({ ...form, newPass: e.target.value })}
-              placeholder="e.g. Ayush7162@ (min 8 chars, 1 uppercase, 1 number, 1 special)"
+              placeholder="••••••••"
               className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
             />
             <FormErrorMessage message={errors.newPass} />
@@ -131,7 +131,7 @@ export function AdminSecurity({
               type="password"
               value={form.confirmPass}
               onChange={(e) => setForm({ ...form, confirmPass: e.target.value })}
-              placeholder="Re-enter new password"
+              placeholder="••••••••"
               className="w-full rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
             />
             <FormErrorMessage message={errors.confirmPass} />

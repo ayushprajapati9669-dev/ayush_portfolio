@@ -418,6 +418,8 @@ export function AdminCertificates({
       ...form,
       year: form.issueDate,
       downloadUrl: form.downloadUrl || form.imageUrl,
+      status: form.status || 'Verified',
+      published: form.status !== 'In Review' && form.status !== 'draft',
       updatedAt: new Date().toISOString()
     };
 
@@ -2039,14 +2041,14 @@ export function AdminCertificates({
           </div>
 
           <div className="flex items-center gap-2 flex-1 sm:flex-initial justify-end">
-            <div className="relative">
+            <div className="admin-select-wrapper relative flex items-center">
               <select
                 value={selectedCategory}
                 onChange={(e) => {
                   playTick();
                   setSelectedCategory(e.target.value);
                 }}
-                className="appearance-none w-full sm:w-auto min-w-[220px] rounded-xl border border-white/10 bg-[#0B101B]/90 pl-4 pr-9 py-2 text-xs font-medium text-white outline-none hover:border-yellow-400/40 focus:border-yellow-400 cursor-pointer transition-colors"
+                className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all min-w-[200px]"
               >
                 {availableCategories.map((cat) => {
                   const count =
@@ -2059,13 +2061,13 @@ export function AdminCertificates({
                         }).length;
 
                   return (
-                    <option key={cat} value={cat} className="bg-[#0b101b] text-white py-1">
+                    <option key={cat} value={cat} className="bg-[#0b101b] text-white">
                       {cat === 'ALL' ? 'All Categories' : cat} ({count})
                     </option>
                   );
                 })}
               </select>
-              <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+              <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
             </div>
 
             {selectedCategory !== 'ALL' && (
@@ -2114,14 +2116,14 @@ export function AdminCertificates({
           <div className="hidden lg:block h-6 w-px bg-white/10" />
 
           {/* Issuer Filter */}
-          <div className="relative min-w-[140px]">
+          <div className="admin-select-wrapper relative flex items-center min-w-[140px]">
             <select
               value={selectedIssuer}
               onChange={(e) => {
                 playTick();
                 setSelectedIssuer(e.target.value);
               }}
-              className="appearance-none w-full bg-transparent border-0 pl-3 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
+              className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
             >
               <option value="ALL" className="bg-[#0b101b] text-white">All Issuers ({certificates.length})</option>
               {uniqueIssuers.map((iss) => (
@@ -2130,48 +2132,48 @@ export function AdminCertificates({
                 </option>
               ))}
             </select>
-            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+            <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
           </div>
 
           {/* Divider */}
           <div className="hidden lg:block h-6 w-px bg-white/10" />
 
           {/* Status Filter */}
-          <div className="relative min-w-[120px]">
+          <div className="admin-select-wrapper relative flex items-center min-w-[130px]">
             <select
               value={selectedStatus}
               onChange={(e) => {
                 playTick();
                 setSelectedStatus(e.target.value);
               }}
-              className="appearance-none w-full bg-transparent border-0 pl-3 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
+              className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
             >
               <option value="ALL" className="bg-[#0b101b] text-white">All Status</option>
               <option value="FEATURED" className="bg-[#0b101b] text-white">★ Featured Only</option>
               <option value="VERIFIED" className="bg-[#0b101b] text-white">✓ Verified Only</option>
             </select>
-            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+            <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
           </div>
 
           {/* Divider */}
           <div className="hidden lg:block h-6 w-px bg-white/10" />
 
           {/* Sort Selector */}
-          <div className="relative min-w-[130px]">
+          <div className="admin-select-wrapper relative flex items-center min-w-[130px]">
             <select
               value={sortBy}
               onChange={(e) => {
                 playTick();
                 setSortBy(e.target.value);
               }}
-              className="appearance-none w-full bg-transparent border-0 pl-3 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
+              className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
             >
               <option value="newest" className="bg-[#0b101b] text-white">Newest Year</option>
               <option value="oldest" className="bg-[#0b101b] text-white">Oldest Year</option>
               <option value="title-asc" className="bg-[#0b101b] text-white">Title (A-Z)</option>
               <option value="issuer-asc" className="bg-[#0b101b] text-white">Issuer (A-Z)</option>
             </select>
-            <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+            <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
           </div>
         </div>
 
@@ -2227,7 +2229,7 @@ export function AdminCertificates({
               const isEditing = editingId === cert.id;
               const certImg =
                 cert.imageUrl ||
-                'https://images.unsplash.com/photo-1589330694653-ded6df03f754?q=80&w=800&auto=format&fit=crop';
+                '/images/apna-college-delta-certificate.webp';
 
               return (
                 <div

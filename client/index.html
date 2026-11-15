@@ -66,37 +66,116 @@
       }
       #root { min-height: 100vh; }
       h1, h2, h3 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; line-height: 1.1; letter-spacing: -0.02em; }
+      .hero-editorial-stage { position: relative; min-height: 100vh; max-width: 1440px; margin: 0 auto; }
+      .hero-photo-container { position: absolute; top: 0; right: 0; bottom: 0; width: 52%; display: flex; align-items: flex-end; justify-content: flex-end; }
+      .hero-photo-wrapper { position: absolute; right: 3%; bottom: 0; height: 98%; max-height: 89vh; width: auto; max-width: 92%; display: flex; align-items: flex-end; justify-content: flex-end; pointer-events: none; z-index: 1; }
+      .hero-photo-img {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        height: 100%;
+        width: auto;
+        max-width: 100%;
+        aspect-ratio: 3 / 4;
+        object-fit: contain;
+        object-position: right bottom;
+        filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.85)) contrast(1.04) brightness(1.0);
+        -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.85) 6%, #000 18%), linear-gradient(to right, transparent 0%, #000 8%);
+        mask-image: linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.85) 6%, #000 18%), linear-gradient(to right, transparent 0%, #000 8%);
+        image-rendering: -webkit-optimize-contrast;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        z-index: 1;
+      }
+      #hero-particle-canvas { position: absolute; inset: 0; pointer-events: none; z-index: 10; width: 100%; height: 100%; display: block; user-select: none; }
+      @media (max-width: 1000px) {
+        .hero-photo-container { position: absolute; top: 50px; left: 0; right: 0; width: 100%; max-width: 100%; height: 50vh; min-height: 270px; bottom: auto; margin: 0; display: flex; justify-content: center; align-items: flex-start; pointer-events: none; z-index: 1; }
+        .hero-photo-wrapper { position: relative; right: auto; bottom: auto; top: 0; height: 100%; max-height: 48vh; max-width: 80%; width: auto; display: flex; justify-content: center; align-items: flex-start; margin: 0 auto; }
+        .hero-photo-img {
+          position: relative;
+          right: auto;
+          bottom: auto;
+          top: 0;
+          height: 100%;
+          max-height: 48vh;
+          max-width: 80%;
+          width: auto;
+          aspect-ratio: 3 / 4;
+          object-fit: contain;
+          filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.7));
+          -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 94%);
+          mask-image: linear-gradient(to bottom, #000 52%, transparent 94%);
+          opacity: 0.72;
+        }
+        .hero-modern-desc { min-height: 7.5em; text-align: left !important; margin: 22px 0 0 0 !important; }
+        .hero-editorial-title, .hero-modern-title { min-height: 180px; text-align: left !important; margin: 0 !important; width: 100% !important; }
+        .hero-announcement-capsule { margin: 0 0 20px 0; }
+        .hero-center-showcase { align-items: flex-start !important; text-align: left !important; }
+      }
+      .hero-editorial-title, .hero-modern-title { text-align: center; margin: 0 auto; }
+      .hero-announcement-capsule {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 18px;
+        margin: 0 auto 24px;
+        height: 33px;
+        box-sizing: border-box;
+      }
+      .hero-modern-desc { min-height: 4.8em; }
     </style>
 
     <!-- High-Performance DNS Prefetch & Preconnect -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 
-    <!-- Performance-Optimized Webfonts with font-display=swap (Non-render-blocking) -->
+    <!-- Critical Hero Portrait Preload with high priority (Eliminates LCP delay) -->
     <link
       rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
+      as="image"
+      type="image/webp"
+      href="/uploads/hero_cutout_1794562459704_847_mobile.webp"
+      media="(max-width: 768px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      href="/uploads/hero_cutout_1794562459704_847.webp"
+      media="(min-width: 769px)"
+      fetchpriority="high"
+    />
+
+    <!-- Performance-Optimized Webfonts (Non-render-blocking) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      media="print"
+      onload="this.media='all'"
     />
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       />
     </noscript>
 
-    <!-- FontAwesome & Devicon Icons (Synchronous for guaranteed icon rendering across public and admin CMS) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <!-- FontAwesome Icons (Non-render-blocking) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    </noscript>
   </head>
-  <body class="min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white">
+  <body class="min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

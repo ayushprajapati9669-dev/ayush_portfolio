@@ -1,8 +1,11 @@
 export const STORAGE_KEY = 'ayush_modern_portfolio_state_v4';
 export const SESSION_KEY = 'ayush_modern_portfolio_admin_session_v4';
 
+let cachedDefaultState = null;
+
 export function getDefaultPortfolioState() {
-  return {
+  if (cachedDefaultState) return cachedDefaultState;
+  cachedDefaultState = {
     uiLabels: {
       navHome: 'Home',
       navAbout: 'About',
@@ -51,13 +54,18 @@ export function getDefaultPortfolioState() {
       eyebrow: 'FULL-STACK MERN DEVELOPER · B.TECH CSE (2028)',
       headline: 'From blank screen to live product. That’s Ayush Prajapati.',
       supportingHeadline: 'From blank screen to live product. That’s Ayush Prajapati.',
-      photoUrl: '/images/ayush-hero-portrait.png',
+      photoUrl: '/uploads/hero_cutout_1794562459704_847.webp',
+      portrait: {
+        url: '/uploads/hero_cutout_1794562459704_847.webp',
+        alt: 'Ayush Prajapati - Hero Portrait',
+        isTemporaryStandIn: false
+      },
       heroDescription: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42) skilled in C, Java, JavaScript, Python, React.js, Node.js, Express.js, MySQL, and MongoDB. Winner of a college website-making competition.',
       availabilityLabel: 'CSE @ SISTec, Bhopal · CGPA: 8.42 (2028)',
       primaryCtaText: 'Explore Live Projects',
       secondaryCtaText: "Let's Connect",
       footerTagline: 'Ayush Prajapati · ayushprajapati9669@gmail.com · (+91) 9669802554 · SISTec, Bhopal',
-      resumeUrl: '',
+      resumeUrl: '/images/Ayush_Prajapati_Resume.pdf',
       resumePreviewUrl: '/images/ayush-resume-preview.jpg',
       resumeSummary: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42, 2028) with strong foundations in C, Java, JavaScript, and Python, and hands-on expertise in building full-stack web applications using HTML, CSS, Bootstrap, React.js, Node.js, Express.js, MySQL, MongoDB, and Cloudinary.',
       education: {
@@ -119,19 +127,91 @@ export function getDefaultPortfolioState() {
       ],
       learningJourney: [
         {
+          id: 'm-workshop-mern-lead',
+          phase: 'Workshop · Technical Leadership',
+          metaLabel: 'Workshop · Technical Leadership',
+          yearBadge: 'Year 3',
+          year: 'Year 3',
+          title: '🎤 Lead Speaker & Instructor: MERN Stack & Cloud Architecture Workshop',
+          desc: '<h3>Hands-on Architecture Workshop</h3><p>Organized and conducted a flagship 2-day technical bootcamp on <strong>MERN Stack Engineering and Cloud Deployment</strong> at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.</p><h3>Live Demo & Lab Outcomes</h3><ul><li>Live-coded a full-stack real-time collaboration app with Socket.io on stage.</li><li>Guided students through Git branching workflows and live cloud deployment on Render and Vercel.</li><li>Rated 4.9/5 across attendee feedback surveys.</li></ul>',
+          description: 'Organized and conducted a flagship 2-day technical bootcamp on MERN Stack Engineering and Cloud Deployment at SISTec Bhopal. Mentored 120+ engineering students building scalable REST APIs with Express & Node.js, reactive state with React, and robust schema modeling with MongoDB.',
+          status: 'completed',
+          progress: 100,
+          rating: 5,
+          metric: '120+ Attendees · 2-Day Live Coding Lab & Project Deployment',
+          tags: [
+            'React JS',
+            'Node.js',
+            'MongoDB',
+            'Socket.io',
+            'Express.js',
+            'Tailwind CSS'
+          ],
+          skills: [
+            'React JS',
+            'Node.js',
+            'MongoDB',
+            'Socket.io',
+            'Express.js',
+            'Tailwind CSS'
+          ],
+          icon: 'fa-chalkboard-user',
+          image: '/images/ayush-workshop-lead.jpg',
+          imageAlt: 'Ayush Prajapati delivering MERN Stack Workshop on stage in front of students',
+          link: 'https://github.com/ayushprajapati9669-dev',
+          published: true,
+          pinned: true,
+          spotlight: true,
+          views: 320,
+          createdAt: '2026-10-24T19:30:00.000Z'
+        },
+        {
+          id: 'm-1',
           phase: 'EDUCATION · 2024 – 2028',
+          metaLabel: 'EDUCATION · 2024 – 2028',
+          yearBadge: 'Year 3',
+          year: 'Year 3',
           title: 'B.Tech CSE — SISTec, Bhopal (CGPA: 8.42)',
-          description: 'Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022).'
+          desc: 'Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022).',
+          description: 'Pursuing Bachelor of Technology in Computer Science & Engineering at SISTec, Bhopal with an 8.42 CGPA (Batch 2024 – 2028). Completed Class XII (MP Board) from Kasturba Vidhya Mandir, Jamani with 83.5% (2022).',
+          status: 'focus',
+          progress: 70,
+          rating: 4,
+          published: true,
+          pinned: false,
+          spotlight: false
         },
         {
+          id: 'm-2',
           phase: 'ACADEMIC PROJECTS · MERN & AI',
+          metaLabel: 'ACADEMIC PROJECTS · MERN & AI',
+          yearBadge: 'Year 1-2',
+          year: 'Year 1-2',
           title: 'Stock Trading Platform & Gemini AI ChatGPT Clone',
-          description: 'Engineered a full-stack Stock Trading Platform (holdings, orders, positions, funds, Market/Limit Buy & Sell) and a ChatGPT Clone using React.js, Node.js, Express.js, MongoDB, and Gemini API.'
+          desc: 'Engineered a full-stack Stock Trading Platform (holdings, orders, positions, funds, Market/Limit Buy & Sell) and a ChatGPT Clone using React.js, Node.js, Express.js, MongoDB, and Gemini API.',
+          description: 'Engineered a full-stack Stock Trading Platform (holdings, orders, positions, funds, Market/Limit Buy & Sell) and a ChatGPT Clone using React.js, Node.js, Express.js, MongoDB, and Gemini API.',
+          status: 'completed',
+          progress: 100,
+          rating: 5,
+          published: true,
+          pinned: false,
+          spotlight: false
         },
         {
+          id: 'm-3',
           phase: 'ACHIEVEMENTS & LIVE DEPLOYMENTS',
+          metaLabel: 'ACHIEVEMENTS & LIVE DEPLOYMENTS',
+          yearBadge: 'Present',
+          year: 'Present',
           title: 'Airbnb Clone Live Deployment & Competition Winner',
-          description: 'Won a website-making competition at college, completed the Apna College Delta Full-Stack Web Development course, and deployed a live Airbnb Clone on Render.'
+          desc: 'Won a website-making competition at college, completed the Apna College Delta Full-Stack Web Development course, and deployed a live Airbnb Clone on Render.',
+          description: 'Won a website-making competition at college, completed the Apna College Delta Full-Stack Web Development course, and deployed a live Airbnb Clone on Render.',
+          status: 'completed',
+          progress: 100,
+          rating: 5,
+          published: true,
+          pinned: false,
+          spotlight: false
         }
       ],
       workbenchSnippets: [
@@ -165,8 +245,8 @@ export function getDefaultPortfolioState() {
         instagram: 'https://www.instagram.com/ayush7162/'
       },
       portrait: {
-        url: '/images/ayush-hero-portrait.png',
-        alt: 'Ayush Prajapati',
+        url: '/uploads/hero_cutout_1794562459704_847.webp',
+        alt: 'Ayush Prajapati - Hero Portrait',
         scale: 1.0,
         offsetX: 0,
         offsetY: 0,
@@ -394,65 +474,33 @@ export function getDefaultPortfolioState() {
       }
     ],
     certificates: [],
-    resumes: [],    messages: [
-      {
-        id: 'msg-recruiter-stripe',
-        name: 'Sarah Jenkins',
-        email: 'sjenkins.recruiting@stripe.com',
-        subject: 'Full-Stack Software Engineering Role (MERN / Distributed Systems)',
-        message: 'Hi Ayush,\n\nI came across your portfolio and was thoroughly impressed by your Wanderlust distributed architecture and full-stack systems work. Our engineering team at Stripe is expanding our platform integrations group and your background in React, Node.js, and high-performance cloud architectures stands out.\n\nWould you be open to an introductory call this week to discuss potential engineering roles?\n\nBest regards,\nSarah Jenkins',
-        status: 'unread',
-        starred: true,
-        createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-        replies: []
-      },
-      {
-        id: 'msg-founder-agentic',
-        name: 'Michael Chang',
-        email: 'michael@hyperscale-ai.io',
-        subject: 'Autonomous Multi-Agent Workspace Collaboration',
-        message: 'Hello Ayush,\n\nWe saw your live project build for the Autonomous Multi-Agent Workspace and were really impressed by your task decomposition and multi-agent coordination architecture.\n\nWe are building next-generation agent harnesses for enterprise engineers and would love to consult with you or explore a collaborative engagement.\n\nLooking forward to speaking,\nMichael Chang',
-        status: 'read',
-        starred: false,
-        createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
-        replies: [
-          {
-            id: 'reply-founder-1',
-            sender: 'You (Admin)',
-            text: 'Hi Michael,\n\nThank you for reaching out! The multi-agent workspace was an exciting system to architect, particularly ensuring reliable inter-agent messaging and state synchronization.\n\nI would be very happy to connect and discuss your team\'s work. Feel free to book a convenient slot on my calendar.\n\nBest regards,\nAyush Prajapati',
-            time: '11:30 AM',
-            date: new Date(Date.now() - 3600000 * 20).toLocaleDateString()
-          }
-        ]
-      },
-      {
-        id: 'msg-speaker-conclave',
-        name: 'Dr. Rajiv Sharma',
-        email: 'rajiv.sharma@techconclave.org',
-        subject: 'Keynote Speaker Invitation: Modern Cloud Architecture Workshop',
-        message: 'Dear Ayush,\n\nFollowing your successful workshop mentoring 120+ engineers at SISTec on MERN and Cloud Architecture, the organizing committee would like to invite you as a keynote guest speaker for the upcoming Central India Tech Innovation Conclave.\n\nPlease let us know if your schedule allows for a 45-minute technical keynote in December.\n\nWarm regards,\nDr. Rajiv Sharma',
-        status: 'read',
-        starred: true,
-        createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
-        replies: []
-      }
-    ],
+    resumes: [],
+    messages: [],
     settings: {
       siteTitle: 'Ayush Prajapati — Full-Stack Developer Portfolio',
+      siteName: 'Ayush Prajapati',
+      seoTitle: 'Ayush Prajapati | Full-Stack Developer & Software Engineer',
       seoDescription: 'Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB.',
+      seoKeywords: 'Ayush Prajapati, Full-Stack Developer, MERN Stack, React.js, Node.js, SISTec Bhopal, Software Engineer, Portfolio',
+      ogTitle: 'Ayush Prajapati — Full-Stack Developer & Software Engineer',
+      ogDescription: 'Portfolio of Ayush Prajapati, B.Tech CSE student at SISTec, Bhopal (CGPA: 8.42) specializing in MERN stack development, C, Java, Python, MySQL, and MongoDB.',
+      ogImage: '/og-image.png',
+      canonicalUrl: 'https://ayushprajapati.dev',
+      robotsIndex: 'index, follow',
+      author: 'Ayush Prajapati',
+      themeMode: 'dark',
+      accentColor: '#dfb740',
+      bgBase: '#000000',
+      bgSurface: '#0a0a0f',
+      fontHeading: "'Plus Jakarta Sans', sans-serif",
+      fontBody: "'Plus Jakarta Sans', sans-serif",
+      glowIntensity: 'medium',
       particlesEnabled: true,
-      mongodbUri: 'mongodb://127.0.0.1:27017/ayush_portfolio',
+      maintenanceMode: false,
+      copyrightText: `© ${new Date().getFullYear()} Ayush Prajapati. All rights reserved.`,
       cloudinaryCloudName: '',
       cloudinaryUploadPreset: ''
-    },
-    adminConfig: {
-      username: 'ayushprajapati9669@gmail.com',
-      passwordHash: 'sha256$6811db276104288014ad87e84e6320c6ecbc3fd6e315da2c44dbd1efbf573412',
-      passwordFnvFallback: 'fnv$a15227e0',
-      recoveryEmail: 'ayushprajapati9669@gmail.com',
-      recoveryPhone: '9669802554',
-      failedAttempts: 0,
-      lockoutUntil: 0
     }
   };
+  return cachedDefaultState;
 }

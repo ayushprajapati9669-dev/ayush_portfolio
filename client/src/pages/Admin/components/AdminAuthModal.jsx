@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
-import { validatePasswordStrength } from '../../../utils/validation';
 import { playTick } from '../../../utils/audio';
 
 function FormErrorMessage({ message }) {
@@ -18,12 +17,22 @@ function FormErrorMessage({ message }) {
 export function AdminAuthModal({
   loginAdmin,
   resetAdminPassword,
+  recoverAdminPassword,
   showToast
 }) {
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'forgot'
-  const [loginUser, setLoginUser] = useState('ayushprajapati9669@gmail.com');
+  const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [authErrors, setAuthErrors] = useState({});
+  const [resetSuccessBanner, setResetSuccessBanner] = useState('');
+
+  // Recovery Form State
+  const [recoveryUser, setRecoveryUser] = useState('ayushprajapati9669@gmail.com');
+  const [recoveryKey, setRecoveryKey] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showResetPass, setShowResetPass] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   const cardRef = useRef(null);
 
@@ -33,8 +42,8 @@ export function AdminAuthModal({
     if (!reduceMotion && cardRef.current) {
       gsap.fromTo(
         cardRef.current,
-        { scale: 0.94, opacity: 0, y: 30 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' }
+        { scale: 0.98, y: 15 },
+        { scale: 1, y: 0, duration: 0.35, ease: 'power2.out', clearProps: 'all' }
       );
     }
   }, [authMode]);
@@ -45,13 +54,6 @@ export function AdminAuthModal({
       gsap.fromTo(cardRef.current, { x: -8 }, { x: 0, duration: 0.4, ease: 'elastic.out(1, 0.3)' });
     }
   };
-
-  const [forgotForm, setForgotForm] = useState({
-    email: '',
-    phone: '',
-    newPass: '',
-    confirmPass: ''
-  });
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -89,51 +91,72 @@ export function AdminAuthModal({
     }
   };
 
-  const handleForgotSubmit = async (e) => {
+  const handleRecoverySubmit = async (e) => {
     e.preventDefault();
     const errs = {};
-    const email = forgotForm.email.trim().toLowerCase();
-    const phone = forgotForm.phone.replace(/[^0-9]/g, '');
 
-    if (!email) {
-      errs.email = 'Registered email is required.';
-    } else if (email !== 'ayushprajapati9669@gmail.com') {
-      errs.email = 'Email does not match the registered admin email.';
+    if (!recoveryUser.trim()) {
+      errs.recoveryUser = 'Admin email or username is required.';
     }
 
-    if (!phone) {
-      errs.phone = 'Registered phone number is required.';
-    } else if (!phone.endsWith('9669802554')) {
-      errs.phone = 'Phone number does not match registered admin phone.';
+    if (!recoveryKey.trim()) {
+      errs.recoveryKey = 'Recovery mobile number or passkey is required.';
     }
 
-    if (!forgotForm.newPass) {
-      errs.newPass = 'New password is required.';
-    } else if (!validatePasswordStrength(forgotForm.newPass)) {
-      errs.newPass = 'Password must be >= 8 chars with 1 uppercase, 1 digit, and 1 special char (e.g. @).';
+    if (!newPassword) {
+      errs.newPassword = 'New password is required.';
+    } else if (newPassword.length < 10) {
+      errs.newPassword = 'Password must be at least 10 characters long.';
     }
 
-    if (!forgotForm.confirmPass) {
-      errs.confirmPass = 'Please confirm your new password.';
-    } else if (forgotForm.newPass !== forgotForm.confirmPass) {
-      errs.confirmPass = 'Passwords do not match.';
+    if (!confirmPassword) {
+      errs.confirmPassword = 'Please confirm your new password.';
+    } else if (newPassword !== confirmPassword) {
+      errs.confirmPassword = 'Confirmation password does not match.';
     }
 
     if (Object.keys(errs).length > 0) {
       setAuthErrors(errs);
+      shakeCard();
       return;
     }
 
+    setIsResetting(true);
+    setAuthErrors({});
     playTick();
-    const result = await resetAdminPassword(forgotForm.newPass);
-    if (!result?.ok) {
-      setAuthErrors({ banner: result?.error || 'Password recovery is unavailable. Contact the site administrator.' });
+
+    if (typeof recoverAdminPassword !== 'function') {
+      setIsResetting(false);
+      setAuthErrors({ banner: 'Password recovery handler is unavailable. Please check server.' });
+      shakeCard();
       return;
     }
-    setForgotForm({ email: '', phone: '', newPass: '', confirmPass: '' });
-    setAuthErrors({});
-    setAuthMode('login');
-    showToast('Password reset successfully! Please sign in with your new password.', 'fa-lock');
+
+    const res = await recoverAdminPassword({
+      usernameOrEmail: recoveryUser.trim(),
+      recoveryKey: recoveryKey.trim(),
+      newPassword
+    });
+
+    setIsResetting(false);
+
+    if (!res.ok) {
+      shakeCard();
+      setAuthErrors({
+        banner: res.error || 'Failed to reset password. Please verify your credentials.'
+      });
+    } else {
+      setLoginUser(recoveryUser.trim());
+      setRecoveryKey('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setAuthMode('login');
+      setResetSuccessBanner('Password reset successfully! Please sign in with your new password.');
+      setAuthErrors({});
+      if (typeof showToast === 'function') {
+        showToast('Password reset successfully! You can now sign in.', 'fa-check');
+      }
+    }
   };
 
   return (
@@ -141,67 +164,90 @@ export function AdminAuthModal({
       <div ref={cardRef} className="glass-card-admin rounded-3xl p-7 sm:p-9 space-y-6 border border-yellow-400/30">
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-2 rounded-full bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 font-mono text-[10px] font-bold text-yellow-400">
-            <i className="fa-solid fa-lock text-xs" />
-            <span>PROTECTED ADMIN PORTAL</span>
+            <i className={`fa-solid ${authMode === 'forgot' ? 'fa-key' : 'fa-lock'} text-xs`} />
+            <span>{authMode === 'forgot' ? 'ADMIN CREDENTIAL RECOVERY' : 'PROTECTED ADMIN PORTAL'}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
             {authMode === 'forgot' ? 'Reset Admin Password' : 'Administrator Sign In'}
           </h1>
           <p className="text-xs leading-relaxed text-slate-400">
             {authMode === 'forgot'
-              ? 'Verify your registered email and phone number to create a new master password.'
+              ? 'Verify your registered recovery details to set a new administrator password.'
               : 'Authorized access only. Sign in with your administrator credentials to manage portfolio content.'}
           </p>
         </div>
 
+        {resetSuccessBanner && authMode === 'login' && (
+          <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3.5 text-xs text-emerald-300 font-medium flex items-center gap-2">
+            <i className="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0" />
+            <span>{resetSuccessBanner}</span>
+          </div>
+        )}
+
         {authErrors.banner && (
-          <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3.5 text-xs text-red-300 font-medium">
-            {authErrors.banner}
+          <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3.5 text-xs text-red-300 font-medium flex items-start gap-2">
+            <i className="fa-solid fa-triangle-exclamation text-red-400 text-sm shrink-0 mt-0.5" />
+            <span>{authErrors.banner}</span>
           </div>
         )}
 
         {authMode === 'forgot' ? (
-          <form onSubmit={handleForgotSubmit} noValidate className="space-y-4">
+          <form onSubmit={handleRecoverySubmit} noValidate className="space-y-4">
             <div>
               <label className="block font-mono text-xs text-slate-400 mb-1">
-                Registered Admin Email *
+                Admin Username or Email *
               </label>
               <input
                 type="text"
-                value={forgotForm.email}
-                onChange={(e) => setForgotForm({ ...forgotForm, email: e.target.value })}
+                name="recoveryUser"
+                autoComplete="username"
+                value={recoveryUser}
+                onChange={(e) => setRecoveryUser(e.target.value)}
                 placeholder="ayushprajapati9669@gmail.com"
                 className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
-              {authErrors.email && <p className="mt-1 font-mono text-[11px] text-red-400">{authErrors.email}</p>}
+              <FormErrorMessage message={authErrors.recoveryUser} />
             </div>
 
             <div>
               <label className="block font-mono text-xs text-slate-400 mb-1">
-                Registered Phone Number (10 digits) *
+                Recovery Mobile Number / Passkey *
               </label>
               <input
                 type="text"
-                value={forgotForm.phone}
-                onChange={(e) => setForgotForm({ ...forgotForm, phone: e.target.value })}
-                placeholder="9669802554"
+                name="recoveryKey"
+                value={recoveryKey}
+                onChange={(e) => setRecoveryKey(e.target.value)}
+                placeholder="e.g. 9669802554 or Master Recovery Key"
                 className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
-              {authErrors.phone && <p className="mt-1 font-mono text-[11px] text-red-400">{authErrors.phone}</p>}
+              <p className="mt-1 text-[11px] text-slate-500">
+                Enter your registered mobile number or master recovery passkey.
+              </p>
+              <FormErrorMessage message={authErrors.recoveryKey} />
             </div>
 
             <div>
-              <label className="block font-mono text-xs text-slate-400 mb-1">
-                New Password *
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block font-mono text-xs text-slate-400">New Password *</label>
+                <button
+                  type="button"
+                  onClick={() => setShowResetPass((prev) => !prev)}
+                  className="font-mono text-[11px] text-yellow-400/90 hover:text-yellow-300 transition-colors"
+                >
+                  {showResetPass ? 'Hide' : 'Show'}
+                </button>
+              </div>
               <input
-                type="password"
-                value={forgotForm.newPass}
-                onChange={(e) => setForgotForm({ ...forgotForm, newPass: e.target.value })}
-                placeholder="Min 8 chars, e.g. Ayush7162@"
+                type={showResetPass ? 'text' : 'password'}
+                name="newPassword"
+                autoComplete="new-password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Minimum 10 characters"
                 className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
-              <FormErrorMessage message={authErrors.newPass} />
+              <FormErrorMessage message={authErrors.newPassword} />
             </div>
 
             <div>
@@ -209,20 +255,33 @@ export function AdminAuthModal({
                 Confirm New Password *
               </label>
               <input
-                type="password"
-                value={forgotForm.confirmPass}
-                onChange={(e) => setForgotForm({ ...forgotForm, confirmPass: e.target.value })}
+                type={showResetPass ? 'text' : 'password'}
+                name="confirmPassword"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter new password"
                 className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
-              <FormErrorMessage message={authErrors.confirmPass} />
+              <FormErrorMessage message={authErrors.confirmPassword} />
             </div>
 
             <button
               type="submit"
-              className="btn-save w-full py-3 text-sm font-bold"
+              disabled={isResetting}
+              className="btn-save w-full py-3 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Update & Reset Password
+              {isResetting ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin" />
+                  <span>Verifying & Resetting...</span>
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-shield-halved" />
+                  <span>Reset Password & Sign In</span>
+                </>
+              )}
             </button>
 
             <div className="text-center pt-2">
@@ -233,7 +292,7 @@ export function AdminAuthModal({
                   setAuthMode('login');
                   setAuthErrors({});
                 }}
-                className="font-mono text-xs text-yellow-400 hover:underline"
+                className="font-mono text-xs text-yellow-400 hover:underline inline-flex items-center gap-1.5"
               >
                 ← Back to Administrator Sign In
               </button>
@@ -247,9 +306,11 @@ export function AdminAuthModal({
               </label>
               <input
                 type="text"
+                name="username"
+                autoComplete="username"
                 value={loginUser}
                 onChange={(e) => setLoginUser(e.target.value)}
-                placeholder="ayushprajapati9669@gmail.com"
+                placeholder="admin@example.com"
                 className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
               <FormErrorMessage message={authErrors.user} />
@@ -272,9 +333,11 @@ export function AdminAuthModal({
               </div>
               <input
                 type="password"
+                name="password"
+                autoComplete="current-password"
                 value={loginPass}
                 onChange={(e) => setLoginPass(e.target.value)}
-                placeholder="Enter your master password"
+                placeholder="••••••••"
                 className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-2.5 text-sm text-white outline-none focus:border-yellow-400"
               />
               <FormErrorMessage message={authErrors.pass} />

@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
+import '../../styles/components/cards.css';
 
 // Authentic, colorful brand tech icons for top 1% developer portfolio
-function getTechIcon(name) {
+export function getTechIcon(name) {
   const n = String(name || '').toLowerCase().trim();
 
   // React — Cyan Atom
@@ -95,19 +97,20 @@ export function ProjectCard({
   onCardMouseMove,
   onCardMouseLeave,
   isSelected,
-  onSelect
+  onSelect,
+  priority = false
 }) {
   const cardRef = useRef(null);
 
   const imgSrc =
     proj.thumbnailUrl ||
     (indexNum === 1
-      ? 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop'
+      ? '/images/airbnb-clone-preview.webp'
       : indexNum === 2
-      ? 'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1000&auto=format&fit=crop'
+      ? '/images/ai-agentic-preview.webp'
       : indexNum === 3
-      ? 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop'
-      : 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000&auto=format&fit=crop');
+      ? '/images/ai-chat-preview.webp'
+      : '/images/airbnb-clone-preview.webp');
 
   const liveHref = proj.liveDemoUrl || '';
   const githubHref = proj.githubUrl || 'https://github.com/ayushprajapati9669-dev';
@@ -211,7 +214,7 @@ export function ProjectCard({
     }
   };
 
-  const primaryTargetUrl = liveHref || githubHref;
+  const detailUrl = `/projects/${proj.slug || proj.id}`;
 
   return (
     <article
@@ -222,104 +225,70 @@ export function ProjectCard({
       onMouseLeave={handleMouseLeave}
       onClick={() => onSelect && onSelect(proj.id)}
     >
-      {primaryTargetUrl ? (
-        <a
-          href={primaryTargetUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-img-wrap block relative overflow-hidden"
-          title={`Launch ${proj.title} ${liveHref ? 'Live Demo' : 'Source Code'}`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <picture>
-            {imgSrc && imgSrc.includes('airbnb-clone-preview') && (
-              <source srcSet="/images/airbnb-clone-preview.webp" type="image/webp" />
-            )}
-            <img
-              src={imgSrc}
-              alt={proj.title}
-              loading={indexNum === 1 ? 'eager' : 'lazy'}
-              fetchpriority={indexNum === 1 ? 'high' : 'auto'}
-              decoding={indexNum === 1 ? 'sync' : 'async'}
-              width="600"
-              height="340"
-              className="w-full h-[200px] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
-            />
-          </picture>
+      <Link
+        to={detailUrl}
+        className="project-img-wrap block relative overflow-hidden"
+        title={`View ${proj.title} Details`}
+      >
+        <picture>
+          {imgSrc && imgSrc.includes('airbnb-clone-preview') && (
+            <source srcSet="/images/airbnb-clone-preview.webp" type="image/webp" />
+          )}
+          <img
+            src={imgSrc}
+            alt={proj.title}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchpriority={priority ? 'high' : 'auto'}
+            decoding="async"
+            width="600"
+            height="340"
+            className="w-full h-[200px] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
+          />
+        </picture>
 
-          {/* Gradient shadow over bottom of image */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent" />
+        {/* Gradient shadow over bottom of image */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent" />
 
-          {/* Badges */}
-          <div className="project-badges">
-            <div className="p-badge">{badgeText}</div>
-            {liveHref && /^https?:\/\//i.test(liveHref) && (
-              <div className="p-badge live flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Live Deployed</span>
-              </div>
-            )}
-          </div>
-        </a>
-      ) : (
-        <div className="project-img-wrap block relative overflow-hidden">
-          <picture>
-            {imgSrc && imgSrc.includes('airbnb-clone-preview') && (
-              <source srcSet="/images/airbnb-clone-preview.webp" type="image/webp" />
-            )}
-            <img
-              src={imgSrc}
-              alt={proj.title}
-              loading={indexNum === 1 ? 'eager' : 'lazy'}
-              fetchpriority={indexNum === 1 ? 'high' : 'auto'}
-              decoding={indexNum === 1 ? 'sync' : 'async'}
-              width="600"
-              height="340"
-              className="w-full h-[200px] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
-            />
-          </picture>
-
-          {/* Gradient shadow over bottom of image */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent" />
-
-          {/* Badges */}
-          <div className="project-badges">
-            <div className="p-badge">{badgeText}</div>
-            {liveHref && /^https?:\/\//i.test(liveHref) && (
-              <div className="p-badge live flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Live Deployed</span>
-              </div>
-            )}
-          </div>
+        {/* Badges */}
+        <div className="project-badges">
+          <div className="p-badge">{badgeText}</div>
+          {liveHref && /^https?:\/\//i.test(liveHref) && (
+            <div className="p-badge live flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Live Deployed</span>
+            </div>
+          )}
         </div>
-      )}
+      </Link>
 
       <div className="project-content flex-1 flex flex-col justify-between">
         <div>
           <div className="project-meta flex items-center justify-between mb-2">
             <span className="project-num">PROJECT {indexNum < 10 ? `0${indexNum}` : indexNum}</span>
-            {proj.category && (
-              <span className="font-mono text-[10px] text-zinc-400 tracking-wider uppercase px-2 py-0.5 rounded-full bg-white/[0.03] border border-white/5">
-                {proj.category}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {proj.category && (
+                <span className="font-mono text-[10px] text-zinc-400 tracking-wider uppercase px-2 py-0.5 rounded-full bg-white/[0.03] border border-white/5">
+                  {proj.category}
+                </span>
+              )}
+              <Link
+                to={detailUrl}
+                className="project-link-hint inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-mono text-amber-300 rounded-full transition-all no-underline bg-white/[0.03] border border-white/10 hover:bg-amber-400/15"
+                title={`Inspect ${proj.title} Details`}
+              >
+                <span>Details</span>
+                <i className="fa-solid fa-arrow-right text-[8px]" />
+              </Link>
+            </div>
           </div>
 
           <h2 className="project-title group-hover:text-amber-300 transition-colors">
-            {primaryTargetUrl ? (
-              <a
-                href={primaryTargetUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="no-underline text-inherit hover:text-amber-300 transition-colors"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {proj.title}
-              </a>
-            ) : (
-              proj.title
-            )}
+            <Link
+              to={detailUrl}
+              className="no-underline text-inherit hover:text-amber-300 transition-colors"
+            >
+              {proj.title}
+            </Link>
           </h2>
 
           <p className="project-desc">
@@ -364,6 +333,17 @@ export function ProjectCard({
               <i className="fa-brands fa-github text-[13px]" />
               <span>Source Code</span>
             </a>
+          )}
+
+          {!liveHref && !githubHref && (
+            <Link
+              to={detailUrl}
+              className="btn-demo flex-1 flex items-center justify-center gap-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <i className="fa-solid fa-arrow-right text-[11px]" />
+              <span>View Details</span>
+            </Link>
           )}
         </div>
       </div>

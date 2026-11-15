@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 
@@ -14,11 +13,14 @@ export function ConfirmModal() {
     if (!confirmState.open) return;
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduceMotion && modalCardRef.current) {
-      gsap.fromTo(
-        modalCardRef.current,
-        { scale: 0.9, opacity: 0, y: 20 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.2)' }
-      );
+      import('gsap').then(({ default: gsap }) => {
+        if (!modalCardRef.current) return;
+        gsap.fromTo(
+          modalCardRef.current,
+          { scale: 0.9, opacity: 0, y: 20 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.2)' }
+        );
+      });
     }
   }, [confirmState.open]);
 

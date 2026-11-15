@@ -12,15 +12,24 @@ class PortfolioDataStore {
   }
 
   _saveBase64ToUploads(dataUrl, prefix = 'hero_portrait') {
-    if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
+    if (!dataUrl || typeof dataUrl !== 'string' || (!dataUrl.startsWith('data:image/') && !dataUrl.startsWith('data:application/pdf'))) {
       return dataUrl;
     }
     try {
-      const match = dataUrl.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
-      if (!match) return dataUrl;
-      const rawExt = match[1].toLowerCase();
-      const ext = rawExt === 'jpeg' ? 'jpg' : rawExt === 'webp' ? 'webp' : rawExt === 'png' ? 'png' : 'jpg';
-      const base64Data = match[2];
+      let ext = 'jpg';
+      let base64Data = '';
+      if (dataUrl.startsWith('data:application/pdf')) {
+        ext = 'pdf';
+        const match = dataUrl.match(/^data:application\/pdf(?:;[a-zA-Z0-9=-]+)*;base64,(.+)$/);
+        if (!match) return dataUrl;
+        base64Data = match[1];
+      } else {
+        const match = dataUrl.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+        if (!match) return dataUrl;
+        const rawExt = match[1].toLowerCase();
+        ext = rawExt === 'jpeg' ? 'jpg' : rawExt === 'webp' ? 'webp' : rawExt === 'png' ? 'png' : 'jpg';
+        base64Data = match[2];
+      }
       const buffer = Buffer.from(base64Data, 'base64');
       const targetDir = this.uploadsDir || path.resolve(path.dirname(this.dataFilePath), '../uploads');
       if (!fs.existsSync(targetDir)) {
@@ -67,15 +76,19 @@ class PortfolioDataStore {
           });
         }
         // Ensure legacy stand-in ceiling image is replaced with clean transparent hero cutout
-        const isLegacyCeilingStandin = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+        const isLegacyCeilingStandin = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp' || u === '/images/ayush-hero-portrait.png'));
         if (this.state.profile) {
           if (isLegacyCeilingStandin(this.state.profile.photoUrl)) {
-            this.state.profile.photoUrl = '/images/ayush-hero-portrait.png';
+            this.state.profile.photoUrl = '/uploads/hero_cutout_1794562459704_847.webp';
             mutated = true;
           }
           if (this.state.profile.portrait && isLegacyCeilingStandin(this.state.profile.portrait.url)) {
-            this.state.profile.portrait.url = '/images/ayush-hero-portrait.png';
+            this.state.profile.portrait.url = '/uploads/hero_cutout_1794562459704_847.webp';
             this.state.profile.portrait.isTemporaryStandIn = false;
+            mutated = true;
+          }
+          if (typeof this.state.profile.resumeUrl === 'string' && this.state.profile.resumeUrl.startsWith('data:application/pdf')) {
+            this.state.profile.resumeUrl = '/images/Ayush_Prajapati_Resume.pdf';
             mutated = true;
           }
         }
@@ -112,6 +125,10 @@ class PortfolioDataStore {
             });
             mutated = true;
           }
+        }
+        if (this.state.settings && this.state.settings.mongodbUri) {
+          delete this.state.settings.mongodbUri;
+          mutated = true;
         }
         if (mutated) {
           this._persist();
@@ -211,6 +228,9 @@ class PortfolioDataStore {
     const cleanedPatch = { ...patch };
     if (cleanedPatch.photoUrl && typeof cleanedPatch.photoUrl === 'string' && cleanedPatch.photoUrl.startsWith('data:image/')) {
       cleanedPatch.photoUrl = this._saveBase64ToUploads(cleanedPatch.photoUrl, 'hero_portrait');
+    }
+    if (cleanedPatch.resumeUrl && typeof cleanedPatch.resumeUrl === 'string' && cleanedPatch.resumeUrl.startsWith('data:application/pdf')) {
+      cleanedPatch.resumeUrl = this._saveBase64ToUploads(cleanedPatch.resumeUrl, 'resume');
     }
     if (cleanedPatch.portrait && typeof cleanedPatch.portrait === 'object') {
       cleanedPatch.portrait = { ...cleanedPatch.portrait };
@@ -358,6 +378,52 @@ class PortfolioDataStore {
     return JSON.parse(JSON.stringify(this.state.certificates || []));
   }
 
+  getPublicCertificates() {
+    if (!Array.isArray(this.state?.certificates)) {
+      return [];
+    }
+
+    const CANONICAL_PUBLIC_STATUSES = new Set(['verified', 'accredited', 'published']);
+    const DISALLOWED_STATUSES = new Set(['draft', 'pending', 'in review', 'in_review', 'unpublished', 'archived']);
+
+    return this.state.certificates
+      .filter((cert) => {
+        // 1. Must be a valid, non-null object
+        if (!cert || typeof cert !== 'object') return false;
+
+        // 2. Must possess valid, non-empty title and issuer
+        if (typeof cert.title !== 'string' || !cert.title.trim()) return false;
+        if (typeof cert.issuer !== 'string' || !cert.issuer.trim()) return false;
+
+        // 3. published === false or explicit draft flags are strictly rejected
+        if (cert.published === false || cert.isDraft === true || cert.draft === true) return false;
+
+        // 4. Status must be an explicit, non-empty string.
+        // Unknown, missing, or empty statuses are strictly rejected, even when published === true.
+        if (typeof cert.status !== 'string' || !cert.status.trim()) return false;
+        const normalizedStatus = cert.status.trim().toLowerCase();
+
+        // 5. Explicitly reject draft, pending, review, unpublished, archived
+        if (DISALLOWED_STATUSES.has(normalizedStatus)) {
+          return false;
+        }
+
+        // 6. Only explicitly allowed canonical statuses are accepted ('verified', 'accredited', 'published').
+        // Unknown statuses are rejected, even when published === true.
+        if (!CANONICAL_PUBLIC_STATUSES.has(normalizedStatus)) {
+          return false;
+        }
+
+        // 7. If published boolean is provided, it must be explicitly true
+        if (cert.published !== undefined && cert.published !== true) {
+          return false;
+        }
+
+        return true;
+      })
+      .map((c) => JSON.parse(JSON.stringify(c)));
+  }
+
   upsertCertificate(certPayload) {
     if (!Array.isArray(this.state.certificates)) this.state.certificates = [];
     const now = new Date().toISOString();
@@ -365,12 +431,20 @@ class PortfolioDataStore {
     if (cleanedCert.imageUrl && typeof cleanedCert.imageUrl === 'string' && cleanedCert.imageUrl.startsWith('data:image/')) {
       cleanedCert.imageUrl = this._saveBase64ToUploads(cleanedCert.imageUrl, 'cert_img');
     }
+
+    const certStatus = certPayload.status ? String(certPayload.status).trim() : 'Verified';
+    const isExplicitlyPublished = typeof certPayload.published === 'boolean'
+      ? certPayload.published
+      : ['published', 'verified', 'accredited'].includes(certStatus.toLowerCase());
+
     if (cleanedCert.id) {
       const idx = this.state.certificates.findIndex(c => c.id === certPayload.id);
       if (idx !== -1) {
         this.state.certificates[idx] = {
           ...this.state.certificates[idx],
           ...certPayload,
+          status: certStatus,
+          published: isExplicitlyPublished,
           updatedAt: now
         };
         this._persist();
@@ -378,14 +452,17 @@ class PortfolioDataStore {
       }
     }
     const created = {
-      id: `cert-${crypto.randomBytes(4).toString('hex')}`,
+      id: certPayload.id || `cert-${crypto.randomBytes(4).toString('hex')}`,
       title: certPayload.title,
       issuer: certPayload.issuer,
-      issueDate: certPayload.issueDate || '2025',
+      issueDate: certPayload.issueDate || '',
       credentialId: certPayload.credentialId || '',
       credentialUrl: certPayload.credentialUrl || '',
       skillsCovered: certPayload.skillsCovered || '',
       imageUrl: certPayload.imageUrl || '',
+      downloadUrl: certPayload.downloadUrl || certPayload.imageUrl || '',
+      status: certStatus,
+      published: isExplicitlyPublished,
       createdAt: now,
       updatedAt: now
     };
@@ -508,12 +585,53 @@ class PortfolioDataStore {
     return JSON.parse(JSON.stringify(this.state.settings || {}));
   }
 
+  getPublicSettings() {
+    const raw = this.state.settings || {};
+    const PUBLIC_SETTINGS_ALLOWLIST = [
+      'siteTitle',
+      'siteName',
+      'seoTitle',
+      'seoDescription',
+      'seoKeywords',
+      'ogTitle',
+      'ogDescription',
+      'ogImage',
+      'canonicalUrl',
+      'robotsIndex',
+      'author',
+      'themeMode',
+      'accentColor',
+      'bgBase',
+      'bgSurface',
+      'fontHeading',
+      'fontBody',
+      'glowIntensity',
+      'particlesEnabled',
+      'contactEmail',
+      'contactPhone',
+      'contactNote',
+      'maintenanceMode',
+      'copyrightText',
+      'updatedAt'
+    ];
+    const filtered = {};
+    for (const key of PUBLIC_SETTINGS_ALLOWLIST) {
+      if (raw[key] !== undefined) {
+        filtered[key] = raw[key];
+      }
+    }
+    return filtered;
+  }
+
   updateSettings(patch) {
+    const cleanedPatch = { ...patch };
+    delete cleanedPatch.mongodbUri;
     this.state.settings = {
       ...this.state.settings,
-      ...patch,
+      ...cleanedPatch,
       updatedAt: new Date().toISOString()
     };
+    if (this.state.settings.mongodbUri) delete this.state.settings.mongodbUri;
     this._persist();
     return this.getSettings();
   }
@@ -527,11 +645,15 @@ class PortfolioDataStore {
     if (!Array.isArray(this.state.resumes)) this.state.resumes = [];
     const now = new Date().toISOString();
     const id = resumeData.id || `res-${crypto.randomBytes(6).toString('hex')}`;
+    let fileUrl = String(resumeData.fileUrl || '').trim();
+    if (fileUrl.startsWith('data:application/pdf')) {
+      fileUrl = this._saveBase64ToUploads(fileUrl, 'resume');
+    }
     const clean = {
       id,
       title: String(resumeData.title || 'Ayush Prajapati - Official Resume').trim(),
       fileName: String(resumeData.fileName || 'Ayush_Prajapati_Resume.pdf').trim(),
-      fileUrl: String(resumeData.fileUrl || '').trim(),
+      fileUrl,
       fileType: String(resumeData.fileType || 'application/pdf').trim(),
       sizeBytes: Number(resumeData.sizeBytes) || 0,
       uploadedAt: resumeData.uploadedAt || now,
@@ -589,12 +711,15 @@ class PortfolioDataStore {
       } else if (pCopy.portrait?.url && !pCopy.photoUrl) {
         pCopy.photoUrl = pCopy.portrait.url;
       }
-      const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp'));
+      if (pCopy.resumeUrl && typeof pCopy.resumeUrl === 'string' && pCopy.resumeUrl.startsWith('data:application/pdf')) {
+        pCopy.resumeUrl = this._saveBase64ToUploads(pCopy.resumeUrl, 'resume');
+      }
+      const isLegacyCeiling = (u) => !u || (typeof u === 'string' && (u.startsWith('data:image/webp;base64,UklGRt5SAABXRUJQV') || u === '/images/ayush-portrait-new.jpg' || u === '/images/ayush-portrait-new.webp' || u === '/images/ayush-hero-portrait.png'));
       if (pCopy.photoUrl && isLegacyCeiling(pCopy.photoUrl)) {
-        pCopy.photoUrl = '/images/ayush-hero-portrait.png';
+        pCopy.photoUrl = '/uploads/hero_cutout_1794562459704_847.webp';
       }
       if (pCopy.portrait && isLegacyCeiling(pCopy.portrait.url)) {
-        pCopy.portrait = { ...pCopy.portrait, url: '/images/ayush-hero-portrait.png', isTemporaryStandIn: false };
+        pCopy.portrait = { ...pCopy.portrait, url: '/uploads/hero_cutout_1794562459704_847.webp', isTemporaryStandIn: false };
       }
       this.state.profile = { ...this.state.profile, ...pCopy };
     }
@@ -622,13 +747,23 @@ class PortfolioDataStore {
       });
     }
     if (Array.isArray(payload.resumes)) {
-      this.state.resumes = payload.resumes;
+      this.state.resumes = payload.resumes.map((r) => {
+        if (!r || typeof r !== 'object') return r;
+        let updatedResume = { ...r };
+        if (updatedResume.fileUrl && typeof updatedResume.fileUrl === 'string' && updatedResume.fileUrl.startsWith('data:application/pdf')) {
+          updatedResume.fileUrl = this._saveBase64ToUploads(updatedResume.fileUrl, 'resume');
+        }
+        return updatedResume;
+      });
     }
     if (Array.isArray(payload.messages)) {
       this.state.messages = payload.messages;
     }
     if (payload.settings && typeof payload.settings === 'object') {
-      this.state.settings = { ...this.state.settings, ...payload.settings };
+      const cleanedSettings = { ...payload.settings };
+      delete cleanedSettings.mongodbUri;
+      this.state.settings = { ...this.state.settings, ...cleanedSettings };
+      if (this.state.settings.mongodbUri) delete this.state.settings.mongodbUri;
     }
     if (payload.uiLabels && typeof payload.uiLabels === 'object') {
       this.state.uiLabels = { ...(this.state.uiLabels || {}), ...payload.uiLabels };

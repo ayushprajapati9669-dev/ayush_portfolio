@@ -16,15 +16,69 @@ function createPublicController({ store, contactLimiter }) {
     },
 
     getBootstrap(req, res) {
+      const SAFE_PUBLIC_SETTINGS_KEYS = [
+        'siteTitle',
+        'siteName',
+        'seoTitle',
+        'seoDescription',
+        'seoKeywords',
+        'ogTitle',
+        'ogDescription',
+        'ogImage',
+        'canonicalUrl',
+        'robotsIndex',
+        'author',
+        'themeMode',
+        'accentColor',
+        'bgBase',
+        'bgSurface',
+        'fontHeading',
+        'fontBody',
+        'glowIntensity',
+        'particlesEnabled',
+        'contactEmail',
+        'contactPhone',
+        'contactNote',
+        'maintenanceMode',
+        'copyrightText',
+        'updatedAt'
+      ];
+      let publicSettings = {};
+      try {
+        if (typeof store.getPublicSettings === 'function') {
+          const raw = store.getPublicSettings() || {};
+          for (const key of SAFE_PUBLIC_SETTINGS_KEYS) {
+            if (raw[key] !== undefined) {
+              publicSettings[key] = raw[key];
+            }
+          }
+        }
+      } catch (_err) {
+        // Fail closed safely: return empty settings without logging or exposing secrets
+        publicSettings = {};
+      }
+
       return sendJson(res, 200, {
         profile: store.getProfile(),
         projects: store.getPublicProjects(),
         skills: store.getSkills(),
-        certificates: store.getCertificates(),
+        certificates: typeof store.getPublicCertificates === 'function' ? store.getPublicCertificates() : store.getCertificates(),
         resumes: store.getResumes ? store.getResumes() : (store.state.resumes || []),
-        settings: store.getSettings(),
+        settings: publicSettings,
         uiLabels: store.state.uiLabels || {}
       });
+    },
+
+    getSettings(req, res) {
+      let publicSettings = {};
+      try {
+        if (typeof store.getPublicSettings === 'function') {
+          publicSettings = store.getPublicSettings() || {};
+        }
+      } catch (_err) {
+        publicSettings = {};
+      }
+      return sendJson(res, 200, { settings: publicSettings });
     },
 
     getProfile(req, res) {
@@ -36,7 +90,8 @@ function createPublicController({ store, contactLimiter }) {
     },
 
     getCertificates(req, res) {
-      return sendJson(res, 200, { certificates: store.getCertificates() });
+      const certs = typeof store.getPublicCertificates === 'function' ? store.getPublicCertificates() : store.getCertificates();
+      return sendJson(res, 200, { certificates: certs });
     },
 
     getProjects(req, res, parsedUrl) {

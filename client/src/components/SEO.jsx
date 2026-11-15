@@ -1,27 +1,50 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { usePortfolio } from '../app/providers/ThemeProvider';
 
 /**
  * Reusable SEO and Open Graph Optimization Component
  * Sets <title>, standard meta tags, Open Graph (og:*), Twitter cards, canonical links, and JSON-LD schemas.
+ * Dynamically falls back to live CMS SEO settings when individual props are omitted.
  */
 export function SEO({
   title,
-  description = 'Ayush Prajapati — Full-Stack Developer & Computer Science Student at SISTec Bhopal. Specializing in MERN stack, resilient backend systems, scalable cloud architectures, and algorithmic problem-solving.',
-  image = '/og-image.png',
+  description,
+  image,
   url,
   type = 'website',
   schema = null
 }) {
   const location = useLocation();
+  let portfolioContext = null;
+  try {
+    portfolioContext = usePortfolio();
+  } catch (_e) {
+    portfolioContext = null;
+  }
+  const appState = portfolioContext?.appState;
+  const s = appState?.settings || {};
+  const p = appState?.profile || {};
 
   useEffect(() => {
     const origin = typeof window !== 'undefined' ? window.location.origin : 'https://ayushprajapati.dev';
-    const currentUrl = url || `${origin}${location.pathname}`;
-    const fullImageUrl = image.startsWith('http') ? image : `${origin}${image.startsWith('/') ? '' : '/'}${image}`;
-    const formattedTitle = title
-      ? (title.includes('Ayush Prajapati') ? title : `${title} | Ayush Prajapati`)
+    const effectiveBase = s.canonicalUrl ? s.canonicalUrl.replace(/\/+$/, '') : origin;
+    const currentUrl = url || `${effectiveBase}${location.pathname}`;
+
+    const effectiveImage = image || s.ogImage || '/og-image.png';
+    const fullImageUrl = effectiveImage.startsWith('http')
+      ? effectiveImage
+      : `${effectiveBase}${effectiveImage.startsWith('/') ? '' : '/'}${effectiveImage}`;
+
+    const resolvedTitle = title || s.seoTitle || s.ogTitle || s.siteTitle;
+    const formattedTitle = resolvedTitle
+      ? (resolvedTitle.includes('Ayush Prajapati') ? resolvedTitle : `${resolvedTitle} | Ayush Prajapati`)
       : 'Ayush Prajapati | Full-Stack Developer & Computer Science Engineer';
+
+    const resolvedDescription = description || s.seoDescription || s.ogDescription || 'Ayush Prajapati — Full-Stack Developer & Computer Science Student at SISTec Bhopal. Specializing in MERN stack, resilient backend systems, scalable cloud architectures, and algorithmic problem-solving.';
+    const resolvedAuthor = s.author || p.displayName || p.name || 'Ayush Prajapati';
+    const resolvedRobots = s.robotsIndex || 'index, follow';
+    const resolvedSiteName = s.siteName || 'Ayush Prajapati Portfolio';
 
     // 1. Title
     document.title = formattedTitle;
@@ -39,22 +62,25 @@ export function SEO({
     };
 
     // 2. Standard Meta Tags
-    setMeta('name', 'description', description);
-    setMeta('name', 'author', 'Ayush Prajapati');
-    setMeta('name', 'robots', 'index, follow');
+    setMeta('name', 'description', resolvedDescription);
+    setMeta('name', 'author', resolvedAuthor);
+    setMeta('name', 'robots', resolvedRobots);
+    if (s.seoKeywords) {
+      setMeta('name', 'keywords', s.seoKeywords);
+    }
 
     // 3. Open Graph Tags
-    setMeta('property', 'og:title', formattedTitle);
-    setMeta('property', 'og:description', description);
+    setMeta('property', 'og:title', s.ogTitle || formattedTitle);
+    setMeta('property', 'og:description', s.ogDescription || resolvedDescription);
     setMeta('property', 'og:type', type);
     setMeta('property', 'og:url', currentUrl);
     setMeta('property', 'og:image', fullImageUrl);
-    setMeta('property', 'og:site_name', 'Ayush Prajapati Portfolio');
+    setMeta('property', 'og:site_name', resolvedSiteName);
 
     // 4. Twitter Cards
     setMeta('name', 'twitter:card', 'summary_large_image');
-    setMeta('name', 'twitter:title', formattedTitle);
-    setMeta('name', 'twitter:description', description);
+    setMeta('name', 'twitter:title', s.ogTitle || formattedTitle);
+    setMeta('name', 'twitter:description', s.ogDescription || resolvedDescription);
     setMeta('name', 'twitter:image', fullImageUrl);
 
     // 5. Canonical Link
@@ -81,7 +107,7 @@ export function SEO({
     } else if (jsonLdScript) {
       jsonLdScript.remove();
     }
-  }, [title, description, image, url, type, schema, location.pathname]);
+  }, [title, description, image, url, type, schema, location.pathname, s]);
 
   return null;
 }

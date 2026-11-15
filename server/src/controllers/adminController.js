@@ -47,6 +47,7 @@ function createAdminController({ store, config }) {
       if (body.location !== undefined) patch.location = sanitizeText(body.location, 160);
       if (body.footerTagline !== undefined) patch.footerTagline = sanitizeText(body.footerTagline, 200);
       if (body.photoUrl !== undefined) patch.photoUrl = sanitizeText(body.photoUrl, 2000000);
+      if (body.resumeUrl !== undefined) patch.resumeUrl = sanitizeText(body.resumeUrl, 2000000);
       if (body.education && typeof body.education === 'object') {
         patch.education = {
           degree: sanitizeText(body.education.degree, 160),
@@ -64,10 +65,15 @@ function createAdminController({ store, config }) {
       }
       if (Array.isArray(body.learningJourney)) {
         patch.learningJourney = body.learningJourney.map(item => ({
-          phase: sanitizeText(item.phase || '', 120),
+          ...item,
+          phase: sanitizeText(item.phase || item.metaLabel || '', 120),
+          metaLabel: sanitizeText(item.metaLabel || item.phase || '', 120),
+          year: sanitizeText(item.year || item.yearBadge || '', 60),
+          yearBadge: sanitizeText(item.yearBadge || item.year || '', 60),
           title: sanitizeText(item.title || '', 200),
-          description: sanitizeText(item.description || '', 1000)
-        })).filter(item => item.title || item.description);
+          description: sanitizeText(item.description || item.desc || '', 3000),
+          desc: sanitizeText(item.desc || item.description || '', 3000)
+        })).filter(item => item.title || item.description || item.desc);
       }
       if (body.socialLinks && typeof body.socialLinks === 'object') {
         for (const k of ['github', 'linkedin', 'instagram']) {
@@ -153,11 +159,14 @@ function createAdminController({ store, config }) {
         id: body.id,
         title,
         issuer,
-        issueDate: sanitizeText(body?.issueDate || '2025', 40),
+        issueDate: sanitizeText(body?.issueDate || '', 40),
         credentialId: sanitizeText(body?.credentialId || '', 120),
         credentialUrl: sanitizeText(body?.credentialUrl || '', 400),
         skillsCovered: sanitizeText(body?.skillsCovered || '', 400),
-        imageUrl: sanitizeText(body?.imageUrl || '', 2000000)
+        imageUrl: sanitizeText(body?.imageUrl || '', 2000000),
+        downloadUrl: sanitizeText(body?.downloadUrl || '', 2000000),
+        status: body?.status ? sanitizeText(body.status, 40) : undefined,
+        published: typeof body?.published === 'boolean' ? body.published : undefined
       });
       return sendJson(res, 200, { certificate: saved, certificates: store.getCertificates() });
     },
@@ -264,13 +273,103 @@ function createAdminController({ store, config }) {
 
     async updateSettings(req, res) {
       const body = await readJsonBody(req);
+      const current = store.getSettings() || {};
+
+      // 1. Server-side validation for color fields (#RGB or #RRGGBB)
+      const HEX_COLOR_REGEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
+      const colorFields = ['accentColor', 'bgBase', 'bgSurface'];
+      for (const field of colorFields) {
+        if (body[field] !== undefined && body[field] !== null && String(body[field]).trim() !== '') {
+          const val = String(body[field]).trim();
+          if (!HEX_COLOR_REGEX.test(val)) {
+            return sendJson(res, 400, {
+              error: `Invalid hex color for ${field}. Value must be in #RGB or #RRGGBB format (e.g. #dfb740).`
+            });
+          }
+        }
+      }
+
+      // 2. Server-side validation for canonicalUrl (valid HTTP/HTTPS or empty)
+      if (body.canonicalUrl !== undefined && body.canonicalUrl !== null && String(body.canonicalUrl).trim() !== '') {
+        const urlVal = String(body.canonicalUrl).trim();
+        let valid = false;
+        try {
+          const parsed = new URL(urlVal);
+          valid = parsed.protocol === 'http:' || parsed.protocol === 'https:';
+        } catch (_e) {
+          valid = false;
+        }
+        if (!valid) {
+          return sendJson(res, 400, {
+            error: 'Canonical URL must be a valid HTTP or HTTPS URL (e.g. https://ayushprajapati.dev).'
+          });
+        }
+      }
+
+      // 3. Server-side validation for ogImage (root-relative /path or HTTP/HTTPS URL, rejecting javascript:/data:)
+      if (body.ogImage !== undefined && body.ogImage !== null && String(body.ogImage).trim() !== '') {
+        const ogVal = String(body.ogImage).trim();
+        const isRelative = ogVal.startsWith('/') && !ogVal.startsWith('//');
+        let isHttp = false;
+        if (!isRelative) {
+          try {
+            const parsed = new URL(ogVal);
+            isHttp = parsed.protocol === 'http:' || parsed.protocol === 'https:';
+          } catch (_e) {
+            isHttp = false;
+          }
+        }
+        if (!isRelative && !isHttp) {
+          return sendJson(res, 400, {
+            error: 'OpenGraph image must be a valid root-relative path (e.g. /og-image.png) or an HTTP/HTTPS URL.'
+          });
+        }
+      }
+
+      // 4. Server-side validation for contactEmail (optional or valid format)
+      if (body.contactEmail !== undefined && body.contactEmail !== null && String(body.contactEmail).trim() !== '') {
+        const emailVal = String(body.contactEmail).trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+          return sendJson(res, 400, {
+            error: 'Please enter a valid email address for contactEmail.'
+          });
+        }
+      }
+
       const updated = store.updateSettings({
-        siteTitle: body.siteTitle !== undefined ? sanitizeText(body.siteTitle, 140) : store.getSettings().siteTitle,
-        seoDescription: body.seoDescription !== undefined ? sanitizeText(body.seoDescription, 320) : store.getSettings().seoDescription,
-        particlesEnabled: body.particlesEnabled !== undefined ? Boolean(body.particlesEnabled) : store.getSettings().particlesEnabled,
-        contactNote: body.contactNote !== undefined ? sanitizeText(body.contactNote, 500) : store.getSettings().contactNote,
-        cloudinaryCloudName: body.cloudinaryCloudName !== undefined ? sanitizeText(body.cloudinaryCloudName, 120) : store.getSettings().cloudinaryCloudName,
-        cloudinaryUploadPreset: body.cloudinaryUploadPreset !== undefined ? sanitizeText(body.cloudinaryUploadPreset, 120) : store.getSettings().cloudinaryUploadPreset
+        // Site Settings
+        siteTitle: body.siteTitle !== undefined ? sanitizeText(body.siteTitle, 140) : current.siteTitle,
+        siteName: body.siteName !== undefined ? sanitizeText(body.siteName, 80) : current.siteName,
+        contactEmail: body.contactEmail !== undefined ? sanitizeText(body.contactEmail, 120) : current.contactEmail,
+        contactPhone: body.contactPhone !== undefined ? sanitizeText(body.contactPhone, 50) : current.contactPhone,
+        contactNote: body.contactNote !== undefined ? sanitizeText(body.contactNote, 1000) : current.contactNote,
+        copyrightText: body.copyrightText !== undefined ? sanitizeText(body.copyrightText, 140) : current.copyrightText,
+        maintenanceMode: body.maintenanceMode !== undefined ? Boolean(body.maintenanceMode) : (current.maintenanceMode || false),
+
+        // Appearance Settings
+        themeMode: body.themeMode !== undefined ? sanitizeText(body.themeMode, 30) : current.themeMode,
+        accentColor: body.accentColor !== undefined ? sanitizeText(body.accentColor, 30) : current.accentColor,
+        bgBase: body.bgBase !== undefined ? sanitizeText(body.bgBase, 30) : current.bgBase,
+        bgSurface: body.bgSurface !== undefined ? sanitizeText(body.bgSurface, 30) : current.bgSurface,
+        fontHeading: body.fontHeading !== undefined ? sanitizeText(body.fontHeading, 60) : current.fontHeading,
+        fontBody: body.fontBody !== undefined ? sanitizeText(body.fontBody, 60) : current.fontBody,
+        glowIntensity: body.glowIntensity !== undefined ? sanitizeText(body.glowIntensity, 30) : current.glowIntensity,
+        particlesEnabled: body.particlesEnabled !== undefined ? Boolean(body.particlesEnabled) : (current.particlesEnabled !== undefined ? current.particlesEnabled : true),
+
+        // SEO Settings
+        seoTitle: body.seoTitle !== undefined ? sanitizeText(body.seoTitle, 140) : current.seoTitle,
+        seoDescription: body.seoDescription !== undefined ? sanitizeText(body.seoDescription, 320) : current.seoDescription,
+        seoKeywords: body.seoKeywords !== undefined ? sanitizeText(body.seoKeywords, 300) : current.seoKeywords,
+        ogTitle: body.ogTitle !== undefined ? sanitizeText(body.ogTitle, 140) : current.ogTitle,
+        ogDescription: body.ogDescription !== undefined ? sanitizeText(body.ogDescription, 320) : current.ogDescription,
+        ogImage: body.ogImage !== undefined ? sanitizeText(body.ogImage, 500) : current.ogImage,
+        canonicalUrl: body.canonicalUrl !== undefined ? sanitizeText(body.canonicalUrl, 500) : current.canonicalUrl,
+        robotsIndex: body.robotsIndex !== undefined ? sanitizeText(body.robotsIndex, 50) : current.robotsIndex,
+        author: body.author !== undefined ? sanitizeText(body.author, 100) : current.author,
+
+        // Cloudinary credentials (admin only)
+        cloudinaryCloudName: body.cloudinaryCloudName !== undefined ? sanitizeText(body.cloudinaryCloudName, 120) : current.cloudinaryCloudName,
+        cloudinaryUploadPreset: body.cloudinaryUploadPreset !== undefined ? sanitizeText(body.cloudinaryUploadPreset, 120) : current.cloudinaryUploadPreset
       });
       return sendJson(res, 200, { settings: updated });
     },

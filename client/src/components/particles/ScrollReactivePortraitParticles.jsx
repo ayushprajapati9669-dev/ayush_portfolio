@@ -1,23 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSmoothScroll } from '../common/SmoothScrollProvider';
+import { runOnIdle, cancelIdle } from '../../utils/idle';
+import { usePortfolio } from '../../app/providers/ThemeProvider';
 
 /**
  * ScrollReactivePortraitParticles — Razorpay AI Builders Image Particle Dissolve Engine
- * Reference: https://razorpay.com/ai-builders/
  *
- * Behavior:
- * 1. Resting State (ScrollY = 0):
- *    - Pristine studio photo is 100% visible, sharp, and clean.
- *    - Subtle stardust aura floats gently around silhouette contours.
- * 2. On Scroll (ScrollY: 0 -> 400px):
- *    - The photograph deconstructs into 1,200+ glowing golden and amber particles
- *      sampled directly from Ayush's portrait image.
- *    - Multi-depth 3D parallax: foreground particles drift upward and scatter into the cosmos.
- * 3. Scroll Reverse:
- *    - Particles magnetically converge back to their original pixel positions,
- *      reconstructing the crisp photograph.
- * 4. Interactive Mouse Physics:
- *    - Nearby particles are pushed away elastically by the cursor and spring back smoothly.
+ * Performance Safeguards:
+ * 1. Bounded-batch incremental pixel sampling: Never blocks the main thread with monolithic tasks.
+ * 2. Complete RAF state machine: runs ONLY when isMounted && inViewport && isTabVisible && scroll > 25.
+ * 3. Graceful early scroll handling: if user scrolls before sampling completes, existing batch dissolves seamlessly.
  */
 
 const MATRIX_GLYPHS = ['0', '1', '+', '*', '·', 'x', ':', '•', '◇', '▲'];
@@ -29,16 +21,116 @@ export function ScrollReactivePortraitParticles({
   imgClassName = '',
   onPhotoFit
 }) {
+  let portfolioContext = null;
+  try {
+    portfolioContext = usePortfolio();
+  } catch (_e) {
+    portfolioContext = null;
+  }
+  const particlesEnabled = portfolioContext?.appState?.settings?.particlesEnabled !== false;
+  const particlesEnabledRef = useRef(particlesEnabled);
+
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const imgRef = useRef(null);
   const lenis = useSmoothScroll();
+  const lenisRef = useRef(lenis);
+  const onPhotoFitRef = useRef(onPhotoFit);
 
   useEffect(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    const imgEl = imgRef.current;
+    particlesEnabledRef.current = particlesEnabled;
+    const canvas = canvasRef.current || (typeof document !== 'undefined' ? document.getElementById('hero-particle-canvas') : null);
+    const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
+    if (!particlesEnabled) {
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      if (imgEl) {
+        imgEl.style.opacity = '1';
+        imgEl.style.transform = 'none';
+      }
+    } else if (typeof window !== 'undefined' && window.__portraitScrollHandler) {
+      window.__portraitScrollHandler(window.pageYOffset || window.scrollY || 0);
+    }
+  }, [particlesEnabled]);
+
+  useEffect(() => {
+    onPhotoFitRef.current = onPhotoFit;
+  }, [onPhotoFit]);
+
+  useEffect(() => {
+    lenisRef.current = lenis;
+  }, [lenis]);
+
+  useEffect(() => {
+    if (!lenis || typeof lenis.on !== 'function') return;
+    const onScroll = (e) => {
+      if (typeof e.scroll === 'number' && typeof window !== 'undefined' && window.__portraitScrollHandler) {
+        window.__portraitScrollHandler(e.scroll);
+      }
+    };
+    lenis.on('scroll', onScroll);
+    return () => {
+      if (typeof lenis.off === 'function') lenis.off('scroll', onScroll);
+    };
+  }, [lenis]);
+
+  // Synchronize CMS-driven profile photo & alt text to DOM elements (including persistent HTML hero shell)
+  useEffect(() => {
+    if (!imageUrl) return;
+    const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
+    if (!imgEl) return;
+
+    const isDefaultCutout = imageUrl.includes('hero_cutout_1794562459704_847.webp');
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
+    if (!isDefaultCutout) {
+      const currentSrc = imgEl.getAttribute('src');
+      if (currentSrc !== imageUrl && !imgEl.src.endsWith(imageUrl)) {
+        imgEl.setAttribute('src', imageUrl);
+        imgEl.src = imageUrl;
+        const pic = imgEl.closest('picture');
+        if (pic) {
+          const sources = pic.querySelectorAll('source');
+          sources.forEach((s) => s.setAttribute('srcset', imageUrl));
+        }
+      }
+    } else {
+      // For default cutout, respect mobile vs desktop picture sources
+      const targetSrc = isMobile
+        ? '/uploads/hero_cutout_1794562459704_847_mobile.webp'
+        : '/uploads/hero_cutout_1794562459704_847.webp';
+      if (!imgEl.src.includes('hero_cutout_1794562459704_847')) {
+        imgEl.setAttribute('src', targetSrc);
+        imgEl.src = targetSrc;
+      }
+    }
+    if (alt && imgEl.alt !== alt) {
+      imgEl.alt = alt;
+    }
+  }, [imageUrl, alt]);
+
+  // Ensure photo-fit aspect calculations trigger even when using the initial HTML shell
+  useEffect(() => {
+    const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
+    if (!imgEl || !onPhotoFit) return;
+    if (imgEl.complete) {
+      onPhotoFit();
+    } else {
+      imgEl.addEventListener('load', onPhotoFit, { once: true });
+    }
+  }, [onPhotoFit]);
+
+  useEffect(() => {
+    const container = containerRef.current || (typeof document !== 'undefined' ? document.getElementById('hero-photo-wrapper') : null);
+    const canvas = canvasRef.current || (typeof document !== 'undefined' ? document.getElementById('hero-particle-canvas') : null);
+    const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
     if (!container || !canvas || !imgEl) return;
+
+    // Guarantee initial resting state: photo is 100% visible and pristine
+    imgEl.style.opacity = '1';
+    imgEl.style.transform = 'translate3d(0, 0, 0)';
 
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
@@ -48,26 +140,91 @@ export function ScrollReactivePortraitParticles({
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // State machine flags
+    const isMounted = { current: true };
+    const inViewport = { current: true };
+    const isTabVisible = { current: typeof document !== 'undefined' ? !document.hidden : true };
+    const isLoopRunning = { current: false };
+
+    const initialScrollY = typeof window !== 'undefined' ? (window.pageYOffset || 0) : 0;
+    const scrollState = {
+      currentY: initialScrollY,
+      targetY: initialScrollY
+    };
+
     let width = 0;
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     let particles = [];
     let isSampled = false;
+    let isSampling = false;
+    let samplingIdleHandle = null;
+    let samplingTimer = null;
+    let samplingGen = 0; // Generation token to prevent race conditions & stale callbacks
+
+    // Initialize Web Worker for off-thread pixel data processing
+    let worker = null;
+    try {
+      if (typeof Worker !== 'undefined') {
+        worker = new Worker(new URL('../../workers/portraitParticleWorker.js', import.meta.url), { type: 'module' });
+      }
+    } catch (_workerErr) {
+      worker = null;
+    }
 
     // Offscreen sampling canvas
     const sampleCanvas = document.createElement('canvas');
     const sampleCtx = sampleCanvas.getContext('2d', { willReadFrequently: true });
 
-    const sampleImagePixels = () => {
+    // Bounded-batch sampling function
+    const startSampling = () => {
+      if (!particlesEnabledRef.current || isSampling) return;
       if (!imgEl.complete || imgEl.naturalWidth === 0) return;
 
       const rect = imgEl.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
+      if (rect.width === 0 || rect.height === 0) {
+        // Layout bounding box not ready yet; safely reschedule for next idle frame
+        if (samplingTimer) clearTimeout(samplingTimer);
+      cancelIdle(samplingIdleHandle);
+        samplingIdleHandle = runOnIdle(startSampling, { timeout: 150, minBudget: 8 });
+        return;
+      }
 
-      width = Math.floor(rect.width);
-      height = Math.floor(rect.height);
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const newWidth = Math.floor(rect.width);
+      const newHeight = Math.floor(rect.height);
+      const newDpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      // If already sampled and dimensions have not changed, reuse existing particles
+      if (isSampled && newWidth === width && newHeight === height && newDpr === dpr) {
+        return;
+      }
+
+      // Cancel any pending stand-by idle handles before initiating batches
+      if (samplingTimer) clearTimeout(samplingTimer);
+      cancelIdle(samplingIdleHandle);
+      isSampling = true;
+      const currentGen = ++samplingGen;
+
+      // If dimensions changed and we already have particles, scale them immediately
+      // to maintain 60 FPS animation continuity with zero blanking or visual pops
+      if (width > 0 && height > 0 && (newWidth !== width || newHeight !== height) && particles.length > 0) {
+        const sx = newWidth / width;
+        const sy = newHeight / height;
+        for (let i = 0; i < particles.length; i++) {
+          const pt = particles[i];
+          pt.ox *= sx;
+          pt.oy *= sy;
+          pt.x *= sx;
+          pt.y *= sy;
+          pt.ampX *= sx;
+          pt.ampY *= sy;
+        }
+      }
+
+      width = newWidth;
+      height = newHeight;
+      dpr = newDpr;
 
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
@@ -94,82 +251,205 @@ export function ScrollReactivePortraitParticles({
       try {
         imgData = sampleCtx.getImageData(0, 0, width, height).data;
       } catch (e) {
+        isSampling = false;
         return;
       }
 
       // Sample step: 4px on desktop, 6px on small screens
       const step = width > 480 ? 4 : 6;
       const pts = [];
+      let currentY = 0;
+      const rowsPerBatch = 28; // Bounded slice: 28 rows per batch (~2-4ms execution)
 
-      for (let y = 0; y < height; y += step) {
-        for (let x = 0; x < width; x += step) {
-          const idx = (y * width + x) * 4;
-          const a = imgData[idx + 3];
+      const processBatch = (deadline) => {
+        if (!isMounted.current || currentGen !== samplingGen) {
+          isSampling = false;
+          return;
+        }
 
-          // Only keep subject silhouette pixels
-          if (a > 45) {
-            const r = imgData[idx];
-            const g = imgData[idx + 1];
-            const b = imgData[idx + 2];
-            const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+        try {
+          const batchStart = performance.now();
 
-            // Spatial depth: 0.25 (deep) to 1.0 (foreground)
-            const z = 0.25 + (y / height) * 0.45 + Math.random() * 0.3;
+          while (currentY < height) {
+            const targetY = Math.min(height, currentY + rowsPerBatch);
 
-            // Scatter trajectory: outward and upward fan
-            const angle = -Math.PI * 0.5 + ((x / width) - 0.5) * 1.1 + (Math.random() - 0.5) * 0.6;
-            const speed = 0.8 + Math.random() * 1.1;
+            for (let y = currentY; y < targetY; y += step) {
+              for (let x = 0; x < width; x += step) {
+                const idx = (y * width + x) * 4;
+                const a = imgData[idx + 3];
 
-            // 18% matrix glyphs, 82% circular stardust points
-            const isChar = Math.random() < 0.18;
-            const char = isChar ? MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)] : null;
+                // Only keep subject silhouette pixels
+                if (a > 45) {
+                  const r = imgData[idx];
+                  const g = imgData[idx + 1];
+                  const b = imgData[idx + 2];
+                  const luma = 0.299 * r + 0.587 * g + 0.114 * b;
 
-            // Subtle warm golden highlight tint for celestial AI builder theme
-            let finalR = r;
-            let finalG = g;
-            let finalB = b;
-            if (luma > 130) {
-              finalR = Math.min(255, Math.floor(r * 1.1 + 25));
-              finalG = Math.min(255, Math.floor(g * 1.05 + 15));
-              finalB = Math.max(0, Math.floor(b * 0.82));
+                  // Spatial depth: 0.25 (deep) to 1.0 (foreground)
+                  const z = 0.25 + (y / height) * 0.45 + Math.random() * 0.3;
+
+                  // Scatter trajectory: outward and upward fan
+                  const angle = -Math.PI * 0.5 + ((x / width) - 0.5) * 1.1 + (Math.random() - 0.5) * 0.6;
+                  const speed = 0.8 + Math.random() * 1.1;
+
+                  // 18% matrix glyphs, 82% circular stardust points
+                  const isChar = Math.random() < 0.18;
+                  const char = isChar ? MATRIX_GLYPHS[Math.floor(Math.random() * MATRIX_GLYPHS.length)] : null;
+
+                  // Subtle warm golden highlight tint for celestial AI builder theme
+                  let finalR = r;
+                  let finalG = g;
+                  let finalB = b;
+                  if (luma > 130) {
+                    finalR = Math.min(255, Math.floor(r * 1.1 + 25));
+                    finalG = Math.min(255, Math.floor(g * 1.05 + 15));
+                    finalB = Math.max(0, Math.floor(b * 0.82));
+                  }
+
+                  pts.push({
+                    ox: x,
+                    oy: y,
+                    x,
+                    y,
+                    z,
+                    r: finalR,
+                    g: finalG,
+                    b: finalB,
+                    baseAlpha: Math.min(1, (a / 255) * (0.65 + (luma / 255) * 0.35)),
+                    radius: 1.1 + (luma / 255) * 1.7 * z,
+                    char,
+                    angle,
+                    speed,
+                    freq: 0.5 + Math.random() * 0.8,
+                    phase: Math.random() * Math.PI * 2,
+                    ampX: (4 + Math.random() * 10) * z,
+                    ampY: (4 + Math.random() * 8) * z,
+                    dispX: 0,
+                    dispY: 0
+                  });
+                }
+              }
             }
 
-            pts.push({
-              ox: x,
-              oy: y,
-              x,
-              y,
-              z,
-              r: finalR,
-              g: finalG,
-              b: finalB,
-              baseAlpha: Math.min(1, (a / 255) * (0.65 + (luma / 255) * 0.35)),
-              radius: 1.1 + (luma / 255) * 1.7 * z,
-              char,
-              angle,
-              speed,
-              freq: 0.5 + Math.random() * 0.8,
-              phase: Math.random() * Math.PI * 2,
-              ampX: (4 + Math.random() * 10) * z,
-              ampY: (4 + Math.random() * 8) * z,
-              dispX: 0,
-              dispY: 0
-            });
+            currentY = targetY;
+
+            // Only expose progressively if we didn't already have particles (initial load)
+            // If we already had particles (e.g. during resize), maintain scaled particles until sample finishes
+            if (particles.length === 0) {
+              particles = pts;
+            }
+
+            // Yield to maintain main thread budget
+            const elapsed = performance.now() - batchStart;
+            const hasTimeRemaining = deadline && typeof deadline.timeRemaining === 'function' ? deadline.timeRemaining() > 2 : true;
+
+            if (elapsed > 8 || !hasTimeRemaining) {
+              break;
+            }
           }
+
+          if (currentY < height) {
+            samplingIdleHandle = runOnIdle((d) => processBatch(d), { timeout: 250, minBudget: 8 });
+          } else {
+            // Sampling complete: atomically replace with pixel-perfect sample
+            if (currentGen === samplingGen) {
+              particles = pts;
+              isSampled = true;
+              isSampling = false;
+              if (onPhotoFit) onPhotoFit();
+              updateLoopState();
+            }
+          }
+        } catch (batchErr) {
+          console.error('[ScrollReactivePortraitParticles] Error processing batch:', batchErr);
+          isSampling = false;
+        }
+      };
+
+      if (worker) {
+        const bufferCopy = imgData.buffer.slice(0);
+
+        worker.onmessage = (e) => {
+          const res = e.data;
+          if (!res || res.gen !== currentGen || !isMounted.current) return;
+          if (res.type === 'SAMPLING_RESULT') {
+            particles = res.particles;
+            isSampled = true;
+            isSampling = false;
+            if (onPhotoFit) onPhotoFit();
+            updateLoopState();
+          } else if (res.type === 'SAMPLING_ERROR') {
+            fallbackToMainThread();
+          }
+        };
+
+        worker.onerror = () => {
+          fallbackToMainThread();
+        };
+
+        const fallbackToMainThread = () => {
+          if (!isMounted.current || currentGen !== samplingGen) return;
+          samplingIdleHandle = runOnIdle((d) => processBatch(d), { timeout: 800, minBudget: 12 });
+        };
+
+        try {
+          worker.postMessage(
+            {
+              type: 'SAMPLE_IMAGE',
+              width,
+              height,
+              step,
+              imgBuffer: bufferCopy,
+              gen: currentGen
+            },
+            [bufferCopy]
+          );
+          return;
+        } catch (_postErr) {
+          fallbackToMainThread();
+          return;
         }
       }
 
-      particles = pts;
-      isSampled = true;
+      samplingIdleHandle = runOnIdle((d) => processBatch(d), { timeout: 800, minBudget: 12 });
     };
 
+    // Stagger sampling on idle after image load, OR immediately on user scroll
+    const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    const triggerSampling = () => {
+      if (samplingTimer) clearTimeout(samplingTimer);
+      cancelIdle(samplingIdleHandle);
+      startSampling();
+    };
+
+    const scheduleSampling = () => {
+      if (scrollState.targetY > 10) {
+        triggerSampling();
+        return;
+      }
+      if (samplingTimer) clearTimeout(samplingTimer);
+      if (isMobileDevice) {
+        samplingTimer = setTimeout(() => {
+          samplingIdleHandle = runOnIdle(startSampling, { timeout: 3000, minBudget: 12 });
+        }, 8000);
+      } else {
+        samplingIdleHandle = runOnIdle(startSampling, { timeout: 300, minBudget: 8 });
+      }
+    };
+
+    const handleImageLoad = () => {
+      if (scrollState.targetY > 10) {
+        triggerSampling();
+      } else {
+        scheduleSampling();
+      }
+      if (onPhotoFit) onPhotoFit();
+    };
+    imgEl.addEventListener('load', handleImageLoad);
+
     if (imgEl.complete && imgEl.naturalWidth > 0) {
-      sampleImagePixels();
-    } else {
-      imgEl.onload = () => {
-        sampleImagePixels();
-        if (onPhotoFit) onPhotoFit();
-      };
+      scheduleSampling();
     }
 
     // Pointer Tracking
@@ -199,190 +479,327 @@ export function ScrollReactivePortraitParticles({
     window.addEventListener('pointerleave', handlePointerLeave, { passive: true });
 
     // Scroll tracking
-    const scrollState = {
-      currentY: window.scrollY || 0,
-      targetY: window.scrollY || 0
-    };
-
     const onNativeScroll = () => {
       scrollState.targetY = window.scrollY || 0;
+      if (scrollState.targetY > 10 && !isSampled && !isSampling) {
+        triggerSampling();
+      }
+      updateLoopState();
+    };
+
+    window.__portraitScrollHandler = (scrollY) => {
+      scrollState.targetY = scrollY;
+      if (scrollState.targetY > 10 && !isSampled && !isSampling) {
+        triggerSampling();
+      }
+      updateLoopState();
     };
 
     let lenisOff = null;
-    if (lenis && typeof lenis.on === 'function') {
+    const initialLenis = lenisRef.current || (typeof window !== 'undefined' ? window.__lenis : null);
+    if (initialLenis && typeof initialLenis.on === 'function') {
       const onLenisScroll = (e) => {
         if (typeof e.scroll === 'number') {
           scrollState.targetY = e.scroll;
+          if (scrollState.targetY > 10 && !isSampled && !isSampling) {
+            triggerSampling();
+          }
+          updateLoopState();
         }
       };
-      lenis.on('scroll', onLenisScroll);
+      initialLenis.on('scroll', onLenisScroll);
       lenisOff = () => {
-        if (typeof lenis.off === 'function') lenis.off('scroll', onLenisScroll);
+        if (typeof initialLenis.off === 'function') initialLenis.off('scroll', onLenisScroll);
       };
     }
 
     window.addEventListener('scroll', onNativeScroll, { passive: true });
 
-    // Resize observer
-    let resizeTimer = null;
-    const onResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        sampleImagePixels();
-      }, 150);
-    };
-    window.addEventListener('resize', onResize);
+    // Visibility Observer
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        inViewport.current = entry ? entry.isIntersecting : false;
+        updateLoopState();
+      },
+      { threshold: 0.05 }
+    );
+    intersectionObserver.observe(container);
 
-    // Animation Loop
+    const handleVisibilityChange = () => {
+      isTabVisible.current = !document.hidden;
+      updateLoopState();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Complete RAF State Machine
     let animId = null;
+    let lastRenderTime = 0;
 
     const render = (now) => {
-      animId = requestAnimationFrame(render);
+      if (!isLoopRunning.current) return;
 
-      if (!isSampled || particles.length === 0) return;
-
-      const time = prefersReducedMotion ? 0 : now * 0.0018;
+      const timeDelta = Math.min(0.05, (now - lastRenderTime) * 0.001);
+      lastRenderTime = now;
 
       // Determine live scroll position from Lenis or window
+      const activeLenis = lenisRef.current;
       const getLiveScroll = () => {
-        if (lenis && typeof lenis.scroll === 'number') return lenis.scroll;
-        return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+        const lenisY = activeLenis && typeof activeLenis.scroll === 'number' ? activeLenis.scroll : 0;
+        const winY = typeof window !== 'undefined' ? (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0) : 0;
+        return Math.max(scrollState.targetY || 0, lenisY, winY);
       };
 
       const liveScroll = getLiveScroll();
       scrollState.targetY = liveScroll;
 
       // Smooth scroll interpolation
-      if (!lenis) {
+      if (!activeLenis) {
         scrollState.currentY += (scrollState.targetY - scrollState.currentY) * 0.16;
       } else {
         scrollState.currentY = scrollState.targetY;
       }
 
-      // RESTING STATE CHECK: If scroll is <= 25px, photo is 100% static & pristine.
-      // Absolutely ZERO particles render without scrolling!
-      if (scrollState.currentY <= 25) {
+      // Check if particles are disabled via CMS appearance settings
+      if (!particlesEnabledRef.current) {
         if (imgEl) {
           imgEl.style.opacity = '1';
           imgEl.style.transform = 'translate3d(0, 0, 0)';
         }
         ctx.clearRect(0, 0, width, height);
-        return; // Early return: NO particle animation runs without scrolling!
+        isLoopRunning.current = false;
+        if (animId) cancelAnimationFrame(animId);
+        animId = null;
+        return;
       }
 
-      // Dissolve factor: 0.0 at 25px scroll, 1.0 at 380px scroll
+      // RESTING STATE CHECK: If BOTH target and current position are <= 25px, photo is 100% static & pristine.
+      if (scrollState.targetY <= 25 && scrollState.currentY <= 25) {
+        if (imgEl) {
+          imgEl.style.opacity = '1';
+          imgEl.style.transform = 'translate3d(0, 0, 0)';
+        }
+        ctx.clearRect(0, 0, width, height);
+        // Pause RAF loop while at resting state
+        isLoopRunning.current = false;
+        if (animId) cancelAnimationFrame(animId);
+        animId = null;
+        return;
+      }
+
       const dissolveFactor = prefersReducedMotion ? 0 : Math.min(1, Math.max(0, (scrollState.currentY - 25) / 355));
 
       // Synchronize image opacity with dissolve wave
       if (imgEl) {
         const imgOpacity = Math.max(0, 1 - dissolveFactor * 1.55);
         imgEl.style.opacity = imgOpacity.toFixed(3);
-        // Gentle micro-parallax on photo
         imgEl.style.transform = `translate3d(0, ${(-dissolveFactor * 24).toFixed(1)}px, 0)`;
       }
 
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, width, height);
+      if (particles.length > 0) {
+        const time = prefersReducedMotion ? 0 : now * 0.0018;
 
-      // Additive screen blend for glowing stardust luminescence
-      ctx.globalCompositeOperation = 'screen';
-      ctx.font = '9px "JetBrains Mono", monospace';
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, width, height);
+        ctx.globalCompositeOperation = 'screen';
+        ctx.font = '9px "JetBrains Mono", monospace';
 
-      const mouseRadius = 140;
-      const count = particles.length;
+        const mouseRadius = 140;
+        const count = particles.length;
 
-      for (let i = 0; i < count; i++) {
-        const pt = particles[i];
+        for (let i = 0; i < count; i++) {
+          const pt = particles[i];
 
-        // Harmonic Brownian breathing drift
-        const driftX = prefersReducedMotion ? 0 : Math.sin(time * pt.freq + pt.phase) * pt.ampX;
-        const driftY = prefersReducedMotion ? 0 : Math.cos(time * pt.freq * 0.8 + pt.phase) * pt.ampY;
+          const driftX = prefersReducedMotion ? 0 : Math.sin(time * pt.freq + pt.phase) * pt.ampX;
+          const driftY = prefersReducedMotion ? 0 : Math.cos(time * pt.freq * 0.8 + pt.phase) * pt.ampY;
 
-        // Wave dissolve threshold (sweeps across image based on Y position)
-        const yNorm = pt.oy / height;
-        const ptThreshold = Math.max(0, (dissolveFactor * 1.35) - ((1 - yNorm) * 0.35));
+          const yNorm = pt.oy / height;
+          const ptThreshold = Math.max(0, (dissolveFactor * 1.35) - ((1 - yNorm) * 0.35));
 
-        // Dispersion displacement on scroll
-        const scatterDist = Math.pow(ptThreshold, 1.5) * 240 * pt.speed * pt.z;
-        const scatterX = Math.cos(pt.angle) * scatterDist;
-        const scatterY = Math.sin(pt.angle) * scatterDist - (dissolveFactor * 120 * pt.z);
+          const scatterDist = Math.pow(ptThreshold, 1.5) * 240 * pt.speed * pt.z;
+          const scatterX = Math.cos(pt.angle) * scatterDist;
+          const scatterY = Math.sin(pt.angle) * scatterDist - (dissolveFactor * 120 * pt.z);
 
-        // Target coordinates
-        const targetX = pt.ox + driftX + scatterX;
-        const targetY = pt.oy + driftY + scatterY;
+          const targetX = pt.ox + driftX + scatterX;
+          const targetY = pt.oy + driftY + scatterY;
 
-        // Mouse displacement & repulsion (only active during scroll when particles exist)
-        if (mouse.active && !prefersReducedMotion && dissolveFactor > 0.05) {
-          const dx = pt.x - mouse.x;
-          const dy = pt.y - mouse.y;
-          const dist = Math.hypot(dx, dy);
+          if (mouse.active && !prefersReducedMotion && dissolveFactor > 0.05) {
+            const dx = pt.x - mouse.x;
+            const dy = pt.y - mouse.y;
+            const dist = Math.hypot(dx, dy);
 
-          if (dist < mouseRadius && dist > 0.001) {
-            const force = Math.pow(1 - dist / mouseRadius, 1.6) * 38 * pt.z;
-            const nx = dx / dist;
-            const ny = dy / dist;
-            pt.dispX += (nx * force - pt.dispX) * 0.16;
-            pt.dispY += (ny * force - pt.dispY) * 0.16;
+            if (dist < mouseRadius && dist > 0.001) {
+              const force = Math.pow(1 - dist / mouseRadius, 1.6) * 38 * pt.z;
+              const nx = dx / dist;
+              const ny = dy / dist;
+              pt.dispX += (nx * force - pt.dispX) * 0.16;
+              pt.dispY += (ny * force - pt.dispY) * 0.16;
+            } else {
+              pt.dispX *= 0.90;
+              pt.dispY *= 0.90;
+            }
           } else {
-            pt.dispX *= 0.90;
-            pt.dispY *= 0.90;
+            pt.dispX *= 0.88;
+            pt.dispY *= 0.88;
           }
-        } else {
-          pt.dispX *= 0.88;
-          pt.dispY *= 0.88;
+
+          pt.x += (targetX + pt.dispX - pt.x) * 0.18;
+          pt.y += (targetY + pt.dispY - pt.y) * 0.18;
+
+          let alpha = 0;
+          if (dissolveFactor > 0.02) {
+            const fadeTail = Math.max(0, 1 - Math.max(0, ptThreshold - 0.75) * 4);
+            alpha = pt.baseAlpha * Math.min(1, (dissolveFactor - 0.02) * 3.2) * fadeTail;
+          }
+
+          if (alpha < 0.01) continue;
+
+          ctx.globalAlpha = alpha;
+
+          if (pt.char) {
+            ctx.fillStyle = `rgb(${pt.r}, ${pt.g}, ${pt.b})`;
+            ctx.fillText(pt.char, pt.x, pt.y);
+          } else {
+            ctx.fillStyle = `rgb(${pt.r}, ${pt.g}, ${pt.b})`;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
         }
 
-        // Smooth spring interpolation towards target
-        pt.x += (targetX + pt.dispX - pt.x) * 0.18;
-        pt.y += (targetY + pt.dispY - pt.y) * 0.18;
+        ctx.restore();
+      }
 
-        // Dynamic alpha:
-        // Strictly only glowing particles when scrolling (dissolveFactor > 0.02)
-        let alpha = 0;
-        if (dissolveFactor > 0.02) {
-          const fadeTail = Math.max(0, 1 - Math.max(0, ptThreshold - 0.75) * 4);
-          alpha = pt.baseAlpha * Math.min(1, (dissolveFactor - 0.02) * 3.2) * fadeTail;
+      if (isLoopRunning.current) {
+        animId = requestAnimationFrame(render);
+      }
+    };
+
+    // Resize handling: debounced with immediate particle scaling & safe cancellation
+    let resizeTimer = null;
+    const onResize = () => {
+      if (samplingTimer) clearTimeout(samplingTimer);
+      cancelIdle(samplingIdleHandle);
+      clearTimeout(resizeTimer);
+
+      const rect = imgEl.getBoundingClientRect();
+      const newW = Math.floor(rect.width);
+      const newH = Math.floor(rect.height);
+      const newD = Math.min(window.devicePixelRatio || 1, 2);
+
+      // If dimensions haven't changed, retain existing sample without re-sampling
+      if (isSampled && newW === width && newH === height && newD === dpr) {
+        return;
+      }
+
+      // If dimensions changed, scale existing particles immediately to prevent glitching/blanking
+      if (width > 0 && height > 0 && (newW !== width || newH !== height) && particles.length > 0) {
+        const sx = newW / width;
+        const sy = newH / height;
+        for (let i = 0; i < particles.length; i++) {
+          const pt = particles[i];
+          pt.ox *= sx;
+          pt.oy *= sy;
+          pt.x *= sx;
+          pt.y *= sy;
+          pt.ampX *= sx;
+          pt.ampY *= sy;
         }
+        width = newW;
+        height = newH;
+        dpr = newD;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
 
-        if (alpha < 0.01) continue;
-
-        ctx.globalAlpha = alpha;
-
-        if (pt.char) {
-          ctx.fillStyle = `rgb(${pt.r}, ${pt.g}, ${pt.b})`;
-          ctx.fillText(pt.char, pt.x, pt.y);
-        } else {
-          ctx.fillStyle = `rgb(${pt.r}, ${pt.g}, ${pt.b})`;
-          ctx.beginPath();
-          ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
-          ctx.fill();
+        // If currently dissolved, immediately draw a synchronous frame so canvas is never blank during rapid resizing
+        if (scrollState.targetY > 25 || scrollState.currentY > 25) {
+          isLoopRunning.current = true;
+          render(performance.now());
         }
       }
 
-      ctx.restore();
-    };
+      // Invalidate current sample token so stale batch callbacks cannot overwrite particles
+      isSampled = false;
+      isSampling = false;
+      samplingGen++;
 
-    animId = requestAnimationFrame(render);
+      resizeTimer = setTimeout(() => {
+        if (isMounted.current) {
+          startSampling();
+        }
+      }, 150);
+    };
+    window.addEventListener('resize', onResize);
+
+    function updateLoopState() {
+      const activeLenis = lenisRef.current;
+      const liveScroll = Math.max(
+        scrollState.targetY || 0,
+        activeLenis && typeof activeLenis.scroll === 'number' ? activeLenis.scroll : 0,
+        typeof window !== 'undefined' ? (window.pageYOffset || window.scrollY || 0) : 0
+      );
+      const shouldRun = particlesEnabledRef.current && isMounted.current && inViewport.current && isTabVisible.current && (liveScroll > 25);
+
+      if (shouldRun && !isLoopRunning.current) {
+        isLoopRunning.current = true;
+        lastRenderTime = performance.now();
+        render(lastRenderTime);
+      } else if (!shouldRun && isLoopRunning.current) {
+        isLoopRunning.current = false;
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+        if (!particlesEnabledRef.current) {
+          if (imgEl) {
+            imgEl.style.opacity = '1';
+            imgEl.style.transform = 'translate3d(0, 0, 0)';
+          }
+          ctx.clearRect(0, 0, width, height);
+        }
+      }
+    }
 
     return () => {
+      delete window.__portraitScrollHandler;
+      isMounted.current = false;
+      isLoopRunning.current = false;
       if (animId) cancelAnimationFrame(animId);
+      if (samplingTimer) clearTimeout(samplingTimer);
+      cancelIdle(samplingIdleHandle);
+      intersectionObserver.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerleave', handlePointerLeave);
       window.removeEventListener('scroll', onNativeScroll);
       window.removeEventListener('resize', onResize);
+      imgEl.removeEventListener('load', handleImageLoad);
+      if (worker) {
+        worker.terminate();
+        worker = null;
+      }
       if (lenisOff) lenisOff();
       clearTimeout(resizeTimer);
     };
-  }, [lenis, onPhotoFit]);
+  }, []);
 
   return (
     <div ref={containerRef} className={`hero-photo-wrapper relative ${className}`}>
-      {/* 1. Original Pristine Photo (100% Quality & Sharpness at resting state) */}
+      {/* Original Pristine Photo */}
       <img
         ref={imgRef}
         id="himg"
         src={imageUrl}
+        srcSet={
+          imageUrl && imageUrl.includes('hero_cutout_1794562459704_847.webp')
+            ? '/uploads/hero_cutout_1794562459704_847_mobile.webp 600w, /uploads/hero_cutout_1794562459704_847.webp 1200w'
+            : undefined
+        }
+        sizes="(max-width: 768px) 300px, 600px"
+        width={1200}
+        height={1600}
         alt={alt}
         className={imgClassName}
         loading="eager"
@@ -393,7 +810,7 @@ export function ScrollReactivePortraitParticles({
         }}
       />
 
-      {/* 2. Scroll-Reactive Dissolve & Interactive Particle Canvas */}
+      {/* Scroll-Reactive Dissolve Particle Canvas */}
       <canvas
         ref={canvasRef}
         className="pointer-events-none absolute inset-0 z-10 block select-none"

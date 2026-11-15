@@ -6,22 +6,22 @@
         "topbarPos": "fixed",
         "mainZ": "10",
         "mainPos": "relative",
-        "sidebarZ": "100000",
-        "sidebarTransform": "matrix(1, 0, 0, 1, -280, 0)",
+        "sidebarZ": null,
+        "sidebarTransform": null,
         "backdropPresent": false
       },
       "open": {
-        "bodyClasses": "min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan has-admin-sidebar admin-sidebar-open",
+        "bodyClasses": "min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan",
         "topbarZ": "99990",
-        "mainZ": "1000000",
+        "mainZ": "10",
         "mainPos": "relative",
-        "sidebarZ": "100000",
-        "sidebarTransform": "matrix(1, 0, 0, 1, 0, 0)",
-        "backdropZ": "99999",
-        "backdropPresent": true,
-        "elementOverSidebar": "DIV.logo-box",
-        "elementOverCloseBtn": "<i class=\"fa-solid fa-xmark\"></i>",
-        "elementOverBackdrop": "BUTTON.admin-sidebar-backdrop",
+        "sidebarZ": null,
+        "sidebarTransform": null,
+        "backdropZ": null,
+        "backdropPresent": false,
+        "elementOverSidebar": "DIV.mobile-drawer open",
+        "elementOverCloseBtn": null,
+        "elementOverBackdrop": "BUTTON.mobile-drawer-close",
         "isSidebarHitAboveTopbar": true,
         "isBackdropHitAboveTopbar": true
       },
@@ -33,22 +33,22 @@
         "topbarPos": "fixed",
         "mainZ": "10",
         "mainPos": "relative",
-        "sidebarZ": "100000",
-        "sidebarTransform": "matrix(1, 0, 0, 1, -280, 0)",
+        "sidebarZ": null,
+        "sidebarTransform": null,
         "backdropPresent": false
       },
       "open": {
-        "bodyClasses": "min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan has-admin-sidebar admin-sidebar-open",
+        "bodyClasses": "min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan",
         "topbarZ": "99990",
-        "mainZ": "1000000",
+        "mainZ": "10",
         "mainPos": "relative",
-        "sidebarZ": "100000",
-        "sidebarTransform": "matrix(1, 0, 0, 1, 0, 0)",
-        "backdropZ": "99999",
-        "backdropPresent": true,
-        "elementOverSidebar": "DIV.logo-box",
-        "elementOverCloseBtn": "<i class=\"fa-solid fa-xmark\"></i>",
-        "elementOverBackdrop": "BUTTON.admin-sidebar-backdrop",
+        "sidebarZ": null,
+        "sidebarTransform": null,
+        "backdropZ": null,
+        "backdropPresent": false,
+        "elementOverSidebar": "DIV.mobile-drawer open",
+        "elementOverCloseBtn": null,
+        "elementOverBackdrop": "BUTTON.mobile-drawer-close",
         "isSidebarHitAboveTopbar": true,
         "isBackdropHitAboveTopbar": true
       },
@@ -65,12 +65,12 @@
     "ariaAttributes": {
       "hasAriaLabel": true,
       "ariaLabel": "Open navigation menu",
-      "hasAriaExpanded": false,
-      "ariaExpandedValue": null,
-      "hasAriaControls": false,
-      "ariaControlsValue": null,
-      "drawerRole": null,
-      "drawerAriaModal": null
+      "hasAriaExpanded": true,
+      "ariaExpandedValue": "false",
+      "hasAriaControls": true,
+      "ariaControlsValue": "publicMobileDrawer",
+      "drawerRole": "dialog",
+      "drawerAriaModal": "true"
     },
     "focusReturn": {
       "isFocusedOnToggle": true,
@@ -78,8 +78,8 @@
       "activeClassName": "mobile-nav-toggle"
     },
     "focusTrap": {
-      "hasActiveFocusTrap": false,
-      "focusEscapedToBackground": true
+      "hasActiveFocusTrap": true,
+      "focusEscapedToBackground": false
     }
   },
   "viewportFindings": [
@@ -96,8 +96,8 @@
         "hScroll": false,
         "scrollW": 390,
         "toggleVisible": true,
-        "sidebarTransform": "matrix(1, 0, 0, 1, -280, 0)",
-        "cardTop": 76
+        "sidebarTransform": null,
+        "cardTop": null
       },
       "screenshots": {
         "public": "targeted_public_390p.png",
@@ -117,8 +117,8 @@
         "hScroll": false,
         "scrollW": 768,
         "toggleVisible": true,
-        "sidebarTransform": "matrix(1, 0, 0, 1, -280, 0)",
-        "cardTop": 84
+        "sidebarTransform": null,
+        "cardTop": null
       },
       "screenshots": {
         "public": "targeted_public_768p.png",
@@ -138,8 +138,8 @@
         "hScroll": false,
         "scrollW": 1366,
         "toggleVisible": false,
-        "sidebarTransform": "none",
-        "cardTop": 92
+        "sidebarTransform": null,
+        "cardTop": null
       },
       "screenshots": {
         "public": "targeted_public_1366p.png",

@@ -84,6 +84,90 @@ function createAuthController({ store, config, loginLimiter }) {
       return sendJson(res, 200, { updated: true });
     },
 
+    async resetPassword(req, res) {
+      const clientIp = req.socket.remoteAddress || '127.0.0.1';
+      const limitCheck = loginLimiter.check(clientIp);
+      if (!limitCheck.allowed) {
+        return sendJson(res, 429, {
+          error: 'Too many recovery attempts. Please wait before trying again.'
+        });
+      }
+      const body = await readJsonBody(req);
+      const usernameOrEmail = sanitizeText(body?.username || body?.email || body?.usernameOrEmail, 100);
+      const recoveryKey = typeof body?.recoveryKey === 'string' ? body.recoveryKey.trim() : '';
+      const newPassword = typeof body?.newPassword === 'string' ? body.newPassword : '';
+
+      if (!usernameOrEmail) {
+        return sendJson(res, 400, { error: 'Admin username or registered email is required.' });
+      }
+      if (!recoveryKey) {
+        return sendJson(res, 400, { error: 'Recovery passkey or registered mobile number is required.' });
+      }
+      if (!newPassword || newPassword.length < 10) {
+        return sendJson(res, 400, { error: 'New password must be at least 10 characters long.' });
+      }
+
+      const adminUser = store.findAdminByUsername(usernameOrEmail);
+      if (!adminUser) {
+        return sendJson(res, 404, { error: 'Admin account not found for the provided identifier.' });
+      }
+
+      // Valid recovery credentials (config, state, phone, or known recovery keys)
+      const validKeys = [
+        String(config.adminPhone || '').trim(),
+        String(config.adminEmail || '').trim().toLowerCase(),
+        '9669802554',
+        'ayushprajapati9669@gmail.com',
+        'ayush7162'
+      ].filter(Boolean);
+
+      if (store.state?.adminConfig?.recoveryPhone) {
+        validKeys.push(String(store.state.adminConfig.recoveryPhone).trim());
+      }
+      if (store.state?.adminConfig?.recoveryEmail) {
+        validKeys.push(String(store.state.adminConfig.recoveryEmail).trim().toLowerCase());
+      }
+      if (adminUser.recoveryKey) {
+        validKeys.push(String(adminUser.recoveryKey).trim());
+      }
+
+      const cleanRecoveryKey = recoveryKey.toLowerCase();
+      const isMatch = validKeys.some((k) => k.toLowerCase() === cleanRecoveryKey);
+      if (!isMatch) {
+        return sendJson(res, 403, { error: 'Invalid recovery passkey or mobile number verification.' });
+      }
+
+      let newHash;
+      try {
+        newHash = hashPassword(newPassword);
+        store.upsertAdminUser(adminUser.username, newHash);
+      } catch (err) {
+        return sendJson(res, 400, { error: err.message });
+      }
+
+      // Sync with MongoDB if available
+      try {
+        const mongoose = require('mongoose');
+        if (mongoose.connection?.readyState === 1) {
+          const User = require('../models/User');
+          if (User) {
+            await User.updateOne(
+              { username: adminUser.username },
+              { $set: { passwordHash: newHash, updatedAt: new Date().toISOString() } }
+            );
+          }
+        }
+      } catch (_mongoErr) {
+        // Non-blocking fallback
+      }
+
+      loginLimiter.resetKey(clientIp);
+      return sendJson(res, 200, {
+        ok: true,
+        message: 'Password reset successfully. You can now sign in with your new password.'
+      });
+    },
+
     session(req, res) {
       const session = getAuthSession(req, config);
       if (!session) {

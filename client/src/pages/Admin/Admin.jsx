@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
@@ -8,35 +8,36 @@ import { useScrollLock } from '../../utils/scrollLock';
 
 // Admin-specific CSS (only loaded when admin page is visited)
 import '../../styles/admin.css';
-import '../../styles/pages/admin-milestones.css';
-// import '../../styles/admin-reference-theme.css';
 
 // Subcomponents
-import { AdminSidebar } from './components/AdminSidebar';
-import { AdminOverview } from './components/AdminOverview';
-import { AdminProjects } from './components/AdminProjects';
-import { AdminCertificates } from './components/AdminCertificates';
-import { AdminSkills } from './components/AdminSkills';
-import { AdminMilestones } from './components/AdminMilestones';
-import { AdminProfile } from './components/AdminProfile';
-import { AdminHeroPortrait } from './components/AdminHeroPortrait';
-import { AdminMessages } from './components/AdminMessages';
-import { AdminSecurity } from './components/AdminSecurity';
-import { AdminUserGuide } from './components/AdminUserGuide';
-import { AdminApiReference } from './components/AdminApiReference';
 import { AdminAuthModal } from './components/AdminAuthModal';
-import { AdminAnalytics } from './components/AdminAnalytics';
+const AdminSidebar = React.lazy(() => import('./components/AdminSidebar').then((m) => ({ default: m.AdminSidebar })));
+const AdminOverview = React.lazy(() => import('./components/AdminOverview').then((m) => ({ default: m.AdminOverview })));
+const AdminProjects = React.lazy(() => import('./components/AdminProjects').then((m) => ({ default: m.AdminProjects })));
+const AdminCertificates = React.lazy(() => import('./components/AdminCertificates').then((m) => ({ default: m.AdminCertificates })));
+const AdminSkills = React.lazy(() => import('./components/AdminSkills').then((m) => ({ default: m.AdminSkills })));
+const AdminMilestones = React.lazy(() => import('./components/AdminMilestones').then((m) => ({ default: m.AdminMilestones })));
+const AdminProfile = React.lazy(() => import('./components/AdminProfile').then((m) => ({ default: m.AdminProfile })));
+const AdminHeroPortrait = React.lazy(() => import('./components/AdminHeroPortrait').then((m) => ({ default: m.AdminHeroPortrait })));
+const AdminAppearance = React.lazy(() => import('./components/AdminAppearance').then((m) => ({ default: m.AdminAppearance })));
+const AdminSeo = React.lazy(() => import('./components/AdminSeo').then((m) => ({ default: m.AdminSeo })));
+const AdminSiteSettings = React.lazy(() => import('./components/AdminSiteSettings').then((m) => ({ default: m.AdminSiteSettings })));
+const AdminMessages = React.lazy(() => import('./components/AdminMessages').then((m) => ({ default: m.AdminMessages })));
+const AdminSecurity = React.lazy(() => import('./components/AdminSecurity').then((m) => ({ default: m.AdminSecurity })));
+const AdminUserGuide = React.lazy(() => import('./components/AdminUserGuide').then((m) => ({ default: m.AdminUserGuide })));
+const AdminApiReference = React.lazy(() => import('./components/AdminApiReference').then((m) => ({ default: m.AdminApiReference })));
+const AdminAnalytics = React.lazy(() => import('./components/AdminAnalytics').then((m) => ({ default: m.AdminAnalytics })));
 
 // Modals
-import { QuickProjectModal } from './components/modals/QuickProjectModal';
-import { ActivityDetailModal } from './components/modals/ActivityDetailModal';
+const QuickProjectModal = React.lazy(() => import('./components/modals/QuickProjectModal').then((m) => ({ default: m.QuickProjectModal })));
+const ActivityDetailModal = React.lazy(() => import('./components/modals/ActivityDetailModal').then((m) => ({ default: m.ActivityDetailModal })));
 import { SEO } from '../../components/SEO';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
 
 export function AdminPage() {
   const { appState, updateAppState, showToast, openConfirmModal } = usePortfolio();
-  const { session, loginAdmin, logoutAdmin, resetAdminPassword, checkCurrentPassword } = useAuth();
+  const { session, loginAdmin, logoutAdmin, resetAdminPassword, recoverAdminPassword, checkCurrentPassword } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -70,11 +71,35 @@ export function AdminPage() {
     return () => window.removeEventListener('admin-sidebar-toggle', handleSidebarToggle);
   }, []);
 
-  // Escape key listener to close mobile sidebar drawer
+  // Escape key listener & admin number navigation shortcuts (1-9)
   useEffect(() => {
     const handleKeyDown = (e) => {
+      const isInput =
+        ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName) ||
+        document.activeElement?.isContentEditable;
+      if (isInput) return;
+
       if (e.key === 'Escape' && isMobileSidebarOpen) {
         setIsMobileSidebarOpen(false);
+      }
+
+      // Number keys 1-9 for instant admin CMS tab navigation
+      const numMap = {
+        '1': 'dashboard',
+        '2': 'projects',
+        '3': 'certificates',
+        '4': 'skills',
+        '5': 'milestones',
+        '6': 'messages',
+        '7': 'appearance',
+        '8': 'analytics',
+        '9': 'settings'
+      };
+
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && numMap[e.key]) {
+        e.preventDefault();
+        playTick();
+        handleSelectTab(numMap[e.key]);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -154,6 +179,8 @@ export function AdminPage() {
 
   // Modals state
   const [isQuickProjOpen, setIsQuickProjOpen] = useState(false);
+  const [openCreateProjectOnNavigate, setOpenCreateProjectOnNavigate] = useState(false);
+  const [openMilestoneWizardOnNavigate, setOpenMilestoneWizardOnNavigate] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
@@ -168,7 +195,49 @@ export function AdminPage() {
     if (current !== activeTab) {
       setActiveTab(current);
     }
+    if (searchParams.get('create') === 'true') {
+      setOpenCreateProjectOnNavigate(true);
+    }
   }, [location.pathname, searchParams]);
+
+  useEffect(() => {
+    const handleSelectTabEvent = (e) => {
+      const tab = e.detail?.tab;
+      if (tab) handleSelectTab(tab);
+    };
+    const handleCreateProjectEvent = () => {
+      setOpenCreateProjectOnNavigate(true);
+      handleSelectTab('projects');
+    };
+    const handleOpenMilestoneWizardEvent = () => {
+      setOpenMilestoneWizardOnNavigate(true);
+      handleSelectTab('milestones');
+    };
+    const handleAdminLogoutEvent = () => {
+      openConfirmModal({
+        title: 'Sign Out Administrator',
+        message: 'Are you sure you want to end your administrative session?',
+        confirmText: 'Sign Out',
+        isDestructive: true,
+        onConfirm: () => {
+          logoutAdmin();
+          showToast('Signed out of Admin CMS', 'fa-right-from-bracket');
+        }
+      });
+    };
+
+    window.addEventListener('ams-select-tab', handleSelectTabEvent);
+    window.addEventListener('ams-create-project', handleCreateProjectEvent);
+    window.addEventListener('ams-open-milestone-wizard', handleOpenMilestoneWizardEvent);
+    window.addEventListener('ams-admin-logout', handleAdminLogoutEvent);
+
+    return () => {
+      window.removeEventListener('ams-select-tab', handleSelectTabEvent);
+      window.removeEventListener('ams-create-project', handleCreateProjectEvent);
+      window.removeEventListener('ams-open-milestone-wizard', handleOpenMilestoneWizardEvent);
+      window.removeEventListener('ams-admin-logout', handleAdminLogoutEvent);
+    };
+  }, [logoutAdmin, openConfirmModal, showToast]);
 
   const handleSelectTab = (tabId, route) => {
     setIsMobileSidebarOpen(false);
@@ -210,6 +279,7 @@ export function AdminPage() {
         <AdminAuthModal
           loginAdmin={loginAdmin}
           resetAdminPassword={resetAdminPassword}
+          recoverAdminPassword={recoverAdminPassword}
           showToast={showToast}
         />
       </div>
@@ -282,160 +352,196 @@ export function AdminPage() {
   };
 
   return (
-    <div className="admin-workspace min-h-screen flex text-white relative">
-      <SEO
-        title="Admin Management Studio & Milestones CMS"
-        description="Administrative management studio for Ayush Prajapati's developer portfolio, managing career milestones, projects, skills, and verified credentials."
-        url="https://ayushprajapati.dev/admin"
-      />
-      {/* 1. Admin Sidebar with Focus Mode */}
-      <AdminSidebar
-        activeTab={activeTab}
-        onSelectTab={handleSelectTab}
-        isCollapsed={isSidebarCollapsed}
-        isMobileOpen={isMobileSidebarOpen}
-        onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
-        counts={counts}
-        profile={appState.profile}
-        onLogout={logoutAdmin}
-        onOpenCategoryModal={handleOpenCategoryModal}
-      />
-      {isMobileSidebarOpen && (
-        <button
-          type="button"
-          className="admin-sidebar-backdrop"
-          onClick={() => setIsMobileSidebarOpen(false)}
-          aria-label="Close admin navigation"
+    <Suspense fallback={<div className="admin-workspace min-h-screen flex items-center justify-center text-slate-400">Loading admin console...</div>}>
+      <div className="admin-workspace min-h-screen flex text-white relative">
+        <SEO
+          title="Admin Management Studio & Milestones CMS"
+          description="Administrative management studio for Ayush Prajapati's developer portfolio, managing career milestones, projects, skills, and verified credentials."
+          url="https://ayushprajapati.dev/admin"
         />
-      )}
+        {/* 1. Admin Sidebar with Focus Mode */}
+        <AdminSidebar
+          activeTab={activeTab}
+          onSelectTab={handleSelectTab}
+          isCollapsed={isSidebarCollapsed}
+          isMobileOpen={isMobileSidebarOpen}
+          onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
+          counts={counts}
+          profile={appState.profile}
+          onLogout={logoutAdmin}
+          onOpenCategoryModal={handleOpenCategoryModal}
+        />
+        {isMobileSidebarOpen && (
+          <button
+            type="button"
+            className="admin-sidebar-backdrop"
+            onClick={() => setIsMobileSidebarOpen(false)}
+            aria-label="Close admin navigation"
+          />
+        )}
 
-      {/* 2. Main Wrapper */}
-      <div
-        className={`admin-main-wrapper ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}
-      >
-        <main ref={contentAreaRef} className="admin-content-area">
-          {activeTab === 'dashboard' && (
-            <AdminOverview
-              appState={appState}
-              onSelectTab={handleSelectTab}
-              onOpenAddProject={() => setIsQuickProjOpen(true)}
-              onOpenDetailModal={(act) => setSelectedActivity(act)}
-              showToast={showToast}
-            />
-          )}
+        {/* 2. Main Wrapper */}
+        <div
+          className={`admin-main-wrapper ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}
+        >
+          <main ref={contentAreaRef} className="admin-content-area">
+            {activeTab === 'dashboard' && (
+              <AdminOverview
+                appState={appState}
+                onSelectTab={handleSelectTab}
+                onOpenAddProject={() => {
+                  setOpenCreateProjectOnNavigate(true);
+                  handleSelectTab('projects');
+                }}
+                onOpenDetailModal={(act) => setSelectedActivity(act)}
+                showToast={showToast}
+              />
+            )}
 
-          {activeTab === 'analytics' && (
-            <AdminAnalytics showToast={showToast} />
-          )}
+            {activeTab === 'analytics' && (
+              <AdminAnalytics showToast={showToast} />
+            )}
 
-          {activeTab === 'projects' && (
-            <AdminProjects
-              appState={appState}
-              updateAppState={updateAppState}
-              session={session}
-              showToast={showToast}
-              openConfirmModal={openConfirmModal}
-            />
-          )}
+            {activeTab === 'projects' && (
+              <AdminProjects
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+                openConfirmModal={openConfirmModal}
+                initialCreateNew={openCreateProjectOnNavigate}
+                onResetCreate={() => setOpenCreateProjectOnNavigate(false)}
+              />
+            )}
 
-          {activeTab === 'certificates' && (
-            <AdminCertificates
-              appState={appState}
-              updateAppState={updateAppState}
-              session={session}
-              showToast={showToast}
-              openConfirmModal={openConfirmModal}
-            />
-          )}
+            {activeTab === 'certificates' && (
+              <AdminCertificates
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+                openConfirmModal={openConfirmModal}
+              />
+            )}
 
-          {activeTab === 'skills' && (
-            <AdminSkills
-              appState={appState}
-              updateAppState={updateAppState}
-              session={session}
-              showToast={showToast}
-              isCategoryModalOpen={isCategoryModalOpen}
-              setIsCategoryModalOpen={setIsCategoryModalOpen}
-            />
-          )}
+            {activeTab === 'skills' && (
+              <AdminSkills
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+                isCategoryModalOpen={isCategoryModalOpen}
+                setIsCategoryModalOpen={setIsCategoryModalOpen}
+              />
+            )}
 
-          {(activeTab === 'milestones' || activeTab === 'journey') && (
-            <AdminMilestones
-              appState={appState}
-              updateAppState={updateAppState}
-              session={session}
-              showToast={showToast}
-              openConfirmModal={openConfirmModal}
-              onSelectTab={handleSelectTab}
-            />
-          )}
+            {(activeTab === 'milestones' || activeTab === 'journey') && (
+              <AdminMilestones
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+                openConfirmModal={openConfirmModal}
+                onSelectTab={handleSelectTab}
+                initialOpenWizard={openMilestoneWizardOnNavigate}
+                onResetWizard={() => setOpenMilestoneWizardOnNavigate(false)}
+              />
+            )}
 
-          {activeTab === 'profile' && (
-            <AdminProfile
-              appState={appState}
-              updateAppState={updateAppState}
-              session={session}
-              showToast={showToast}
-            />
-          )}
+            {activeTab === 'profile' && (
+              <AdminProfile
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+              />
+            )}
 
-          {(activeTab === 'media' || activeTab === 'hero' || activeTab === 'portrait') && (
-            <AdminHeroPortrait
-              appState={appState}
-              updateAppState={updateAppState}
-              session={session}
-              showToast={showToast}
-            />
-          )}
+            {(activeTab === 'media' || activeTab === 'hero' || activeTab === 'portrait') && (
+              <AdminHeroPortrait
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+              />
+            )}
 
-          {activeTab === 'messages' && (
-            <AdminMessages
-              appState={appState}
-              updateAppState={updateAppState}
-              session={session}
-              showToast={showToast}
-              openConfirmModal={openConfirmModal}
-            />
-          )}
+            {activeTab === 'appearance' && (
+              <AdminAppearance
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+              />
+            )}
 
-          {activeTab === 'security' && (
-            <AdminSecurity
-              checkCurrentPassword={checkCurrentPassword}
-              resetAdminPassword={resetAdminPassword}
-              showToast={showToast}
-            />
-          )}
+            {activeTab === 'seo' && (
+              <AdminSeo
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+              />
+            )}
 
-          {activeTab === 'guide' && (
-            <AdminUserGuide
-              onSelectTab={handleSelectTab}
-              showToast={showToast}
-            />
-          )}
+            {(activeTab === 'settings' || activeTab === 'site-settings') && (
+              <AdminSiteSettings
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+              />
+            )}
 
-          {activeTab === 'api-docs' && (
-            <AdminApiReference
-              onSelectTab={handleSelectTab}
-              showToast={showToast}
-            />
-          )}
-        </main>
+            {activeTab === 'messages' && (
+              <AdminMessages
+                appState={appState}
+                updateAppState={updateAppState}
+                session={session}
+                showToast={showToast}
+                openConfirmModal={openConfirmModal}
+              />
+            )}
+
+            {activeTab === 'security' && (
+              <AdminSecurity
+                checkCurrentPassword={checkCurrentPassword}
+                resetAdminPassword={resetAdminPassword}
+                showToast={showToast}
+              />
+            )}
+
+            {activeTab === 'guide' && (
+              <AdminUserGuide
+                onSelectTab={handleSelectTab}
+                showToast={showToast}
+              />
+            )}
+
+            {activeTab === 'api-docs' && (
+              <AdminApiReference
+                onSelectTab={handleSelectTab}
+                showToast={showToast}
+              />
+            )}
+          </main>
+        </div>
+
+        {/* Quick Project Creation Modal */}
+        <QuickProjectModal
+          isOpen={isQuickProjOpen}
+          onClose={() => setIsQuickProjOpen(false)}
+          onSave={handleSaveQuickProject}
+        />
+
+        {/* Activity Details Modal */}
+        <ActivityDetailModal
+          item={selectedActivity}
+          onClose={() => setSelectedActivity(null)}
+          onAction={handleActivityAction}
+        />
       </div>
-
-      {/* Quick Project Creation Modal */}
-      <QuickProjectModal
-        isOpen={isQuickProjOpen}
-        onClose={() => setIsQuickProjOpen(false)}
-        onSave={handleSaveQuickProject}
-      />
-
-      {/* Activity Details Modal */}
-      <ActivityDetailModal
-        item={selectedActivity}
-        onClose={() => setSelectedActivity(null)}
-        onAction={handleActivityAction}
-      />
-    </div>
+    </Suspense>
   );
 }
 

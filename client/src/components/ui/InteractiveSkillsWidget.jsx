@@ -5,10 +5,50 @@ import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { playTick } from '../../utils/audio';
 import { ScrollWriteText } from '../common/ScrollWriteText';
 import { TechLogo } from '../common/TechLogos';
+import { useInView } from '../../hooks/useInView';
 
 try {
   gsap.registerPlugin(ScrollTrigger);
-} catch (_e) {}
+} catch (_e) { }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LayerCard: wraps a .flow-layer <section> and toggles the "in" CSS class
+   using the bidirectional useInView IntersectionObserver hook.
+   All mouse-move hover props are forwarded from the parent.
+───────────────────────────────────────────────────────────────────────────── */
+function LayerCard({ style, onMouseMove, onMouseLeave, children, className = '' }) {
+  const ref = useRef(null);
+  const inView = useInView(ref);
+
+  return (
+    <section
+      ref={ref}
+      className={`flow-layer${inView ? ' in' : ''}${className ? ` ${className}` : ''}`}
+      style={style}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+    >
+      {children}
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FlowLink: wraps a .flow-link connector and fades it in after its
+   preceding LayerCard enters the viewport. It observes itself with a
+   simple IntersectionObserver (threshold 0 / 0.5) so when ANY part of
+   the link is visible, it gets the "in" class (delayed 300ms via CSS).
+───────────────────────────────────────────────────────────────────────────── */
+function FlowLink({ className = '', children }) {
+  const ref = useRef(null);
+  const inView = useInView(ref);
+
+  return (
+    <div ref={ref} className={`flow-link${className ? ` ${className}` : ''}${inView ? ' in' : ''}`}>
+      {children}
+    </div>
+  );
+}
 
 // SVG Icon Render Map - Ultra-Crisp, High-Contrast Vector Emblems from Reference Architecture
 const SKILL_SVGS = {
@@ -170,9 +210,9 @@ const SKILL_PILL_COLORS = {
   node: '#4ade80',
   'express.js': '#d4d4d8',
   express: '#d4d4d8',
-  'rest api development': '#fbbf24',
-  'rest api': '#fbbf24',
-  api: '#fbbf24',
+  'rest api development': '#38bdf8',
+  'rest api': '#38bdf8',
+  api: '#38bdf8',
   mongodb: '#22c55e',
   mongo: '#22c55e',
   mysql: '#38bdf8',
@@ -224,8 +264,20 @@ const normalizeSkillKey = (name) => {
 
 export const getSkillVisuals = (item) => {
   const key = normalizeSkillKey(item?.name || item?.logoKey || '');
-  const color = SKILL_PILL_COLORS[key] || item?.color || '#e8c547';
+  const color = SKILL_PILL_COLORS[key] || item?.color || '#38bdf8';
   return { key, color, svg: SKILL_SVGS[key] || null };
+};
+
+const getCanonicalCategoryColor = (name, customColor) => {
+  if (customColor && customColor !== '#d4af37' && customColor !== '#e8c547') return customColor;
+  const n = String(name || '').toLowerCase();
+  if (/front/i.test(n)) return '#38bdf8'; // Sky Cyan
+  if (/back/i.test(n)) return '#4ade80'; // Emerald Green
+  if (/data.*base|db/i.test(n)) return '#10b981'; // Forest Green
+  if (/lang/i.test(n)) return '#818cf8'; // Indigo Blue
+  if (/tool/i.test(n)) return '#f97316'; // Coral Orange
+  if (/problem|dsa|algo|structure/i.test(n)) return '#a855f7'; // Purple
+  return '#38bdf8';
 };
 
 export function SkillsSection({ isStandalonePage = false, showCta = false, onCtaClick = null }) {
@@ -246,14 +298,14 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
         if (!catGroup) return;
         const catName = catGroup.category || catGroup.categoryName || catGroup.name || `Category ${cIdx + 1}`;
         const catId = String(catGroup.id || `cat-${cIdx}`);
-        const catColor = catGroup.color || '#d4af37';
+        const catColor = getCanonicalCategoryColor(catName, catGroup.color);
         const items = Array.isArray(catGroup.items) ? catGroup.items : [];
         const visibleItems = items.filter((item) => item && item.isVisible !== false);
 
         const mappedItems = visibleItems.map((item, iIdx) => {
           const name = item.name || '';
           const normKey = normalizeSkillKey(name);
-          const brandColor = SKILL_PILL_COLORS[normKey] || item.color || '#e8c547';
+          const brandColor = SKILL_PILL_COLORS[normKey] || (item.color && item.color !== '#e8c547' && item.color !== '#d4af37' ? item.color : catColor);
           return {
             id: item.id || `skill-${catId}-${iIdx}`,
             name,
@@ -277,12 +329,25 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
     // Baseline fallbacks matching skills-pro.html exactly
     const findCategory = (regex, fallback) => {
       const match = allCategories.find((c) => regex.test(c.name || ''));
-      if (match && match.items.length > 0) {
+      if (match && Array.isArray(match.items) && match.items.length > 0) {
+        const resolvedName = (match.name && typeof match.name === 'string' && match.name.trim())
+          ? match.name.trim()
+          : fallback.name;
+        const resolvedSubtitle = (match.subtitle && typeof match.subtitle === 'string' && match.subtitle.trim())
+          ? match.subtitle.trim()
+          : ((match.description && typeof match.description === 'string' && match.description.trim())
+            ? match.description.trim()
+            : fallback.subtitle);
+        const resolvedColor = (match.color && typeof match.color === 'string' && match.color.trim() && match.color !== '#d4af37' && match.color !== '#e8c547')
+          ? match.color.trim()
+          : fallback.color;
+
         return {
+          ...fallback,
           ...match,
-          name: fallback.name,
-          subtitle: fallback.subtitle,
-          color: fallback.color
+          name: resolvedName,
+          subtitle: resolvedSubtitle,
+          color: resolvedColor
         };
       }
       return fallback;
@@ -309,7 +374,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
       items: [
         { id: 'b-1', name: 'Node.js', normKey: 'node', color: '#4ade80' },
         { id: 'b-2', name: 'Express.js', normKey: 'express', color: '#d4d4d8' },
-        { id: 'b-3', name: 'REST API Development', normKey: 'api', color: '#fbbf24' }
+        { id: 'b-3', name: 'REST API Development', normKey: 'api', color: '#38bdf8' }
       ]
     });
 
@@ -328,7 +393,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
       id: 'languages',
       name: 'Languages',
       subtitle: 'What I write code in',
-      color: '#e8c547',
+      color: '#818cf8',
       items: [
         { id: 'l-1', name: 'TypeScript', normKey: 'typescript', color: '#3178c6' },
         { id: 'l-2', name: 'Python', normKey: 'python', color: '#3776ab' },
@@ -383,111 +448,6 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
     };
   }, [appState?.skills]);
 
-  // Luxury GSAP ScrollTrigger Entrance & Cascading Stagger
-  useEffect(() => {
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion || !boardRef.current) return;
-
-    const board = boardRef.current;
-    const layers = board.querySelectorAll('.flow-layer');
-    const links = board.querySelectorAll('.flow-link');
-    const label = board.querySelector('.flow-section-label');
-    const pills = board.querySelectorAll('.flow-pill');
-
-    gsap.killTweensOf([layers, links, label, pills]);
-
-    // Initial state
-    gsap.set(layers, { opacity: 0, y: 32, scale: 0.97 });
-    gsap.set(links, { opacity: 0, scaleY: 0, transformOrigin: 'top center' });
-    if (label) gsap.set(label, { opacity: 0, x: -24 });
-    gsap.set(pills, { opacity: 0, scale: 0.88, y: 8 });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: board,
-        start: 'top 85%',
-        once: true
-      },
-      onComplete: () => {
-        // Clear transforms so hover 3D tilt and mousemove work smoothly without matrix conflicts
-        gsap.set([layers, links, label, pills], { clearProps: 'transform' });
-      }
-    });
-
-    // 1. Pipeline Cascade: Layer 1 -> Link 1 -> Layer 2 -> Link 2 -> Layer 3
-    const pipelineItems = board.querySelectorAll('.skills-flow-pipeline > *');
-    pipelineItems.forEach((el) => {
-      if (el.classList.contains('flow-layer')) {
-        tl.to(el, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.45,
-          ease: 'power3.out'
-        }, '-=0.25');
-
-        const innerPills = el.querySelectorAll('.flow-pill');
-        if (innerPills.length > 0) {
-          tl.to(innerPills, {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.3,
-            stagger: 0.025,
-            ease: 'back.out(1.4)'
-          }, '-=0.35');
-        }
-      } else if (el.classList.contains('flow-link')) {
-        tl.to(el, {
-          opacity: 1,
-          scaleY: 1,
-          duration: 0.3,
-          ease: 'power2.out'
-        }, '-=0.2');
-      }
-    });
-
-    // 2. Behind every layer section label
-    if (label) {
-      tl.to(label, {
-        opacity: 1,
-        x: 0,
-        duration: 0.35,
-        ease: 'power2.out'
-      }, '-=0.15');
-    }
-
-    // 3. Staggered Base Cards
-    const baseCards = board.querySelectorAll('.flow-base .flow-layer');
-    if (baseCards.length > 0) {
-      tl.to(baseCards, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.45,
-        stagger: 0.08,
-        ease: 'power3.out'
-      }, '-=0.15');
-
-      const allBasePills = board.querySelectorAll('.flow-base .flow-pill');
-      if (allBasePills.length > 0) {
-        tl.to(allBasePills, {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.3,
-          stagger: 0.02,
-          ease: 'back.out(1.4)'
-        }, '-=0.35');
-      }
-    }
-
-    return () => {
-      tl.kill();
-      if (tl.scrollTrigger) tl.scrollTrigger.kill();
-    };
-  }, [categorizedData]);
-
   // Pointer subtle spotlight lighting on cards (rock-solid, user-friendly, no 3D wobble)
   const handleLayerMouseMove = (e) => {
     const layer = e.currentTarget;
@@ -535,9 +495,9 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
     return <TechLogo name={skill.name} className="w-[24px] h-[24px] flex-none" />;
   };
 
-  // Render individual skill pill
-  const renderPill = (skill, layerDefaultColor) => {
-    const pillColor = skill.color || layerDefaultColor || '#e8c547';
+  // Render individual skill pill — index is passed for CSS stagger variable --i
+  const renderPill = (skill, layerDefaultColor, index = 0) => {
+    const pillColor = skill.color || layerDefaultColor || '#38bdf8';
     const isSearchActive = Boolean(searchQuery.trim());
     const isSearchMatch = isSearchActive
       ? skill.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
@@ -553,6 +513,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
         className={`flow-pill ${isHovered || isSearchMatch ? 'on' : ''}`}
         style={{
           '--c': pillColor,
+          '--i': index,
           ...(isDimmed ? { opacity: 0.35, filter: 'grayscale(0.3)' } : {})
         }}
         tabIndex={0}
@@ -655,8 +616,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
         <div className="skills-flow-pipeline">
           {/* Layer 1: Frontend */}
           {frontendCat && (
-            <section
-              className="flow-layer"
+            <LayerCard
               style={{ '--c': frontendCat.color || '#38bdf8' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -669,18 +629,17 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                 <p>{frontendCat.subtitle}</p>
               </div>
               <div className="flow-pills">
-                {frontendCat.items.map((skill) => renderPill(skill, frontendCat.color || '#38bdf8'))}
+                {frontendCat.items.map((skill, idx) => renderPill(skill, frontendCat.color || '#38bdf8', idx))}
               </div>
-            </section>
+            </LayerCard>
           )}
 
           {/* Link 1: sends requests */}
-          <div className="flow-link link-1">sends requests</div>
+          <FlowLink className="link-1">sends requests</FlowLink>
 
           {/* Layer 2: Backend */}
           {backendCat && (
-            <section
-              className="flow-layer"
+            <LayerCard
               style={{ '--c': backendCat.color || '#4ade80' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -693,18 +652,17 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                 <p>{backendCat.subtitle}</p>
               </div>
               <div className="flow-pills">
-                {backendCat.items.map((skill) => renderPill(skill, backendCat.color || '#4ade80'))}
+                {backendCat.items.map((skill, idx) => renderPill(skill, backendCat.color || '#4ade80', idx))}
               </div>
-            </section>
+            </LayerCard>
           )}
 
           {/* Link 2: reads and writes */}
-          <div className="flow-link link-2">reads and writes</div>
+          <FlowLink className="link-2">reads and writes</FlowLink>
 
           {/* Layer 3: Databases */}
           {databasesCat && (
-            <section
-              className="flow-layer"
+            <LayerCard
               style={{ '--c': databasesCat.color || '#22c55e' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -717,9 +675,9 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                 <p>{databasesCat.subtitle}</p>
               </div>
               <div className="flow-pills">
-                {databasesCat.items.map((skill) => renderPill(skill, databasesCat.color || '#22c55e'))}
+                {databasesCat.items.map((skill, idx) => renderPill(skill, databasesCat.color || '#22c55e', idx))}
               </div>
-            </section>
+            </LayerCard>
           )}
         </div>
 
@@ -730,9 +688,8 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
         <div className="flow-base">
           {/* Base Card 1: Languages */}
           {languagesCat && (
-            <section
-              className="flow-layer"
-              style={{ '--c': languagesCat.color || '#e8c547' }}
+            <LayerCard
+              style={{ '--c': languagesCat.color || '#818cf8' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
             >
@@ -744,15 +701,14 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                 <p>{languagesCat.subtitle}</p>
               </div>
               <div className="flow-pills">
-                {languagesCat.items.map((skill) => renderPill(skill, languagesCat.color || '#e8c547'))}
+                {languagesCat.items.map((skill, idx) => renderPill(skill, languagesCat.color || '#818cf8', idx))}
               </div>
-            </section>
+            </LayerCard>
           )}
 
           {/* Base Card 2: Tools */}
           {toolsCat && (
-            <section
-              className="flow-layer"
+            <LayerCard
               style={{ '--c': toolsCat.color || '#f05133' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -765,15 +721,14 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                 <p>{toolsCat.subtitle}</p>
               </div>
               <div className="flow-pills">
-                {toolsCat.items.map((skill) => renderPill(skill, toolsCat.color || '#f05133'))}
+                {toolsCat.items.map((skill, idx) => renderPill(skill, toolsCat.color || '#f05133', idx))}
               </div>
-            </section>
+            </LayerCard>
           )}
 
           {/* Base Card 3: Problem Solving */}
           {problemSolvingCat && (
-            <section
-              className="flow-layer"
+            <LayerCard
               style={{ '--c': problemSolvingCat.color || '#a78bfa' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -786,18 +741,17 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                 <p>{problemSolvingCat.subtitle}</p>
               </div>
               <div className="flow-pills">
-                {problemSolvingCat.items.map((skill) => renderPill(skill, problemSolvingCat.color || '#a78bfa'))}
+                {problemSolvingCat.items.map((skill, idx) => renderPill(skill, problemSolvingCat.color || '#a78bfa', idx))}
               </div>
-            </section>
+            </LayerCard>
           )}
 
           {/* Extra CMS Categories if created by admin */}
           {extraCategories.map((cat, idx) => {
-            const catColor = cat.color || '#d4af37';
+            const catColor = cat.color || '#38bdf8';
             return (
-              <section
+              <LayerCard
                 key={cat.id || idx}
-                className="flow-layer"
                 style={{ '--c': catColor }}
                 onMouseMove={handleLayerMouseMove}
                 onMouseLeave={handleLayerMouseLeave}
@@ -810,9 +764,9 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                   <p>{cat.subtitle || 'Supporting technologies'}</p>
                 </div>
                 <div className="flow-pills">
-                  {cat.items.map((skill) => renderPill(skill, catColor))}
+                  {cat.items.map((skill, sIdx) => renderPill(skill, catColor, sIdx))}
                 </div>
-              </section>
+              </LayerCard>
             );
           })}
         </div>

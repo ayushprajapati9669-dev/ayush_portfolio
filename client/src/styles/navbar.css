@@ -31,6 +31,10 @@
   top: 14px;
 }
 
+.nav-wrapper.scrolled .navbar {
+  background: rgba(5, 8, 12, 0.95) !important;
+}
+
 /* When on admin page with sidebar */
 body.has-admin-sidebar .nav-wrapper {
   top: 16px;
@@ -1459,6 +1463,11 @@ a.btn-primary:hover {
   z-index: 9999999 !important;
 }
 
+.keyboard-shortcuts-backdrop,
+.admin-voice-backdrop {
+  z-index: 10000000 !important;
+}
+
 /* 2. Main Navbar Glass Bar */
 .navbar {
   display: flex !important;
@@ -2086,6 +2095,19 @@ a.btn-primary:hover {
     border-color: rgba(252, 211, 77, 0.6) !important;
     color: #fcd34d !important;
     transform: scale(1.05) !important;
+  }
+
+  .mobile-nav-toggle i.fa-bars:empty::before {
+    content: '☰';
+    font-style: normal;
+    font-size: 19px;
+    line-height: 1;
+  }
+  .mobile-nav-toggle i.fa-xmark:empty::before {
+    content: '✕';
+    font-style: normal;
+    font-size: 19px;
+    line-height: 1;
   }
 }
 

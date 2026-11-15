@@ -2,7 +2,16 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'filter-admin-from-public-entry',
+      transformIndexHtml(html) {
+        // Strip Admin CSS from the public entry HTML so it is loaded strictly on-demand when visiting /admin
+        return html.replace(/<link[^>]+rel="stylesheet"[^>]+page-admin-[^>]+>\s*/g, '');
+      }
+    }
+  ],
   optimizeDeps: {
     include: [
       'react',
@@ -10,7 +19,6 @@ export default defineConfig({
       'react-router-dom',
       'gsap',
       'three',
-      'framer-motion',
       'lenis',
       'dompurify',
       'marked'
@@ -27,11 +35,36 @@ export default defineConfig({
     chunkSizeWarningLimit: 1200,
     reportCompressedSize: false,
     assetsInlineLimit: 4096,
+    modulePreload: {
+      resolveDependencies(filename, deps, { hostId, hostType }) {
+        if (hostType === 'html') {
+          return deps.filter((dep) => {
+            return (
+              !dep.includes('Admin') &&
+              !dep.includes('page-admin') &&
+              !dep.includes('vendor-markdown') &&
+              !dep.includes('vendor-three') &&
+              !dep.includes('vendor-motion') &&
+              !dep.includes('vendor-scrolltrigger') &&
+              !dep.includes('vendor-lenis') &&
+              !dep.includes('vendor-misc')
+            );
+          });
+        }
+        return deps;
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {
           // Split vendor libraries into separate chunks
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom') || id.includes('node_modules/scheduler')) {
+          if (
+            id.includes('node_modules/react') ||
+            id.includes('node_modules/react-dom') ||
+            id.includes('node_modules/react-router') ||
+            id.includes('node_modules/@remix-run') ||
+            id.includes('node_modules/scheduler')
+          ) {
             return 'vendor-react';
           }
           if (id.includes('node_modules/three')) {
@@ -39,6 +72,12 @@ export default defineConfig({
           }
           if (id.includes('node_modules/framer-motion')) {
             return 'vendor-motion';
+          }
+          if (
+            id.includes('node_modules/gsap/ScrollTrigger') ||
+            id.includes('node_modules/gsap/dist/ScrollTrigger')
+          ) {
+            return 'vendor-scrolltrigger';
           }
           if (id.includes('node_modules/gsap')) {
             return 'vendor-gsap';
@@ -51,10 +90,6 @@ export default defineConfig({
           }
           if (id.includes('node_modules/')) {
             return 'vendor-misc';
-          }
-          // Split admin page into its own chunk
-          if (id.includes('/pages/Admin/')) {
-            return 'page-admin';
           }
         },
         chunkFileNames: 'assets/[name]-[hash].js',

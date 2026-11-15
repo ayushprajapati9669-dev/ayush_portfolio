@@ -37,55 +37,64 @@ export function AdminOverview({
     } catch (_e) {}
 
     const ctx = gsap.context(() => {
-      // 1. Stat cards entrance stagger with ScrollTrigger
+      // On mobile/tablet or touchscreens, ensure cards are immediately visible with zero delay or scroll-blocking
+      const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+      // 1. Stat cards entrance stagger
       if (statsGridRef.current) {
         const cards = statsGridRef.current.querySelectorAll('.stat-card');
-        gsap.from(cards, {
-          y: 30,
-          opacity: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'back.out(1.2)',
-          delay: 0.15,
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: statsGridRef.current,
-            start: 'top 92%',
-            toggleActions: 'play none none none'
+        gsap.fromTo(
+          cards,
+          { y: 20, opacity: 0.7 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: 'power2.out',
+            clearProps: 'all'
           }
-        });
+        );
       }
 
-      // 2. Recent Activity glass card entrance with ScrollTrigger
+      // 2. Recent Activity glass card entrance
       if (recentActivityRef.current) {
-        gsap.from(recentActivityRef.current, {
-          y: 40,
-          opacity: 0,
-          duration: 0.75,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: recentActivityRef.current,
-            start: 'top 90%',
-            toggleActions: 'play none none none'
-          }
-        });
+        if (isMobileOrTablet) {
+          gsap.set(recentActivityRef.current, { clearProps: 'all' });
+        } else {
+          gsap.from(recentActivityRef.current, {
+            y: 20,
+            opacity: 0.8,
+            duration: 0.5,
+            ease: 'power2.out',
+            clearProps: 'all',
+            scrollTrigger: {
+              trigger: recentActivityRef.current,
+              start: 'top 95%',
+              once: true
+            }
+          });
+        }
       }
 
-      // 3. Quick Actions glass card entrance with ScrollTrigger
+      // 3. Quick Actions glass card entrance
       if (quickActionsRef.current) {
-        gsap.from(quickActionsRef.current, {
-          y: 40,
-          opacity: 0,
-          duration: 0.75,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: quickActionsRef.current,
-            start: 'top 90%',
-            toggleActions: 'play none none none'
-          }
-        });
+        if (isMobileOrTablet) {
+          gsap.set(quickActionsRef.current, { clearProps: 'all' });
+        } else {
+          gsap.from(quickActionsRef.current, {
+            y: 20,
+            opacity: 0.8,
+            duration: 0.5,
+            ease: 'power2.out',
+            clearProps: 'all',
+            scrollTrigger: {
+              trigger: quickActionsRef.current,
+              start: 'top 98%',
+              once: true
+            }
+          });
+        }
       }
     });
 
@@ -338,7 +347,7 @@ export function AdminOverview({
       </div>
 
       {/* 4 STATS CARDS */}
-      <div className="stats-grid scroll-reveal" ref={statsGridRef}>
+      <div className="stats-grid" ref={statsGridRef}>
         {/* Card 1: Live Projects */}
         <div
           className="stat-card"
@@ -458,7 +467,7 @@ export function AdminOverview({
       </div>
 
       {/* RECENT ACTIVITY GLASS CARD */}
-      <div className="glass-card-admin scroll-reveal" ref={recentActivityRef}>
+      <div className="glass-card-admin" ref={recentActivityRef}>
         <div className="card-header">
           <h2 className="card-title">
             <i className="fa-solid fa-wave-square" />
@@ -582,13 +591,22 @@ export function AdminOverview({
       </div>
 
       {/* QUICK ACTIONS ROW */}
-      <div className="glass-card-admin scroll-reveal" ref={quickActionsRef} style={{ padding: '24px' }}>
+      <div className="glass-card-admin quick-actions-card" ref={quickActionsRef} style={{ padding: '24px' }}>
         <div className="quick-actions">
           <div
             className="action-btn"
+            role="button"
+            tabIndex={0}
             onClick={() => {
               playTick();
               onOpenAddProject();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playTick();
+                onOpenAddProject();
+              }
             }}
           >
             <div className="action-icon">
@@ -602,9 +620,18 @@ export function AdminOverview({
 
           <div
             className="action-btn"
+            role="button"
+            tabIndex={0}
             onClick={() => {
               playTick();
               onSelectTab('messages');
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playTick();
+                onSelectTab('messages');
+              }
             }}
           >
             <div className="action-icon" style={{ color: '#f59e0b' }}>
@@ -618,9 +645,18 @@ export function AdminOverview({
 
           <div
             className="action-btn"
+            role="button"
+            tabIndex={0}
             onClick={() => {
               playTick();
               onSelectTab('profile');
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playTick();
+                onSelectTab('profile');
+              }
             }}
           >
             <div className="action-icon" style={{ color: 'var(--accent-2)' }}>
