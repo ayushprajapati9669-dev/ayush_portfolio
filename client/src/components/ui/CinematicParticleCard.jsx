@@ -79,7 +79,7 @@ export function CinematicParticleCard({ className = '' }) {
       gl = null;
     }
 
-    // Text point generator with bounded scan
+    // Text point generator with bounded scan and aspect-ratio preservation
     function getTextPoints(text, fontSize, w, h, yOffset = 0, is2D = false) {
       const c = document.createElement('canvas');
       c.width = w;
@@ -87,9 +87,12 @@ export function CinematicParticleCard({ className = '' }) {
       const ctx = c.getContext('2d');
       if (!ctx) return [];
       ctx.fillStyle = 'white';
-      ctx.font = `800 ${fontSize}px "Inter", "Segoe UI", Arial, sans-serif`;
+      ctx.font = `700 ${fontSize}px "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
+      if ('letterSpacing' in ctx) {
+        ctx.letterSpacing = is2D ? '4px' : '6px';
+      }
       ctx.fillText(text, w / 2, h / 2);
 
       let imgData;
@@ -100,29 +103,33 @@ export function CinematicParticleCard({ className = '' }) {
       }
 
       const points = [];
-      const step = is2D ? 3 : 2;
+      const step = is2D ? 4 : 3;
       const textWidth = Math.min(width * 0.82, 420);
       const startX = (width - textWidth) / 2;
+
+      // Maintain exact 1:1 aspect ratio in 3D world space
+      const spanY = 6.8;
+      const spanX = spanY * (w / h);
 
       for (let y = 0; y < h; y += step) {
         for (let x = 0; x < w; x += step) {
           const index = (y * w + x) * 4;
-          if (imgData[index + 3] > 128) {
+          if (imgData[index + 3] > 140) {
             if (is2D) {
               const px = startX + (x / w) * textWidth;
-              const py = height / 2 + yOffset + ((y / h) - 0.5) * 60;
+              const py = height / 2 + yOffset + ((y / h) - 0.5) * 56;
               points.push({
                 x: px,
                 y: py,
                 baseX: px,
                 baseY: py,
-                size: Math.random() * 1.5 + 1.1,
+                size: Math.random() * 1.2 + 0.9,
                 color: Math.random() > 0.45 ? '#e5b869' : Math.random() > 0.2 ? '#f5d19a' : '#ffffff'
               });
             } else {
-              const px = (x / w - 0.5) * 32;
-              const py = -((y / h - 0.5) * 12) + yOffset;
-              const pz = (Math.random() - 0.5) * 1.5;
+              const px = (x / w - 0.5) * spanX;
+              const py = -((y / h - 0.5) * spanY) + yOffset;
+              const pz = (Math.random() - 0.5) * 0.8;
               points.push({ x: px, y: py, z: pz });
             }
           }
@@ -139,16 +146,16 @@ export function CinematicParticleCard({ className = '' }) {
       canvas.height = height;
 
       const target2DA = [
-        ...getTextPoints('AYUSH', 68, 512, 140, -32, true),
-        ...getTextPoints('PRAJAPATI', 56, 512, 140, 34, true)
+        ...getTextPoints('AYUSH', 52, 512, 140, -26, true),
+        ...getTextPoints('PRAJAPATI', 44, 512, 140, 26, true)
       ];
       const target2DB = [
-        ...getTextPoints('FULL STACK', 52, 512, 140, -32, true),
-        ...getTextPoints('ENGINEER', 64, 512, 140, 34, true)
+        ...getTextPoints('FULL STACK', 42, 512, 140, -26, true),
+        ...getTextPoints('ENGINEER', 48, 512, 140, 26, true)
       ];
       const target2DC = [
-        ...getTextPoints('AI / ML', 66, 512, 140, -32, true),
-        ...getTextPoints('LEARNER', 66, 512, 140, 34, true)
+        ...getTextPoints('AI / ML', 50, 512, 140, -26, true),
+        ...getTextPoints('LEARNER', 48, 512, 140, 26, true)
       ];
       const targets2D = [target2DA, target2DB, target2DC];
 
@@ -401,8 +408,8 @@ export function CinematicParticleCard({ className = '' }) {
         const posAttr = geometry.attributes.position;
         const array = posAttr.array;
         const lerpSpeed = 0.08;
-        const repelRadius = 6;
-        const repelStrength = 1.5;
+        const repelRadius = 3.2;
+        const repelStrength = 0.8;
         const activeTarget = targetPositions[state.currentState];
 
         if (activeTarget) {
@@ -456,8 +463,8 @@ export function CinematicParticleCard({ className = '' }) {
     const step1 = () => {
       if (!isMounted.current) return;
       const targetA = [
-        ...getTextPoints('AYUSH', 145, 1024, 256, 3.4),
-        ...getTextPoints('PRAJAPATI', 125, 1024, 256, -4.0)
+        ...getTextPoints('AYUSH', 108, 1024, 256, 2.4),
+        ...getTextPoints('PRAJAPATI', 88, 1024, 256, -2.4)
       ];
       allTargets.push(targetA.length ? targetA : [{ x: 0, y: 0, z: 0 }]);
       idleInitHandle = runOnIdle(step2, { timeout: 100, minBudget: 12 });
@@ -466,8 +473,8 @@ export function CinematicParticleCard({ className = '' }) {
     const step2 = () => {
       if (!isMounted.current) return;
       const targetB = [
-        ...getTextPoints('FULL STACK', 110, 1024, 256, 3.4),
-        ...getTextPoints('ENGINEER', 140, 1024, 256, -4.0)
+        ...getTextPoints('FULL STACK', 82, 1024, 256, 2.4),
+        ...getTextPoints('ENGINEER', 94, 1024, 256, -2.4)
       ];
       allTargets.push(targetB.length ? targetB : [{ x: 0, y: 0, z: 0 }]);
       idleInitHandle = runOnIdle(step3, { timeout: 100, minBudget: 12 });
@@ -476,8 +483,8 @@ export function CinematicParticleCard({ className = '' }) {
     const step3 = () => {
       if (!isMounted.current) return;
       const targetC = [
-        ...getTextPoints('AI / ML', 145, 1024, 256, 3.4),
-        ...getTextPoints('LEARNER', 145, 1024, 256, -4.0)
+        ...getTextPoints('AI / ML', 96, 1024, 256, 2.4),
+        ...getTextPoints('LEARNER', 88, 1024, 256, -2.4)
       ];
       allTargets.push(targetC.length ? targetC : [{ x: 0, y: 0, z: 0 }]);
       idleInitHandle = runOnIdle(step4BuildBuffers, { timeout: 100, minBudget: 12 });
@@ -524,7 +531,7 @@ export function CinematicParticleCard({ className = '' }) {
             vColor = color + vec3(hueShift, hueShift, 0.0);
             vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
             vDepth = -mvPosition.z;
-            gl_PointSize = size * (400.0 / vDepth);
+            gl_PointSize = size * (290.0 / vDepth);
             gl_Position = projectionMatrix * mvPosition;
           }
         `,
@@ -538,7 +545,7 @@ export function CinematicParticleCard({ className = '' }) {
             vec4 texColor = texture2D(uTexture, gl_PointCoord);
             float dof = smoothstep(15.0, 25.0, vDepth) * (1.0 - smoothstep(35.0, 45.0, vDepth));
             float trail = mix(0.9, 1.0, uMorphProgress);
-            gl_FragColor = vec4(vColor, texColor.a * 1.0 * dof * trail);
+            gl_FragColor = vec4(vColor, texColor.a * 0.92 * dof * trail);
           }
         `,
         transparent: true,
@@ -574,9 +581,9 @@ export function CinematicParticleCard({ className = '' }) {
       const colors = new Float32Array(particleCount * 3);
       const sizes = new Float32Array(particleCount);
 
-      const goldColor = new THREE.Color(0xe5b869);
-      const whiteColor = new THREE.Color(0xffffff);
-      const lightGoldColor = new THREE.Color(0xf5d19a);
+      const goldColor = new THREE.Color(0xe8bd6b);
+      const lightGoldColor = new THREE.Color(0xfae1ad);
+      const whiteColor = new THREE.Color(0xfffdf0);
 
       for (let i = 0; i < particleCount; i++) {
         const i3 = i * 3;
@@ -586,15 +593,15 @@ export function CinematicParticleCard({ className = '' }) {
 
         const r = Math.random();
         let color;
-        if (r > 0.55) color = whiteColor;
-        else if (r > 0.22) color = lightGoldColor;
+        if (r > 0.80) color = whiteColor;
+        else if (r > 0.45) color = lightGoldColor;
         else color = goldColor;
 
         colors[i3] = color.r;
         colors[i3 + 1] = color.g;
         colors[i3 + 2] = color.b;
 
-        sizes[i] = Math.random() * 0.15 + 0.1;
+        sizes[i] = Math.random() * 0.09 + 0.06;
       }
 
       geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));

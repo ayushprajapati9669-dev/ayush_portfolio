@@ -43,10 +43,10 @@ self.onmessage = function (e) {
     const colors = new Float32Array(particleCount * 3);
     const sizes = new Float32Array(particleCount);
 
-    // Color definitions (Gold, White, Light Gold)
-    const gold = [0.898, 0.722, 0.412];     // #e5b869
-    const white = [1.0, 1.0, 1.0];          // #ffffff
-    const lightGold = [0.961, 0.820, 0.604]; // #f5d19a
+    // Color definitions (Luxury Rich Gold, Warm Light Gold, White Sparkle)
+    const gold = [0.91, 0.74, 0.42];        // #e8bd6b rich champagne gold
+    const lightGold = [0.98, 0.88, 0.68];   // #fae1ad warm shimmering gold
+    const white = [1.0, 0.98, 0.94];        // warm diamond sparkle
 
     for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3;
@@ -56,15 +56,15 @@ self.onmessage = function (e) {
 
       const r = Math.random();
       let c;
-      if (r > 0.55) c = white;
-      else if (r > 0.22) c = lightGold;
-      else c = gold;
+      if (r > 0.80) c = white;         // 20% sparkling highlights
+      else if (r > 0.45) c = lightGold; // 35% warm light gold
+      else c = gold;                   // 45% rich champagne gold
 
       colors[i3] = c[0];
       colors[i3 + 1] = c[1];
       colors[i3 + 2] = c[2];
 
-      sizes[i] = Math.random() * 0.15 + 0.1;
+      sizes[i] = Math.random() * 0.09 + 0.06;
     }
 
     // Zero-copy transfer of all typed array buffers

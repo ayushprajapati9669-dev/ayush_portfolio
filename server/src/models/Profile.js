@@ -10,7 +10,7 @@ const ProfileSchema = new mongoose.Schema({
   heroDescription: { type: String, default: '' },
   availabilityLabel: { type: String, default: '' },
   primaryCtaText: { type: String, default: 'Explore my work' },
-  secondaryCtaText: { type: String, default: "Let's connect" },
+  secondaryCtaText: { type: String, default: "Download Resume" },
   education: { type: mongoose.Schema.Types.Mixed },
   aboutBio: { type: [String], default: [] },
   focusAreas: { type: Array, default: [] },

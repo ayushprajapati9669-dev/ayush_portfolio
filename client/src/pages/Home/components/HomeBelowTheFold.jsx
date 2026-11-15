@@ -279,16 +279,6 @@ export function HomeBelowTheFold({
       </div>
 
       {/* =========================================================================
-          SECTION 01.5: The 0 to 1 Journey Milestone Card
-          ========================================================================= */}
-      <section className="pt-2">
-        <ZeroToOneJourneyCard
-          items={p.learningJourney}
-          onExploreJourney={() => goTo('/journey')}
-        />
-      </section>
-
-      {/* =========================================================================
           SECTION 02: Quick Directory Executive Buttons
           ========================================================================= */}
       <section id="portfolio-directories" className="border-t hairline-border pt-12 pb-2 space-y-6">
@@ -466,47 +456,6 @@ export function HomeBelowTheFold({
               <span className="arrow">→</span>
             </div>
           </button>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 02.5: Engineering Impact & Capabilities Matrix
-          ========================================================================= */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-2">
-        <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-amber-400/30 transition-all group backdrop-blur-sm">
-          <span className="font-mono text-3xl sm:text-4xl font-extrabold text-amber-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
-            {publishedProjects.length}+
-          </span>
-          <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
-            Live Applications Deployed
-          </span>
-        </div>
-
-        <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-cyan-400/30 transition-all group backdrop-blur-sm">
-          <span className="font-mono text-3xl sm:text-4xl font-extrabold text-cyan-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
-            {allSkillItems.length}+
-          </span>
-          <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
-            Technologies & Tools
-          </span>
-        </div>
-
-        <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-emerald-400/30 transition-all group backdrop-blur-sm">
-          <span className="font-mono text-3xl sm:text-4xl font-extrabold text-emerald-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
-            {certificates.length > 0 ? certificates.length : '8.42'}
-          </span>
-          <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
-            {certificates.length > 0 ? 'Verified Accreditations' : 'B.Tech CSE CGPA'}
-          </span>
-        </div>
-
-        <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/8 hover:border-rose-400/30 transition-all group backdrop-blur-sm">
-          <span className="font-mono text-3xl sm:text-4xl font-extrabold text-rose-300 block tracking-tight group-hover:scale-105 transition-transform origin-left">
-            100%
-          </span>
-          <span className="text-xs font-mono text-white/50 uppercase tracking-wider block mt-1.5">
-            Code Craft & Dedication
-          </span>
         </div>
       </section>
 

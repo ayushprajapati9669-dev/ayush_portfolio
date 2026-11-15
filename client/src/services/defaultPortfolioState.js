@@ -63,7 +63,7 @@ export function getDefaultPortfolioState() {
       heroDescription: 'Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42) skilled in C, Java, JavaScript, Python, React.js, Node.js, Express.js, MySQL, and MongoDB. Winner of a college website-making competition.',
       availabilityLabel: 'CSE @ SISTec, Bhopal · CGPA: 8.42 (2028)',
       primaryCtaText: 'Explore Live Projects',
-      secondaryCtaText: "Let's Connect",
+      secondaryCtaText: 'Download Resume',
       footerTagline: 'Ayush Prajapati · ayushprajapati9669@gmail.com · (+91) 9669802554 · SISTec, Bhopal',
       resumeUrl: '/images/Ayush_Prajapati_Resume.pdf',
       resumePreviewUrl: '/images/ayush-resume-preview.jpg',

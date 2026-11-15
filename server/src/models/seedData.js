@@ -9,7 +9,7 @@ const INITIAL_SEED_DATA = {
     heroDescription: "I’m a Computer Science student exploring the intersection of web engineering, problem solving, and intelligent applications. I enjoy turning ideas into useful digital products and continuously improving how I build them.",
     availabilityLabel: "Open to learning opportunities & SWE internships",
     primaryCtaText: "Explore my work",
-    secondaryCtaText: "Let's connect",
+    secondaryCtaText: "Download Resume",
     education: {
       degree: "B.Tech in Computer Science and Engineering",
       college: "SISTec (Sagar Institute of Science and Technology)",

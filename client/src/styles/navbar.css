@@ -2291,15 +2291,15 @@ a.btn-primary:hover {
   display: flex !important;
   align-items: center !important;
   gap: 14px !important;
-  min-height: 52px !important;
+  min-height: 48px !important;
   padding: 0 16px !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   border: 1px solid rgba(255, 255, 255, 0.06) !important;
   background: rgba(18, 18, 24, 0.6) !important;
   color: #b0b0ba !important;
   text-decoration: none !important;
   font-weight: 500 !important;
-  font-size: 0.98rem !important;
+  font-size: 0.94rem !important;
   font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif !important;
   transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.35s var(--spring) !important;
 }
@@ -2400,8 +2400,8 @@ a.btn-primary:hover {
   left: 0 !important;
   right: 0 !important;
   top: 0 !important;
-  height: 52px !important;
-  border-radius: 14px !important;
+  height: 48px !important;
+  border-radius: 12px !important;
   pointer-events: none !important;
   opacity: 0 !important;
   border: 1px solid rgba(223, 183, 64, 0.38) !important;
@@ -2434,49 +2434,53 @@ a.btn-primary:hover {
 /* Drawer Footer */
 .mobile-drawer .drawer-foot {
   display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 12px !important;
+  flex-direction: column !important;
+  gap: 14px !important;
   padding-top: 16px !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
   margin-top: auto !important;
   flex-shrink: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .mobile-drawer .socials {
-  flex: 1 1 100% !important;
   display: flex !important;
   justify-content: center !important;
+  align-items: center !important;
   gap: 12px !important;
+  width: 100% !important;
 }
 
 .mobile-drawer .socials a {
-  width: 44px !important;
-  height: 44px !important;
+  width: 38px !important;
+  height: 38px !important;
   border-radius: 50% !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   background: rgba(18, 18, 24, 0.75) !important;
   display: grid !important;
   place-items: center !important;
-  transition: transform 0.3s var(--spring), border-color 0.25s ease, background 0.25s ease !important;
+  transition: transform 0.25s var(--spring), border-color 0.2s ease, background 0.2s ease, box-shadow 0.25s ease !important;
   text-decoration: none !important;
 }
 
 .mobile-drawer .socials a:hover,
 .mobile-drawer .socials a:active {
-  transform: scale(1.08) !important;
+  transform: translateY(-2px) scale(1.06) !important;
   border-color: rgba(223, 183, 64, 0.45) !important;
   background: rgba(26, 26, 36, 0.95) !important;
+  box-shadow: 0 4px 12px rgba(223, 183, 64, 0.15) !important;
 }
 
 .mobile-drawer .socials svg {
-  width: 19px !important;
-  height: 19px !important;
+  width: 17px !important;
+  height: 17px !important;
   stroke: #94949e !important;
   fill: none !important;
   stroke-width: 1.8 !important;
   stroke-linecap: round !important;
   stroke-linejoin: round !important;
-  transition: stroke 0.25s ease !important;
+  transition: stroke 0.2s ease !important;
 }
 
 .mobile-drawer .socials a:hover svg,
@@ -2484,23 +2488,33 @@ a.btn-primary:hover {
   stroke: #dfb740 !important;
 }
 
+/* Drawer Action Buttons Grid Container */
+.mobile-drawer .drawer-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
 .mobile-drawer .btn {
-  flex: 1 1 130px !important;
-  min-height: 48px !important;
-  padding: 0 18px !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  height: 40px !important;
+  padding: 0 14px !important;
   border-radius: 9999px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
+  gap: 6px !important;
   font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif !important;
   font-weight: 600 !important;
-  font-size: 0.95rem !important;
-  letter-spacing: 0.01em !important;
+  font-size: 0.84rem !important;
+  letter-spacing: 0.02em !important;
   text-decoration: none !important;
   cursor: pointer !important;
   white-space: nowrap !important;
-  transition: transform 0.25s var(--spring), box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease !important;
+  transition: transform 0.2s var(--spring), box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
   box-sizing: border-box !important;
 }
 
@@ -2508,28 +2522,39 @@ a.btn-primary:hover {
   transform: scale(0.97) !important;
 }
 
+.mobile-drawer .btn-arrow {
+  font-size: 0.85rem !important;
+  transition: transform 0.2s ease !important;
+}
+
+.mobile-drawer .btn-ghost:hover .btn-arrow {
+  transform: translate(2px, -2px) !important;
+}
+
 .mobile-drawer .btn-ghost {
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   background: rgba(255, 255, 255, 0.04) !important;
-  color: #f4f1ec !important;
+  color: #e4e4e7 !important;
 }
 
 .mobile-drawer .btn-ghost:hover {
   border-color: rgba(223, 183, 64, 0.45) !important;
   background: rgba(223, 183, 64, 0.08) !important;
   color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
 }
 
 .mobile-drawer .btn-solid {
-  border: none !important;
-  background: #f4f1ec !important;
-  color: #030303 !important;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: #ffffff !important;
+  color: #09090b !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.12) !important;
 }
 
 .mobile-drawer .btn-solid:hover {
-  background: #ffffff !important;
-  box-shadow: 0 4px 20px rgba(223, 183, 64, 0.25) !important;
+  background: #f8fafc !important;
+  box-shadow: 0 4px 18px rgba(223, 183, 64, 0.25) !important;
   transform: translateY(-1px) !important;
 }
 

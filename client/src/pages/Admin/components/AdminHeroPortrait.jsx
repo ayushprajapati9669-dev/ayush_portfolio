@@ -28,7 +28,7 @@ export function AdminHeroPortrait({
   const [heroTitle, setHeroTitle] = useState(p.headline || p.supportingHeadline || "Hi, I'm Ayush.");
   const [statusTag, setStatusTag] = useState(p.availabilityLabel || 'Open to SWE Internships');
   const [primaryCta, setPrimaryCta] = useState(p.primaryCtaText || 'View Projects');
-  const [secondaryCta, setSecondaryCta] = useState(p.secondaryCtaText || 'Contact Me');
+  const [secondaryCta, setSecondaryCta] = useState(p.secondaryCtaText || 'Download Resume');
   const [themeColor, setThemeColor] = useState(p.themeColor || '#d4af37');
   const [fontFamily, setFontFamily] = useState(p.fontFamily || "'Inter', sans-serif");
   const [photoUrl, setPhotoUrl] = useState(p.photoUrl || p.portrait?.url || '/images/ayush-hero-portrait.jpg');
@@ -1024,7 +1024,7 @@ export function AdminHeroPortrait({
                     type="text"
                     value={secondaryCta}
                     onChange={(e) => handleFieldChange(setSecondaryCta, e.target.value)}
-                    placeholder="e.g. Contact Me"
+                    placeholder="e.g. Download Resume"
                     className="hero-form-control"
                   />
                 </div>
@@ -1206,7 +1206,7 @@ export function AdminHeroPortrait({
                             window.open('/contact', '_blank');
                           }}
                         >
-                          {secondaryCta || 'Contact Me'}
+                          {secondaryCta || 'Download Resume'}
                         </button>
                       </div>
                     </div>

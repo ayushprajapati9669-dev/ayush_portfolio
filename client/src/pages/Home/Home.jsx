@@ -384,15 +384,6 @@ export function HomePage() {
               },
               '-=0.5'
             )
-            .from(
-              '.hero-modern-desc',
-              {
-                y: 16,
-                opacity: 0,
-                duration: d3
-              },
-              '-=0.4'
-            )
             .fromTo(
               '.hero-features-strip',
               { y: 16, opacity: 0 },
@@ -447,10 +438,6 @@ export function HomePage() {
             imgClassName={`hero-photo-img ${isPhotoWide ? 'wide' : ''}`}
             onPhotoFit={checkPhotoFit}
           />
-          <div className="hero-photo-status-badge" aria-hidden="true">
-            <span className="hero-photo-pulse-dot" />
-            <span className="hero-photo-badge-text">{p.availabilityLabel ? (p.availabilityLabel.length > 25 ? 'Available for hire' : p.availabilityLabel) : 'Available for hire'}</span>
-          </div>
         </div>
 
         {/* Top Eyebrow Meta Row */}
@@ -523,13 +510,7 @@ export function HomePage() {
               </span>.
             </span>
           </h1>
-
-          {/* Modern Description matching Reference Image 1 & index (14).html */}
-          <p className="hero-modern-desc">
-            {p.heroDescription || "I’m a Computer Science student from Bhopal exploring web engineering, problem-solving, and intelligent applications."}
-          </p>
-
-          </div>
+        </div>
 
         {/* Bottom Hero Features Strip matching Image 1 & index (14).html */}
         <div className="hero-features-strip">
@@ -571,7 +552,7 @@ export function HomePage() {
                 <polyline points="10 9 9 9 8 9" />
               </svg>
             </span>
-            <span>{p.secondaryCtaText ? p.secondaryCtaText : <>Download my <strong>resume</strong></>}</span>
+            <span>{p.secondaryCtaText && p.secondaryCtaText !== "Let's Connect" ? p.secondaryCtaText : 'Download Resume'}</span>
           </button>
 
           <button

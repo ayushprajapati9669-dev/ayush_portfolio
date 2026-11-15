@@ -1308,6 +1308,19 @@ export function Header() {
               </svg>
             </a>
             <a
+              href={p.socialLinks?.instagram || p.instagramUrl || 'https://www.instagram.com/ayush7162/'}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              onClick={() => playTick()}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+            </a>
+            <a
               href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}
               aria-label="Email"
               onClick={() => playTick()}
@@ -1319,46 +1332,49 @@ export function Header() {
             </a>
           </div>
 
-          {!isAdmin ? (
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => {
-                playTick();
-                setMobileMenuOpen(false);
-                if (openResumeModal) {
-                  openResumeModal();
-                } else {
-                  showToast('Opening Resume...');
-                }
-              }}
-            >
-              Resume ↗
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => {
-                playTick();
-                setMobileMenuOpen(false);
-                setCmdOpen(true);
-              }}
-            >
-              <i className="fa-solid fa-magnifying-glass mr-1" /> Search ⌘K
-            </button>
-          )}
+          <div className="drawer-actions">
+            {!isAdmin ? (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => {
+                  playTick();
+                  setMobileMenuOpen(false);
+                  if (openResumeModal) {
+                    openResumeModal();
+                  } else {
+                    showToast('Opening Resume...');
+                  }
+                }}
+              >
+                <span>Resume</span>
+                <span className="btn-arrow" aria-hidden="true">↗</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => {
+                  playTick();
+                  setMobileMenuOpen(false);
+                  setCmdOpen(true);
+                }}
+              >
+                <i className="fa-solid fa-magnifying-glass mr-1" /> Search ⌘K
+              </button>
+            )}
 
-          <Link
-            to="/contact"
-            className="btn btn-solid"
-            onClick={() => {
-              playTick();
-              setMobileMenuOpen(false);
-            }}
-          >
-            Hire / Connect
-          </Link>
+            <Link
+              to="/contact"
+              className="btn btn-solid"
+              onClick={() => {
+                playTick();
+                setMobileMenuOpen(false);
+              }}
+            >
+              <span>Hire / Connect</span>
+            </Link>
+          </div>
         </div>
       </aside>
 
