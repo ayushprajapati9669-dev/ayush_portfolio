@@ -80,9 +80,10 @@
 
 /* Sections Containers: Max width and generous horizontal padding */
 .journey-page > .spotlight-section,
+.journey-page > .journey-split-wrapper,
 .journey-page > .leetcode-section,
 .journey-page > .bottom-section {
-  max-width: 1280px !important;
+  max-width: 1400px !important;
   width: 100% !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -90,17 +91,181 @@
   box-sizing: border-box !important;
 }
 
+/* ==========================================================================
+   Interactive Horizontally Resizable Split Layout (LeetCode + Achievements)
+   ========================================================================== */
+.journey-split-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  gap: 28px;
+  box-sizing: border-box;
+}
+
+.journey-split-wrapper.is-resizing {
+  user-select: none !important;
+  cursor: col-resize !important;
+}
+
+.journey-split-pane {
+  box-sizing: border-box;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.journey-split-pane-left {
+  container-type: inline-size;
+}
+
+.journey-split-wrapper .leetcode-section,
+.journey-split-wrapper .bottom-section {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.journey-split-wrapper .leetcode-mastery-card,
+.journey-split-wrapper .about-card {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+.journey-split-wrapper .about-card {
+  padding: 28px 32px !important;
+}
+
+.journey-split-wrapper .timeline-list {
+  flex: 1 1 auto !important;
+  max-height: 560px !important;
+  overflow-y: auto !important;
+  padding-right: 10px !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(212, 175, 55, 0.4) transparent !important;
+}
+
+.journey-split-wrapper .timeline-list::-webkit-scrollbar {
+  width: 5px !important;
+}
+.journey-split-wrapper .timeline-list::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.journey-split-wrapper .timeline-list::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.35) !important;
+  border-radius: 9999px !important;
+}
+.journey-split-wrapper .timeline-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.7) !important;
+}
+
+/* Draggable Splitter (Hidden on mobile, active on desktop) */
+.journey-split-divider {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .journey-split-wrapper {
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+  }
+
+  .journey-split-pane-left {
+    flex: 0 0 var(--split-ratio, 48%) !important;
+    width: var(--split-ratio, 48%) !important;
+    max-width: var(--split-ratio, 48%) !important;
+  }
+
+  .journey-split-divider {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 24px !important;
+    width: 24px !important;
+    margin: 0 -4px !important;
+    cursor: col-resize !important;
+    user-select: none !important;
+    touch-action: none !important;
+    z-index: 10 !important;
+    position: relative !important;
+  }
+
+  .journey-split-divider .split-divider-line {
+    flex: 1 1 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, rgba(212, 175, 55, 0.25) 20%, rgba(212, 175, 55, 0.25) 80%, transparent);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .journey-split-divider .split-divider-pill {
+    width: 22px;
+    height: 48px;
+    border-radius: 9999px;
+    background: rgba(16, 18, 25, 0.96);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d4af37;
+    font-size: 11px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .journey-split-divider:hover .split-divider-pill,
+  .journey-split-divider.active .split-divider-pill {
+    background: #d4af37;
+    color: #0c0d12;
+    border-color: #fef08a;
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.65), 0 4px 14px rgba(0, 0, 0, 0.8);
+  }
+
+  .journey-split-divider:hover .split-divider-line,
+  .journey-split-divider.active .split-divider-line {
+    background: linear-gradient(180deg, transparent, #d4af37 20%, #d4af37 80%, transparent);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.45);
+  }
+
+  .journey-split-pane-right {
+    flex: 1 1 0 !important;
+    width: calc(100% - var(--split-ratio, 48%) - 16px) !important;
+    max-width: calc(100% - var(--split-ratio, 48%) - 16px) !important;
+  }
+}
+
+/* Container query for responsive LeetCode inside pane */
+@container (max-width: 620px) {
+  .journey-split-pane-left .lmc-layout-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 .journey-page .spotlight-section {
   margin: 0 auto 52px auto !important;
 }
 
-.journey-page .leetcode-section {
+/* Legacy standalone section margins (now handled by split wrapper on desktop) */
+.journey-page > .leetcode-section {
   margin: 52px auto !important;
 }
 
-.journey-page .bottom-section {
-  display: block !important;
+.journey-page > .bottom-section {
   margin: 52px auto 60px auto !important;
+}
+
+/* Split wrapper vertical spacing */
+.journey-page > .journey-split-wrapper {
+  margin-top: 52px !important;
+  margin-bottom: 60px !important;
 }
 
 /* Shared Card Architecture */

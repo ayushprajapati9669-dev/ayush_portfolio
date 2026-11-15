@@ -199,7 +199,7 @@ export function HomeBelowTheFold({
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-stretch">
           <TiltCard
-            className="bento-bio-card lg:col-span-6 glass-card rounded-3xl p-7 sm:p-8 space-y-4 text-stonewarm leading-relaxed cursor-default transition-shadow hover:shadow-cyan-500/10 flex flex-col justify-between"
+            className="bento-bio-card order-2 lg:order-1 lg:col-span-6 glass-card rounded-3xl p-7 sm:p-8 space-y-4 text-stonewarm leading-relaxed cursor-default transition-shadow hover:shadow-cyan-500/10 flex flex-col justify-between"
             onMouseMove={handleCardMouseMove}
             onMouseLeave={handleCardMouseLeave}
           >
@@ -214,7 +214,7 @@ export function HomeBelowTheFold({
             </div>
           </TiltCard>
 
-          <div className="lg:col-span-6 flex items-stretch">
+          <div className="order-1 lg:order-2 lg:col-span-6 flex items-stretch">
             <LazyInView minHeight="380px" className="h-full w-full">
               <CinematicParticleCard className="h-full min-h-[380px]" />
             </LazyInView>

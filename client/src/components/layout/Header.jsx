@@ -1280,10 +1280,26 @@ export function Header() {
               ))}
             </ul>
           </div>
+
+          {/* Executive Context Badge (Top 1% Polish) */}
+          <div className="drawer-context-card" style={{ '--i': navItems.length + 1 }}>
+            <div className="dcc-header">
+              <span className="dcc-dot" />
+              <span className="dcc-title">ENGINEERING CRAFT</span>
+              <span className="dcc-badge">PRO</span>
+            </div>
+            <div className="dcc-body">
+              <span>Full-Stack &amp; Scalable Cloud Systems</span>
+            </div>
+            <div className="dcc-foot">
+              <span>Bhopal, India · IST</span>
+              <span>SISTec · 8.42 CGPA</span>
+            </div>
+          </div>
         </div>
 
         {/* Drawer Foot */}
-        <div className="drawer-foot mobile-drawer-footer" style={{ '--i': navItems.length + 1 }}>
+        <div className="drawer-foot mobile-drawer-footer" style={{ '--i': navItems.length + 2 }}>
           <div className="socials">
             <a
               href={p.githubUrl || 'https://github.com/ayushprajapati9669-dev'}
@@ -1373,6 +1389,7 @@ export function Header() {
               }}
             >
               <span>Hire / Connect</span>
+              <span className="btn-arrow" aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
