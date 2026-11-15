@@ -51,72 +51,34 @@ export function AdminVoiceAssistant({
     setStatus(nextStatus);
   };
 
-  // Stop hardware audio meter
+  // Audio telemetry animation for waveform bars (driven cleanly by speech recognition state)
   const stopAudioTelemetry = useCallback(() => {
     if (animFrameRef.current) {
       cancelAnimationFrame(animFrameRef.current);
       animFrameRef.current = null;
     }
-    if (mediaStreamRef.current) {
-      try {
-        mediaStreamRef.current.getTracks().forEach((track) => track.stop());
-      } catch (_e) {}
-      mediaStreamRef.current = null;
-    }
-    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-      try {
-        audioContextRef.current.close();
-      } catch (_e) {}
-      audioContextRef.current = null;
-    }
-    analyserRef.current = null;
     setMicAudioLevel(0);
   }, []);
 
-  // Initialize live microphone hardware volume telemetry (Web Audio API)
-  const startAudioTelemetry = useCallback(async () => {
-    if (typeof window === 'undefined' || !navigator.mediaDevices?.getUserMedia) return;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaStreamRef.current = stream;
-
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const audioCtx = new AudioCtx();
-      audioContextRef.current = audioCtx;
-
-      const source = audioCtx.createMediaStreamSource(stream);
-      const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 64;
-      analyser.smoothingTimeConstant = 0.5;
-      source.connect(analyser);
-      analyserRef.current = analyser;
-
-      const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-      const checkVolume = () => {
-        if (!analyserRef.current) return;
-        analyserRef.current.getByteFrequencyData(dataArray);
-        let sum = 0;
-        for (let i = 0; i < dataArray.length; i++) {
-          sum += dataArray[i];
-        }
-        const avg = sum / dataArray.length;
-        const normalized = Math.min(100, Math.round((avg / 128) * 100));
-        setMicAudioLevel(normalized);
-
-        // If high audio volume detected and currently idle/listening, indicate speech
-        if (normalized > 14 && statusRef.current === 'listening') {
-          updateStatus('processing');
-        }
-
-        animFrameRef.current = requestAnimationFrame(checkVolume);
-      };
-
-      checkVolume();
-    } catch (_err) {
-      // Audio telemetry is optional enhancement; fallback to speech recognition events
-    }
+  const startAudioTelemetry = useCallback(() => {
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    let step = 0;
+    const tickWave = () => {
+      step += 0.18;
+      if (statusRef.current === 'processing') {
+        // High energetic speech response
+        const dynamic = Math.round(55 + Math.sin(step * 2.8) * 25 + Math.cos(step * 4.2) * 15);
+        setMicAudioLevel(Math.min(95, Math.max(35, dynamic)));
+      } else if (statusRef.current === 'listening') {
+        // Gentle ambient breath pulse
+        const ambient = Math.round(18 + Math.sin(step) * 6);
+        setMicAudioLevel(ambient);
+      } else {
+        setMicAudioLevel(0);
+      }
+      animFrameRef.current = requestAnimationFrame(tickWave);
+    };
+    animFrameRef.current = requestAnimationFrame(tickWave);
   }, []);
 
   // Stop listening completely
@@ -187,12 +149,12 @@ export function AdminVoiceAssistant({
         }
 
         if (recognized && shouldAutoClose) {
-          // Auto-dismiss modal after 650ms so user lands directly on what they requested
+          // Direct, swift auto-dismiss after 350ms so user immediately lands on target form
           setTimeout(() => {
             stopListening();
             setActive(false);
             if (onClose) onClose();
-          }, 650);
+          }, 350);
         } else {
           setTimeout(() => {
             if (isListeningWantedRef.current) {
@@ -206,20 +168,41 @@ export function AdminVoiceAssistant({
       };
 
       // -----------------------------------------------------------------------
-      // 1. Projects - Create new project wizard
-      // Matches: "add project", "create project", "new project", "project add karo", "naya project", "project banao"
+      // 1. Projects - Create new project wizard / form
+      // Matches: "add new project", "add project", "create project", "new project", "project add karo", "naya project", "project banao", "open project form", "project form", "naya project form"
       // -----------------------------------------------------------------------
       if (
-        (clean.includes('project') && (clean.includes('add') || clean.includes('create') || clean.includes('new') || clean.includes('wizard') || clean.includes('banao') || clean.includes('karo'))) ||
-        clean === 'add project' || clean === 'create project' || clean === 'new project' || clean === 'naya project'
+        clean === 'add new project' ||
+        clean === 'add project' ||
+        clean === 'create project' ||
+        clean === 'new project' ||
+        clean === 'naya project' ||
+        clean === 'project form' ||
+        clean.includes('add new project') ||
+        clean.includes('new project') ||
+        clean.includes('project form') ||
+        clean.includes('project creator') ||
+        clean.includes('naya project') ||
+        clean.includes('project banao') ||
+        clean.includes('project add') ||
+        (clean.includes('project') && (
+          clean.includes('add') ||
+          clean.includes('create') ||
+          clean.includes('new') ||
+          clean.includes('wizard') ||
+          clean.includes('form') ||
+          clean.includes('banao') ||
+          clean.includes('karo') ||
+          clean.includes('kholo') ||
+          clean.includes('creator')
+        ))
       ) {
-        showToast('Voice Command: Opening Project Creator Wizard', 'fa-plus');
+        showToast('Voice Command: Opening Project Creator Form', 'fa-plus');
+        dispatchTab('projects');
+        navigate('/admin?tab=projects&create=true');
         window.dispatchEvent(new CustomEvent('ams-create-project'));
         if (onOpenAddProject) {
-          onOpenAddProject();
-        } else {
-          dispatchTab('projects');
-          navigate('/admin?tab=projects&create=true');
+          try { onOpenAddProject(); } catch (_e) {}
         }
         finishExecution('Add New Project');
         return;
@@ -232,6 +215,7 @@ export function AdminVoiceAssistant({
       if (clean.includes('project') || clean.includes('portfolio work')) {
         showToast('Voice Command: Navigating to Projects CMS', 'fa-layer-group');
         dispatchTab('projects');
+        navigate('/admin?tab=projects');
         finishExecution('Go to Projects');
         return;
       }
@@ -250,6 +234,7 @@ export function AdminVoiceAssistant({
       ) {
         showToast('Voice Command: Opening Messages & Inquiries', 'fa-envelope');
         dispatchTab('messages');
+        navigate('/admin?tab=messages');
         finishExecution('Go to Messages');
         return;
       }
@@ -267,6 +252,7 @@ export function AdminVoiceAssistant({
       ) {
         showToast('Voice Command: Navigating to Overview Dashboard', 'fa-chart-pie');
         dispatchTab('dashboard');
+        navigate('/admin');
         finishExecution('Go to Dashboard');
         return;
       }
@@ -284,6 +270,7 @@ export function AdminVoiceAssistant({
       ) {
         showToast('Voice Command: Navigating to Certificates CMS', 'fa-shield-halved');
         dispatchTab('certificates');
+        navigate('/admin?tab=certificates');
         finishExecution('Go to Certificates');
         return;
       }
@@ -295,6 +282,7 @@ export function AdminVoiceAssistant({
       if (clean.includes('skill') || clean.includes('tech stack') || clean.includes('technology') || clean.includes('technologies')) {
         showToast('Voice Command: Navigating to Skills CMS', 'fa-code');
         dispatchTab('skills');
+        navigate('/admin?tab=skills');
         finishExecution('Go to Skills');
         return;
       }
@@ -315,19 +303,20 @@ export function AdminVoiceAssistant({
           clean.includes('create') ||
           clean.includes('add') ||
           clean.includes('wizard') ||
-          clean.includes('banao')
+          clean.includes('banao') ||
+          clean.includes('karo') ||
+          clean.includes('form')
         ) {
           showToast('Voice Command: Creating New Milestone', 'fa-plus');
           dispatchTab('milestones');
+          navigate('/admin?tab=milestones&create=true');
           window.dispatchEvent(new CustomEvent('ams-open-milestone-wizard'));
-          setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('ams-open-milestone-wizard'));
-          }, 150);
           finishExecution('New Milestone');
           return;
         }
         showToast('Voice Command: Navigating to Career Milestones CMS', 'fa-trophy');
         dispatchTab('milestones');
+        navigate('/admin?tab=milestones');
         finishExecution('Go to Milestones');
         return;
       }
@@ -527,7 +516,7 @@ export function AdminVoiceAssistant({
   );
 
   // Start Speech Recognition & Hardware Audio Telemetry
-  const startListening = useCallback(() => {
+  const startListening = useCallback(async () => {
     if (statusRef.current === 'executing') return;
     isListeningWantedRef.current = true;
     const SpeechRecognition =
@@ -539,7 +528,42 @@ export function AdminVoiceAssistant({
       return;
     }
 
-    // Start hardware audio telemetry stream
+    // Step 1: Ensure Chrome microphone permission is requested / active via getUserMedia
+    try {
+      if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+        // Query permission if available
+        if (navigator.permissions && navigator.permissions.query) {
+          try {
+            const p = await navigator.permissions.query({ name: 'microphone' });
+            if (p.state === 'denied') {
+              isListeningWantedRef.current = false;
+              updateStatus('error');
+              setErrorMsg('Microphone blocked. Click the lock/tune icon in the Chrome address bar, set Microphone to "Allow", and reload.');
+              return;
+            }
+          } catch (_e) {}
+        }
+        
+        // This triggers Chrome's "Allow / Block" permission prompt if state is 'prompt'
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Release tracks immediately so it doesn't hold hardware exclusive lock
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    } catch (err) {
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        isListeningWantedRef.current = false;
+        updateStatus('error');
+        setErrorMsg('Microphone permission was denied. Please allow microphone in Chrome (click the tune/lock icon in address bar) and click Start Listening.');
+        return;
+      }
+      if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        isListeningWantedRef.current = false;
+        updateStatus('error');
+        setErrorMsg('No microphone hardware detected. Please connect a microphone or headset.');
+        return;
+      }
+    }
+
     startAudioTelemetry();
 
     try {
@@ -559,6 +583,14 @@ export function AdminVoiceAssistant({
         updateStatus('listening');
         setErrorMsg(null);
         window.dispatchEvent(new CustomEvent('ams-voice-active', { detail: { active: true } }));
+      };
+
+      recognition.onspeechstart = () => {
+        if (statusRef.current !== 'executing') updateStatus('processing');
+      };
+
+      recognition.onspeechend = () => {
+        if (statusRef.current !== 'executing') updateStatus('processing');
       };
 
       recognition.onresult = (event) => {
@@ -591,33 +623,64 @@ export function AdminVoiceAssistant({
         if (finalTranscript.trim()) {
           handleCommandExecution(finalTranscript.trim());
         } else if (interim.trim()) {
-          // If user pauses for 650ms on interim speech, execute directly from interim buffer
-          const capturedInterim = interim.trim();
-          silenceTimerRef.current = setTimeout(() => {
-            handleCommandExecution(capturedInterim);
-          }, 650);
+          const lower = interim.toLowerCase().trim();
+          // Instant interim match for immediate execution & redirection without waiting
+          if (
+            lower.includes('project') ||
+            lower.includes('message') ||
+            lower.includes('inbox') ||
+            lower.includes('overview') ||
+            lower.includes('dashboard') ||
+            lower.includes('milestone') ||
+            lower.includes('theme') ||
+            lower.includes('terminal') ||
+            lower.includes('site') ||
+            lower.includes('skill') ||
+            lower.includes('cert') ||
+            lower.includes('seo') ||
+            lower.includes('setting') ||
+            lower.includes('profile') ||
+            lower.includes('media') ||
+            lower.includes('security')
+          ) {
+            handleCommandExecution(lower);
+          } else {
+            // If user pauses briefly (300ms), execute from interim
+            const capturedInterim = interim.trim();
+            silenceTimerRef.current = setTimeout(() => {
+              handleCommandExecution(capturedInterim);
+            }, 300);
+          }
         }
       };
 
       recognition.onerror = (event) => {
+        console.warn('SpeechRecognition error:', event.error);
         if (event.error === 'not-allowed') {
           isListeningWantedRef.current = false;
           updateStatus('error');
-          setErrorMsg('Microphone permission was denied. Please allow microphone in browser settings or type commands below.');
+          setErrorMsg('Microphone blocked. Click the lock/tune icon in the Chrome address bar to Allow.');
         } else if (event.error === 'audio-capture') {
+          isListeningWantedRef.current = false;
           updateStatus('error');
-          setErrorMsg('No microphone hardware detected. Please connect or un-mute your microphone.');
+          setErrorMsg('Microphone hardware busy or muted. Check Windows microphone volume & Lenovo F4 key.');
+        } else if (event.error === 'network') {
+          updateStatus('error');
+          setErrorMsg('Google Speech recognition service offline or blocked. Click quick chips or type below.');
         } else if (event.error !== 'no-speech') {
           setErrorMsg(`Voice notice: ${event.error}`);
         }
       };
 
       recognition.onend = () => {
-        // Safe, non-flickering reconnection: instantiate a fresh SpeechRecognition without blinking UI
+        // If error or executing, don't overwrite with idle or restart in a loop
+        if (statusRef.current === 'error' || statusRef.current === 'executing') {
+          return;
+        }
         if (isListeningWantedRef.current) {
           if (restartTimerRef.current) clearTimeout(restartTimerRef.current);
           restartTimerRef.current = setTimeout(() => {
-            if (isListeningWantedRef.current) {
+            if (isListeningWantedRef.current && statusRef.current !== 'error' && statusRef.current !== 'executing') {
               try {
                 startListening();
               } catch (_e) {}
@@ -791,7 +854,11 @@ export function AdminVoiceAssistant({
 
           <button
             type="button"
-            onClick={isMicActive ? stopListening : startListening}
+            onClick={() => {
+              playTick();
+              if (isMicActive) stopListening();
+              else startListening();
+            }}
             className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl transition-all duration-300 shadow-xl cursor-pointer ${
               status === 'executing'
                 ? 'bg-gradient-to-tr from-emerald-500 to-teal-400 text-black shadow-emerald-500/40 scale-105'
@@ -974,7 +1041,11 @@ export function AdminVoiceAssistant({
         <div className="flex items-center justify-between pt-2 border-t border-white/10">
           <button
             type="button"
-            onClick={isMicActive ? stopListening : startListening}
+            onClick={() => {
+              playTick();
+              if (isMicActive) stopListening();
+              else startListening();
+            }}
             className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-colors cursor-pointer"
           >
             <i className={`fa-solid ${isMicActive ? 'fa-microphone-slash' : 'fa-microphone'} mr-1.5`} />

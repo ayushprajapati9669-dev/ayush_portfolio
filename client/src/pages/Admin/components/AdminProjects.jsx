@@ -1,4 +1,4 @@
-import React, {  useState, useRef, useEffect, useMemo  } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { uploadImageViaCloudinary, apiRequest } from '../../../services/api';
 import { validateProjectForm } from '../../../utils/validation';
@@ -133,30 +133,43 @@ export function AdminProjects({
   });
   const [errors, setErrors] = useState({});
 
+  const openWizardAndFocus = useCallback(() => {
+    setEditingId(null);
+    setForm({
+      title: '',
+      category: 'Full-Stack Web App',
+      status: 'published',
+      shortDescription: '',
+      technologies: 'React JS, Node.js, Express.js, MongoDB',
+      liveDemoUrl: '',
+      githubUrl: 'https://github.com/ayushprajapati9669-dev',
+      thumbnailUrl: '',
+      featured: true,
+      caseStudy: JSON.parse(JSON.stringify(DEFAULT_CASE_STUDY))
+    });
+    setErrors({});
+    setCurrentStep(1);
+    setIsFormOpen(true);
+    setTimeout(() => {
+      if (formRef.current) {
+        const top = formRef.current.getBoundingClientRect().top + window.pageYOffset - 85;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        formRef.current.querySelector('input')?.focus();
+      }
+    }, 150);
+  }, []);
+
   useEffect(() => {
     if (initialCreateNew) {
-      setEditingId(null);
-      setForm({
-        title: '',
-        category: 'Full-Stack Web App',
-        status: 'published',
-        shortDescription: '',
-        technologies: 'React JS, Node.js, Express.js, MongoDB',
-        liveDemoUrl: '',
-        githubUrl: 'https://github.com/ayushprajapati9669-dev',
-        thumbnailUrl: '',
-        featured: true,
-        caseStudy: JSON.parse(JSON.stringify(DEFAULT_CASE_STUDY))
-      });
-      setErrors({});
-      setCurrentStep(1);
-      setIsFormOpen(true);
+      openWizardAndFocus();
       if (onResetCreate) onResetCreate();
-      setTimeout(() => {
-        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
     }
-  }, [initialCreateNew, onResetCreate]);
+  }, [initialCreateNew, onResetCreate, openWizardAndFocus]);
+
+  useEffect(() => {
+    window.addEventListener('ams-create-project', openWizardAndFocus);
+    return () => window.removeEventListener('ams-create-project', openWizardAndFocus);
+  }, [openWizardAndFocus]);
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);

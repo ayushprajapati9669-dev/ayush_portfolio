@@ -651,3 +651,90 @@
     display: none;
   }
 }
+
+/* ==========================================================================
+   Scroll-triggered Stagger Animation (bidirectional, CSS + IntersectionObserver)
+   - Layer cards fade in + slide up 24px when 15% enters viewport
+   - Chips pop in with stagger: delay = index * 70ms + 120ms
+   - Icon badges spin in with stagger: delay = index * 70ms + 180ms
+   - Connector lines (.flow-link) fade in 300ms after their card enters
+   - Uses animation-fill-mode: backwards so search dim opacity (.35) is NOT locked
+   - Reduced-motion: everything shown immediately (see block above)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* ── Layer card: hidden before .in ── */
+  .flow-layer:not(.in) {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  .flow-layer {
+    /* Extend the existing transition to include opacity + transform for entrance */
+    transition: opacity 0.5s ease,
+                transform 0.5s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+  }
+
+  /* ── Chips: hidden before card enters ── */
+  .flow-layer:not(.in) .flow-pill {
+    opacity: 0;
+  }
+
+  /* ── Chip entrance animation ── */
+  .flow-layer.in .flow-pill {
+    animation: skillChipPop 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.25) backwards;
+    animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+  }
+
+  /* ── Icon badge spin ── */
+  /* The first element child of .flow-pill is the icon (svg / img / i) */
+  .flow-layer.in .flow-pill > svg,
+  .flow-layer.in .flow-pill > img,
+  .flow-layer.in .flow-pill > i {
+    animation: skillBadgeSpin 0.7s ease backwards;
+    animation-delay: calc(var(--i, 0) * 70ms + 180ms);
+  }
+
+  /* ── Connector lines: fade in 300ms after card ── */
+  .flow-link {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .flow-link.in {
+    opacity: 1;
+    transition-delay: 300ms;
+  }
+
+  /* ── Keyframes ── */
+  @keyframes skillChipPop {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.6);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes skillBadgeSpin {
+    from {
+      transform: rotate(-120deg) scale(0.4);
+    }
+    to {
+      transform: none;
+    }
+  }
+}
+
+/* Mobile: hide level/proficiency dots on very small screens if chips overflow */
+@media (max-width: 379px) {
+  .skill-level-dot,
+  .flow-pill .level-dot {
+    display: none;
+  }
+}
