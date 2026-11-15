@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import '../../styles/navbar.css';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
@@ -48,6 +48,9 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [adminSidebarOpen, setAdminSidebarOpen] = useState(false);
   const mobileDrawerRef = useRef(null);
+  const backdropRef = useRef(null);
+  const mobileNavRef = useRef(null);
+  const mobilePillRef = useRef(null);
   const [readNotifIds, setReadNotifIds] = useState(() => {
     try {
       const stored = localStorage.getItem('admin_read_notifs_v9');
@@ -66,75 +69,41 @@ export function Header() {
   const p = appState.profile || {};
   const ui = appState.uiLabels || {};
 
-  // Theme & Accent controls for Admin Top Navbar
-  const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem('admin_theme_v9') || 'theme-midnight');
-  const [currentAccent, setCurrentAccent] = useState(() => localStorage.getItem('admin_accent_v9') || 'accent-cyan');
-  const [currentDensity, setCurrentDensity] = useState(() => localStorage.getItem('admin_density_v9') || 'comfortable');
-  const [accentPaletteOpen, setAccentPaletteOpen] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
-
-  const THEME_CLASSES = [
-    'theme-midnight',
-    'theme-ocean',
-    'theme-forest',
-    'theme-sunset',
-    'theme-cyberpunk',
-    'theme-gold',
-    'theme-dracula',
-    'theme-nord',
-    'theme-synthwave',
-    'theme-tokyo'
-  ];
-  const ACCENT_CLASSES = ['accent-cyan', 'accent-violet', 'accent-rose', 'accent-emerald', 'accent-amber', 'accent-pink', 'accent-lime', 'accent-blue'];
-
   const [toolsMenuOpen, setToolsMenuOpen] = useState(false);
   const toolsMenuRef = useRef(null);
-  const accentPickerRef = useRef(null);
 
   useEffect(() => {
-    let savedTheme = localStorage.getItem('portfolio_theme') || localStorage.getItem('admin_theme_v9') || 'theme-midnight';
-    if (savedTheme === 'theme-light') savedTheme = 'theme-midnight';
-    const savedAccent = localStorage.getItem('portfolio_accent') || localStorage.getItem('admin_accent_v9') || 'accent-cyan';
-
-    if (!document.body.classList.contains(savedTheme)) {
-      document.body.classList.remove('theme-light', ...THEME_CLASSES);
-      document.body.classList.add(savedTheme);
-      setCurrentTheme(savedTheme);
-    }
-
-    if (!document.body.classList.contains(savedAccent)) {
-      document.body.classList.remove(...ACCENT_CLASSES);
-      document.body.classList.add(savedAccent);
-      setCurrentAccent(savedAccent);
-    }
+    // Purge any residual theme or accent overrides from body and localStorage
+    const THEME_CLASSES_TO_CLEAN = [
+      'theme-light',
+      'theme-midnight',
+      'theme-ocean',
+      'theme-forest',
+      'theme-sunset',
+      'theme-cyberpunk',
+      'theme-gold',
+      'theme-dracula',
+      'theme-nord',
+      'theme-synthwave',
+      'theme-tokyo',
+      'accent-cyan',
+      'accent-violet',
+      'accent-rose',
+      'accent-emerald',
+      'accent-amber',
+      'accent-pink',
+      'accent-lime',
+      'accent-blue'
+    ];
+    document.body.classList.remove(...THEME_CLASSES_TO_CLEAN);
+    try {
+      localStorage.removeItem('portfolio_theme');
+      localStorage.removeItem('admin_theme_v9');
+      localStorage.removeItem('portfolio_accent');
+      localStorage.removeItem('admin_accent_v9');
+    } catch (e) {}
   }, []);
-
-  const handleThemeChange = (newTheme) => {
-    playTick();
-    setCurrentTheme(newTheme);
-    document.body.classList.remove('theme-light', ...THEME_CLASSES);
-    document.body.classList.add(newTheme);
-    try {
-      localStorage.setItem('portfolio_theme', newTheme);
-      localStorage.setItem('admin_theme_v9', newTheme);
-    } catch (e) {}
-    window.dispatchEvent(new CustomEvent('admin-theme-changed', { detail: { theme: newTheme } }));
-    showToast(`Switched theme to ${newTheme.replace('theme-', '')}`);
-  };
-
-  const handleAccentChange = (newAccent) => {
-    playTick();
-    setCurrentAccent(newAccent);
-    document.body.classList.remove(...ACCENT_CLASSES);
-    document.body.classList.add(newAccent);
-    try {
-      localStorage.setItem('portfolio_accent', newAccent);
-      localStorage.setItem('admin_accent_v9', newAccent);
-    } catch (e) {}
-    setAccentPaletteOpen(false);
-    window.dispatchEvent(new CustomEvent('admin-accent-changed', { detail: { accent: newAccent } }));
-    showToast('Updated accent color');
-  };
 
   const handleToggleFocus = () => {
     playTick();
@@ -257,12 +226,52 @@ export function Header() {
   const isAdmin = Boolean(session) && (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'));
 
   const navItems = [
-    { name: ui.navHome || 'Home', path: '/', icon: 'fa-solid fa-house' },
-    { name: ui.navAbout || 'About', path: '/about', icon: 'fa-regular fa-user' },
-    { name: ui.navJourney || 'Journey', path: '/journey', icon: 'fa-solid fa-trophy' },
-    { name: ui.navSkills || 'Skills', path: '/skills', icon: 'fa-solid fa-code' },
-    { name: ui.navProjects || 'Projects', path: '/projects', icon: 'fa-solid fa-layer-group' },
-    { name: isAdmin ? 'Certs' : (ui.navCertificates || 'Certificates'), path: '/certificates', icon: 'fa-solid fa-certificate' }
+    {
+      name: ui.navHome || 'Home',
+      path: '/',
+      icon: 'fa-solid fa-house',
+      svg: <path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10" />
+    },
+    {
+      name: ui.navAbout || 'About',
+      path: '/about',
+      icon: 'fa-regular fa-user',
+      svg: (
+        <>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
+        </>
+      )
+    },
+    {
+      name: ui.navJourney || 'Journey',
+      path: '/journey',
+      icon: 'fa-solid fa-trophy',
+      svg: <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4zM7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3" />
+    },
+    {
+      name: ui.navSkills || 'Skills',
+      path: '/skills',
+      icon: 'fa-solid fa-code',
+      svg: <path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14" />
+    },
+    {
+      name: ui.navProjects || 'Projects',
+      path: '/projects',
+      icon: 'fa-solid fa-layer-group',
+      svg: <path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5M3 17.5l9 5 9-5" />
+    },
+    {
+      name: isAdmin ? 'Certs' : (ui.navCertificates || 'Certificates'),
+      path: '/certificates',
+      icon: 'fa-solid fa-certificate',
+      svg: (
+        <>
+          <circle cx="12" cy="9" r="6" />
+          <path d="M8.5 14L7 22l5-3 5 3-1.5-8" />
+        </>
+      )
+    }
   ];
 
   // Outside click listener for tools popover
@@ -462,6 +471,188 @@ export function Header() {
   // Focus trapping inside mobile drawer with focus restoration
   useFocusTrap(mobileDrawerRef, mobileMenuOpen, { initialFocusSelector: '.mobile-drawer-close' });
 
+  // -------------------------------------------------------------------------
+  // Mobile Menu v3: Gliding Pill, Touch Gestures, & Arrow Key Navigation
+  // Note: BACK_CLOSES = false since React Router manages history stack
+  // -------------------------------------------------------------------------
+  const updateMobilePill = useCallback(() => {
+    if (!mobileNavRef.current || !mobilePillRef.current) return;
+    const activeLink =
+      mobileNavRef.current.querySelector('a.active') ||
+      mobileNavRef.current.querySelector('[aria-current="page"]');
+    if (!activeLink) {
+      mobilePillRef.current.classList.remove('on');
+      return;
+    }
+    const li = activeLink.closest('li') || activeLink.parentElement;
+    if (li) {
+      mobilePillRef.current.style.height = `${li.offsetHeight}px`;
+      mobilePillRef.current.style.transform = `translateY(${li.offsetTop}px)`;
+      mobilePillRef.current.classList.add('on');
+    }
+  }, []);
+
+  // Update mobile pill when drawer opens, route changes, or window resizes
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      const t = setTimeout(updateMobilePill, 60);
+      return () => clearTimeout(t);
+    }
+  }, [mobileMenuOpen, location.pathname, updateMobilePill]);
+
+  useEffect(() => {
+    const handleResizeMobile = () => {
+      if (window.innerWidth >= 1024) {
+        setMobileMenuOpen(false);
+      }
+      if (mobileMenuOpen) {
+        updateMobilePill();
+      }
+    };
+    window.addEventListener('resize', handleResizeMobile);
+    return () => window.removeEventListener('resize', handleResizeMobile);
+  }, [mobileMenuOpen, updateMobilePill]);
+
+  // Touch ripple on nav rows
+  const handleNavPointerDown = (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    const r = a.getBoundingClientRect();
+    a.style.setProperty('--rx', `${e.clientX - r.left}px`);
+    a.style.setProperty('--ry', `${e.clientY - r.top}px`);
+    a.classList.remove('rip');
+    void a.offsetWidth;
+    a.classList.add('rip');
+  };
+
+  // Drag-to-close gesture on mobile drawer
+  useEffect(() => {
+    const drawerEl = mobileDrawerRef.current;
+    if (!drawerEl) return;
+
+    let sx = 0;
+    let sy = 0;
+    let t0 = 0;
+    let dx = 0;
+    let dragging = false;
+    let decided = false;
+    let w = 1;
+
+    const handleTouchStart = (e) => {
+      const t = e.touches[0];
+      sx = t.clientX;
+      sy = t.clientY;
+      t0 = Date.now();
+      dx = 0;
+      dragging = false;
+      decided = false;
+      w = drawerEl.offsetWidth || 1;
+    };
+
+    const handleTouchMove = (e) => {
+      const t = e.touches[0];
+      const mx = t.clientX - sx;
+      const my = t.clientY - sy;
+      if (!decided && (Math.abs(mx) > 8 || Math.abs(my) > 8)) {
+        decided = true;
+        dragging = mx > 0 && Math.abs(mx) > Math.abs(my) * 1.2;
+        if (dragging) {
+          drawerEl.style.transition = 'none';
+          if (backdropRef.current) backdropRef.current.style.transition = 'none';
+        }
+      }
+      if (!dragging) return;
+      dx = Math.max(0, mx);
+      drawerEl.style.transform = `translateX(${dx}px)`;
+      if (backdropRef.current) {
+        backdropRef.current.style.opacity = Math.max(0, 1 - dx / w);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      if (!dragging) return;
+      dragging = false;
+      const elapsed = Date.now() - t0;
+      const fast = elapsed > 0 && dx / elapsed > 0.5;
+      const shut = dx > w * 0.33 || fast;
+      drawerEl.style.transition = '';
+      if (backdropRef.current) backdropRef.current.style.transition = '';
+      void drawerEl.offsetWidth;
+      drawerEl.style.transform = '';
+      if (backdropRef.current) backdropRef.current.style.opacity = '';
+      if (shut) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    drawerEl.addEventListener('touchstart', handleTouchStart, { passive: true });
+    drawerEl.addEventListener('touchmove', handleTouchMove, { passive: true });
+    drawerEl.addEventListener('touchend', handleTouchEnd);
+    drawerEl.addEventListener('touchcancel', handleTouchEnd);
+
+    return () => {
+      drawerEl.removeEventListener('touchstart', handleTouchStart);
+      drawerEl.removeEventListener('touchmove', handleTouchMove);
+      drawerEl.removeEventListener('touchend', handleTouchEnd);
+      drawerEl.removeEventListener('touchcancel', handleTouchEnd);
+    };
+  }, []);
+
+  // Swipe in from right edge of screen to open drawer on mobile
+  useEffect(() => {
+    let ex = null;
+    let ey = 0;
+
+    const handleDocTouchStart = (e) => {
+      const t = e.touches[0];
+      if (!mobileMenuOpen && window.innerWidth < 1024 && t.clientX > window.innerWidth - 24) {
+        ex = t.clientX;
+        ey = t.clientY;
+      } else {
+        ex = null;
+      }
+    };
+
+    const handleDocTouchMove = (e) => {
+      if (ex === null) return;
+      const t = e.touches[0];
+      if (ex - t.clientX > 48 && Math.abs(t.clientY - ey) < 40) {
+        ex = null;
+        setMobileMenuOpen(true);
+      }
+    };
+
+    document.addEventListener('touchstart', handleDocTouchStart, { passive: true });
+    document.addEventListener('touchmove', handleDocTouchMove, { passive: true });
+
+    return () => {
+      document.removeEventListener('touchstart', handleDocTouchStart);
+      document.removeEventListener('touchmove', handleDocTouchMove);
+    };
+  }, [mobileMenuOpen]);
+
+  // Keyboard Arrow navigation inside mobile drawer
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handleNavKeyDown = (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Home' || e.key === 'End') {
+        const links = mobileNavRef.current ? Array.from(mobileNavRef.current.querySelectorAll('a')) : [];
+        const activeIdx = links.indexOf(document.activeElement);
+        if (activeIdx > -1) {
+          e.preventDefault();
+          let nextIdx = activeIdx;
+          if (e.key === 'Home') nextIdx = 0;
+          else if (e.key === 'End') nextIdx = links.length - 1;
+          else if (e.key === 'ArrowDown') nextIdx = (activeIdx + 1) % links.length;
+          else if (e.key === 'ArrowUp') nextIdx = (activeIdx - 1 + links.length) % links.length;
+          links[nextIdx]?.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleNavKeyDown);
+    return () => window.removeEventListener('keydown', handleNavKeyDown);
+  }, [mobileMenuOpen]);
+
   // 3D Tilt, Scroll Shrink & Magnetic GSAP effects (matching uploaded HTML)
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -609,9 +800,6 @@ export function Header() {
       }
       if (toolsMenuRef.current && !toolsMenuRef.current.contains(e.target)) {
         setToolsMenuOpen(false);
-      }
-      if (accentPickerRef.current && !accentPickerRef.current.contains(e.target)) {
-        setAccentPaletteOpen(false);
       }
     };
     document.addEventListener('click', handleClickOutside);
@@ -805,53 +993,12 @@ export function Header() {
                     </div>
                   </div>
                 </div>
-              )}                {/* Theme & Accent Controls (Only on Admin) */}
+              )}
+
+              {/* Admin Quick Settings & Tools Dropdown */}
               {isAdmin && (
                 <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
-                {/* Theme Selector Dropdown (10 Curated Dark Themes - No Light) */}
-                <select
-                  className="theme-selector"
-                  value={currentTheme}
-                  onChange={(e) => handleThemeChange(e.target.value)}
-                  aria-label="Theme Selector"
-                >
-                  <option value="theme-midnight">🌙 Midnight</option>
-                  <option value="theme-ocean">🌊 Ocean</option>
-                  <option value="theme-forest">🌲 Forest</option>
-                  <option value="theme-sunset">🌅 Sunset</option>
-                  <option value="theme-cyberpunk">⚡ Cyberpunk</option>
-                  <option value="theme-gold">👑 Luxury Gold</option>
-                  <option value="theme-dracula">🧛 Dracula</option>
-                  <option value="theme-nord">❄️ Nord Frost</option>
-                  <option value="theme-synthwave">👾 Synthwave 84</option>
-                  <option value="theme-tokyo">🌌 Tokyo Night</option>
-                </select>
-
-                {/* Accent Color Palette (8 vibrant colors) */}
-                <div className="accent-picker-wrapper relative" ref={accentPickerRef}>
-                  <button
-                    type="button"
-                    className="accent-picker-btn"
-                    onClick={() => setAccentPaletteOpen((prev) => !prev)}
-                    title="Accent Color"
-                    aria-label="Accent color"
-                  />
-                  {accentPaletteOpen && (
-                    <div className="accent-palette active" style={{ display: 'flex' }}>
-                      <div className={`accent-swatch ${currentAccent === 'accent-cyan' ? 'selected' : ''}`} style={{ background: '#d4af37' }} onClick={() => handleAccentChange('accent-cyan')} title="Electric Cyan" />
-                      <div className={`accent-swatch ${currentAccent === 'accent-violet' ? 'selected' : ''}`} style={{ background: '#a855f7' }} onClick={() => handleAccentChange('accent-violet')} title="Neon Violet" />
-                      <div className={`accent-swatch ${currentAccent === 'accent-rose' ? 'selected' : ''}`} style={{ background: '#f43f5e' }} onClick={() => handleAccentChange('accent-rose')} title="Crimson Rose" />
-                      <div className={`accent-swatch ${currentAccent === 'accent-emerald' ? 'selected' : ''}`} style={{ background: '#10b981' }} onClick={() => handleAccentChange('accent-emerald')} title="Cyber Emerald" />
-                      <div className={`accent-swatch ${currentAccent === 'accent-amber' ? 'selected' : ''}`} style={{ background: '#f59e0b' }} onClick={() => handleAccentChange('accent-amber')} title="Royal Amber" />
-                      <div className={`accent-swatch ${currentAccent === 'accent-pink' ? 'selected' : ''}`} style={{ background: '#ec4899' }} onClick={() => handleAccentChange('accent-pink')} title="Hot Pink" />
-                      <div className={`accent-swatch ${currentAccent === 'accent-lime' ? 'selected' : ''}`} style={{ background: '#84cc16' }} onClick={() => handleAccentChange('accent-lime')} title="Toxic Lime" />
-                      <div className={`accent-swatch ${currentAccent === 'accent-blue' ? 'selected' : ''}`} style={{ background: '#3b82f6' }} onClick={() => handleAccentChange('accent-blue')} title="Sapphire Blue" />
-                    </div>
-                  )}
-                </div>
-
-                {/* Admin Quick Settings & Tools Dropdown */}
-                <div className="relative" ref={toolsMenuRef}>
+                  <div className="relative" ref={toolsMenuRef}>
                     <button
                       type="button"
                       className={`btn-icon relative ${toolsMenuOpen ? 'active' : ''} ${isVoiceActive ? 'text-emerald-400 border-emerald-500/50' : ''}`}
@@ -1020,7 +1167,7 @@ export function Header() {
               {/* Mobile Drawer Toggle with ARIA Semantics */}
               <button
                 type="button"
-                className="mobile-nav-toggle"
+                className={`mobile-nav-toggle burger ${mobileMenuOpen ? 'open' : ''}`}
                 onClick={() => {
                   playTick();
                   if (isAdmin) {
@@ -1037,85 +1184,145 @@ export function Header() {
                 aria-expanded={isAdmin ? adminSidebarOpen : mobileMenuOpen}
                 aria-controls={isAdmin ? 'adminSidebar' : 'publicMobileDrawer'}
               >
-                <i className={isAdmin ? (adminSidebarOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars') : (mobileMenuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars')} />
+                {isAdmin ? (
+                  <i className={adminSidebarOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'} />
+                ) : (
+                  <>
+                    <i />
+                    <i />
+                    <i />
+                  </>
+                )}
               </button>
             </div>
           </nav>
         </div>
       </header>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer Backdrop */}
       <div
+        ref={backdropRef}
+        className={`mobile-menu-backdrop backdrop ${mobileMenuOpen ? 'show' : ''}`}
+        onClick={() => {
+          playTick();
+          setMobileMenuOpen(false);
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Mobile Drawer Menu (Matching mobile-menu-v3.html layout & interactions) */}
+      <aside
         id="publicMobileDrawer"
         ref={mobileDrawerRef}
-        className={`mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}
+        className={`mobile-drawer drawer ${mobileMenuOpen ? 'open' : ''}`}
         role="dialog"
         aria-modal="true"
-        aria-label="Navigation Menu"
+        aria-label="Main menu"
       >
-        <div className="mobile-drawer-header">
-          <div className="flex items-center gap-3">
-            <div className="nav-logo-box">{p.monogram || 'AP'}</div>
-            <div className="text-white font-bold">{p.displayName || 'Ayush Prajapati'}</div>
-          </div>
+        <span className="grab" aria-hidden="true" />
+
+        {/* Drawer Head */}
+        <div className="drawer-head mobile-drawer-header">
+          <Link
+            to="/"
+            className="brand"
+            onClick={() => {
+              playTick();
+              setMobileMenuOpen(false);
+            }}
+          >
+            <span className="logo">{p.monogram || 'AP'}</span>
+            <span className="brand-name">{p.displayName || 'AYUSH PRAJAPATI'}</span>
+          </Link>
           <button
             type="button"
-            className="mobile-drawer-close"
+            className="close mobile-drawer-close"
             aria-label="Close navigation menu"
             onClick={() => {
               playTick();
               setMobileMenuOpen(false);
             }}
           >
-            <i className="fa-solid fa-xmark" />
+            ✕
           </button>
         </div>
 
-        <div className="mobile-drawer-links">
-          <div className="mobile-drawer-theme-box mb-3 pb-3 border-b border-white/10 flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-mono">Theme Palette:</span>
-            <select
-              className="theme-selector-mobile text-xs py-1.5 px-3 rounded-lg bg-black/60 border border-white/20 text-white outline-none"
-              value={currentTheme}
-              onChange={(e) => handleThemeChange(e.target.value)}
-              aria-label="Mobile Theme Selector"
-            >
-              <option value="theme-midnight">🌙 Midnight</option>
-              <option value="theme-ocean">🌊 Ocean</option>
-              <option value="theme-forest">🌲 Forest</option>
-              <option value="theme-sunset">🌅 Sunset</option>
-              <option value="theme-cyberpunk">⚡ Cyberpunk</option>
-              <option value="theme-gold">👑 Luxury Gold</option>
-              <option value="theme-dracula">🧛 Dracula</option>
-              <option value="theme-nord">❄️ Nord Frost</option>
-              <option value="theme-synthwave">👾 Synthwave 84</option>
-              <option value="theme-tokyo">🌌 Tokyo Night</option>
-            </select>
+        {/* Drawer Body */}
+        <div className="drawer-body mobile-drawer-links">
+          <p className="status" style={{ '--i': 0 }}>
+            <span className="pulse" />
+            Available for opportunities
+          </p>
+
+          <div className="navwrap">
+            <span ref={mobilePillRef} className="pill" aria-hidden="true" />
+            <ul className="nav" ref={mobileNavRef} onPointerDown={handleNavPointerDown}>
+              {navItems.map((item, index) => (
+                <li key={item.path} style={{ '--i': index + 1 }}>
+                  <NavLink
+                    to={item.path}
+                    end={item.path === '/'}
+                    className={({ isActive }) => (isActive ? 'active' : '')}
+                    onClick={() => {
+                      playTick();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <svg className="ic" viewBox="0 0 24 24" aria-hidden="true">
+                      {item.svg}
+                    </svg>
+                    <span>{item.name}</span>
+                    <svg className="chev" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M9 6l6 6-6 6" />
+                    </svg>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </div>
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `mobile-drawer-link ${isActive ? 'active' : ''} ${item.isAdmin ? 'text-orange-400 font-bold' : ''}`
-              }
-              onClick={() => {
-                playTick();
-                setMobileMenuOpen(false);
-              }}
-            >
-              <i className={item.icon} />
-              <span>{item.name}</span>
-            </NavLink>
-          ))}
         </div>
 
-        <div className="mobile-drawer-footer">
+        {/* Drawer Foot */}
+        <div className="drawer-foot mobile-drawer-footer" style={{ '--i': navItems.length + 1 }}>
+          <div className="socials">
+            <a
+              href={p.githubUrl || 'https://github.com/ayushprajapati9669-dev'}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              onClick={() => playTick()}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 00-.9-2.6c3.1-.3 6.4-1.5 6.4-7a5.4 5.4 0 00-1.5-3.8 5 5 0 00-.1-3.7s-1.2-.3-3.9 1.5a13.4 13.4 0 00-7 0C6.8 2.8 5.6 3.1 5.6 3.1a5 5 0 00-.1 3.7A5.4 5.4 0 004 10.6c0 5.4 3.3 6.7 6.4 7a3.4 3.4 0 00-.9 2.6V22" />
+              </svg>
+            </a>
+            <a
+              href={p.linkedinUrl || 'https://linkedin.com/in/ayush-prajapati'}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              onClick={() => playTick()}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 2a2 2 0 110 4 2 2 0 010-4z" />
+              </svg>
+            </a>
+            <a
+              href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}
+              aria-label="Email"
+              onClick={() => playTick()}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="M22 7l-10 6L2 7" />
+              </svg>
+            </a>
+          </div>
+
           {!isAdmin ? (
             <button
               type="button"
-              className="btn-outline"
-              style={{ display: 'flex', fontSize: '12px', padding: '8px 14px' }}
+              className="btn btn-ghost"
               onClick={() => {
                 playTick();
                 setMobileMenuOpen(false);
@@ -1126,26 +1333,25 @@ export function Header() {
                 }
               }}
             >
-              Resume <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '10px' }} />
+              Resume ↗
             </button>
           ) : (
             <button
               type="button"
-              className="btn-outline"
-              style={{ display: 'flex', fontSize: '12px', padding: '8px 14px' }}
+              className="btn btn-ghost"
               onClick={() => {
                 playTick();
                 setMobileMenuOpen(false);
                 setCmdOpen(true);
               }}
             >
-              <i className="fa-solid fa-magnifying-glass" /> Search ⌘K
+              <i className="fa-solid fa-magnifying-glass mr-1" /> Search ⌘K
             </button>
           )}
+
           <Link
             to="/contact"
-            className="btn-primary"
-            style={{ fontSize: '12px', padding: '8px 16px' }}
+            className="btn btn-solid"
             onClick={() => {
               playTick();
               setMobileMenuOpen(false);
@@ -1154,7 +1360,7 @@ export function Header() {
             Hire / Connect
           </Link>
         </div>
-      </div>
+      </aside>
 
       {/* Floating Exit Focus Mode Button */}
       {isFocusMode && (
@@ -1198,7 +1404,6 @@ export function Header() {
             isOpen={voiceOpen}
             onClose={() => setVoiceOpen(false)}
             showToast={showToast}
-            onThemeChange={handleThemeChange}
             onSelectTab={(tab) => {
               window.dispatchEvent(new CustomEvent('ams-select-tab', { detail: { tab } }));
               navigate(tab === 'dashboard' ? '/admin' : `/admin?tab=${tab}`);

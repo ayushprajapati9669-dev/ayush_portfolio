@@ -16,7 +16,7 @@ const SUPPORTED_LANGUAGES = [
    the action to run when matched.
    We match by checking: clean.includes(trigger) for each trigger.
 ───────────────────────────────────────────────────────────────── */
-function buildCommandTable({ navigate, onSelectTab, onOpenAddProject, onThemeChange, showToast, autoClose, stopListeningFn, setActiveFn, onClose }) {
+function buildCommandTable({ navigate, onSelectTab, onOpenAddProject, showToast, autoClose, stopListeningFn, setActiveFn, onClose }) {
   const dispatchTab = (tab) => {
     window.dispatchEvent(new CustomEvent('ams-select-tab', { detail: { tab } }));
     if (onSelectTab) onSelectTab(tab);
@@ -135,30 +135,7 @@ function buildCommandTable({ navigate, onSelectTab, onOpenAddProject, onThemeCha
       label: 'Go to Milestones'
     },
 
-    // ── 8. Theme presets
-    ...[
-      { id: 'theme-gold',      label: 'Luxury Gold',      icon: 'fa-crown',         triggers: ['theme gold', 'gold theme', 'gold', 'luxury', 'sunhara'] },
-      { id: 'theme-midnight',  label: 'Midnight Dark',    icon: 'fa-moon',          triggers: ['theme midnight', 'midnight', 'dark theme', 'dark mode'] },
-      { id: 'theme-ocean',     label: 'Ocean Blue',       icon: 'fa-water',         triggers: ['theme ocean', 'ocean', 'blue theme'] },
-      { id: 'theme-forest',    label: 'Emerald Forest',   icon: 'fa-tree',          triggers: ['theme forest', 'forest', 'green theme', 'emerald'] },
-      { id: 'theme-sunset',    label: 'Sunset Amber',     icon: 'fa-sun',           triggers: ['theme sunset', 'sunset', 'orange theme', 'amber theme'] },
-      { id: 'theme-cyberpunk', label: 'Cyberpunk Neon',   icon: 'fa-bolt',          triggers: ['theme cyberpunk', 'cyberpunk', 'neon'] },
-      { id: 'theme-dracula',   label: 'Dracula Purple',   icon: 'fa-ghost',         triggers: ['theme dracula', 'dracula', 'purple theme'] },
-      { id: 'theme-synthwave', label: 'Synthwave Retro',  icon: 'fa-compact-disc',  triggers: ['theme synthwave', 'synthwave', 'retro'] }
-    ].map((t) => ({
-      id: t.id,
-      triggers: t.triggers,
-      fuzzy: (c) => t.triggers.some((tr) => c.includes(tr)),
-      action: (toast) => {
-        if (onThemeChange) onThemeChange(t.id);
-        window.dispatchEvent(new CustomEvent('admin-theme-changed', { detail: { theme: t.id } }));
-        toast(`Theme set to ${t.label}`, t.icon);
-      },
-      label: `Theme: ${t.label}`,
-      keepOpen: true
-    })),
-
-    // ── 9. Appearance (generic theme / design)
+    // ── 8. Appearance (design settings)
     {
       id: 'appearance',
       triggers: ['appearance', 'design', 'color', 'rang'],
@@ -363,8 +340,7 @@ export function AdminVoiceAssistant({
   onClose,
   showToast,
   onSelectTab,
-  onOpenAddProject,
-  onThemeChange
+  onOpenAddProject
 }) {
   const [active, setActive] = useState(isOpen || false);
 
@@ -462,7 +438,6 @@ export function AdminVoiceAssistant({
       navigate,
       onSelectTab,
       onOpenAddProject,
-      onThemeChange,
       showToast,
       autoClose: autoCloseRef.current,
       stopListeningFn: stopListening,
@@ -506,7 +481,7 @@ export function AdminVoiceAssistant({
         setTranscript('');
       }, 1000);
     }
-  }, [navigate, onClose, onOpenAddProject, onSelectTab, onThemeChange, showToast, setStatusBoth, stopListening]);
+  }, [navigate, onClose, onOpenAddProject, onSelectTab, showToast, setStatusBoth, stopListening]);
 
   /* ─────────────────────────────────────────────────────────────
      START LISTENING
@@ -733,7 +708,7 @@ export function AdminVoiceAssistant({
     { label: '✉️ Messages',    cmd: 'check messages' },
     { label: '📊 Overview',     cmd: 'overview' },
     { label: '🏆 Milestones',   cmd: 'new milestone' },
-    { label: '👑 Gold Theme',   cmd: 'theme gold' },
+    { label: '📜 Certificates', cmd: 'certificates' },
     { label: '💻 Terminal',     cmd: 'terminal' },
     { label: '🌐 Live Site',    cmd: 'view live site' }
   ];
@@ -871,7 +846,7 @@ export function AdminVoiceAssistant({
             </span>
           ) : (
             <span className="text-slate-500 italic text-xs">
-              Say e.g. "Add project" · "Go to messages" · "Theme gold" · "Milestones"
+              Say e.g. "Add project" · "Go to messages" · "Certificates" · "Milestones"
             </span>
           )}
         </div>
@@ -883,7 +858,7 @@ export function AdminVoiceAssistant({
             <div>
               <div className="font-semibold text-white">{feedbackMsg}</div>
               <div className="text-[11px] text-amber-200/80 mt-1">
-                Try: "Add project" · "Messages" · "Overview" · "Milestones" · "Theme gold" · "Live site"
+                Try: "Add project" · "Messages" · "Overview" · "Milestones" · "Certificates" · "Live site"
               </div>
             </div>
           </div>
@@ -925,7 +900,7 @@ export function AdminVoiceAssistant({
             type="text"
             value={manualInput}
             onChange={(e) => setManualInput(e.target.value)}
-            placeholder="Or type a command… 'add project', 'theme gold', 'milestones'"
+            placeholder="Or type a command… 'add project', 'certificates', 'milestones'"
             className="flex-1 bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-yellow-400 font-sans"
           />
           <button

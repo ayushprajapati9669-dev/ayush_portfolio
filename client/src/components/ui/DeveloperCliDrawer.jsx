@@ -381,36 +381,11 @@ export function DeveloperCliDrawer() {
       }
 
       case 'theme': {
-        const themeChoice = args[0]?.toLowerCase();
-        const validThemes = {
-          cyberpunk: 'theme-cyberpunk',
-          midnight: 'theme-midnight',
-          ocean: 'theme-ocean',
-          forest: 'theme-forest',
-          sunset: 'theme-sunset',
-          gold: 'theme-gold',
-          dracula: 'theme-dracula',
-          nord: 'theme-nord',
-          synthwave: 'theme-synthwave',
-          tokyo: 'theme-tokyo'
-        };
-
-        if (validThemes[themeChoice]) {
-          const themeClass = validThemes[themeChoice];
-          const allThemeClasses = Object.values(validThemes);
-          document.body.classList.remove('theme-light', ...allThemeClasses);
-          document.body.classList.add(themeClass);
-          localStorage.setItem('portfolio_theme', themeClass);
-          localStorage.setItem('admin_theme_v9', themeClass);
-          window.dispatchEvent(new CustomEvent('admin-theme-changed', { detail: { theme: themeClass } }));
-          addLog({ type: 'system', content: `Theme changed to: \x1b[32m${themeChoice}\x1b[0m` });
-          showToast(`Active Theme: ${themeChoice}`);
-        } else {
-          addLog({
-            type: 'error',
-            content: `Unknown theme "${themeChoice || ''}". Available themes: ${Object.keys(validThemes).join(', ')}`
-          });
-        }
+        addLog({
+          type: 'info',
+          content: 'Portfolio is locked to the unified Luxury Obsidian & Gold editorial design system. Theme palette feature has been removed.'
+        });
+        showToast('Unified Luxury Gold Design System Active');
         break;
       }
 
