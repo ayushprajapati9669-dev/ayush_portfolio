@@ -1,5 +1,5 @@
 {
-  "totalPageViews": 6143,
+  "totalPageViews": 6145,
   "uniqueVisitors": 486,
   "resumeDownloads": 89,
   "cliLaunches": 142,
@@ -12,7 +12,7 @@
     "Google / Search": 140,
     "Twitter / X": 84,
     "LeetCode": 76,
-    "Direct / External": 4871
+    "Direct / External": 4873
   },
   "topProjects": {
     "wanderlust-airbnb-clone": {
@@ -97,9 +97,29 @@
     "2026-11-09": 91,
     "2026-11-13": 1607,
     "2026-11-14": 716,
-    "2026-11-15": 151
+    "2026-11-15": 153
   },
   "recentEvents": [
+    {
+      "id": "ev-1794729353925-h0hu",
+      "type": "pageview",
+      "path": "/admin",
+      "title": "Skills & Tech Stack | Ayush Prajapati",
+      "referrer": "http://localhost:5174/skills",
+      "timestamp": "2026-11-15T07:55:53.925Z",
+      "country": "Direct",
+      "city": "Global"
+    },
+    {
+      "id": "ev-1794729207930-vljl",
+      "type": "pageview",
+      "path": "/skills",
+      "title": "Admin Management Studio & Milestones CMS | Ayush Prajapati",
+      "referrer": "http://localhost:5174/skills",
+      "timestamp": "2026-11-15T07:53:27.930Z",
+      "country": "Direct",
+      "city": "Global"
+    },
     {
       "id": "ev-1794728660644-n3hs",
       "type": "pageview",
@@ -577,26 +597,6 @@
       "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
       "referrer": "http://localhost:5174/admin?tab=seo",
       "timestamp": "2026-11-15T06:35:29.978Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1794724529975-anls",
-      "type": "pageview",
-      "path": "/admin",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/admin",
-      "timestamp": "2026-11-15T06:35:29.975Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1794724267368-a2ht",
-      "type": "pageview",
-      "path": "/admin",
-      "title": "Verified Certificates & Professional Credentials | Ayush Prajapati",
-      "referrer": "http://localhost:5174/admin",
-      "timestamp": "2026-11-15T06:31:07.368Z",
       "country": "Direct",
       "city": "Global"
     }
