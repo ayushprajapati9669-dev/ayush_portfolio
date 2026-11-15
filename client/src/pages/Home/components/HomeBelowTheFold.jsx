@@ -3,17 +3,11 @@ import '../../../styles/components/home-below-the-fold.css';
 import { LazyInView } from '../../../components/common/LazyInView';
 import { TiltCard } from '../../../components/ui/TiltCard';
 
-const ZeroToOneJourneyCard = React.lazy(() =>
-  import('../../../components/ui/ZeroToOneJourneyCard').then((m) => ({ default: m.ZeroToOneJourneyCard }))
-);
 const InteractiveMeshWave = React.lazy(() =>
   import('../../../components/ui/InteractiveMeshWave').then((m) => ({ default: m.InteractiveMeshWave }))
 );
 const CinematicParticleCard = React.lazy(() =>
   import('../../../components/ui/CinematicParticleCard').then((m) => ({ default: m.CinematicParticleCard }))
-);
-const ProjectCard = React.lazy(() =>
-  import('../../../components/projects/ProjectCard').then((m) => ({ default: m.ProjectCard }))
 );
 const TechLogo = React.lazy(() =>
   import('../../../components/common/TechLogos').then((m) => ({ default: m.TechLogo }))
@@ -62,7 +56,7 @@ export function HomeBelowTheFold({
           // On mobile & touch devices, fail open immediately to prevent stuck opacity:0 during fast touch scrolling
           gsap.set(
             foldRef.current.querySelectorAll(
-              '.bento-section .bento-header > *, .bento-bio-card, .particle-container, .home-nav-executive-btn, .home-nav-btn, #featured-projects .project-card, #featured-projects .project-card-v2, .home-cta-banner'
+              '.bento-section .bento-header > *, .bento-bio-card, .particle-container, .home-nav-executive-btn, .home-nav-btn, .home-cta-banner'
             ),
             { clearProps: 'opacity,transform,visibility' }
           );
@@ -131,25 +125,7 @@ export function HomeBelowTheFold({
           });
         }
 
-        // 3. Featured Projects
-        const projectCards = foldRef.current?.querySelectorAll('#featured-projects .project-card, #featured-projects .project-card-v2');
-        if (projectCards && projectCards.length > 0) {
-          gsap.from(projectCards, {
-            scrollTrigger: {
-              trigger: '#featured-projects',
-              start: 'top 92%',
-              once: true
-            },
-            y: 24,
-            opacity: 0,
-            stagger: 0.1,
-            duration: 0.6,
-            ease: 'power2.out',
-            clearProps: 'all'
-          });
-        }
-
-        // 4. CTA Banner
+        // 3. CTA Banner
         gsap.from('.home-cta-banner', {
           scrollTrigger: {
             trigger: '.home-cta-banner',
@@ -203,14 +179,6 @@ export function HomeBelowTheFold({
             >
               Technology is the starting point. *People are the point.*
             </ScrollWriteText>
-            <ScrollWriteText
-              as="p"
-              className="text-stonewarm text-sm sm:text-base leading-relaxed"
-              mode="words"
-              stagger={0.02}
-            >
-              Engineering intelligent web applications, scalable cloud backends, and responsive interactive products with clean craft.
-            </ScrollWriteText>
           </div>
 
           {/* Interactive 3D Three.js GLSL Undulating Wave Displacement */}
@@ -220,11 +188,6 @@ export function HomeBelowTheFold({
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_65%,rgba(180,165,130,0.035),transparent_72%)]"
               aria-hidden="true"
             />
-            {/* Minimalist Micro-Badge: User-friendly indicator */}
-            <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/10 backdrop-blur-md pointer-events-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-mono text-xs font-semibold text-slate-200 uppercase tracking-wider">3D Topography</span>
-            </div>
             <div className="absolute bottom-3 right-4 z-10 font-mono text-xs text-slate-400 pointer-events-none">
               Hover to ripple
             </div>
@@ -460,53 +423,7 @@ export function HomeBelowTheFold({
       </section>
 
       {/* =========================================================================
-          SECTION 03: Selected Flagship Engineering Builds
-          ========================================================================= */}
-      <section id="featured-projects" className="border-t hairline-border pt-14 space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-2">
-            <ScrollWriteText
-              as="p"
-              className="font-mono text-[11px] uppercase tracking-widest text-amber-400/90 font-semibold"
-              mode="scramble"
-              scrambleDuration={20}
-            >
-              03 · FEATURED ENGINEERING
-            </ScrollWriteText>
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight">
-              Selected <em className="italic font-serif text-[#e5b869]">Flagship Builds</em>
-            </h2>
-            <p className="text-stonewarm text-xs sm:text-sm max-w-xl">
-              Production-grade full-stack architectures engineered with real-time sync, resilient databases, and responsive modern interfaces.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => goTo('/projects')}
-            className="inline-flex items-center gap-2 self-start sm:self-end px-4 py-2 rounded-full border border-white/10 hover:border-amber-400/50 bg-white/[0.03] hover:bg-white/[0.08] text-xs font-mono text-white transition-all group shrink-0"
-            title="Explore all engineering projects"
-          >
-            <span>Explore all {publishedProjects.length} projects</span>
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {showcaseProjects.map((proj, idx) => (
-            <ProjectCard
-              key={proj.id || `home-proj-${idx}`}
-              proj={proj}
-              indexNum={idx + 1}
-              onCardMouseMove={handleCardMouseMove}
-              onCardMouseLeave={handleCardMouseLeave}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 05: Direct Contact CTA Banner
+          SECTION 03: Direct Contact CTA Banner
           ========================================================================= */}
       <section className="home-cta-banner rounded-3xl border border-white/10 bg-gradient-to-r from-[#121216] via-[#161622] to-[#121216] p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
         {/* Subtle Ambient Radial Glow */}

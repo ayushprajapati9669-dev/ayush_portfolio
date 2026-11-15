@@ -707,14 +707,6 @@ export function CinematicParticleCard({ className = '' }) {
       }}
       title="Click to morph particle typography"
     >
-      {/* Top Left Badge */}
-      <div className="absolute top-5 left-5 z-10 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/50 border border-white/10 backdrop-blur-md">
-        <span className="w-2 h-2 rounded-full bg-[#e5b869] shadow-[0_0_10px_#e5b869] animate-pulse" />
-        <span className="font-mono text-[11px] font-bold text-[#e5b869] uppercase tracking-wider">
-          Cinematic Particles
-        </span>
-      </div>
-
       {/* WebGL Canvas */}
       <canvas
         ref={canvasRef}

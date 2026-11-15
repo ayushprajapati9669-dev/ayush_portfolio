@@ -213,12 +213,6 @@ export function Footer() {
               <div className="footer-brand-name">{brandName}</div>
             </div>
 
-            <p className="footer-bio-text">
-              {p.aboutBio?.[0] ||
-                p.headerSubtitle ||
-                'Computer Science Engineer specializing in scalable full-stack web applications, interactive architectures, and intelligent systems.'}
-            </p>
-
             <div className="footer-contact-list">
               <a
                 href={`mailto:${effectiveEmail}`}
@@ -407,21 +401,6 @@ export function Footer() {
         <div className="footer-bottom-bar">
           <div className="footer-copyright">
             {s.copyrightText || `© ${new Date().getFullYear()} ${brandName}. All rights reserved.`}
-            <span className="hidden sm:inline" style={{ color: '#444' }}> · </span>
-            <span className="hidden sm:inline" style={{ color: '#888' }}>
-              Engineered with MERN Stack & VSLFlow Design System.
-            </span>
-          </div>
-
-          <div className="footer-bottom-links">
-            <Link to="/about" onClick={() => playTick()}>About</Link>
-            <Link to="/journey" onClick={() => playTick()}>Journey</Link>
-            <Link to="/projects" onClick={() => playTick()}>Projects</Link>
-            <Link to="/contact" onClick={() => playTick()}>Contact</Link>
-            <button type="button" className="footer-btn-top" onClick={handleScrollToTop}>
-              <span>Back to Top</span>
-              <i className="fa-solid fa-arrow-up" style={{ fontSize: '9px' }} />
-            </button>
           </div>
         </div>
       </div>

@@ -369,20 +369,16 @@ export function HomePage() {
           const d4 = 0.35;
 
           heroTl
-            .from('.hero-top-meta', {
-              y: -16,
-              opacity: 0,
-              duration: d1,
-              delay: 0.05
-            })
-            .from(
+            .fromTo(
               '.hero-announcement-capsule',
+              { y: 12, opacity: 0 },
               {
-                y: 12,
-                opacity: 0,
-                duration: d2
-              },
-              '-=0.5'
+                y: 0,
+                opacity: 1,
+                duration: d2,
+                ease: 'power2.out',
+                clearProps: 'all'
+              }
             )
             .fromTo(
               '.hero-features-strip',
@@ -394,7 +390,7 @@ export function HomePage() {
                 ease: 'power2.out',
                 clearProps: 'all'
               },
-              '-=0.3'
+              '-=0.2'
             );
         });
       }, containerRef);
@@ -438,15 +434,6 @@ export function HomePage() {
             imgClassName={`hero-photo-img ${isPhotoWide ? 'wide' : ''}`}
             onPhotoFit={checkPhotoFit}
           />
-        </div>
-
-        {/* Top Eyebrow Meta Row */}
-        <div className="hero-top-meta">
-          <div className="hero-meta-left">
-            <span className="hero-meta-dot">▪</span>
-            <span>ENGINEER. DEVELOPER. BUILDER.</span>
-          </div>
-          
         </div>
 
         {/* Center / Left-Aligned Showcase matching Reference Image 1 & index (14).html */}
