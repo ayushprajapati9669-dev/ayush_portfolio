@@ -1776,7 +1776,7 @@ body.theme-light .nav-link.active {
   height: 9px !important;
   border-radius: 50% !important;
   background: var(--accent-rose) !important;
-  animation: amsPulse 1s infinite !important;
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.6) !important;
 }
 
 .voice-command-indicator .v-text {

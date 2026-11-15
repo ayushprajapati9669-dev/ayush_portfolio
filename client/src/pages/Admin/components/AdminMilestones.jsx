@@ -674,7 +674,9 @@ export function AdminMilestones({
       return;
     }
     if (isVoiceCmdListening) {
-      if (voiceRecognitionRef.current) voiceRecognitionRef.current.stop();
+      if (voiceRecognitionRef.current) {
+        try { voiceRecognitionRef.current.stop(); } catch (_e) {}
+      }
       setIsVoiceCmdListening(false);
       return;
     }
@@ -682,19 +684,33 @@ export function AdminMilestones({
     const recognition = new SR();
     voiceRecognitionRef.current = recognition;
     recognition.continuous = true;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+    recognition.lang = (typeof navigator !== 'undefined' && (navigator.language || 'en-IN')) || 'en-IN';
 
     recognition.onstart = () => {
       setIsVoiceCmdListening(true);
       setVoiceCmdText('Listening for command...');
-      showToast('Voice Command activated: Try "New milestone" or "Search React"', 'fa-microphone');
+      showToast('Voice Command activated: Try "New milestone", "Search React", or "Focus"', 'fa-microphone');
     };
 
     recognition.onresult = (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-      setVoiceCmdText(`"${transcript}"`);
-      processVoiceCommand(transcript);
+      let finalTranscript = '';
+      let interim = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const item = event.results[i];
+        if (item.isFinal) {
+          finalTranscript += item[0].transcript;
+        } else {
+          interim += item[0].transcript;
+        }
+      }
+      const spokenText = (finalTranscript || interim).toLowerCase().trim();
+      if (spokenText) {
+        setVoiceCmdText(`"${spokenText}"`);
+        if (finalTranscript.trim()) {
+          processVoiceCommand(finalTranscript.toLowerCase().trim());
+        }
+      }
     };
 
     recognition.onerror = () => {
@@ -705,26 +721,40 @@ export function AdminMilestones({
       setIsVoiceCmdListening(false);
     };
 
-    recognition.start();
+    try {
+      recognition.start();
+    } catch (_e) {}
   };
 
   const processVoiceCommand = (cmd) => {
-    if (cmd.includes('new milestone') || cmd.includes('create milestone')) {
+    if (
+      cmd.includes('new milestone') ||
+      cmd.includes('create milestone') ||
+      cmd.includes('add milestone') ||
+      cmd.includes('milestone banao') ||
+      cmd.includes('naya milestone')
+    ) {
       openNewWizard();
-      if (voiceRecognitionRef.current) voiceRecognitionRef.current.stop();
-    } else if (cmd.includes('search')) {
-      const term = cmd.replace(/search\s*(for)?/, '').trim();
-      setSearchQuery(term);
-    } else if (cmd.includes('recycle') || cmd.includes('trash')) {
+      showToast('Voice: Opening Milestone Wizard', 'fa-plus');
+      if (voiceRecognitionRef.current) {
+        try { voiceRecognitionRef.current.stop(); } catch (_e) {}
+      }
+      setIsVoiceCmdListening(false);
+    } else if (cmd.includes('search') || cmd.includes('dhoondo') || cmd.includes('find')) {
+      const term = cmd.replace(/^(search\s*(for)?|dhoondo|find)\s*/i, '').trim();
+      if (term) setSearchQuery(term);
+    } else if (cmd.includes('recycle') || cmd.includes('trash') || cmd.includes('bin') || cmd.includes('kachra')) {
       setIsRecycleBinOpen(true);
-    } else if (cmd.includes('activity')) {
+    } else if (cmd.includes('activity') || cmd.includes('history') || cmd.includes('log')) {
       setIsActivityOpen(true);
-    } else if (cmd.includes('templates')) {
+    } else if (cmd.includes('template') || cmd.includes('templates')) {
       setIsTemplatesOpen(true);
-    } else if (cmd.includes('focus')) {
+    } else if (cmd.includes('focus') || cmd.includes('fullscreen')) {
       setIsFocusMode((prev) => !prev);
-    } else if (cmd.includes('stop') || cmd.includes('cancel')) {
-      if (voiceRecognitionRef.current) voiceRecognitionRef.current.stop();
+    } else if (cmd.includes('stop') || cmd.includes('cancel') || cmd.includes('band karo') || cmd.includes('close')) {
+      if (voiceRecognitionRef.current) {
+        try { voiceRecognitionRef.current.stop(); } catch (_e) {}
+      }
       setIsVoiceCmdListening(false);
     }
   };

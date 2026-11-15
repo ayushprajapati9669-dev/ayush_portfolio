@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import '../../styles/navbar.css';
 import { usePortfolio } from '../../app/providers/ThemeProvider';
 import { useAuth } from '../../app/providers/AuthProvider';
@@ -37,6 +37,7 @@ export function Header() {
   const { appState, updateAppState, showToast, openResumeModal } = usePortfolio();
   const { session } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [notifOpen, setNotifOpen] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
