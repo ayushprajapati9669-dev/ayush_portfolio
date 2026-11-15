@@ -1,5 +1,5 @@
 {
-  "totalPageViews": 6145,
+  "totalPageViews": 6146,
   "uniqueVisitors": 486,
   "resumeDownloads": 89,
   "cliLaunches": 142,
@@ -12,7 +12,7 @@
     "Google / Search": 140,
     "Twitter / X": 84,
     "LeetCode": 76,
-    "Direct / External": 4873
+    "Direct / External": 4874
   },
   "topProjects": {
     "wanderlust-airbnb-clone": {
@@ -97,9 +97,19 @@
     "2026-11-09": 91,
     "2026-11-13": 1607,
     "2026-11-14": 716,
-    "2026-11-15": 153
+    "2026-11-15": 154
   },
   "recentEvents": [
+    {
+      "id": "ev-1794729537517-oayd",
+      "type": "pageview",
+      "path": "/admin",
+      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
+      "referrer": "http://localhost:5174/admin?tab=messages",
+      "timestamp": "2026-11-15T07:58:57.517Z",
+      "country": "Direct",
+      "city": "Global"
+    },
     {
       "id": "ev-1794729353925-h0hu",
       "type": "pageview",
@@ -587,16 +597,6 @@
       "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
       "referrer": "http://localhost:5174/admin",
       "timestamp": "2026-11-15T06:37:53.175Z",
-      "country": "Direct",
-      "city": "Global"
-    },
-    {
-      "id": "ev-1794724529978-3p61",
-      "type": "pageview",
-      "path": "/admin",
-      "title": "Ayush Prajapati — Full-Stack Developer & Software Engineer",
-      "referrer": "http://localhost:5174/admin?tab=seo",
-      "timestamp": "2026-11-15T06:35:29.978Z",
       "country": "Direct",
       "city": "Global"
     }
