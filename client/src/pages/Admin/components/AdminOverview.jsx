@@ -595,9 +595,18 @@ export function AdminOverview({
         <div className="quick-actions">
           <div
             className="action-btn"
+            role="button"
+            tabIndex={0}
             onClick={() => {
               playTick();
               onOpenAddProject();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playTick();
+                onOpenAddProject();
+              }
             }}
           >
             <div className="action-icon">
@@ -611,9 +620,18 @@ export function AdminOverview({
 
           <div
             className="action-btn"
+            role="button"
+            tabIndex={0}
             onClick={() => {
               playTick();
               onSelectTab('messages');
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playTick();
+                onSelectTab('messages');
+              }
             }}
           >
             <div className="action-icon" style={{ color: '#f59e0b' }}>
@@ -627,9 +645,18 @@ export function AdminOverview({
 
           <div
             className="action-btn"
+            role="button"
+            tabIndex={0}
             onClick={() => {
               playTick();
               onSelectTab('profile');
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playTick();
+                onSelectTab('profile');
+              }
             }}
           >
             <div className="action-icon" style={{ color: 'var(--accent-2)' }}>

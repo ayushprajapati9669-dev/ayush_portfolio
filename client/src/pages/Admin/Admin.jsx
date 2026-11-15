@@ -71,11 +71,35 @@ export function AdminPage() {
     return () => window.removeEventListener('admin-sidebar-toggle', handleSidebarToggle);
   }, []);
 
-  // Escape key listener to close mobile sidebar drawer
+  // Escape key listener & admin number navigation shortcuts (1-9)
   useEffect(() => {
     const handleKeyDown = (e) => {
+      const isInput =
+        ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName) ||
+        document.activeElement?.isContentEditable;
+      if (isInput) return;
+
       if (e.key === 'Escape' && isMobileSidebarOpen) {
         setIsMobileSidebarOpen(false);
+      }
+
+      // Number keys 1-9 for instant admin CMS tab navigation
+      const numMap = {
+        '1': 'dashboard',
+        '2': 'projects',
+        '3': 'certificates',
+        '4': 'skills',
+        '5': 'milestones',
+        '6': 'messages',
+        '7': 'appearance',
+        '8': 'analytics',
+        '9': 'settings'
+      };
+
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && numMap[e.key]) {
+        e.preventDefault();
+        playTick();
+        handleSelectTab(numMap[e.key]);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -155,6 +179,8 @@ export function AdminPage() {
 
   // Modals state
   const [isQuickProjOpen, setIsQuickProjOpen] = useState(false);
+  const [openCreateProjectOnNavigate, setOpenCreateProjectOnNavigate] = useState(false);
+  const [openMilestoneWizardOnNavigate, setOpenMilestoneWizardOnNavigate] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
@@ -169,7 +195,49 @@ export function AdminPage() {
     if (current !== activeTab) {
       setActiveTab(current);
     }
+    if (searchParams.get('create') === 'true') {
+      setOpenCreateProjectOnNavigate(true);
+    }
   }, [location.pathname, searchParams]);
+
+  useEffect(() => {
+    const handleSelectTabEvent = (e) => {
+      const tab = e.detail?.tab;
+      if (tab) handleSelectTab(tab);
+    };
+    const handleCreateProjectEvent = () => {
+      setOpenCreateProjectOnNavigate(true);
+      handleSelectTab('projects');
+    };
+    const handleOpenMilestoneWizardEvent = () => {
+      setOpenMilestoneWizardOnNavigate(true);
+      handleSelectTab('milestones');
+    };
+    const handleAdminLogoutEvent = () => {
+      openConfirmModal({
+        title: 'Sign Out Administrator',
+        message: 'Are you sure you want to end your administrative session?',
+        confirmText: 'Sign Out',
+        isDestructive: true,
+        onConfirm: () => {
+          logoutAdmin();
+          showToast('Signed out of Admin CMS', 'fa-right-from-bracket');
+        }
+      });
+    };
+
+    window.addEventListener('ams-select-tab', handleSelectTabEvent);
+    window.addEventListener('ams-create-project', handleCreateProjectEvent);
+    window.addEventListener('ams-open-milestone-wizard', handleOpenMilestoneWizardEvent);
+    window.addEventListener('ams-admin-logout', handleAdminLogoutEvent);
+
+    return () => {
+      window.removeEventListener('ams-select-tab', handleSelectTabEvent);
+      window.removeEventListener('ams-create-project', handleCreateProjectEvent);
+      window.removeEventListener('ams-open-milestone-wizard', handleOpenMilestoneWizardEvent);
+      window.removeEventListener('ams-admin-logout', handleAdminLogoutEvent);
+    };
+  }, [logoutAdmin, openConfirmModal, showToast]);
 
   const handleSelectTab = (tabId, route) => {
     setIsMobileSidebarOpen(false);
@@ -321,7 +389,10 @@ export function AdminPage() {
               <AdminOverview
                 appState={appState}
                 onSelectTab={handleSelectTab}
-                onOpenAddProject={() => setIsQuickProjOpen(true)}
+                onOpenAddProject={() => {
+                  setOpenCreateProjectOnNavigate(true);
+                  handleSelectTab('projects');
+                }}
                 onOpenDetailModal={(act) => setSelectedActivity(act)}
                 showToast={showToast}
               />
@@ -338,6 +409,8 @@ export function AdminPage() {
                 session={session}
                 showToast={showToast}
                 openConfirmModal={openConfirmModal}
+                initialCreateNew={openCreateProjectOnNavigate}
+                onResetCreate={() => setOpenCreateProjectOnNavigate(false)}
               />
             )}
 
@@ -370,6 +443,8 @@ export function AdminPage() {
                 showToast={showToast}
                 openConfirmModal={openConfirmModal}
                 onSelectTab={handleSelectTab}
+                initialOpenWizard={openMilestoneWizardOnNavigate}
+                onResetWizard={() => setOpenMilestoneWizardOnNavigate(false)}
               />
             )}
 

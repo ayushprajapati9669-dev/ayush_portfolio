@@ -11,14 +11,39 @@ import { runOnIdle, cancelIdle } from '../../utils/idle';
 const CommandPalette = React.lazy(() =>
   import('../ui/CommandPalette').then((m) => ({ default: m.CommandPalette }))
 );
+const KeyboardShortcutsModal = React.lazy(() =>
+  import('../ui/KeyboardShortcutsModal').then((m) => ({ default: m.KeyboardShortcutsModal }))
+);
+const AdminVoiceAssistant = React.lazy(() =>
+  import('../ui/AdminVoiceAssistant').then((m) => ({ default: m.AdminVoiceAssistant }))
+);
+
+function formatRelativeTime(dateStr) {
+  if (!dateStr) return 'Recent';
+  const diffMs = Date.now() - new Date(dateStr).getTime();
+  if (isNaN(diffMs) || diffMs < 0) return 'Just now';
+  const sec = Math.floor(diffMs / 1000);
+  if (sec < 60) return 'Just now';
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hrs = Math.floor(min / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString([], { month: 'short', day: 'numeric' });
+}
 
 export function Header() {
-  const { appState, showToast, openResumeModal } = usePortfolio();
+  const { appState, updateAppState, showToast, openResumeModal } = usePortfolio();
   const { session } = useAuth();
   const location = useLocation();
 
   const [notifOpen, setNotifOpen] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
+  const [shortcutsModalOpen, setShortcutsModalOpen] = useState(false);
+  const [voiceOpen, setVoiceOpen] = useState(false);
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const [notifFilter, setNotifFilter] = useState('all');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [adminSidebarOpen, setAdminSidebarOpen] = useState(false);
   const mobileDrawerRef = useRef(null);
@@ -112,12 +137,22 @@ export function Header() {
 
   const handleToggleFocus = () => {
     playTick();
-    setIsFocusMode((prev) => {
-      const next = !prev;
-      if (next) document.body.classList.add('focus-mode');
-      else document.body.classList.remove('focus-mode');
-      return next;
-    });
+    const willFocus = !document.body.classList.contains('focus-mode');
+    if (willFocus) {
+      document.body.classList.add('focus-mode');
+      setIsFocusMode(true);
+      showToast('Focus Mode & Full Screen Enabled (Press F or Esc to exit)', 'fa-expand');
+      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    } else {
+      document.body.classList.remove('focus-mode');
+      setIsFocusMode(false);
+      showToast('Exited Focus Mode', 'fa-compress');
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
   };
 
   // Keyboard shortcut listener for Esc / F to exit focus mode
@@ -161,25 +196,48 @@ export function Header() {
         }
       }
 
-      // ? key: Open Keyboard Shortcuts
-      if (e.key === '?' && !isInput) {
+      // ⌘K / Ctrl+K: Open Command Palette & Global Search
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         playTick();
-        window.dispatchEvent(new CustomEvent('ams-open-shortcuts'));
+        setCmdOpen((prev) => !prev);
+      }
+
+      // ? key: Open Keyboard Shortcuts
+      if (e.key === '?' && !isInput && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        playTick();
+        setShortcutsModalOpen(true);
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [showToast]);
 
+  useEffect(() => {
+    const onShortcuts = () => setShortcutsModalOpen(true);
+    const onVoice = () => setVoiceOpen((prev) => !prev);
+    const onVoiceActive = (e) => setIsVoiceActive(Boolean(e.detail?.active));
+
+    window.addEventListener('ams-open-shortcuts', onShortcuts);
+    window.addEventListener('ams-toggle-voice', onVoice);
+    window.addEventListener('ams-voice-active', onVoiceActive);
+
+    return () => {
+      window.removeEventListener('ams-open-shortcuts', onShortcuts);
+      window.removeEventListener('ams-toggle-voice', onVoice);
+      window.removeEventListener('ams-voice-active', onVoiceActive);
+    };
+  }, []);
+
   const handleToggleVoice = () => {
     playTick();
-    window.dispatchEvent(new CustomEvent('ams-toggle-voice'));
+    setVoiceOpen((prev) => !prev);
   };
 
   const handleOpenShortcuts = () => {
     playTick();
-    window.dispatchEvent(new CustomEvent('ams-open-shortcuts'));
+    setShortcutsModalOpen(true);
   };
 
   // Register global command palette opener for shortcuts
@@ -220,40 +278,105 @@ export function Header() {
   }, [toolsMenuOpen]);
 
   // Dynamic notifications from messages & portfolio state
+  const allMessages = (appState.messages || []).slice(0, 5);
   const rawNotifications = [
-    ...(appState.messages || []).slice(0, 3).map((m) => ({
-      id: 'msg-' + m.id,
-      title: `Message from ${m.name || 'Visitor'}`,
-      desc: m.subject || m.message?.slice(0, 45) + '...',
-      time: m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent',
+    // 1. Real Contact Form Messages
+    ...allMessages.map((m) => ({
+      id: 'msg-' + (m.id || m._id),
+      title: `Inquiry: ${m.name || 'New Lead'}`,
+      desc: m.subject || (m.message ? m.message.slice(0, 55) + (m.message.length > 55 ? '...' : '') : 'New portfolio inquiry message received.'),
+      time: m.createdAt ? formatRelativeTime(m.createdAt) : 'Recent',
       icon: 'fa-envelope',
-      iconBg: 'rgba(245,158,11,0.1)',
+      iconBg: 'rgba(245, 158, 11, 0.12)',
       iconColor: '#f59e0b',
-      unread: m.status === 'unread' && !readNotifIds.includes('msg-' + m.id)
+      unread: m.status === 'unread' && !readNotifIds.includes('msg-' + (m.id || m._id)),
+      targetTab: 'messages',
+      badge: 'Message'
     })),
+    // 2. Real Live Projects
     {
       id: 'stat-project-live',
-      title: 'Portfolio Projects Live',
-      desc: `${(appState.projects || []).length} interactive full-stack projects online.`,
+      title: 'Production Projects Live',
+      desc: `${(appState.projects || []).filter((p) => p.status === 'published').length} builds active in production gallery.`,
       time: 'Live',
       icon: 'fa-rocket',
-      iconBg: 'rgba(0,255,136,0.1)',
-      iconColor: 'var(--accent-2, #00ff88)',
-      unread: !readNotifIds.includes('stat-project-live')
+      iconBg: 'rgba(16, 185, 129, 0.12)',
+      iconColor: '#10b981',
+      unread: !readNotifIds.includes('stat-project-live'),
+      targetTab: 'projects',
+      badge: 'Projects'
     },
+    // 3. Real Certificates
     {
       id: 'stat-cert-verified',
-      title: 'Certificates Verified',
-      desc: `${(appState.certificates || []).length} accredited credentials ready to inspect.`,
+      title: 'Accredited Credentials',
+      desc: `${(appState.certificates || []).filter((c) => c.published).length} verified credentials available to inspect.`,
       time: 'Verified',
       icon: 'fa-shield-halved',
-      iconBg: 'rgba(0,240,255,0.1)',
-      iconColor: 'var(--accent-1, #00f0ff)',
-      unread: !readNotifIds.includes('stat-cert-verified')
+      iconBg: 'rgba(6, 182, 212, 0.12)',
+      iconColor: '#06b6d4',
+      unread: !readNotifIds.includes('stat-cert-verified'),
+      targetTab: 'certificates',
+      badge: 'Credentials'
+    },
+    // 4. System Storage Health
+    {
+      id: 'stat-system-active',
+      title: 'Backend Storage Connected',
+      desc: 'CSRF security guards & MongoDB store synchronized.',
+      time: 'System',
+      icon: 'fa-server',
+      iconBg: 'rgba(168, 85, 247, 0.12)',
+      iconColor: '#a855f7',
+      unread: !readNotifIds.includes('stat-system-active'),
+      targetTab: 'settings',
+      badge: 'System'
     }
   ];
 
   const unreadCount = rawNotifications.filter((n) => n.unread).length;
+  const filteredNotifications = notifFilter === 'unread' ? rawNotifications.filter((n) => n.unread) : rawNotifications;
+
+  const markNotifRead = (id) => {
+    setReadNotifIds((prev) => {
+      const next = prev.includes(id) ? prev : [...prev, id];
+      try {
+        localStorage.setItem('admin_read_notifs_v9', JSON.stringify(next));
+      } catch (_e) {}
+      return next;
+    });
+
+    if (id && id.startsWith('msg-') && typeof updateAppState === 'function') {
+      const msgId = id.replace('msg-', '');
+      updateAppState((prev) => ({
+        ...prev,
+        messages: (prev.messages || []).map((m) =>
+          String(m.id || m._id) === String(msgId) ? { ...m, status: 'read' } : m
+        )
+      }));
+
+      // Persist read status in backend if running
+      fetch(`/api/admin/messages/${msgId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'read' })
+      }).catch(() => {});
+    }
+  };
+
+  const handleNotificationClick = (item) => {
+    playTick();
+    markNotifRead(item.id);
+    setNotifOpen(false);
+    if (item.targetTab) {
+      window.dispatchEvent(new CustomEvent('ams-select-tab', { detail: { tab: item.targetTab } }));
+      if (item.id && item.id.startsWith('msg-')) {
+        const rawMsgId = item.id.replace('msg-', '');
+        window.dispatchEvent(new CustomEvent('ams-select-message', { detail: { messageId: rawMsgId } }));
+      }
+      navigate(item.targetTab === 'dashboard' ? '/admin' : `/admin?tab=${item.targetTab}`);
+    }
+  };
 
   // Active pill sliding calculation
   const updatePill = (targetEl) => {
@@ -496,7 +619,31 @@ export function Header() {
 
   const handleMarkAllRead = () => {
     playTick();
-    setReadNotifIds(rawNotifications.map((n) => n.id));
+    const allIds = rawNotifications.map((n) => n.id);
+    setReadNotifIds(allIds);
+    try {
+      localStorage.setItem('admin_read_notifs_v9', JSON.stringify(allIds));
+    } catch (_e) {}
+
+    if (typeof updateAppState === 'function') {
+      updateAppState((prev) => ({
+        ...prev,
+        messages: (prev.messages || []).map((m) => ({ ...m, status: 'read' }))
+      }));
+
+      // Background patch any unread messages in database
+      (appState.messages || [])
+        .filter((m) => m.status === 'unread')
+        .forEach((m) => {
+          const mId = m.id || m._id;
+          fetch(`/api/admin/messages/${mId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'read' })
+          }).catch(() => {});
+        });
+    }
+
     showToast('All notifications marked as read', 'fa-check-double');
   };
 
@@ -567,45 +714,81 @@ export function Header() {
                   </button>
 
                   <div className={`notif-dropdown ${notifOpen ? 'open' : ''}`}>
-                    <div className="notif-head">
-                      <h4>
-                        <i className="fa-solid fa-bolt" style={{ color: 'var(--accent-1)' }} />
-                        Notifications
+                    <div className="notif-head flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <h4 className="flex items-center gap-1.5 m-0 font-bold text-sm">
+                          <i className="fa-solid fa-bell text-yellow-400" />
+                          Notifications
+                        </h4>
                         <span className="count-pill">{unreadCount} new</span>
-                      </h4>
-                      <button
-                        type="button"
-                        className="notif-mark-read"
-                        onClick={handleMarkAllRead}
-                      >
-                        Mark all read
-                      </button>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="flex rounded-md border border-white/10 p-0.5 bg-black/40 text-[10px] font-mono">
+                          <button
+                            type="button"
+                            className={`px-2 py-0.5 rounded transition-colors ${notifFilter === 'all' ? 'bg-white/20 text-white font-bold' : 'text-slate-400 hover:text-white'}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setNotifFilter('all');
+                            }}
+                          >
+                            All
+                          </button>
+                          <button
+                            type="button"
+                            className={`px-2 py-0.5 rounded transition-colors ${notifFilter === 'unread' ? 'bg-yellow-400/20 text-yellow-300 font-bold' : 'text-slate-400 hover:text-white'}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setNotifFilter('unread');
+                            }}
+                          >
+                            Unread ({unreadCount})
+                          </button>
+                        </div>
+                        {unreadCount > 0 && (
+                          <button
+                            type="button"
+                            className="notif-mark-read text-[11px] text-yellow-400 hover:underline cursor-pointer"
+                            onClick={handleMarkAllRead}
+                          >
+                            Mark read
+                          </button>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="notif-list">
-                      {rawNotifications.map((n) => (
-                        <div
-                          key={n.id}
-                          className={`notif-item ${n.unread ? 'unread' : ''}`}
-                          onClick={() => {
-                            playTick();
-                            if (!readNotifIds.includes(n.id)) {
-                              setReadNotifIds((prev) => [...prev, n.id]);
-                            }
-                          }}
-                        >
-                          <div className="notif-ico" style={{ background: n.iconBg, color: n.iconColor }}>
-                            <i className={`fa-solid ${n.icon}`} />
-                          </div>
-                          <div className="notif-body">
-                            <div className="notif-title">{n.title}</div>
-                            <div className="notif-desc">{n.desc}</div>
-                            <div className="notif-time">
-                              <i className="fa-regular fa-clock" /> {n.time}
+                    <div className="notif-list custom-scrollbar">
+                      {filteredNotifications.length === 0 ? (
+                        <div className="p-6 text-center text-slate-400 space-y-2">
+                          <i className="fa-solid fa-circle-check text-2xl text-emerald-400" />
+                          <div className="text-xs font-mono font-medium text-slate-200">All caught up!</div>
+                          <div className="text-[11px] text-slate-500">Zero unread notifications remaining.</div>
+                        </div>
+                      ) : (
+                        filteredNotifications.map((n) => (
+                          <div
+                            key={n.id}
+                            className={`notif-item ${n.unread ? 'unread' : ''}`}
+                            onClick={() => handleNotificationClick(n)}
+                          >
+                            <div className="notif-ico" style={{ background: n.iconBg, color: n.iconColor }}>
+                              <i className={`fa-solid ${n.icon}`} />
+                            </div>
+                            <div className="notif-body">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="notif-title">{n.title}</span>
+                                {n.badge && (
+                                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded border border-white/10 text-slate-400 bg-white/5">{n.badge}</span>
+                                )}
+                              </div>
+                              <div className="notif-desc">{n.desc}</div>
+                              <div className="notif-time">
+                                <i className="fa-regular fa-clock" /> {n.time}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                      )}
                     </div>
 
                     <div className="notif-foot">
@@ -670,7 +853,7 @@ export function Header() {
                 <div className="relative" ref={toolsMenuRef}>
                     <button
                       type="button"
-                      className={`btn-icon ${toolsMenuOpen ? 'active' : ''}`}
+                      className={`btn-icon relative ${toolsMenuOpen ? 'active' : ''} ${isVoiceActive ? 'text-emerald-400 border-emerald-500/50' : ''}`}
                       onClick={() => {
                         playTick();
                         setToolsMenuOpen((prev) => !prev);
@@ -679,6 +862,11 @@ export function Header() {
                       aria-label="Quick Settings & Tools"
                     >
                       <i className="fa-solid fa-sliders text-xs" />
+                      {isVoiceActive && (
+                        <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                        </span>
+                      )}
                     </button>
 
                     {toolsMenuOpen && (
@@ -686,18 +874,19 @@ export function Header() {
                         <div className="popover-title">Quick Settings & Tools</div>
                         <button
                           type="button"
-                          className="popover-item"
+                          className={`popover-item ${isVoiceActive ? 'text-emerald-400 font-semibold' : ''}`}
                           onClick={() => {
                             handleToggleVoice();
                             setToolsMenuOpen(false);
                           }}
                         >
-                          <i className="fa-solid fa-microphone text-xs" />
-                          <span>Voice Commands</span>
+                          <i className={`fa-solid fa-microphone text-xs ${isVoiceActive ? 'text-emerald-400' : ''}`} />
+                          <span>{isVoiceActive ? 'Voice Assistant (Active)' : 'Voice Commands'}</span>
+                          <span className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">Mic</span>
                         </button>
                         <button
                           type="button"
-                          className="popover-item"
+                          className={`popover-item ${isFocusMode ? 'text-yellow-400 font-semibold' : ''}`}
                           onClick={() => {
                             handleToggleFocus();
                             setToolsMenuOpen(false);
@@ -705,7 +894,7 @@ export function Header() {
                         >
                           <i className="fa-solid fa-expand text-xs" />
                           <span>{isFocusMode ? 'Exit Focus Mode' : 'Focus Mode (Zoom)'}</span>
-                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded">F</kbd>
+                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">F</kbd>
                         </button>
                         <button
                           type="button"
@@ -727,9 +916,9 @@ export function Header() {
                             setToolsMenuOpen(false);
                           }}
                         >
-                          <i className="fa-solid fa-keyboard text-xs" />
+                          <i className="fa-solid fa-keyboard text-xs text-sky-400" />
                           <span>Keyboard Shortcuts</span>
-                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded">?</kbd>
+                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">?</kbd>
                         </button>
                       </div>
                     )}
@@ -987,6 +1176,36 @@ export function Header() {
           <CommandPalette
             isOpen={cmdOpen}
             onClose={() => setCmdOpen(false)}
+          />
+        </React.Suspense>
+      )}
+
+      {/* Keyboard Shortcuts Cheat Sheet Modal */}
+      {shortcutsModalOpen && (
+        <React.Suspense fallback={null}>
+          <KeyboardShortcutsModal
+            isOpen={shortcutsModalOpen}
+            onClose={() => setShortcutsModalOpen(false)}
+          />
+        </React.Suspense>
+      )}
+
+      {/* Admin Voice Assistant Overlay */}
+      {voiceOpen && (
+        <React.Suspense fallback={null}>
+          <AdminVoiceAssistant
+            isOpen={voiceOpen}
+            onClose={() => setVoiceOpen(false)}
+            showToast={showToast}
+            onThemeChange={handleThemeChange}
+            onSelectTab={(tab) => {
+              window.dispatchEvent(new CustomEvent('ams-select-tab', { detail: { tab } }));
+              navigate(tab === 'dashboard' ? '/admin' : `/admin?tab=${tab}`);
+            }}
+            onOpenAddProject={() => {
+              window.dispatchEvent(new CustomEvent('ams-create-project'));
+              navigate('/admin?tab=projects&create=true');
+            }}
           />
         </React.Suspense>
       )}

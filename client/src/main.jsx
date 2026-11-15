@@ -43,21 +43,11 @@ if (typeof window !== 'undefined') {
 
 const rootEl = document.getElementById('root');
 if (rootEl) {
-  const mount = () => {
-    createRoot(rootEl).render(
-      <ErrorBoundary>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ErrorBoundary>
-    );
-  };
-
-  if (typeof window !== 'undefined') {
-    requestAnimationFrame(() => {
-      setTimeout(mount, 0);
-    });
-  } else {
-    mount();
-  }
+  createRoot(rootEl).render(
+    <ErrorBoundary>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ErrorBoundary>
+  );
 }

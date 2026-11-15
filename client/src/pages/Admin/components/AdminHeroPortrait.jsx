@@ -1072,17 +1072,20 @@ export function AdminHeroPortrait({
                   <label>
                     <span>Typography Font</span>
                   </label>
-                  <select
-                    value={fontFamily}
-                    onChange={(e) => handleFieldChange(setFontFamily, e.target.value)}
-                    className="hero-form-control cursor-pointer"
-                  >
-                    <option value="'Inter', sans-serif">Inter (Modern & Clean)</option>
-                    <option value="'Space Grotesk', sans-serif">Space Grotesk (Tech & Cyber)</option>
-                    <option value="'Outfit', sans-serif">Outfit (Bold & Geometric)</option>
-                    <option value="'JetBrains Mono', monospace">JetBrains Mono (Developer)</option>
-                    <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (Sleek)</option>
-                  </select>
+                  <div className="admin-select-wrapper w-full relative flex items-center">
+                    <select
+                      value={fontFamily}
+                      onChange={(e) => handleFieldChange(setFontFamily, e.target.value)}
+                      className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full"
+                    >
+                      <option value="'Inter', sans-serif" className="bg-[#0b101b] text-white">Inter (Modern & Clean)</option>
+                      <option value="'Space Grotesk', sans-serif" className="bg-[#0b101b] text-white">Space Grotesk (Tech & Cyber)</option>
+                      <option value="'Outfit', sans-serif" className="bg-[#0b101b] text-white">Outfit (Bold & Geometric)</option>
+                      <option value="'JetBrains Mono', monospace" className="bg-[#0b101b] text-white">JetBrains Mono (Developer)</option>
+                      <option value="'Plus Jakarta Sans', sans-serif" className="bg-[#0b101b] text-white">Plus Jakarta Sans (Sleek)</option>
+                    </select>
+                    <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+                  </div>
                 </div>
               </div>
 

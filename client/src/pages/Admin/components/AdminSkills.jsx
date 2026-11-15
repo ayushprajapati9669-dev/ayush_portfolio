@@ -753,15 +753,15 @@ export function AdminSkills({
         <div className="hidden md:block h-6 w-px bg-white/10" />
 
         {/* Category Dropdown */}
-        <div className="relative min-w-[170px] flex items-center">
-          <i className="fa-solid fa-layer-group text-yellow-400 text-xs pl-2 mr-1 pointer-events-none" />
+        <div className="admin-select-wrapper relative flex items-center min-w-[170px]">
+          <i className="fa-solid fa-layer-group text-yellow-400 text-xs absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
           <select
             value={activeCategory}
             onChange={(e) => {
               playTick();
               setActiveCategory(e.target.value);
             }}
-            className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-semibold text-white outline-none cursor-pointer hover:text-yellow-300 transition-colors"
+            className="admin-select-field has-icon-left appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-8 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
             title="Filter by Skill Category"
           >
             <option value="all" className="bg-[#0b101b] text-white">
@@ -773,22 +773,22 @@ export function AdminSkills({
               </option>
             ))}
           </select>
-          <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+          <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
         </div>
 
         {/* Divider */}
         <div className="hidden md:block h-6 w-px bg-white/10" />
 
         {/* Sort Controls */}
-        <div className="relative min-w-[210px] flex items-center">
-          <i className="fa-solid fa-arrow-down-up-across-line text-slate-400 text-xs pl-2 mr-1 pointer-events-none" />
+        <div className="admin-select-wrapper relative flex items-center min-w-[210px]">
+          <i className="fa-solid fa-arrow-down-up-across-line text-slate-400 text-xs absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
           <select
             value={sortOrder}
             onChange={(e) => {
               playTick();
               setSortOrder(e.target.value);
             }}
-            className="appearance-none w-full bg-transparent border-0 pl-1.5 pr-7 py-2 text-xs font-medium text-slate-200 hover:text-white outline-none cursor-pointer transition-colors"
+            className="admin-select-field has-icon-left appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-8 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
             title="Sort Order"
           >
             <option value="custom" className="bg-[#0b101b] text-white">Custom Order (Drag & Drop)</option>
@@ -796,7 +796,7 @@ export function AdminSkills({
             <option value="za" className="bg-[#0b101b] text-white">Alphabetical (Z-A)</option>
             <option value="newest" className="bg-[#0b101b] text-white">Newest First</option>
           </select>
-          <i className="fa-solid fa-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none" />
+          <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
         </div>
 
         {/* New Category Button */}
@@ -886,24 +886,27 @@ export function AdminSkills({
 
             {/* Target Category Select */}
             <div className="space-y-1.5">
-              <label className="block font-mono text-xs font-semibold text-slate-300">
+              <label className="block text-xs font-semibold text-slate-300 font-sans">
                 Target Category
               </label>
-              <select
-                value={selectedFormCategory}
-                onChange={(e) => setSelectedFormCategory(e.target.value)}
-                className="w-full rounded-xl border border-white/15 bg-black/60 px-4 py-3 text-sm text-white outline-none focus:border-yellow-400 transition-all cursor-pointer font-sans"
-              >
-                {categories.length === 0 ? (
-                  <option value="">No categories available - click New Category</option>
-                ) : (
-                  categories.map((cat) => (
-                    <option key={cat.id} value={cat.id} className="bg-[#0b101b] text-white">
-                      {cat.name}
-                    </option>
-                  ))
-                )}
-              </select>
+              <div className="admin-select-wrapper w-full relative flex items-center">
+                <select
+                  value={selectedFormCategory}
+                  onChange={(e) => setSelectedFormCategory(e.target.value)}
+                  className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2.5 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full font-sans"
+                >
+                  {categories.length === 0 ? (
+                    <option value="" className="bg-[#0b101b] text-white">No categories available - click New Category</option>
+                  ) : (
+                    categories.map((cat) => (
+                      <option key={cat.id} value={cat.id} className="bg-[#0b101b] text-white">
+                        {cat.name}
+                      </option>
+                    ))
+                  )}
+                </select>
+                <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+              </div>
             </div>
 
             {/* Live Preview Box */}

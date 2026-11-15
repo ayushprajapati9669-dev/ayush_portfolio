@@ -150,65 +150,32 @@
       fetchpriority="high"
     />
 
-    <!-- Performance-Optimized Webfonts (Loaded on idle after FCP/LCP to eliminate network contention) -->
+    <!-- Performance-Optimized Webfonts (Non-render-blocking) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=optional"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Jost:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       />
     </noscript>
 
-    <!-- FontAwesome Icons (Loaded on idle after FCP/LCP) -->
+    <!-- FontAwesome Icons (Non-render-blocking) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      media="print"
+      onload="this.media='all'"
+    />
     <noscript>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     </noscript>
   </head>
   <body class="min-h-screen bg-black text-white antialiased selection:bg-white/20 selection:text-white theme-midnight accent-cyan">
-    <!-- Critical Persistent Hero Shell (Never destroyed during React hydration -> Locks LCP at frame 0) -->
-    <section id="hero-stage-shell" class="hero-editorial-stage" style="position: absolute; top: 0; left: 0; right: 0; pointer-events: none; z-index: 1; margin: 0 auto; max-width: 1440px;">
-      <div id="hero-photo-portal" class="hero-photo-container">
-        <div id="hero-photo-wrapper" class="hero-photo-wrapper relative">
-          <picture id="hero-photo-picture">
-            <source media="(max-width: 768px)" srcset="/uploads/hero_cutout_1794562459704_847_mobile.webp" type="image/webp" />
-            <source media="(min-width: 769px)" srcset="/uploads/hero_cutout_1794562459704_847.webp" type="image/webp" />
-            <img
-              id="himg"
-              src="/uploads/hero_cutout_1794562459704_847_mobile.webp"
-              width="600"
-              height="800"
-              alt="Ayush Prajapati - Hero Portrait"
-              class="hero-photo-img"
-              loading="eager"
-              fetchpriority="high"
-              decoding="sync"
-            />
-          </picture>
-          <canvas id="hero-particle-canvas" class="pointer-events-none absolute inset-0 z-10 block select-none" aria-hidden="true"></canvas>
-        </div>
-      </div>
-    </section>
-    <script>
-      if (window.location.pathname !== '/' && window.location.pathname !== '') {
-        var s = document.getElementById('hero-stage-shell');
-        if (s) s.style.display = 'none';
-      }
-      window.__earlyUserInteraction = false;
-      function _onEarlyAct() {
-        window.__earlyUserInteraction = true;
-        window.removeEventListener('scroll', _onEarlyAct);
-        window.removeEventListener('touchstart', _onEarlyAct);
-        window.removeEventListener('touchmove', _onEarlyAct);
-        window.removeEventListener('pointerdown', _onEarlyAct);
-        window.removeEventListener('wheel', _onEarlyAct);
-        window.removeEventListener('keydown', _onEarlyAct);
-      }
-      window.addEventListener('scroll', _onEarlyAct, { passive: true, once: true });
-      window.addEventListener('touchstart', _onEarlyAct, { passive: true, once: true });
-      window.addEventListener('touchmove', _onEarlyAct, { passive: true, once: true });
-      window.addEventListener('pointerdown', _onEarlyAct, { passive: true, once: true });
-      window.addEventListener('wheel', _onEarlyAct, { passive: true, once: true });
-      window.addEventListener('keydown', _onEarlyAct, { passive: true, once: true });
-    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

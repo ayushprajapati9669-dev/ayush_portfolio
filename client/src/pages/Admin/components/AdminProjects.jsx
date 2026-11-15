@@ -111,7 +111,9 @@ export function AdminProjects({
   updateAppState,
   session,
   showToast,
-  openConfirmModal
+  openConfirmModal,
+  initialCreateNew,
+  onResetCreate
 }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -130,6 +132,31 @@ export function AdminProjects({
     caseStudy: JSON.parse(JSON.stringify(DEFAULT_CASE_STUDY))
   });
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (initialCreateNew) {
+      setEditingId(null);
+      setForm({
+        title: '',
+        category: 'Full-Stack Web App',
+        status: 'published',
+        shortDescription: '',
+        technologies: 'React JS, Node.js, Express.js, MongoDB',
+        liveDemoUrl: '',
+        githubUrl: 'https://github.com/ayushprajapati9669-dev',
+        thumbnailUrl: '',
+        featured: true,
+        caseStudy: JSON.parse(JSON.stringify(DEFAULT_CASE_STUDY))
+      });
+      setErrors({});
+      setCurrentStep(1);
+      setIsFormOpen(true);
+      if (onResetCreate) onResetCreate();
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [initialCreateNew, onResetCreate]);
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
@@ -1725,14 +1752,14 @@ export function AdminProjects({
             </div>
 
             {/* Category Dropdown */}
-            <div className="relative flex items-center">
+            <div className="admin-select-wrapper relative flex items-center">
               <select
                 value={selectedCategory}
                 onChange={(e) => {
                   playTick();
                   setSelectedCategory(e.target.value);
                 }}
-                className="appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-7 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
+                className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
               >
                 <option value="all" className="bg-[#0b101b] text-white">
                   All Categories
@@ -1745,18 +1772,18 @@ export function AdminProjects({
                     </option>
                   ))}
               </select>
-              <i className="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+              <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
             </div>
 
             {/* Sort Selector */}
-            <div className="relative flex items-center">
+            <div className="admin-select-wrapper relative flex items-center">
               <select
                 value={sortBy}
                 onChange={(e) => {
                   playTick();
                   setSortBy(e.target.value);
                 }}
-                className="appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
+                className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.id} value={opt.id} className="bg-[#0b101b] text-white">
@@ -1764,7 +1791,7 @@ export function AdminProjects({
                   </option>
                 ))}
               </select>
-              <i className="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+              <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
             </div>
           </div>
 

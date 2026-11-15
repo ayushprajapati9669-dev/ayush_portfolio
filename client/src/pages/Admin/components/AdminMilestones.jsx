@@ -93,7 +93,9 @@ export function AdminMilestones({
   session,
   showToast,
   openConfirmModal,
-  onSelectTab
+  onSelectTab,
+  initialOpenWizard,
+  onResetWizard
 }) {
   const profile = appState.profile || {};
   
@@ -533,57 +535,36 @@ export function AdminMilestones({
       if (e.detail?.density) setDensity(e.detail.density);
     };
 
-    const handleVoiceEvent = () => {
-      toggleVoiceCommand();
-    };
-
-    const handleShortcutsEvent = () => {
-      setIsShortcutsOpen(true);
-    };
-
-    const handleCmdPaletteEvent = () => {
-      setIsCommandPaletteOpen(true);
+    const handleMilestoneWizardEvent = () => {
+      openNewWizard();
     };
 
     window.addEventListener('ams-open-modal', handleCustomModal);
     window.addEventListener('admin-theme-changed', handleThemeEvent);
     window.addEventListener('admin-accent-changed', handleAccentEvent);
     window.addEventListener('admin-density-changed', handleDensityEvent);
-    window.addEventListener('ams-toggle-voice', handleVoiceEvent);
-    window.addEventListener('ams-open-shortcuts', handleShortcutsEvent);
-    window.addEventListener('ams-open-command-palette', handleCmdPaletteEvent);
+    window.addEventListener('ams-open-milestone-wizard', handleMilestoneWizardEvent);
 
     return () => {
       window.removeEventListener('ams-open-modal', handleCustomModal);
       window.removeEventListener('admin-theme-changed', handleThemeEvent);
       window.removeEventListener('admin-accent-changed', handleAccentEvent);
       window.removeEventListener('admin-density-changed', handleDensityEvent);
-      window.removeEventListener('ams-toggle-voice', handleVoiceEvent);
-      window.removeEventListener('ams-open-shortcuts', handleShortcutsEvent);
-      window.removeEventListener('ams-open-command-palette', handleCmdPaletteEvent);
+      window.removeEventListener('ams-open-milestone-wizard', handleMilestoneWizardEvent);
     };
   }, []);
 
   // Keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsCommandPaletteOpen((prev) => !prev);
-      } else if (e.key === 'Escape') {
+      if (e.key === 'Escape') {
         setContextMenu({ visible: false, x: 0, y: 0, targetId: null });
         setIsCommandPaletteOpen(false);
         setIsShortcutsOpen(false);
         setIsCompareActive(false);
-      } else if (e.key === '?' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) && !document.activeElement.isContentEditable) {
-        e.preventDefault();
-        setIsShortcutsOpen(true);
       } else if (e.key === 'n' && !e.ctrlKey && !e.metaKey && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) && !document.activeElement.isContentEditable) {
         e.preventDefault();
         openNewWizard();
-      } else if (e.key === 'f' && !e.ctrlKey && !e.metaKey && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) && !document.activeElement.isContentEditable) {
-        e.preventDefault();
-        setIsFocusMode((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -1257,6 +1238,13 @@ export function AdminMilestones({
       setIsRteVoiceListening(false);
     }
   };
+
+  useEffect(() => {
+    if (initialOpenWizard) {
+      openNewWizard();
+      if (onResetWizard) onResetWizard();
+    }
+  }, [initialOpenWizard, onResetWizard]);
 
   // Duplicate Check logic
   const checkDuplicate = (titleInput) => {
@@ -1991,47 +1979,56 @@ export function AdminMilestones({
           <div className="admin-milestones-toolbar bg-[#080e1b] border border-white/[0.08] rounded-2xl p-4 flex flex-col gap-3 shadow-sm">
             {/* Filter Selects Row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              <select
-                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500/60 cursor-pointer"
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                aria-label="Filter status"
-              >
-                <option value="all">Status: All</option>
-                <option value="focus">Focus</option>
-                <option value="completed">Completed</option>
-                <option value="planned">Planned</option>
-              </select>
+              <div className="admin-select-wrapper relative flex items-center w-full">
+                <select
+                  className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full"
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  aria-label="Filter status"
+                >
+                  <option value="all" className="bg-[#0b101b] text-white">Status: All</option>
+                  <option value="focus" className="bg-[#0b101b] text-white">Focus</option>
+                  <option value="completed" className="bg-[#0b101b] text-white">Completed</option>
+                  <option value="planned" className="bg-[#0b101b] text-white">Planned</option>
+                </select>
+                <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+              </div>
 
-              <select
-                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500/60 cursor-pointer"
-                value={filterYear}
-                onChange={(e) => setFilterYear(e.target.value)}
-                aria-label="Filter year"
-              >
-                <option value="all">Year: All</option>
-                <option value="Year 1">Year 1</option>
-                <option value="Year 2">Year 2</option>
-                <option value="Year 3">Year 3</option>
-                <option value="Year 4">Year 4</option>
-                <option value="2023">Year 2023</option>
-                <option value="2024">Year 2024</option>
-                <option value="2025">Year 2025</option>
-                <option value="Present">Present</option>
-              </select>
+              <div className="admin-select-wrapper relative flex items-center w-full">
+                <select
+                  className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full"
+                  value={filterYear}
+                  onChange={(e) => setFilterYear(e.target.value)}
+                  aria-label="Filter year"
+                >
+                  <option value="all" className="bg-[#0b101b] text-white">Year: All</option>
+                  <option value="Year 1" className="bg-[#0b101b] text-white">Year 1</option>
+                  <option value="Year 2" className="bg-[#0b101b] text-white">Year 2</option>
+                  <option value="Year 3" className="bg-[#0b101b] text-white">Year 3</option>
+                  <option value="Year 4" className="bg-[#0b101b] text-white">Year 4</option>
+                  <option value="2023" className="bg-[#0b101b] text-white">Year 2023</option>
+                  <option value="2024" className="bg-[#0b101b] text-white">Year 2024</option>
+                  <option value="2025" className="bg-[#0b101b] text-white">Year 2025</option>
+                  <option value="Present" className="bg-[#0b101b] text-white">Present</option>
+                </select>
+                <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+              </div>
 
-              <select
-                className="bg-[#0c1424] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500/60 cursor-pointer"
-                value={filterSort}
-                onChange={(e) => setFilterSort(e.target.value)}
-                aria-label="Sort milestones"
-              >
-                <option value="manual">Manual Order</option>
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-                <option value="az">Alphabetical A-Z</option>
-                <option value="views">Most Viewed</option>
-              </select>
+              <div className="admin-select-wrapper relative flex items-center w-full">
+                <select
+                  className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full"
+                  value={filterSort}
+                  onChange={(e) => setFilterSort(e.target.value)}
+                  aria-label="Sort milestones"
+                >
+                  <option value="manual" className="bg-[#0b101b] text-white">Manual Order</option>
+                  <option value="newest" className="bg-[#0b101b] text-white">Newest First</option>
+                  <option value="oldest" className="bg-[#0b101b] text-white">Oldest First</option>
+                  <option value="az" className="bg-[#0b101b] text-white">Alphabetical A-Z</option>
+                  <option value="views" className="bg-[#0b101b] text-white">Most Viewed</option>
+                </select>
+                <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+              </div>
 
               <input
                 type="text"
@@ -2725,32 +2722,38 @@ export function AdminMilestones({
                       </div>
                       <div className="form-group">
                         <label>Year</label>
-                        <select
-                          className="form-control"
-                          value={wizardYear}
-                          onChange={(e) => setWizardYear(e.target.value)}
-                        >
-                          <option value="Year 1">Year 1</option>
-                          <option value="Year 2">Year 2</option>
-                          <option value="Year 3">Year 3</option>
-                          <option value="Year 4">Year 4</option>
-                          <option value="Present">Present</option>
-                        </select>
+                        <div className="admin-select-wrapper w-full relative flex items-center">
+                          <select
+                            className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full"
+                            value={wizardYear}
+                            onChange={(e) => setWizardYear(e.target.value)}
+                          >
+                            <option value="Year 1" className="bg-[#0b101b] text-white">Year 1</option>
+                            <option value="Year 2" className="bg-[#0b101b] text-white">Year 2</option>
+                            <option value="Year 3" className="bg-[#0b101b] text-white">Year 3</option>
+                            <option value="Year 4" className="bg-[#0b101b] text-white">Year 4</option>
+                            <option value="Present" className="bg-[#0b101b] text-white">Present</option>
+                          </select>
+                          <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+                        </div>
                       </div>
                     </div>
 
                     <div className="form-row">
                       <div className="form-group">
                         <label>Status</label>
-                        <select
-                          className="form-control"
-                          value={wizardStatus}
-                          onChange={(e) => setWizardStatus(e.target.value)}
-                        >
-                          <option value="focus">Current Focus</option>
-                          <option value="completed">Completed</option>
-                          <option value="planned">Planned</option>
-                        </select>
+                        <div className="admin-select-wrapper w-full relative flex items-center">
+                          <select
+                            className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full"
+                            value={wizardStatus}
+                            onChange={(e) => setWizardStatus(e.target.value)}
+                          >
+                            <option value="focus" className="bg-[#0b101b] text-white">Current Focus</option>
+                            <option value="completed" className="bg-[#0b101b] text-white">Completed</option>
+                            <option value="planned" className="bg-[#0b101b] text-white">Planned</option>
+                          </select>
+                          <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+                        </div>
                       </div>
                       <div className="form-group">
                         <label>Progress (%)</label>

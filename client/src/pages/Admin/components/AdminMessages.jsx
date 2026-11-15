@@ -63,19 +63,26 @@ export function AdminMessages({
     }
   }, [messages, activeMailId]);
 
-  // Keyboard shortcut listener (⌘K for search)
+  // Keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        searchInputRef.current?.focus();
-      }
       if (e.key === 'Escape') {
         setContextMenu({ visible: false, x: 0, y: 0, targetId: null });
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // External message selection from notifications or shortcuts
+  useEffect(() => {
+    const handleSelectMessage = (e) => {
+      if (e.detail?.messageId) {
+        setActiveMailId(e.detail.messageId);
+      }
+    };
+    window.addEventListener('ams-select-message', handleSelectMessage);
+    return () => window.removeEventListener('ams-select-message', handleSelectMessage);
   }, []);
 
   // Close context menu on outside click

@@ -123,13 +123,14 @@ export function ScrollReactivePortraitParticles({
   }, [onPhotoFit]);
 
   useEffect(() => {
-    const shell = typeof document !== 'undefined' ? document.getElementById('hero-stage-shell') : null;
-    if (shell) shell.style.display = 'block';
-
     const container = containerRef.current || (typeof document !== 'undefined' ? document.getElementById('hero-photo-wrapper') : null);
     const canvas = canvasRef.current || (typeof document !== 'undefined' ? document.getElementById('hero-particle-canvas') : null);
     const imgEl = imgRef.current || (typeof document !== 'undefined' ? document.getElementById('himg') : null);
     if (!container || !canvas || !imgEl) return;
+
+    // Guarantee initial resting state: photo is 100% visible and pristine
+    imgEl.style.opacity = '1';
+    imgEl.style.transform = 'translate3d(0, 0, 0)';
 
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
@@ -763,7 +764,6 @@ export function ScrollReactivePortraitParticles({
 
     return () => {
       delete window.__portraitScrollHandler;
-      if (shell) shell.style.display = 'none';
       isMounted.current = false;
       isLoopRunning.current = false;
       if (animId) cancelAnimationFrame(animId);
@@ -784,11 +784,6 @@ export function ScrollReactivePortraitParticles({
       clearTimeout(resizeTimer);
     };
   }, []);
-
-  const hasExistingShell = typeof document !== 'undefined' && Boolean(document.getElementById('hero-photo-wrapper'));
-  if (hasExistingShell) {
-    return null;
-  }
 
   return (
     <div ref={containerRef} className={`hero-photo-wrapper relative ${className}`}>

@@ -135,33 +135,7 @@ export function JourneyPage() {
     });
   };
 
-  // Seamless non-trapping scrollbar interaction for Achievements & Journey
-  const handleTimelineWheel = (e) => {
-    const el = e.currentTarget;
-    if (!el) return;
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    const maxScroll = scrollHeight - clientHeight;
-    const isDown = e.deltaY > 0;
-    const isUp = e.deltaY < 0;
 
-    const canScrollDown = isDown && scrollTop < maxScroll - 1;
-    const canScrollUp = isUp && scrollTop > 1;
-
-    if (canScrollDown || canScrollUp) {
-      // Container has remaining scroll distance; allow native container scrolling
-      return;
-    }
-
-    // Container reached edge: seamlessly bubble scroll to page/Lenis so user is never trapped
-    if (typeof window !== 'undefined') {
-      if (window.__lenis && typeof window.__lenis.scrollTo === 'function') {
-        const current = typeof window.__lenis.targetScroll === 'number' ? window.__lenis.targetScroll : window.__lenis.scroll;
-        window.__lenis.scrollTo(current + e.deltaY * 0.9, { immediate: false });
-      } else {
-        window.scrollBy({ top: e.deltaY, behavior: 'auto' });
-      }
-    }
-  };
 
   // Magnetic Button Physics
   const handleMagneticMouseMove = (e) => {
@@ -272,11 +246,7 @@ export function JourneyPage() {
 
       {/* Part 3: Dynamic Achievements & Journey Timeline (from Admin CMS) */}
       <div className="bottom-section">
-        <div
-          className="about-card"
-          onMouseMove={handleCardMouseMove}
-          onMouseLeave={handleCardMouseLeave}
-        >
+        <div className="about-card">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <h3 style={{ margin: 0 }}>
               <span className="realistic-icon">
@@ -290,11 +260,9 @@ export function JourneyPage() {
           </div>
 
           <div
-            className="timeline-list custom-scrollbar"
-            data-lenis-prevent="true"
+            className="timeline-list"
             tabIndex={0}
             aria-label="Achievements and journey timeline list"
-            onWheel={handleTimelineWheel}
           >
             {timelineMilestones.map((item, idx) => {
               const cleanPhase = (item.phase || item.metaLabel || '').replace(/\s*·\s*Year\s*[\d–-]+/i, '').trim();

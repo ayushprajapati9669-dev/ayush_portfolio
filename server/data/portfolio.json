@@ -255,7 +255,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "From blank screen to live product. That’s Ayush Prajapati.",
-    "updatedAt": "2026-11-14T20:05:33.420Z",
+    "updatedAt": "2026-11-15T04:21:28.076Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -335,7 +335,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "Airbnb clone 1",
-      "updatedAt": "2026-11-14T20:05:33.202Z",
+      "updatedAt": "2026-11-15T04:21:27.871Z",
       "caseStudy": {
         "problem": "",
         "approach": "",
@@ -385,7 +385,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone 2",
-      "updatedAt": "2026-11-14T20:05:33.202Z"
+      "updatedAt": "2026-11-15T04:21:27.871Z"
     },
     {
       "id": "proj-1792496192331",
@@ -410,7 +410,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-chat-preview.webp",
       "title": "ai chat boat",
-      "updatedAt": "2026-11-14T20:05:33.202Z"
+      "updatedAt": "2026-11-15T04:21:27.871Z"
     },
     {
       "id": "proj-1792781601076",
@@ -438,7 +438,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
-      "updatedAt": "2026-11-14T20:05:33.202Z"
+      "updatedAt": "2026-11-15T04:21:27.871Z"
     },
     {
       "id": "proj-1792669669594",
@@ -466,7 +466,7 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-agentic-preview.webp",
       "title": "AI Agentic Workspace",
-      "updatedAt": "2026-11-14T20:05:33.202Z"
+      "updatedAt": "2026-11-15T04:21:27.871Z"
     }
   ],
   "skills": [
@@ -499,7 +499,7 @@
         }
       ],
       "tabIcon": "languages",
-      "updatedAt": "2026-11-14T20:05:33.205Z"
+      "updatedAt": "2026-11-15T04:21:27.873Z"
     },
     {
       "id": "skill-frontend",
@@ -542,7 +542,7 @@
         }
       ],
       "tabIcon": "frontend",
-      "updatedAt": "2026-11-14T20:05:33.205Z"
+      "updatedAt": "2026-11-15T04:21:27.873Z"
     },
     {
       "id": "skill-backend",
@@ -565,7 +565,7 @@
         }
       ],
       "tabIcon": "backend",
-      "updatedAt": "2026-11-14T20:05:33.205Z"
+      "updatedAt": "2026-11-15T04:21:27.873Z"
     },
     {
       "id": "skill-databases",
@@ -584,7 +584,7 @@
         }
       ],
       "tabIcon": "databases",
-      "updatedAt": "2026-11-14T20:05:33.205Z"
+      "updatedAt": "2026-11-15T04:21:27.873Z"
     },
     {
       "id": "skill-tools",
@@ -615,7 +615,7 @@
         }
       ],
       "tabIcon": "tools",
-      "updatedAt": "2026-11-14T20:05:33.205Z"
+      "updatedAt": "2026-11-15T04:21:27.873Z"
     },
     {
       "id": "skill-dsa",
@@ -630,12 +630,49 @@
         }
       ],
       "tabIcon": "dsa",
-      "updatedAt": "2026-11-14T20:05:33.205Z"
+      "updatedAt": "2026-11-15T04:21:27.873Z"
     }
   ],
   "certificates": [],
   "media": [],
-  "messages": [],
+  "messages": [
+    {
+      "id": "msg-1792813214696",
+      "name": "ajit kumar",
+      "email": "ajit@gmail.com",
+      "subject": "help",
+      "message": "i need some help from you please support me",
+      "status": "read",
+      "createdAt": "2026-10-24T03:40:14.696Z"
+    },
+    {
+      "id": "msg-1792776034240",
+      "name": "ajay prajapati",
+      "email": "ajay@gmail.com",
+      "subject": "personal",
+      "message": "you can aaply for the tcs",
+      "status": "read",
+      "createdAt": "2026-10-23T17:20:34.240Z"
+    },
+    {
+      "id": "msg-1792775992794",
+      "name": "sonali prajapati",
+      "email": "sonali@gmail.com",
+      "subject": "connect",
+      "message": "i am connect to you",
+      "status": "read",
+      "createdAt": "2026-10-23T17:19:52.794Z"
+    },
+    {
+      "id": "msg-1792775905527",
+      "name": "rohit prajapati",
+      "email": "rohti626861@gmail.com",
+      "subject": "hiring",
+      "message": "i hired you",
+      "status": "read",
+      "createdAt": "2026-10-23T17:18:25.527Z"
+    }
+  ],
   "settings": {
     "siteName": "Ayush Prajapati",
     "siteTitle": "Ayush Prajapati — Full-Stack Developer Portfolio",
@@ -649,7 +686,7 @@
     "contactPhone": "(+91) 9669802554",
     "contactNote": "",
     "copyrightText": "© 2026 Ayush Prajapati. All rights reserved.",
-    "accentColor": "#06b6d4",
+    "accentColor": "#10b981",
     "themeMode": "dark",
     "bgBase": "#000000",
     "bgSurface": "#0a0a0f",
@@ -657,9 +694,9 @@
     "maintenanceMode": false,
     "particlesEnabled": true,
     "robotsIndex": "index, follow",
-    "updatedAt": "2026-11-15T03:52:00.589Z",
+    "updatedAt": "2026-11-15T05:10:15.105Z",
     "fontHeading": "'Plus Jakarta Sans', sans-serif",
-    "fontBody": "'Plus Jakarta Sans', sans-serif",
+    "fontBody": "'Inter', sans-serif",
     "seoKeywords": "Ayush Prajapati, Full-Stack Developer, MERN Stack, React.js, Node.js, SISTec Bhopal, Software Engineer, Portfolio",
     "author": "Ayush Prajapati",
     "cloudinaryCloudName": "",
@@ -671,10 +708,10 @@
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-15T03:34:19.451Z",
+      "lastLoginAt": "2026-11-15T06:31:06.416Z",
       "passwordHash": "scrypt$16384$8$1$4239cdd5ea09a3af47a1ef70e7251af9$a879a3326e425702bfceff0e6670507b88b6bf5e0db1daed20ac3c15adf277ad33fad93c85fd3e8afdbbe88859afba4b254129a99d4137ee3770075f29dd77d6",
       "role": "admin",
-      "updatedAt": "2026-11-14T20:05:33.347Z"
+      "updatedAt": "2026-11-15T04:21:28.017Z"
     },
     {
       "username": "ayush",
@@ -683,15 +720,15 @@
       "lastLoginAt": "2026-11-14T18:09:37.910Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T20:05:33.347Z"
+      "updatedAt": "2026-11-15T04:21:28.017Z"
     },
     {
       "createdAt": "2026-11-05T12:05:07.107Z",
       "id": "usr-efjufiyw",
-      "lastLoginAt": null,
+      "lastLoginAt": "2026-11-15T04:40:09.843Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T20:05:33.347Z",
+      "updatedAt": "2026-11-15T04:21:28.017Z",
       "username": "admin"
     },
     {
@@ -700,7 +737,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-14T20:05:33.347Z",
+      "updatedAt": "2026-11-15T04:21:28.017Z",
       "username": "Ayush7162"
     }
   ],

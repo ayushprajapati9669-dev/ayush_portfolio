@@ -372,33 +372,39 @@ export function AdminAppearance({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-mono text-slate-400 mb-1.5">Display & Heading Font</label>
-                <select
-                  value={form.fontHeading}
-                  onChange={(e) => handleChange('fontHeading', e.target.value)}
-                  className="w-full font-mono text-xs px-3 py-2 rounded-xl border border-white/10 bg-black/50 text-white focus:border-yellow-400/50 outline-none"
-                >
-                  {FONT_PRESETS.map((f) => (
-                    <option key={f.name} value={f.family} className="bg-zinc-900 text-white">
-                      {f.name} ({f.category})
-                    </option>
-                  ))}
-                </select>
+                <label className="block text-xs font-semibold text-slate-300 font-sans mb-1.5">Display & Heading Font</label>
+                <div className="admin-select-wrapper w-full relative flex items-center">
+                  <select
+                    value={form.fontHeading}
+                    onChange={(e) => handleChange('fontHeading', e.target.value)}
+                    className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full"
+                  >
+                    {FONT_PRESETS.map((f) => (
+                      <option key={f.name} value={f.family} className="bg-[#0b101b] text-white">
+                        {f.name} ({f.category})
+                      </option>
+                    ))}
+                  </select>
+                  <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-slate-400 mb-1.5">Body & UI Font</label>
-                <select
-                  value={form.fontBody}
-                  onChange={(e) => handleChange('fontBody', e.target.value)}
-                  className="w-full font-mono text-xs px-3 py-2 rounded-xl border border-white/10 bg-black/50 text-white focus:border-yellow-400/50 outline-none"
-                >
-                  {FONT_PRESETS.map((f) => (
-                    <option key={f.name} value={f.family} className="bg-zinc-900 text-white">
-                      {f.name} ({f.category})
-                    </option>
-                  ))}
-                </select>
+                <label className="block text-xs font-semibold text-slate-300 font-sans mb-1.5">Body & UI Font</label>
+                <div className="admin-select-wrapper w-full relative flex items-center">
+                  <select
+                    value={form.fontBody}
+                    onChange={(e) => handleChange('fontBody', e.target.value)}
+                    className="admin-select-field appearance-none bg-[#050a14] border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 outline-none cursor-pointer transition-all w-full"
+                  >
+                    {FONT_PRESETS.map((f) => (
+                      <option key={f.name} value={f.family} className="bg-[#0b101b] text-white">
+                        {f.name} ({f.category})
+                      </option>
+                    ))}
+                  </select>
+                  <i className="admin-select-icon fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-400 pointer-events-none" />
+                </div>
               </div>
             </div>
           </div>
@@ -493,71 +499,110 @@ export function AdminAppearance({
             >
               {/* Simulated Card Surface */}
               <div
-                className="p-4 rounded-xl border space-y-3 shadow-lg"
+                className="p-4 rounded-xl border space-y-3.5 shadow-xl transition-all"
                 style={{
                   backgroundColor: form.bgSurface,
-                  borderColor: form.accentColor + '33'
+                  borderColor: form.accentColor + '33',
+                  boxShadow: `0 10px 25px -5px ${form.accentColor}15`
                 }}
               >
                 <div className="flex items-center justify-between">
                   <span
-                    className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-md border"
+                    className="text-[10px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-md border font-semibold"
                     style={{
                       borderColor: form.accentColor + '55',
-                      backgroundColor: form.accentColor + '15',
+                      backgroundColor: form.accentColor + '18',
                       color: form.accentColor
                     }}
                   >
-                    MERN ARCHITECTURE
+                    THEME & COMPONENT PREVIEW
                   </span>
-                  <span className="text-[11px] font-mono text-slate-400">2026 Live</span>
+                  <span className="text-[10px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                    {form.themeName || 'Custom'}
+                  </span>
                 </div>
 
-                <h4
-                  className="text-base font-bold leading-tight"
-                  style={{ fontFamily: form.fontHeading }}
-                >
-                  High-Throughput Distributed Microservices
-                </h4>
+                <div className="space-y-1">
+                  <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: form.accentColor }} />
+                    Heading Font · {form.fontHeading}
+                  </div>
+                  <h4
+                    className="text-lg font-bold leading-tight"
+                    style={{ fontFamily: form.fontHeading }}
+                  >
+                    Crafting High-Performance User Experiences
+                  </h4>
+                </div>
 
-                <p
-                  className="text-xs text-slate-300 leading-relaxed"
-                  style={{ fontFamily: form.fontBody }}
-                >
-                  Engineered resilient full-stack systems with sub-50ms p99 latency and continuous WebGL visual telemetry.
-                </p>
+                <div className="space-y-1">
+                  <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+                    Body Font · {form.fontBody}
+                  </div>
+                  <p
+                    className="text-xs text-slate-300 leading-relaxed"
+                    style={{ fontFamily: form.fontBody }}
+                  >
+                    This card simulates your live portfolio design. As you customize accents, typography, surface depth, and glow intensity, buttons and badges dynamically update here.
+                  </p>
+                </div>
 
-                <div className="flex items-center gap-2 pt-1">
+                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-white/5">
                   <button
                     type="button"
-                    className="text-xs font-semibold px-3 py-1.5 rounded-lg text-black transition-all shadow-md"
+                    className="text-xs font-semibold px-3.5 py-1.5 rounded-lg text-black transition-all shadow-md flex items-center gap-1.5"
                     style={{
                       backgroundColor: form.accentColor,
-                      fontFamily: form.fontBody
+                      fontFamily: form.fontBody,
+                      boxShadow: form.glowIntensity === 'vibrant'
+                        ? `0 0 16px ${form.accentColor}66`
+                        : form.glowIntensity === 'medium'
+                        ? `0 0 10px ${form.accentColor}44`
+                        : 'none'
                     }}
                   >
-                    Explore Case Study
+                    <span>Primary Action</span>
+                    <i className="fa-solid fa-arrow-right text-[10px]" />
                   </button>
                   <button
                     type="button"
-                    className="text-xs px-3 py-1.5 rounded-lg border text-white transition-all"
+                    className="text-xs px-3 py-1.5 rounded-lg border text-white transition-all bg-white/[0.03] hover:bg-white/[0.08]"
                     style={{
-                      borderColor: 'rgba(255, 255, 255, 0.15)',
+                      borderColor: 'rgba(255, 255, 255, 0.2)',
                       fontFamily: form.fontBody
                     }}
                   >
-                    Live Demo →
+                    Secondary Outline
                   </button>
+                  <span
+                    className="text-[10px] font-mono px-2 py-1 rounded-md ml-auto"
+                    style={{
+                      backgroundColor: form.accentColor + '20',
+                      color: form.accentColor,
+                      border: `1px solid ${form.accentColor}44`
+                    }}
+                  >
+                    Badge Sample
+                  </span>
                 </div>
               </div>
 
               {/* Simulated Status Indicators */}
-              <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-1 border-t border-white/5">
+              <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-slate-400 pt-2 border-t border-white/5">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: form.accentColor }} />
-                  Accent: {form.accentColor}
+                  <span className="w-2.5 h-2.5 rounded-full border border-white/20 shrink-0" style={{ backgroundColor: form.accentColor }} />
+                  Accent: <code className="text-white">{form.accentColor}</code>
                 </span>
-                <span>Particles: {form.particlesEnabled ? 'Enabled' : 'Disabled'}</span>
+                <span className="text-right">
+                  Base: <code className="text-white">{form.bgBase}</code>
+                </span>
+                <span>
+                  Particles: <span className={form.particlesEnabled ? 'text-emerald-400 font-semibold' : 'text-slate-500'}>{form.particlesEnabled ? 'Active' : 'Disabled'}</span>
+                </span>
+                <span className="text-right">
+                  Glow: <span className="text-yellow-400 capitalize">{form.glowIntensity}</span>
+                </span>
               </div>
             </div>
 

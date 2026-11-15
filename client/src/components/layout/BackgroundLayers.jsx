@@ -169,7 +169,7 @@ export function BackgroundLayers() {
               alt=""
               width="1920"
               height="1080"
-              className="w-full h-full object-cover object-bottom transition-all duration-700 ease-out"
+              className="w-full h-full object-cover object-bottom will-change-transform"
               style={{
                 transform: `translate3d(0, ${Math.min(100, scrollProgress * 120)}px, 0) scale(1.02)`,
                 filter: 'contrast(112%) brightness(92%) saturate(108%)',

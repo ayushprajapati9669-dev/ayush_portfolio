@@ -4257,3 +4257,105 @@ body.admin-sidebar-open #main-content {
     padding: 16px !important;
   }
 }
+
+/* =========================================================================
+   Standardized Admin Panel Dropdown Controls (Projects Tab Standard)
+   ========================================================================= */
+.admin-select-wrapper {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  width: auto;
+}
+
+.admin-select-wrapper.w-full {
+  width: 100% !important;
+  display: flex !important;
+}
+
+.admin-select-field {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-color: #050a14 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.75rem !important; /* rounded-xl */
+  padding-left: 0.75rem; /* pl-3 by default */
+  padding-right: 2rem !important; /* pr-8 */
+  padding-top: 0.5rem !important; /* py-2 */
+  padding-bottom: 0.5rem !important; /* py-2 */
+  font-size: 0.75rem !important; /* text-xs */
+  line-height: 1rem !important;
+  font-weight: 500 !important;
+  color: #cbd5e1 !important; /* text-slate-300 */
+  outline: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  width: 100% !important;
+}
+
+.admin-select-field.has-icon-left,
+.admin-select-field.pl-8 {
+  padding-left: 2rem !important;
+}
+
+.admin-select-field:hover {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.admin-select-field:focus {
+  color: #ffffff !important;
+  border-color: rgba(212, 175, 55, 0.45) !important;
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.25) !important;
+}
+
+.admin-select-icon {
+  position: absolute !important;
+  right: 0.65rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 9px !important;
+  color: #94a3b8 !important; /* text-slate-400 */
+  pointer-events: none !important;
+  transition: transform 0.2s ease, color 0.2s ease !important;
+}
+
+.admin-select-wrapper:hover .admin-select-icon {
+  color: #ffffff !important;
+}
+
+/* Dark obsidian styling for all select options */
+.admin-select-field option,
+select.admin-select-field option,
+.admin-select-wrapper select option,
+select option.admin-select-option {
+  background-color: #0b101b !important;
+  color: #ffffff !important;
+}
+
+/* =========================================================================
+   Voice Assistant Audio Wave Visualization (Gentle, Non-blinking Wave)
+   ========================================================================= */
+@keyframes adminVoiceWave {
+  0%, 100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.admin-voice-wave-bar {
+  transform-origin: center;
+  border-radius: 9999px;
+  will-change: transform;
+}
+
+/* =========================================================================
+   High Priority Modals (Z-Index Exceeding Navbar & Sidebar)
+   ========================================================================= */
+.keyboard-shortcuts-backdrop,
+.admin-voice-backdrop {
+  z-index: 10000000 !important;
+}

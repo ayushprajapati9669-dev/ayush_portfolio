@@ -1463,6 +1463,11 @@ a.btn-primary:hover {
   z-index: 9999999 !important;
 }
 
+.keyboard-shortcuts-backdrop,
+.admin-voice-backdrop {
+  z-index: 10000000 !important;
+}
+
 /* 2. Main Navbar Glass Bar */
 .navbar {
   display: flex !important;
