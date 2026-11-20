@@ -495,7 +495,10 @@ export function ContactPage() {
                   <span className="value">
                     {p.education?.college || 'SISTec, Bhopal'}{' '}
                     <span className="cgpa-badge">
-                      {p.education?.cgpa ? `${p.education.cgpa} CGPA` : '8.42 CGPA'}
+                      {(() => {
+                        const raw = p.education?.cgpa || '8.42';
+                        return /cgpa/i.test(raw) ? raw : `${raw} CGPA`;
+                      })()}
                     </span>
                   </span>
                   <span className="sub-info">

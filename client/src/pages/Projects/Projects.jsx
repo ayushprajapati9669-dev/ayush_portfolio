@@ -10,70 +10,6 @@ import { playTick } from '../../utils/audio';
 import { SEO } from '../../components/SEO';
 import { itemListSchema } from '../../utils/seo';
 
-// Baseline Reference Projects from Reference HTML
-const REFERENCE_PROJECTS = [
-  {
-    id: 'airbnb-clone-platform',
-    slug: 'airbnb-clone-platform',
-    title: 'Airbnb Clone Platform',
-    category: 'Full-Stack',
-    badge: 'Flagship Full-Stack App',
-    shortDescription:
-      'A comprehensive property rental platform featuring secure JWT authentication, dynamic search filters, booking management, and a custom cloud image upload system.',
-    thumbnailUrl: '/images/airbnb-clone-preview.webp',
-    liveDemoUrl: 'https://airbnbclone2-8519.onrender.com',
-    githubUrl: 'https://github.com/ayushprajapati9669-dev',
-    technologies: ['React JS', 'Node.js', 'Express.js', 'MongoDB'],
-    displayOrder: 1,
-    status: 'published'
-  },
-  {
-    id: 'ai-conversational-workspace',
-    slug: 'ai-conversational-workspace',
-    title: 'AI Conversational Workspace',
-    category: 'AI / ML',
-    badge: 'AI Integration',
-    shortDescription:
-      'A ChatGPT-inspired conversational AI interface featuring real-time streaming responses, markdown rendering, chat history persistence, and a sleek dark-mode UI.',
-    thumbnailUrl: '/images/ai-agentic-preview.webp',
-    liveDemoUrl: 'https://agentic-workspace.onrender.com',
-    githubUrl: 'https://github.com/ayushprajapati9669-dev',
-    technologies: ['React JS', 'OpenAI API', 'MongoDB'],
-    displayOrder: 2,
-    status: 'published'
-  },
-  {
-    id: 'zerodha-trading-dashboard',
-    slug: 'zerodha-trading-dashboard',
-    title: 'Zerodha Trading Dashboard',
-    category: 'Frontend',
-    badge: 'FinTech Dashboard',
-    shortDescription:
-      'A responsive trading dashboard clone featuring interactive charts, portfolio tracking, dynamic data tables, and a seamless user interface built for high-density data.',
-    thumbnailUrl: '/images/ai-chat-preview.webp',
-    liveDemoUrl: 'https://airbnbclone2-8519.onrender.com',
-    githubUrl: 'https://github.com/ayushprajapati9669-dev',
-    technologies: ['React JS', 'Recharts', 'CSS Modules'],
-    displayOrder: 3,
-    status: 'published'
-  },
-  {
-    id: 'modern-ecommerce-storefront',
-    slug: 'modern-ecommerce-storefront',
-    title: 'Modern E-Commerce Storefront',
-    category: 'Frontend',
-    badge: 'E-Commerce',
-    shortDescription:
-      'A blazing-fast headless e-commerce frontend with cart persistence, Stripe checkout integration, and fully responsive design.',
-    thumbnailUrl: '/images/airbnb-clone-preview.webp',
-    liveDemoUrl: 'https://airbnbclone2-8519.onrender.com',
-    githubUrl: 'https://github.com/ayushprajapati9669-dev',
-    technologies: ['Next.js', 'Stripe API', 'Tailwind'],
-    displayOrder: 4,
-    status: 'published'
-  }
-];
-
 function normalizeCategoryKey(cat) {
   const c = String(cat || '').toLowerCase().trim();
   if (c.includes('aiml') || c.includes('ai') || c.includes('machine') || c.includes('gpt') || c.includes('gemini')) {
@@ -100,12 +36,12 @@ export function ProjectsPage({ viewMode = 'projects' }) {
     return <React.Suspense fallback={null}><LazyCertificatesPage /></React.Suspense>;
   }
 
-  // Projects View Mode: read CMS published projects or fallback to reference baseline
+  // Projects View Mode: read CMS published projects
   const cmsPublished = (appState.projects || [])
     .filter((p) => p.status === 'published')
     .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
 
-  const allProjects = cmsPublished.length > 0 ? cmsPublished : REFERENCE_PROJECTS;
+  const allProjects = cmsPublished;
 
   // Filter tabs
   const FILTER_TABS = [
@@ -317,8 +253,20 @@ export function ProjectsPage({ viewMode = 'projects' }) {
         </div>
       </div>
 
-      {/* Dynamic Masonry Grid */}
-      {filteredProjects.length === 0 ? (
+      {/* Dynamic Masonry Grid or Honest Empty State */}
+      {allProjects.length === 0 ? (
+        <div className="project-empty-state max-w-xl mx-auto text-center py-16 px-6 my-10 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-2xl shadow-lg shadow-amber-500/5">
+            <i className="fa-solid fa-layer-group text-2xl" />
+          </div>
+          <h3 className="font-display text-xl sm:text-2xl font-bold text-white mb-2">
+            Projects In Development
+          </h3>
+          <p className="font-sans text-sm sm:text-base text-slate-400 leading-relaxed max-w-md mx-auto">
+            Production full-stack applications and software engineering systems will appear here once published via the Admin CMS.
+          </p>
+        </div>
+      ) : filteredProjects.length === 0 ? (
         <div className="project-card text-center p-12 space-y-4">
           <h3 className="project-title text-2xl">No matching projects found</h3>
           <p className="project-desc">

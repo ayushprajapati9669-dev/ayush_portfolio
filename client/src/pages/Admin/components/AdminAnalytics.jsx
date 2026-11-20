@@ -2,152 +2,19 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiRequest } from '../../../services/api';
 import { playTick } from '../../../utils/audio';
 
-const createDemoTimestamp = (minutesAgo) => new Date(Date.now() - minutesAgo * 60_000).toISOString();
-
-const DEMO_ANALYTICS = {
-  totalPageViews: 4125,
-  uniqueVisitors: 1420,
-  resumeDownloads: 89,
-  cliLaunches: 142,
-  apiSandboxExecutions: 70,
-  chatQueries: 70,
-  referrers: {
-    LinkedIn: 412,
-    GitHub: 328,
-    'Direct / URL': 245,
-    'Google / Search': 184,
-    LeetCode: 96,
-    'Twitter / X': 84
-  },
-  topProjects: {
-    'wanderlust-airbnb-clone': { views: 348, title: 'Wanderlust — Distributed Airbnb Architecture' },
-    'agentic-workspace': { views: 295, title: 'Autonomous Multi-Agent AI Workspace' },
-    'ai-mock-interview-platform': { views: 256, title: 'AI Mock Interview & Assessment Platform' },
-    'developer-portfolio-v9': { views: 210, title: 'Cinematic Developer Portfolio (Argon Edition)' },
-    'real-time-chat-platform': { views: 185, title: 'Socket.io Distributed Real-Time Chat' },
-    'ecommerce-dashboard': { views: 162, title: 'Microservices E-commerce Analytics' }
-  },
-  devices: { desktop: 890, mobile: 440, tablet: 90 },
-  browsers: { Chrome: 710, Firefox: 260, Safari: 230, Edge: 150, Other: 70 },
-  dailyViews: {
-    '2026-10-30': 125,
-    '2026-10-31': 239,
-    '2026-11-01': 720,
-    '2026-11-02': 802,
-    '2026-11-03': 339,
-    '2026-11-04': 184,
-    '2026-11-05': 210,
-    '2026-11-06': 295,
-    '2026-11-07': 340,
-    '2026-11-08': 415,
-    '2026-11-09': 380,
-    '2026-11-10': 490,
-    '2026-11-11': 530,
-    '2026-11-12': 620,
-    '2026-11-13': 468
-  },
-  recentEvents: [
-    {
-      id: 'ev-1',
-      type: 'project_view',
-      title: 'Viewed Wanderlust — Distributed Airbnb Architecture',
-      path: '/projects/wanderlust-airbnb-clone',
-      city: 'San Francisco',
-      country: 'United States',
-      referrer: 'LinkedIn',
-      timestamp: createDemoTimestamp(3)
-    },
-    {
-      id: 'ev-2',
-      type: 'resume_download',
-      title: 'Downloaded Official Full-Stack Resume ATS PDF',
-      path: '/resume',
-      city: 'London',
-      country: 'United Kingdom',
-      referrer: 'GitHub',
-      timestamp: createDemoTimestamp(9)
-    },
-    {
-      id: 'ev-3',
-      type: 'api_sandbox',
-      title: 'Executed Live Property Search REST API Endpoint',
-      path: '/api/v1/properties/search',
-      city: 'Bengaluru',
-      country: 'India',
-      referrer: 'Direct / URL',
-      timestamp: createDemoTimestamp(18)
-    },
-    {
-      id: 'ev-4',
-      type: 'cli_launch',
-      title: 'Launched Interactive Developer CLI Drawer (AYUSH-TERM)',
-      path: '/terminal',
-      city: 'Seattle',
-      country: 'United States',
-      referrer: 'LinkedIn',
-      timestamp: createDemoTimestamp(32)
-    },
-    {
-      id: 'ev-5',
-      type: 'project_view',
-      title: 'Viewed Autonomous Multi-Agent AI Workspace',
-      path: '/projects/agentic-workspace',
-      city: 'Berlin',
-      country: 'Germany',
-      referrer: 'Google / Search',
-      timestamp: createDemoTimestamp(48)
-    },
-    {
-      id: 'ev-6',
-      type: 'pageview',
-      title: 'Inspected Tech Stack & Skills Matrix',
-      path: '/skills',
-      city: 'Toronto',
-      country: 'Canada',
-      referrer: 'GitHub',
-      timestamp: createDemoTimestamp(65)
-    },
-    {
-      id: 'ev-7',
-      type: 'chat_query',
-      title: 'Prompted Antigravity Portfolio AI Assistant',
-      path: '/ai-chat',
-      city: 'Singapore',
-      country: 'Singapore',
-      referrer: 'Direct / URL',
-      timestamp: createDemoTimestamp(82)
-    },
-    {
-      id: 'ev-8',
-      type: 'project_view',
-      title: 'Viewed AI Mock Interview & Assessment Platform',
-      path: '/projects/ai-mock-interview-platform',
-      city: 'Amsterdam',
-      country: 'Netherlands',
-      referrer: 'LinkedIn',
-      timestamp: createDemoTimestamp(104)
-    },
-    {
-      id: 'ev-9',
-      type: 'resume_download',
-      title: 'Downloaded Official Full-Stack Resume ATS PDF',
-      path: '/resume',
-      city: 'Pune',
-      country: 'India',
-      referrer: 'LeetCode',
-      timestamp: createDemoTimestamp(120)
-    },
-    {
-      id: 'ev-10',
-      type: 'pageview',
-      title: 'Explored Career Milestones & Leadership Journey',
-      path: '/journey',
-      city: 'Sydney',
-      country: 'Australia',
-      referrer: 'Direct / URL',
-      timestamp: createDemoTimestamp(145)
-    }
-  ]
+const EMPTY_ANALYTICS = {
+  totalPageViews: 0,
+  uniqueVisitors: 0,
+  resumeDownloads: 0,
+  cliLaunches: 0,
+  apiSandboxExecutions: 0,
+  chatQueries: 0,
+  referrers: {},
+  topProjects: {},
+  devices: { desktop: 0, mobile: 0, tablet: 0 },
+  browsers: {},
+  dailyViews: {},
+  recentEvents: []
 };
 
 const REFERRER_ICONS = {
@@ -476,8 +343,7 @@ function TelemetryEventDetailModal({ event, onClose }) {
  * Main Admin Analytics Component - Clean, Simple, Understandable
  */
 export function AdminAnalytics({ showToast }) {
-  const [data, setData] = useState(DEMO_ANALYTICS);
-  const [usingDemoData, setUsingDemoData] = useState(false);
+  const [data, setData] = useState(EMPTY_ANALYTICS);
   const [refreshing, setRefreshing] = useState(false);
   const [streamPaused, setStreamPaused] = useState(false);
   const [error, setError] = useState('');
@@ -496,15 +362,13 @@ export function AdminAnalytics({ showToast }) {
       }
 
       setData(result.analytics);
-      setUsingDemoData(false);
       setError('');
       return true;
     } catch (requestError) {
       if (requestError instanceof Error && requestError.name === 'AbortError') {
         return false;
       }
-      setData(DEMO_ANALYTICS);
-      setUsingDemoData(true);
+      setData((prev) => prev || EMPTY_ANALYTICS);
       setError(requestError instanceof Error ? requestError.message : 'Unable to connect to live telemetry.');
       return false;
     } finally {
@@ -530,7 +394,7 @@ export function AdminAnalytics({ showToast }) {
     if (succeeded) showToast?.('Visitor telemetry synchronized with server.', 'fa-circle-check');
   };
 
-  const analytics = data || DEMO_ANALYTICS;
+  const analytics = data || EMPTY_ANALYTICS;
 
   // Process Referrers
   const referrers = useMemo(() => {
@@ -539,7 +403,7 @@ export function AdminAnalytics({ showToast }) {
       .filter((s) => s.count > 0)
       .sort((a, b) => b.count - a.count);
   }, [analytics.referrers]);
-  const referralTotal = referrers.reduce((sum, s) => sum + s.count, 0) || 1;
+  const referralTotal = referrers.reduce((sum, s) => sum + s.count, 0);
 
   // Process Projects
   const topProjects = useMemo(() => {
@@ -553,38 +417,34 @@ export function AdminAnalytics({ showToast }) {
       .sort((a, b) => b.views - a.views);
   }, [analytics.topProjects]);
   const maxProjectViews = topProjects[0]?.views || 1;
-  const totalProjectViews = topProjects.reduce((sum, p) => sum + p.views, 0) || 1;
+  const totalProjectViews = topProjects.reduce((sum, p) => sum + p.views, 0);
 
   // Process Devices
-  const devices = analytics.devices || DEMO_ANALYTICS.devices;
+  const devices = analytics.devices || EMPTY_ANALYTICS.devices;
   const desktop = Number(devices.desktop) || 0;
   const mobile = Number(devices.mobile) || 0;
   const tablet = Number(devices.tablet) || 0;
-  const totalDevices = desktop + mobile + tablet || 1;
-  const desktopPercent = Math.round((desktop / totalDevices) * 100);
-  const mobilePercent = Math.round((mobile / totalDevices) * 100);
-  const tabletPercent = 100 - desktopPercent - mobilePercent;
+  const totalDevices = desktop + mobile + tablet;
+  const desktopPercent = totalDevices > 0 ? Math.round((desktop / totalDevices) * 100) : 0;
+  const mobilePercent = totalDevices > 0 ? Math.round((mobile / totalDevices) * 100) : 0;
+  const tabletPercent = totalDevices > 0 ? Math.max(0, 100 - desktopPercent - mobilePercent) : 0;
 
   // Recent Events
   const recentEvents = Array.isArray(analytics.recentEvents) ? analytics.recentEvents.filter(Boolean) : [];
 
-  // Geographic Breakdown
+  // Geographic Breakdown from actual telemetry events
   const geoBreakdown = useMemo(() => {
     const map = new Map();
     recentEvents.forEach((ev) => {
-      const country = ev.country && ev.country !== 'Direct' ? ev.country : 'United States';
+      const country = (ev.country && ev.country !== 'Direct') ? ev.country : '';
+      if (!country) return;
       const existing = map.get(country) || 0;
       map.set(country, existing + 1);
     });
 
-    if (map.size === 0) {
-      map.set('United States', 24);
-      map.set('India', 18);
-      map.set('United Kingdom', 8);
-      map.set('Germany', 6);
-    }
+    const total = Array.from(map.values()).reduce((sum, c) => sum + c, 0);
+    if (total === 0) return [];
 
-    const total = Array.from(map.values()).reduce((sum, c) => sum + c, 0) || 1;
     return Array.from(map.entries())
       .map(([country, count]) => ({
         country,
@@ -600,15 +460,16 @@ export function AdminAnalytics({ showToast }) {
                        (Number(analytics.chatQueries) || 0);
 
   const resumeDownloads = Number(analytics.resumeDownloads) || 0;
-  const totalPageViews = Number(analytics.totalPageViews) || 1;
-  const resumeConversionRate = ((resumeDownloads / (totalProjectViews || 1)) * 100).toFixed(1);
+  const totalPageViews = Number(analytics.totalPageViews) || 0;
+  const resumeConversionRate = totalPageViews > 0
+    ? ((resumeDownloads / (totalProjectViews || totalPageViews)) * 100).toFixed(1)
+    : '0.0';
 
-  // Timeframe Scaling
-  const timeframeMultiplier = timeframe === '24h' ? 0.14 : timeframe === '7d' ? 0.42 : timeframe === '30d' ? 0.85 : 1.0;
-  const displayedPageviews = Math.round(totalPageViews * timeframeMultiplier);
-  const displayedProjectViews = Math.round(totalProjectViews * timeframeMultiplier);
-  const displayedResumeDownloads = Math.max(1, Math.round(resumeDownloads * timeframeMultiplier));
-  const displayedInteractions = Math.max(1, Math.round(interactions * timeframeMultiplier));
+  // Display authentic telemetry metrics
+  const displayedPageviews = totalPageViews;
+  const displayedProjectViews = totalProjectViews;
+  const displayedResumeDownloads = resumeDownloads;
+  const displayedInteractions = interactions;
 
   // Filtered Events List
   const filteredEvents = useMemo(() => {
@@ -853,7 +714,12 @@ export function AdminAnalytics({ showToast }) {
           </div>
 
           <div className="space-y-3">
-            {topProjects.slice(0, 5).map((project, idx) => {
+            {topProjects.length === 0 ? (
+              <div className="py-8 text-center text-xs text-slate-500 font-mono">
+                No project views recorded yet.
+              </div>
+            ) : (
+              topProjects.slice(0, 5).map((project, idx) => {
               const percent = Math.round((project.views / maxProjectViews) * 100);
               return (
                 <div key={project.slug} className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-2 hover:border-amber-400/30 transition-all">
@@ -887,7 +753,7 @@ export function AdminAnalytics({ showToast }) {
                   </div>
                 </div>
               );
-            })}
+            }))}
           </div>
         </div>
 
@@ -907,8 +773,13 @@ export function AdminAnalytics({ showToast }) {
           </div>
 
           <div className="space-y-3">
-            {referrers.slice(0, 5).map(({ source, count }) => {
-              const percent = Math.round((count / referralTotal) * 100);
+            {referrers.length === 0 ? (
+              <div className="py-8 text-center text-xs text-slate-500 font-mono">
+                No external referral channels recorded yet.
+              </div>
+            ) : (
+              referrers.slice(0, 5).map(({ source, count }) => {
+              const percent = referralTotal > 0 ? Math.round((count / referralTotal) * 100) : 0;
               const iconData = REFERRER_ICONS[source] || { icon: 'fa-solid fa-globe', color: '#94a3b8' };
               return (
                 <div key={source} className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-2">
@@ -931,7 +802,7 @@ export function AdminAnalytics({ showToast }) {
                   </div>
                 </div>
               );
-            })}
+            }))}
           </div>
         </div>
       </div>
@@ -1066,7 +937,12 @@ export function AdminAnalytics({ showToast }) {
             Top Visitor Locations
           </h4>
           <div className="space-y-2.5">
-            {geoBreakdown.slice(0, 4).map((geo) => (
+            {geoBreakdown.length === 0 ? (
+              <div className="py-6 text-center text-xs text-slate-500 font-mono">
+                Awaiting visitor location telemetry...
+              </div>
+            ) : (
+              geoBreakdown.slice(0, 4).map((geo) => (
               <div key={geo.country} className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-300 font-medium">{geo.country}</span>
@@ -1079,7 +955,7 @@ export function AdminAnalytics({ showToast }) {
                   />
                 </div>
               </div>
-            ))}
+            )))}
           </div>
         </div>
 

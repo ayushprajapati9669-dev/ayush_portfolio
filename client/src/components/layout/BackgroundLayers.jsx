@@ -131,21 +131,23 @@ export function BackgroundLayers() {
           {/* Layer 1: High-Resolution Cinematic Dusk Landscape (Optimized WebP format)
               Softly dissolves on scroll so content sections rest on pure high-contrast obsidian */}
           {showLandscape && (
-            <img
-              src="/images/cinematic-dusk-landscape.webp"
-              alt=""
-              width="1920"
-              height="1080"
-              className="w-full h-full object-cover object-bottom will-change-transform"
-              style={{
-                transform: `translate3d(0, ${Math.min(100, scrollProgress * 120)}px, 0) scale(1.02)`,
-                filter: 'contrast(112%) brightness(92%) saturate(108%)',
-                opacity: isHome ? Math.max(0.08, 0.92 - scrollProgress * 2.8) : 0.16
-              }}
-              loading="lazy"
-              fetchpriority="low"
-              decoding="async"
-            />
+            <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+              <img
+                src="/images/cinematic-dusk-landscape.webp"
+                alt=""
+                width="1920"
+                height="1080"
+                className="w-full h-full object-cover object-bottom will-change-transform"
+                style={{
+                  transform: `translate3d(0, ${Math.min(100, scrollProgress * 120)}px, 0) scale(1.02)`,
+                  filter: 'contrast(112%) brightness(92%) saturate(108%)',
+                  opacity: isHome ? Math.max(0.08, 0.92 - scrollProgress * 2.8) : 0.16
+                }}
+                loading="lazy"
+                fetchpriority="low"
+                decoding="async"
+              />
+            </div>
           )}
 
           {/* Layer 2: Dynamic Living Horizon Warmth Breath */}
@@ -232,9 +234,6 @@ export function BackgroundLayers() {
           ))}
         </div>
       )}
-
-      {/* Architectural 4-Column Hairline Guides */}
-      <div className="editorial-grid-guides" aria-hidden="true" />
 
       {/* High-End Micro-Film Grain Overlay */}
       <div className="bg-noise" aria-hidden="true" />

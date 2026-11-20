@@ -91,25 +91,25 @@ export function JourneyPage() {
   // Default / Baseline Milestones matching Portfolio Data
   const defaultMilestones = [
     {
-      phase: 'Full-Stack Practice',
+      phase: 'Full-Stack Engineering',
       yearBadge: 'Year 3',
-      title: 'MERN Stack & Interactive Systems',
+      title: 'MERN Stack & Deployed Applications',
       description:
-        'Building a Zerodha-inspired trading dashboard and a ChatGPT-inspired conversational AI workspace.'
+        'Building full-stack MERN applications including a live Airbnb Clone on Render, an AI Agentic Workspace, and a Stock Trading simulation platform.'
     },
     {
       phase: 'Foundation',
       yearBadge: 'Year 1-2',
       title: 'Core Programming & CS Fundamentals',
       description:
-        'Strong foundation in C, Java, Python, OOP, MySQL, and HTML/CSS.'
+        'Strong foundation in C, Java, Python, Data Structures & Algorithms, OOP, MySQL, and modern web development.'
     },
     {
       phase: 'Current Focus',
       yearBadge: 'Present',
-      title: 'Algorithmic Depth & AI Integration',
+      title: 'Algorithmic Problem-Solving & AI Integration',
       description:
-        'Deepening DSA fluency and exploring practical AI/ML integration.'
+        'Active problem solving on LeetCode (@ayush7162) and practical AI/LLM API integrations.'
     }
   ];
 

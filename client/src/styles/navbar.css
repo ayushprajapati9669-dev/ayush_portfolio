@@ -106,7 +106,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   transform: none !important;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .nav-wrapper,
   body.has-admin-sidebar .nav-wrapper,
   body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
@@ -723,7 +723,7 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
   right: 12px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .nav-center {
     display: none;
   }
@@ -779,8 +779,15 @@ body.has-admin-sidebar .notif-btn:hover .fa-bell {
 }
 
 @media (max-width: 768px) {
-  .nav-logo-text {
-    display: none !important;
+  .nav-logo-text,
+  #navWrapper .nav-logo-text {
+    display: flex !important;
+    align-items: center !important;
+    font-size: clamp(13px, 3.8vw, 15.5px) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
   }
   .btn-primary {
     background: #f4f1ec !important;
@@ -1889,15 +1896,48 @@ a.btn-primary:hover {
    ========================================================================= */
 
 /* Desktop only: Hide mobile hamburger toggle */
-@media (min-width: 1025px) {
+@media (min-width: 1181px) {
   .mobile-nav-toggle,
   #navWrapper .mobile-nav-toggle {
     display: none !important;
   }
 }
 
+/* Laptops (1181px - 1280px): Optimize desktop capsule and action buttons to prevent overflow */
+@media (min-width: 1181px) and (max-width: 1280px) {
+  .nav-item,
+  #navWrapper .nav-item {
+    padding: 5px 8px !important;
+    font-size: 13px !important;
+  }
+  .nav-terminal-btn .shortcut-key,
+  #navWrapper .nav-terminal-btn .shortcut-key {
+    display: none !important;
+  }
+  .nav-terminal-btn,
+  #navWrapper .nav-terminal-btn {
+    padding: 5px 8px !important;
+  }
+  .nav-resume-btn,
+  #navWrapper .nav-resume-btn {
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+  }
+  .nav-talk-btn,
+  #navWrapper .nav-talk-btn {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+  }
+  .navbar,
+  #navbar,
+  #navWrapper .navbar {
+    padding: 4px 8px !important;
+    gap: 8px !important;
+  }
+}
+
 /* Tablet & Mobile Screens (<= 1024px) */
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   /* Capsule Wrapper Positioning */
   .nav-wrapper,
   #navWrapper,
@@ -2015,10 +2055,19 @@ a.btn-primary:hover {
     padding: 5px 8px !important;
   }
 
-  /* Hide brand text on phones to keep monogram and hamburger clean and non-colliding */
+  /* Brand text on phones: clean editorial luxury typography filling space between AP and menu */
   .nav-logo-text,
   #navWrapper .nav-logo-text {
-    display: none !important;
+    display: flex !important;
+    align-items: center !important;
+    font-size: clamp(12.5px, 3.6vw, 15px) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    max-width: calc(100vw - 130px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   /* Hide CTA pill on phones — it is fully accessible inside the mobile drawer */
@@ -2185,11 +2234,11 @@ a.btn-primary:hover {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  font-size: 0.95rem !important;
+  font-size: clamp(0.82rem, 3.6vw, 0.95rem) !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  letter-spacing: 0.03em !important;
+  letter-spacing: -0.01em !important;
 }
 
 .mobile-drawer .close {
@@ -2651,7 +2700,7 @@ a.btn-primary:hover {
   .mobile-drawer .socials { display: none !important; }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1181px) {
   .mobile-nav-toggle.burger,
   .mobile-drawer,
   .mobile-menu-backdrop {

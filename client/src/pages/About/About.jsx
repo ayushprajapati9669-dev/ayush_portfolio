@@ -287,19 +287,16 @@ export function AboutPage() {
           ) : (
             <>
               <p>
-                I am a third-year <strong>B.Tech Computer Science and Engineering</strong> student at
-                SISTec, Bhopal, focused on building full-stack web applications with the MERN stack
-                and strengthening my core software engineering fundamentals.
+                I am Ayush Prajapati, a Computer Science &amp; Engineering (CSE) undergraduate at
+                SISTec, Bhopal (2024–2028 batch) maintaining a CGPA of 8.42.
               </p>
               <p>
-                Alongside developing full-stack interfaces and REST APIs with React, Node.js, Express,
-                and MongoDB, I actively practice <strong>Data Structures and Algorithms</strong> in C,
-                Java, and Python to sharpen how I reason about time complexity, state, and system design.
+                My core technical stack spans programming in C, Java, JavaScript, and Python alongside
+                full-stack web engineering with React.js, Node.js, Express.js, MySQL, MongoDB, and modern APIs.
               </p>
               <p>
-                I am also exploring <strong>Artificial Intelligence and Machine Learning</strong>—specifically
-                how modern conversational workflows and intelligent tooling can be integrated cleanly
-                into practical web software.
+                I have built and deployed real-world full-stack applications—including a live Airbnb Clone on Render,
+                an AI Agentic Workspace, and a Stock Trading simulation platform—and won a website-making competition at college.
               </p>
             </>
           )}
@@ -383,7 +380,7 @@ export function AboutPage() {
           <div className="edu-grid">
             <div className="edu-item">
               <div className="edu-score">
-                {p.education?.cgpa?.replace(/[^0-9.]/g, '') || '8.42'}{' '}
+                {(p.education?.cgpa || '').match(/(\d+\.?\d*)/)?.[1] || '8.42'}{' '}
                 <span>CGPA</span>
               </div>
               <div className="edu-title">
@@ -396,8 +393,8 @@ export function AboutPage() {
 
             <div className="edu-item">
               <div className="edu-score">
-                {p.education?.schoolScore || '80%'}{' '}
-                <span>2022</span>
+                {(p.education?.schoolScore || '83.5%').split('|')[0].trim()}{' '}
+                <span>{(p.education?.schoolScore || '').includes('2022') ? '2022' : 'Completed'}</span>
               </div>
               <div className="edu-title">
                 {p.education?.schoolBoard || 'MP board'}

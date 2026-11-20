@@ -54,8 +54,24 @@
   margin: 0 auto !important;
   padding: 0 clamp(20px, 5vw, 64px) !important;
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)) !important;
   gap: 28px !important;
+}
+
+@media (max-width: 640px) {
+  .certificates-page {
+    padding-top: 100px !important;
+    padding-bottom: 80px !important;
+  }
+  .certificates-page .page-header {
+    padding: 0 16px !important;
+    margin-bottom: 32px !important;
+  }
+  .cert-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    padding: 0 16px !important;
+  }
 }
 
 /* ── Certificate Card ── */

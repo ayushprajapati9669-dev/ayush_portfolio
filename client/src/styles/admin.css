@@ -583,6 +583,13 @@
   box-sizing: border-box;
 }
 
+.admin-content-area > * {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
 @media (max-width: 768px) {
   .admin-content-area {
     padding: 88px 16px 32px 16px;
@@ -1547,6 +1554,29 @@
   backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .admin-proj-top-banner {
+    padding: 16px 14px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+  .admin-proj-top-banner > div:last-child {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .admin-proj-top-banner .btn-create-project {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    padding: 10px 18px !important;
+    white-space: nowrap !important;
+  }
 }
 
 .admin-proj-top-banner::before {
@@ -4183,8 +4213,8 @@ button[style*="38bdf8"] {
     left: 0 !important;
     height: 100vh !important;
     height: 100dvh !important;
-    width: 280px !important;
-    max-width: 85vw !important;
+    width: min(300px, 86vw) !important;
+    max-width: 86vw !important;
     z-index: 100000 !important;
     transform: translateX(-100%) !important;
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -4254,7 +4284,31 @@ body.admin-sidebar-open #main-content {
 
 @media (max-width: 1024px) {
   .admin-sidebar .sidebar-header {
-    padding: 16px !important;
+    padding: 16px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+  .admin-sidebar .logo-wrap {
+    min-width: 0 !important;
+    flex: 1 !important;
+    overflow: hidden !important;
+    gap: 8px !important;
+  }
+  .admin-sidebar .logo-text-wrap {
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+  .admin-sidebar .logo-text {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: clamp(12px, 3.8vw, 15px) !important;
+    display: block !important;
+  }
+  .admin-sidebar .logo-sub {
+    font-size: 10px !important;
   }
 }
 

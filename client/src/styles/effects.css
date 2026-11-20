@@ -46,17 +46,9 @@
   pointer-events: none;
 }
 
-/* 3. Architectural 4-Column Guide Grid — gold-tinted */
+/* 3. Architectural 4-Column Guide Grid — disabled per user request */
 .editorial-grid-guides {
-  position: fixed;
-  inset: 0 clamp(24px, 5vw, 88px);
-  background: linear-gradient(90deg, rgba(212, 175, 55, 0.035) 1px, transparent 1px);
-  background-size: 25% 100%;
-  opacity: 0.18;
-  pointer-events: none;
-  z-index: 0;
-  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  display: none !important;
 }
 
 /* 4. Living Gold Aurora Ambient Blobs with Organic Breathing Drift */

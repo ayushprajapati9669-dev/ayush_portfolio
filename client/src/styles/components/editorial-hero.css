@@ -30,18 +30,9 @@
   }
 }
 
-/* Background vertical architectural guidelines */
+/* Background vertical architectural guidelines - disabled per user request */
 .hero-editorial-guides {
-  position: absolute;
-  inset: 104px clamp(24px, 5vw, 64px) 0;
-  pointer-events: none;
-  background: linear-gradient(90deg, rgba(212, 175, 55, 0.06) 1px, transparent 1px);
-  background-size: 25% 100%;
-  border-right: 1px solid rgba(212, 175, 55, 0.06);
-  opacity: 0.35;
-  -webkit-mask-image: linear-gradient(#000, transparent 90%);
-  mask-image: linear-gradient(#000, transparent 90%);
-  z-index: 0;
+  display: none !important;
 }
 
 .hero-editorial-guides div {
@@ -1377,6 +1368,12 @@
     z-index: 2;
     padding-top: min(55vw, 330px) !important;
   }
+
+  @media (orientation: landscape) and (max-height: 550px) {
+    .hero-center-showcase {
+      padding-top: 10px !important;
+    }
+  }
 }
 
 /* Align Showcase to the Left on Desktop to Sit Alongside Right-Side Photo */
@@ -1663,5 +1660,38 @@
     font-size: 15px !important;
     gap: 12px !important;
     padding: 6px 2px !important;
+  }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+  .hero-editorial-stage {
+    padding-top: 72px !important;
+    min-height: auto !important;
+    padding-bottom: 40px !important;
+  }
+  .hero-photo-container {
+    height: 180px !important;
+    min-height: 140px !important;
+    top: 35px !important;
+    opacity: 0.35 !important;
+  }
+  .hero-announcement-capsule {
+    margin: 0 auto 10px !important;
+    padding: 3px 12px !important;
+    font-size: 11px !important;
+  }
+  .hero-editorial-title {
+    font-size: clamp(1.4rem, 4vw, 2rem) !important;
+    line-height: 1.15 !important;
+    margin-bottom: 8px !important;
+  }
+  .hero-action-buttons {
+    margin-top: 10px !important;
+    gap: 8px !important;
+  }
+  .hero-action-buttons a,
+  .hero-action-buttons button {
+    padding: 6px 14px !important;
+    font-size: 11.5px !important;
   }
 }

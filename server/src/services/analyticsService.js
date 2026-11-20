@@ -51,10 +51,10 @@ class AnalyticsService {
         'LeetCode': 76
       },
       topProjects: {
-        'wanderlust-airbnb-clone': { views: 324, title: 'Wanderlust - Distributed Airbnb Architecture' },
-        'agentic-workspace': { views: 289, title: 'Autonomous Multi-Agent Workspace' },
-        'ai-mock-interview-platform': { views: 245, title: 'AI Mock Interview Platform' },
-        'developer-portfolio-v9': { views: 198, title: 'Dynamic Obsidian Portfolio v9' }
+        'airbnb-clone': { views: 42, title: 'Full-Stack Airbnb Clone' },
+        'ai-agentic-workspace': { views: 35, title: 'AI Agentic Workspace' },
+        'ai-chat-assistant': { views: 28, title: 'AI Chat Assistant' },
+        'stock-trading-platform': { views: 24, title: 'Stock Trading Simulation Platform' }
       },
       devices: {
         desktop: 780,

@@ -43,18 +43,25 @@
 .name-heading {
   font-family: 'Cinzel', serif !important;
   text-transform: uppercase !important;
-  font-size: clamp(2.5rem, 6vw, 6rem) !important;
+  font-size: clamp(1.85rem, 6.8vw, 5.5rem) !important;
   font-weight: 600 !important;
   letter-spacing: 0.02em !important;
-  line-height: 1.1 !important;
+  line-height: 1.12 !important;
   display: flex !important;
-  flex-wrap: nowrap !important;
+  flex-wrap: wrap !important;
   align-items: baseline !important;
-  gap: 0.25em !important;
+  gap: 0.15em 0.3em !important;
   perspective: 1000px !important;
-  white-space: nowrap !important;
   text-shadow: 0 20px 50px rgba(0,0,0,0.8) !important;
   margin: 0 0 24px 0 !important;
+  word-break: break-word !important;
+}
+
+@media (max-width: 480px) {
+  .name-heading {
+    font-size: clamp(1.55rem, 7.8vw, 2.3rem) !important;
+    margin-bottom: 16px !important;
+  }
 }
 
 .word-wrapper {

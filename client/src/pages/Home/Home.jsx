@@ -417,14 +417,6 @@ export function HomePage() {
           HERO SECTION (Image 1 Sarthak Sharma Composition + Image 4 Photo)
           ========================================================================= */}
       <section ref={heroRef} className="hero-editorial-stage">
-        {/* Architectural 4-column guide lines */}
-        <div className="hero-editorial-guides" aria-hidden="true">
-          <div />
-          <div />
-          <div />
-          <div />
-        </div>
-
         {/* Hero Right-Side Portrait with Scroll-Reactive Particle Dissolve Engine (Razorpay AI Builders Inspired) */}
         <div ref={heroPhotoBoxRef} className="hero-photo-container">
           <ScrollReactivePortraitParticles

@@ -155,9 +155,9 @@ export function AdminOverview({
     }
   }, [activeFilter, visibleCount]);
 
-  // Assemble dynamic activities from real state + system events
+  // Assemble dynamic activities strictly from real database entities (zero mock items)
   const allActivities = [
-    ...projects.slice(0, 3).map((p) => ({
+    ...projects.slice(0, 5).map((p) => ({
       id: 'proj-' + p.id,
       type: 'project',
       title: p.title || 'Portfolio Project',
@@ -168,12 +168,12 @@ export function AdminOverview({
       badgeClass: 'success',
       badgeIcon: 'fa-check-circle',
       badgeText: p.status === 'published' ? 'Live' : 'Draft',
-      time: p.updatedAt ? new Date(p.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Today',
+      time: p.updatedAt ? new Date(p.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently',
       actionLabel: 'Manage Projects',
       actionTab: 'projects',
       source: p.liveDemoUrl || 'Live Deployment'
     })),
-    ...certificates.slice(0, 2).map((c) => {
+    ...certificates.slice(0, 5).map((c) => {
       const isAws = (c.title || '').toLowerCase().includes('aws') || (c.issuer || '').toLowerCase().includes('amazon');
       return {
         id: 'cert-' + c.id,
@@ -185,34 +185,18 @@ export function AdminOverview({
         ) : (
           <i className="fa-solid fa-certificate text-purple-400" />
         ),
-      iconBg: 'rgba(162,89,255,0.1)',
-      iconBorder: '1px solid rgba(162,89,255,0.2)',
-      badgeClass: 'info',
-      badgeIcon: 'fa-shield-halved',
-      badgeText: 'Verified',
-      time: 'Verified',
-      actionLabel: 'Manage Certificates',
-      actionTab: 'certificates',
-      source: c.issuer || 'Online Certification'
+        iconBg: 'rgba(162,89,255,0.1)',
+        iconBorder: '1px solid rgba(162,89,255,0.2)',
+        badgeClass: 'info',
+        badgeIcon: 'fa-shield-halved',
+        badgeText: 'Verified',
+        time: c.issueDate || 'Verified',
+        actionLabel: 'Manage Certificates',
+        actionTab: 'certificates',
+        source: c.issuer || 'Online Certification'
       };
     }),
-    {
-      id: 'commit-1',
-      type: 'commit',
-      title: 'Pushed to main branch',
-      sub: 'ayushprajapati9669-dev/portfolio',
-      iconElement: <i className="fa-brands fa-github text-white" />,
-      iconBg: 'rgba(255,255,255,0.05)',
-      iconBorder: '1px solid rgba(255,255,255,0.1)',
-      badgeClass: 'info',
-      badgeIcon: 'fa-code-commit',
-      badgeText: 'Commit',
-      time: '2 hours ago',
-      actionLabel: 'View GitHub Code',
-      actionUrl: 'https://github.com/ayushprajapati9669-dev',
-      source: 'GitHub CI/CD'
-    },
-    ...messages.slice(0, 2).map((m) => ({
+    ...messages.slice(0, 5).map((m) => ({
       id: 'msg-' + m.id,
       type: 'message',
       title: `Message: ${m.subject || 'Portfolio Inquiry'}`,
@@ -227,54 +211,7 @@ export function AdminOverview({
       actionLabel: 'Open Messages Inbox',
       actionTab: 'messages',
       source: m.email || 'Contact Form'
-    })),
-    {
-      id: 'view-1',
-      type: 'view',
-      title: 'Portfolio viewed by 18 visitors',
-      sub: 'From LinkedIn & GitHub referral · last hour',
-      iconElement: <i className="fa-solid fa-eye" style={{ color: 'var(--accent-1)' }} />,
-      iconBg: 'rgba(0, 240, 255, 0.1)',
-      iconBorder: '1px solid rgba(0, 240, 255, 0.2)',
-      badgeClass: 'info',
-      badgeIcon: 'fa-chart-line',
-      badgeText: '18 views',
-      time: '1 hr ago',
-      actionLabel: 'Analytics Details',
-      source: 'LinkedIn Analytics'
-    },
-    {
-      id: 'view-2',
-      type: 'view',
-      title: 'Resume downloaded',
-      sub: 'by recruiter@techcorp.io',
-      iconElement: <i className="fa-solid fa-download" style={{ color: 'var(--accent-3)' }} />,
-      iconBg: 'rgba(162,89,255,0.1)',
-      iconBorder: '1px solid rgba(162,89,255,0.2)',
-      badgeClass: 'purple-badge',
-      badgeIcon: 'fa-file-pdf',
-      badgeText: 'Downloaded',
-      time: '3 hrs ago',
-      actionLabel: 'Check Resume Settings',
-      actionTab: 'profile',
-      source: 'Resume Download Button'
-    },
-    {
-      id: 'star-1',
-      type: 'project',
-      title: 'New GitHub star on portfolio repo',
-      sub: 'ayush_portfolio · by @devhunter',
-      iconElement: <i className="fa-solid fa-star" style={{ color: 'var(--accent-2)' }} />,
-      iconBg: 'rgba(0, 255, 136, 0.1)',
-      iconBorder: '1px solid rgba(0, 255, 136, 0.2)',
-      badgeClass: 'success',
-      badgeIcon: 'fa-star',
-      badgeText: 'Starred',
-      time: 'Yesterday',
-      actionLabel: 'View GitHub Repo',
-      actionUrl: 'https://github.com/ayushprajapati9669-dev',
-      source: 'GitHub API'
-    }
+    }))
   ];
 
   // Filtering by chip & search query
@@ -369,7 +306,7 @@ export function AdminOverview({
             <div className="stat-value cyan">{publishedCount}</div>
             <div className="stat-trend">
               <i className="fa-solid fa-arrow-trend-up" style={{ color: 'var(--accent-2)' }} />
-              <span>+1 this month</span>
+              <span>{projects.length} total registered</span>
             </div>
           </div>
         </div>

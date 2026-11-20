@@ -4,9 +4,9 @@ import { playTick } from '../../utils/audio';
 import { useSmoothScroll } from '../common/SmoothScrollProvider';
 
 const SUGGESTIONS = [
-  "What is Ayush's experience with MongoDB indexing?",
-  "Show me his hackathon winning project",
-  "Is Ayush available for immediate joining?",
+  "Tell me about his full-stack projects",
+  "What is his academic background & CGPA?",
+  "What is his experience with MongoDB & React?",
   "What are his LeetCode problem solving stats?"
 ];
 
@@ -168,7 +168,7 @@ export function AskAyushAiWidget() {
 
       {/* Floating Chat Drawer */}
       {isOpen && (
-        <div className="fixed bottom-6 right-4 sm:right-6 z-[995] w-[92vw] sm:w-[420px] h-[560px] max-h-[85vh] flex flex-col rounded-2xl bg-[#070c16]/95 border border-yellow-500/30 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(0,240,255,0.15)] backdrop-blur-2xl overflow-hidden font-sans animate-fadeIn">
+        <div className="fixed bottom-4 sm:bottom-6 right-3 sm:right-6 z-[995] w-[calc(100vw-24px)] max-w-[420px] h-[560px] max-h-[85vh] flex flex-col rounded-2xl bg-[#070c16]/95 border border-yellow-500/30 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(0,240,255,0.15)] backdrop-blur-2xl overflow-hidden font-sans animate-fadeIn">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 bg-[#0c1424] border-b border-yellow-500/20">
             <div className="flex items-center gap-2.5">

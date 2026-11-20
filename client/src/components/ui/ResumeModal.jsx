@@ -81,7 +81,7 @@ export function ResumeModal() {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#080808]/95 z-10 flex-wrap gap-3">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/10 bg-[#080808]/95 z-10 flex-wrap gap-2.5 sm:gap-3">
           <div className="flex flex-col gap-0.5">
             <span className="text-[#d4af37] font-mono text-[11.5px] font-semibold tracking-[0.16em] uppercase">
               Curriculum Vitae • Verified Profile

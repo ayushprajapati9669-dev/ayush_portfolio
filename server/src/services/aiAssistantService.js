@@ -9,69 +9,76 @@ function generateAiAnswer(question, portfolioState = {}) {
   const profile = portfolioState.profile || {};
   const projects = portfolioState.projects || [];
   const skills = portfolioState.skills || [];
-  const certificates = portfolioState.certificates || [];
+  const education = profile.education || {};
 
   let answer = '';
   let followUps = [];
   let relatedProject = null;
 
   // 1. Availability / Hiring / Joining
-  if (q.includes('availab') || q.includes('join') || q.includes('hire') || q.includes('notice') || q.includes('relocat')) {
-    answer = `Yes! Ayush is actively interviewing and available for immediate joining. He is open to Full-Stack Engineer, Backend & Distributed Systems, and AI/Full-Stack roles (Remote or Hybrid worldwide). You can reach him directly via the Contact form or trigger "sudo hire" in the CLI.`;
-    followUps = ['What is his primary tech stack?', 'Can I download his resume?', 'Show me his backend architecture projects'];
+  if (q.includes('availab') || q.includes('join') || q.includes('hire') || q.includes('notice') || q.includes('relocat') || q.includes('contact')) {
+    answer = `Yes! Ayush is a Computer Science & Engineering undergraduate at ${education.college || 'SISTec, Bhopal'} (CGPA: ${education.cgpa?.match(/(\d+\.?\d*)/)?.[1] || '8.42'}, Batch 2024–2028) open to Full-Stack MERN developer roles, software engineering internships, and project collaborations. You can reach him directly at ${profile.email || 'ayushprajapati9669@gmail.com'} or via the Contact page.`;
+    followUps = ['What is his primary tech stack?', 'Can I download his resume?', 'Show me his featured full-stack projects'];
   }
-  // 2. MongoDB & Database Indexing
-  else if (q.includes('mongo') || q.includes('index') || q.includes('database') || q.includes('redis') || q.includes('sql')) {
-    answer = `Ayush possesses in-depth database engineering expertise with both NoSQL (MongoDB) and In-Memory caching (Redis):\n\n` +
-      `• **MongoDB Indexing & Aggregations:** Experienced with compound indexes, sparse indexes, text search indexes, and multi-stage aggregation pipelines ($lookup, $facet, $unwind) ensuring sub-50ms query execution even across 100k+ records.\n` +
-      `• **Redis Layering:** Utilizes Redis for distributed session caching, rate-limiting (sliding window log), and pub/sub message brokers to cut primary database load by over 60%.\n` +
-      `• **Transactions & Consistency:** Implements 2-phase commits and atomic transactions in MongoDB for multi-entity bookings and financial/cart states.`;
-    followUps = ['Show me the Wanderlust Airbnb project', 'What caching strategies does he use?', 'Tell me about his LeetCode stats'];
-    relatedProject = projects.find((p) => p.title?.toLowerCase().includes('wanderlust') || p.slug?.includes('airbnb')) || projects[0];
+  // 2. MongoDB & Database Engineering
+  else if (q.includes('mongo') || q.includes('index') || q.includes('database') || q.includes('sql') || q.includes('backend')) {
+    answer = `Ayush possesses hands-on database engineering experience across MongoDB and MySQL:\n\n` +
+      `• **MongoDB & Mongoose:** Schema design, document validation, relational referencing, and indexed queries for responsive data retrieval.\n` +
+      `• **Full-Stack Implementations:** Modeled multi-user property listings and reviews in his Airbnb Clone, message threads in his AI Chat Assistant, and portfolios/order tables in his Stock Trading platform.\n` +
+      `• **Media & Cloud Integrations:** Integrates Cloudinary with MongoDB storage pipelines for multi-image uploads.`;
+    followUps = ['Show me the Airbnb clone project', 'What is his core technical stack?', 'Tell me about his LeetCode stats'];
+    relatedProject = projects.find((p) => p.slug?.includes('airbnb') || p.title?.toLowerCase().includes('airbnb')) || projects[0];
   }
-  // 3. Hackathon & Competitions
-  else if (q.includes('hackathon') || q.includes('competition') || q.includes('win') || q.includes('award')) {
-    answer = `Ayush has competed in multiple high-stakes hackathons and engineering sprints:\n\n` +
-      `• Built and deployed autonomous multi-agent workspaces and AI-driven mock interview systems within tight 36-hour sprint windows.\n` +
-      `• Recognized for clean modular system architecture, microsecond Redis caching, and real-time WebRTC/WebSocket integrations.\n` +
-      `• Actively maintains a 71.4% acceptance rate with 350+ solved challenges on LeetCode (Top 12% globally).`;
-    followUps = ['Show me his AI Mock Interview platform', 'What are his DSA metrics?', 'Can I schedule an interview?'];
-    relatedProject = projects.find((p) => p.title?.toLowerCase().includes('agent') || p.title?.toLowerCase().includes('interview')) || projects[0];
+  // 3. Competitions & Achievements
+  else if (q.includes('competition') || q.includes('win') || q.includes('award') || q.includes('achieve') || q.includes('college')) {
+    answer = `Ayush's key achievements and recognitions include:\n\n` +
+      `• **College Website Competition Winner:** Won 1st place in a college website-making competition for responsive UI architecture and full-stack execution.\n` +
+      `• **Apna College Certification:** Successfully completed the Delta Full Stack Web Development program covering React, Node.js, Express, and MongoDB.\n` +
+      `• **Strong Academic Standing:** Maintaining an 8.42 CGPA in Computer Science & Engineering at SISTec, Bhopal (Batch 2024–2028).`;
+    followUps = ['Show me his featured projects', 'What are his DSA metrics?', 'How can I get in touch?'];
+    relatedProject = projects[0];
   }
   // 4. Tech Stack / Skills
-  else if (q.includes('skill') || q.includes('tech stack') || q.includes('react') || q.includes('node') || q.includes('next')) {
-    answer = `Ayush's production engineering stack is focused on high-throughput, modern web applications:\n\n` +
-      `• **Frontend:** React 18/19, Next.js, TypeScript, Tailwind CSS, GSAP 3D animations, Canvas & WebGL micro-interactions.\n` +
-      `• **Backend & Distributed:** Node.js, Express, REST & GraphQL APIs, Redis caching, WebSockets, Kafka/BullMQ message queues.\n` +
-      `• **Databases & Cloud:** MongoDB Atlas, PostgreSQL, AWS (S3, EC2, CloudFront), Docker, CI/CD GitHub Actions.\n` +
-      `• **AI & Automation:** LangChain, OpenAI/Gemini API integrations, RAG vectors, Agentic workflows.`;
-    followUps = ['View System Architecture Blueprint', 'Check LeetCode Profile', 'Download Full-Stack Resume'];
+  else if (q.includes('skill') || q.includes('tech stack') || q.includes('react') || q.includes('node') || q.includes('language') || q.includes('java')) {
+    answer = `Ayush's core technical stack spans modern full-stack development and core programming fundamentals:\n\n` +
+      `• **Programming Languages:** C, Java, JavaScript, Python\n` +
+      `• **Frontend:** React.js, HTML5, CSS3, Tailwind CSS, Bootstrap, Responsive UI Design\n` +
+      `• **Backend:** Node.js, Express.js, RESTful APIs\n` +
+      `• **Databases & Storage:** MongoDB Atlas, MySQL, Cloudinary\n` +
+      `• **Developer Tools:** Git, GitHub, Postman, VS Code`;
+    followUps = ['Tell me about his full-stack projects', 'Check LeetCode Profile', 'Download Full-Stack Resume'];
   }
   // 5. Projects & Architectures
-  else if (q.includes('project') || q.includes('system') || q.includes('airbnb') || q.includes('wanderlust') || q.includes('app')) {
-    const featured = projects.slice(0, 3).map((p) => `• **${p.title}**: ${p.shortDescription || p.description || 'High-performance system'}`).join('\n');
-    answer = `Ayush has built several production-grade full-stack web applications:\n\n${featured}\n\nEvery project features live cloud deployments, accessible responsive interfaces, and clean modular codebases.`;
+  else if (q.includes('project') || q.includes('system') || q.includes('airbnb') || q.includes('stock') || q.includes('agent')) {
+    const featuredList = (projects.length > 0 ? projects : [])
+      .filter((p) => p && p.status === 'published')
+      .slice(0, 4)
+      .map((p) => `• **${p.title}**: ${p.shortDescription || p.category || 'Full-stack application'}`)
+      .join('\n');
+    answer = `Ayush has built several production full-stack web applications:\n\n` +
+      (featuredList || `• **Full-Stack Airbnb Clone**: Rental marketplace with authentication, Cloudinary uploads, and reviews.\n• **Stock Trading Platform**: Real-time simulated trading with Market/Limit orders and MongoDB backend.\n• **AI Agentic Workspace**: Autonomous multi-agent workspace built with modern tools.`) +
+      `\n\nEach application features clean component architecture and live cloud deployments.`;
     followUps = ['Show live deployed projects', 'Tell me about his primary tech stack', 'Ask about his DSA proficiency'];
     relatedProject = projects[0];
   }
   // 6. LeetCode / DSA / Problem Solving
   else if (q.includes('leetcode') || q.includes('dsa') || q.includes('algo') || q.includes('problem')) {
-    answer = `Ayush is deeply committed to algorithmic excellence and computational problem solving:\n\n` +
-      `• **Total Problems Solved:** 350+ on LeetCode (Profile: ayush7162)\n` +
-      `• **Difficulty Breakdown:** 142 Easy, 182 Medium, 32 Hard\n` +
-      `• **Contest Rating:** 1,742+ (Top 12% globally)\n` +
-      `• **Acceptance Rate:** 71.4% with verified badges in 100 Days Streak and SQL/Algorithms.`;
-    followUps = ['Show LeetCode badge details', 'Does he know graph algorithms?', 'How to contact Ayush?'];
+    answer = `Ayush actively practices Data Structures and Algorithms on LeetCode (@ayush7162):\n\n` +
+      `• **Problems Solved:** 65 Algorithmic Challenges\n` +
+      `• **Difficulty Breakdown:** 15 Easy, 41 Medium, 9 Hard\n` +
+      `• **Core Focus:** Arrays, Two Pointers, Linked Lists, Trees, and Algorithmic Foundations\n` +
+      `• **Verified Profile:** https://leetcode.com/u/ayush7162/`;
+    followUps = ['What programming languages does he use?', 'Does he know graph algorithms?', 'How to contact Ayush?'];
   }
-  // 7. General Catch-All RAG synthesis
+  // 7. General Catch-All
   else {
-    answer = `Ayush Prajapati is a Full-Stack & Systems Engineer specializing in scalable React/Node.js web platforms, resilient distributed backends, and AI agent integrations.\n\n` +
-      `He has developed end-to-end full-stack architectures (including Wanderlust Airbnb clone, AI Mock Interview suite, and Agentic workspaces) and has solved 350+ DSA problems on LeetCode.\n\n` +
-      `Feel free to ask about his technical decisions, database strategies, or how to schedule an introductory interview!`;
+    answer = `Ayush Prajapati is a Computer Science & Engineering undergraduate at SISTec, Bhopal (CGPA: 8.42, Batch 2024–2028) specializing in full-stack MERN engineering, clean REST APIs, and algorithmic problem-solving.\n\n` +
+      `His published portfolio includes a live Airbnb Clone deployed on Render, an AI Agentic Workspace, an AI Chat Assistant, and a Stock Trading simulation platform.\n\n` +
+      `Feel free to ask about his technical stack, academic qualifications, or explore his live deployed projects!`;
     followUps = [
-      'What is Ayush\'s experience with MongoDB indexing?',
-      'Show me his hackathon winning project',
-      'Is Ayush available for immediate joining?'
+      'Tell me about his full-stack projects',
+      'What is his academic background & CGPA?',
+      'What are his LeetCode problem solving stats?'
     ];
   }
 

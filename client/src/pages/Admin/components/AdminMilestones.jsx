@@ -1718,19 +1718,42 @@ export function AdminMilestones({
   const [githubCommits, setGithubCommits] = useState([]);
   const [isFetchingCommits, setIsFetchingCommits] = useState(false);
 
-  const fetchGithubCommits = () => {
+  const fetchGithubCommits = async () => {
     setIsFetchingCommits(true);
-    setTimeout(() => {
-      const mockCommits = [
-        { hash: 'a4b8c9d', msg: 'feat: Enhanced Milestone Blueprint viewer with live metrics', date: 'Yesterday' },
-        { hash: 'e2f5g1h', msg: 'fix: Enhanced contrast & dynamic lighting across portfolio modals', date: '3 days ago' },
-        { hash: 'j7k3m9n', msg: 'feat: Integrated Gemini API with streaming chat completions', date: '5 days ago' },
-        { hash: 'p0q4r8s', msg: 'perf: Optimized GSAP bundle and asset preloading pipelines', date: '1 week ago' }
-      ];
-      setGithubCommits(mockCommits);
+    try {
+      const clean = (githubUrl || '').replace(/^https?:\/\/github\.com\//i, '').replace(/\/+$/, '');
+      const parts = clean.split('/');
+      if (parts.length < 2) {
+        showToast('Please enter a valid GitHub repository URL (e.g., https://github.com/owner/repo)', 'fa-triangle-exclamation');
+        setIsFetchingCommits(false);
+        return;
+      }
+      const [owner, repo] = parts;
+      const res = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/commits?per_page=5`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          const commits = data.map((c) => ({
+            hash: c.sha ? c.sha.slice(0, 7) : 'commit',
+            msg: c.commit?.message?.split('\n')[0] || 'Repository commit',
+            date: c.commit?.author?.date ? new Date(c.commit.author.date).toLocaleDateString() : 'Recent'
+          }));
+          setGithubCommits(commits);
+          showToast(`Fetched ${commits.length} recent commits from ${owner}/${repo}`, 'fa-github');
+        } else {
+          setGithubCommits([]);
+          showToast('No commits found in this repository branch.', 'fa-circle-info');
+        }
+      } else {
+        setGithubCommits([]);
+        showToast(`GitHub API notice: ${res.status === 404 ? 'Repository not found or private' : 'Rate limited or inaccessible'}`, 'fa-triangle-exclamation');
+      }
+    } catch (_err) {
+      setGithubCommits([]);
+      showToast('Unable to reach GitHub API. Check connection.', 'fa-triangle-exclamation');
+    } finally {
       setIsFetchingCommits(false);
-      showToast(`Fetched ${mockCommits.length} recent commits from repository`, 'fa-github');
-    }, 800);
+    }
   };
 
   const importCommitAsMilestone = (commit) => {

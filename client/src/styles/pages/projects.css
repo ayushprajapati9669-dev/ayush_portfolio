@@ -132,7 +132,7 @@
 
 .projects-grid {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)) !important;
   gap: 24px !important;
 }
 
@@ -348,6 +348,45 @@
   margin: 0 auto !important;
   padding: 0 clamp(20px, 5vw, 64px) 120px !important;
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)) !important;
   gap: 24px !important;
+}
+
+@media (max-width: 640px) {
+  .projects-page {
+    padding-top: 100px !important;
+  }
+  .projects-page .page-header {
+    padding: 0 16px 32px !important;
+  }
+  .projects-filters-row {
+    padding: 0 16px !important;
+    gap: 8px !important;
+    margin-bottom: 24px !important;
+  }
+  .projects-page .filters {
+    width: 100% !important;
+    gap: 6px !important;
+  }
+  .filter-btn {
+    padding: 6px 14px !important;
+    font-size: 11.5px !important;
+  }
+  .projects-page .search-wrap,
+  .project-search-wrap {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-top: 4px !important;
+  }
+  .projects-page .search-input,
+  .project-search-input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .projects-content,
+  .project-grid {
+    padding: 0 16px 80px !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
 }

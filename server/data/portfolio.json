@@ -130,25 +130,35 @@
       },
       {
         "id": "m-1794686654523",
-        "title": "ai-ml completed",
-        "desc": "<h3>Overview</h3><p>Successfully completed <b>ai-ml completed </b> demonstrating rigorous engineering and methodical execution.</p><h3>Key Highlights</h3><ul><li>Applied algorithmic problem-solving and modern development tools.</li><li>Engineered modular architecture with comprehensive test coverage.</li><li>Ensured intuitive responsive interfaces and optimized execution speed.</li></ul>",
-        "description": "<h3>Overview</h3><p>Successfully completed <b>ai-ml completed </b> demonstrating rigorous engineering and methodical execution.</p><h3>Key Highlights</h3><ul><li>Applied algorithmic problem-solving and modern development tools.</li><li>Engineered modular architecture with comprehensive test coverage.</li><li>Ensured intuitive responsive interfaces and optimized execution speed.</li></ul>",
+        "title": "Machine Learning & AI Tooling Exploration",
+        "desc": "<h3>Machine Learning & AI Workflows</h3><p>Explored LangChain, prompt engineering, and Gemini REST API integrations into full-stack modern web architectures.</p><h3>Key Highlights</h3><ul><li>Built real-time AI chat widgets with streaming responses and fallback resilience.</li><li>Engineered modular prompt design with contextual retrieval pipelines.</li><li>Optimized runtime memory and client responsiveness across mobile and desktop.</li></ul>",
+        "description": "Explored LangChain, prompt engineering, and Gemini REST API integrations into full-stack modern web architectures with streaming responses and contextual retrieval.",
         "year": "Year 3",
         "yearBadge": "Year 3",
         "status": "completed",
-        "metaLabel": "ai-ml practice year-3",
-        "phase": "ai-ml practice year-3",
+        "metaLabel": "Year 3 · Applied AI & ML",
+        "phase": "Year 3 · Applied AI & ML",
         "progress": 70,
         "rating": 4,
-        "tags": [],
-        "skills": [],
+        "tags": [
+          "Machine Learning",
+          "LangChain",
+          "Gemini API",
+          "Python"
+        ],
+        "skills": [
+          "Machine Learning",
+          "LangChain",
+          "Gemini API",
+          "Python"
+        ],
         "icon": "fa-layer-group",
         "image": null,
         "images": [],
         "hdImages": [],
         "imageAlt": "",
         "link": "",
-        "metric": "",
+        "metric": "LangChain & Gemini API Integrations",
         "badgeText": "",
         "badgeIcon": "fa-trophy",
         "challenge": "",
@@ -255,7 +265,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "From blank screen to live product. That’s Ayush Prajapati.",
-    "updatedAt": "2026-11-15T11:36:51.860Z",
+    "updatedAt": "2026-11-20T15:31:55.218Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -310,153 +320,56 @@
   },
   "projects": [
     {
-      "id": "proj-1792430568297",
-      "approachArchitecture": "",
-      "category": "Full-Stack Web App",
-      "createdAt": "2026-10-31T08:13:37.186Z",
-      "disclaimer": "",
-      "displayOrder": 1,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
-      "problemContext": "",
-      "shortDescription": "this is a airbnb clone",
-      "slug": "airbnb-clone-1",
-      "status": "published",
-      "technologies": [
-        "React JS",
-        "Node.js",
-        "Express.js",
-        "MongoDB"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
-      "title": "Airbnb clone 1",
-      "updatedAt": "2026-11-15T11:36:50.943Z",
-      "caseStudy": {
-        "problem": "",
-        "approach": "",
-        "techDecisions": "",
-        "learnings": "",
-        "architectureDiagramUrl": "",
-        "beforeScreenshots": [],
-        "afterScreenshots": [],
-        "result": {
-          "summary": "",
-          "metrics": [
-            {
-              "label": "API Endpoints",
-              "value": "15+"
-            },
-            {
-              "label": "Lighthouse",
-              "value": "92"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "proj-1792430599188",
-      "approachArchitecture": "",
-      "category": "Full-Stack Web App",
-      "createdAt": "2026-10-31T08:13:37.215Z",
-      "disclaimer": "",
-      "displayOrder": 2,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
-      "problemContext": "",
-      "shortDescription": "this is a second testing project",
-      "slug": "airbnb-clone-2",
-      "status": "published",
-      "technologies": [
-        "React JS",
-        "Node.js",
-        "Express.js",
-        "MongoDB"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
-      "title": "airbnb clone 2",
-      "updatedAt": "2026-11-15T11:36:50.943Z"
-    },
-    {
-      "id": "proj-1792496192331",
-      "approachArchitecture": "",
-      "category": "Full-Stack Web App",
-      "createdAt": "2026-10-31T08:13:37.247Z",
-      "disclaimer": "",
-      "displayOrder": 3,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "",
-      "problemContext": "",
-      "shortDescription": "ai chat boat — Modern full-stack architecture built with react.",
-      "slug": "ai-chat-boat",
-      "status": "published",
-      "technologies": [
-        "react"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "/images/ai-chat-preview.webp",
-      "title": "ai chat boat",
-      "updatedAt": "2026-11-15T11:36:50.943Z"
-    },
-    {
-      "id": "proj-1792781601076",
-      "approachArchitecture": "",
-      "category": "Full-Stack Web App",
-      "createdAt": "2026-10-31T08:13:37.348Z",
-      "disclaimer": "",
-      "displayOrder": 4,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
-      "problemContext": "",
-      "shortDescription": "hi this is a testing project",
+      "id": "proj-airbnb-clone",
+      "title": "Full-Stack Airbnb Clone",
       "slug": "airbnb-clone",
-      "status": "published",
+      "category": "Full-Stack Web App",
+      "shortDescription": "Full-stack rental marketplace built with React, Node.js, Express, and MongoDB, featuring authentication, Cloudinary media uploads, dynamic listings, and booking management.",
+      "problemContext": "Designed to solve end-to-end property discovery, booking workflow, and user review management with a responsive interface.",
+      "approachArchitecture": "Decoupled MERN stack with RESTful API endpoints, JWT-based user authentication, and Cloudinary storage pipeline for listing images.",
+      "implementedFeatures": [
+        "JWT Authentication & Session Management",
+        "Dynamic Property Search with Filters",
+        "Multi-Image Upload via Cloudinary",
+        "Interactive User Reviews & Rating System",
+        "Responsive Mobile-First Interface"
+      ],
+      "lessonsLearned": "Mastered multi-part form data processing with Multer, MongoDB relational referencing, and resilient deployment on Render.",
+      "disclaimer": "",
       "technologies": [
         "React JS",
         "Node.js",
         "Express.js",
-        "MongoDB"
+        "MongoDB",
+        "Cloudinary"
       ],
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
-      "title": "airbnb clone",
-      "updatedAt": "2026-11-15T11:36:50.943Z"
-    },
-    {
-      "id": "proj-1792669669594",
-      "approachArchitecture": "",
-      "category": "AI & Machine Learning",
-      "createdAt": "2026-10-31T08:13:37.316Z",
-      "disclaimer": "",
-      "displayOrder": 5,
-      "featured": true,
       "galleryImages": [],
       "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://agentic-workspace.onrender.com",
-      "problemContext": "",
-      "shortDescription": "An advanced AI agentic workspace built with cutting-edge tools.",
-      "slug": "ai-agentic-workspace",
+      "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
+      "featured": true,
       "status": "published",
+      "displayOrder": 1,
+      "createdAt": "2026-10-31T08:13:37.186Z",
+      "updatedAt": "2026-11-20T15:51:19.328Z"
+    },
+    {
+      "id": "proj-ai-agentic-workspace",
+      "title": "AI Agentic Workspace",
+      "slug": "ai-agentic-workspace",
+      "category": "AI & Machine Learning",
+      "shortDescription": "Autonomous multi-agent workspace built with modern full-stack tools, featuring contextual task workflows and intelligent orchestration.",
+      "problemContext": "Simplifies developer workflows through autonomous task breakdown, tool coordination, and real-time state tracking.",
+      "approachArchitecture": "Modular agent architecture executing multi-step reasoning tasks with contextual tool execution.",
+      "implementedFeatures": [
+        "Multi-Agent Task Orchestration",
+        "Context Memory & Execution History",
+        "Interactive Web UI with Real-Time Feedback",
+        "Live Cloud Deployment on Render"
+      ],
+      "lessonsLearned": "Managing asynchronous agent states, event queues, and error recovery in distributed workflows.",
+      "disclaimer": "",
       "technologies": [
         "React JS",
         "Node.js",
@@ -465,8 +378,81 @@
       ],
       "thumbnailType": "image",
       "thumbnailUrl": "/images/ai-agentic-preview.webp",
-      "title": "AI Agentic Workspace",
-      "updatedAt": "2026-11-15T11:36:50.943Z"
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "liveDemoUrl": "https://agentic-workspace.onrender.com",
+      "featured": true,
+      "status": "published",
+      "displayOrder": 2,
+      "createdAt": "2026-10-31T08:13:37.316Z",
+      "updatedAt": "2026-11-20T15:51:19.328Z"
+    },
+    {
+      "id": "proj-ai-chat-assistant",
+      "title": "AI Chat Assistant",
+      "slug": "ai-chat-assistant",
+      "category": "AI & Machine Learning",
+      "shortDescription": "Conversational AI assistant built with React, Node.js, Express, and Google Gemini API, with persistent chat thread and message management in MongoDB.",
+      "problemContext": "Provides intelligent contextual assistance through clean chat threads, markdown message rendering, and automated conversational memory.",
+      "approachArchitecture": "Full-stack conversational application integrating Google Gemini generative API with persistent MongoDB chat history storage.",
+      "implementedFeatures": [
+        "Gemini API LLM Integration",
+        "Persistent Chat Threads in MongoDB",
+        "Markdown Formatting & Code Syntax Highlighting",
+        "Responsive Dark-Themed Chat Interface"
+      ],
+      "lessonsLearned": "Handling API streaming tokens, error resilience, and structured prompt engineering.",
+      "disclaimer": "",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Gemini API"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "/images/ai-chat-preview.webp",
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "liveDemoUrl": "",
+      "featured": true,
+      "status": "published",
+      "displayOrder": 3,
+      "createdAt": "2026-10-31T08:13:37.247Z",
+      "updatedAt": "2026-11-20T15:51:19.328Z"
+    },
+    {
+      "id": "proj-stock-trading-sim",
+      "title": "Stock Trading Simulation Platform",
+      "slug": "stock-trading-platform",
+      "category": "Full-Stack Web App",
+      "shortDescription": "Full-stack trading application featuring portfolio holdings, positions, real-time funds calculation, and Buy/Sell execution with Market and Limit orders.",
+      "problemContext": "Simulates financial trading environment with accurate balance updates, order validation, and position tracking.",
+      "approachArchitecture": "FinTech dashboard with modular holdings, positions, and order book execution with transactional MongoDB updates.",
+      "implementedFeatures": [
+        "Market & Limit Order Execution",
+        "Holdings & Positions Calculation",
+        "Available Funds & Margin Validation",
+        "Interactive Data Tables & Portfolio Summary"
+      ],
+      "lessonsLearned": "Financial data precision, transactional integrity, and state consistency across order life cycles.",
+      "disclaimer": "",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "/images/ai-chat-preview.webp",
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "liveDemoUrl": "",
+      "featured": true,
+      "status": "published",
+      "displayOrder": 4,
+      "createdAt": "2026-10-31T08:13:37.348Z",
+      "updatedAt": "2026-11-20T15:51:19.328Z"
     }
   ],
   "skills": [
@@ -499,7 +485,30 @@
         }
       ],
       "tabIcon": "languages",
-      "updatedAt": "2026-11-15T11:36:50.953Z"
+      "updatedAt": "2026-11-20T15:31:53.958Z"
+    },
+    {
+      "id": "skill-backend",
+      "category": "Backend",
+      "createdAt": "2026-11-14T17:32:55.993Z",
+      "description": "Server runtimes and REST API architecture.",
+      "displayOrder": 3,
+      "items": [
+        {
+          "name": "Node.js",
+          "logoKey": "nodejs"
+        },
+        {
+          "name": "Express.js",
+          "logoKey": "express"
+        },
+        {
+          "name": "REST APIs",
+          "logoKey": "api"
+        }
+      ],
+      "tabIcon": "backend",
+      "updatedAt": "2026-11-20T15:31:53.958Z"
     },
     {
       "id": "skill-frontend",
@@ -542,30 +551,7 @@
         }
       ],
       "tabIcon": "frontend",
-      "updatedAt": "2026-11-15T11:36:50.953Z"
-    },
-    {
-      "id": "skill-backend",
-      "category": "Backend",
-      "createdAt": "2026-11-14T17:32:55.993Z",
-      "description": "Server runtimes and REST API architecture.",
-      "displayOrder": 3,
-      "items": [
-        {
-          "name": "Node.js",
-          "logoKey": "nodejs"
-        },
-        {
-          "name": "Express.js",
-          "logoKey": "express"
-        },
-        {
-          "name": "REST APIs",
-          "logoKey": "api"
-        }
-      ],
-      "tabIcon": "backend",
-      "updatedAt": "2026-11-15T11:36:50.953Z"
+      "updatedAt": "2026-11-20T15:31:53.958Z"
     },
     {
       "id": "skill-databases",
@@ -584,7 +570,7 @@
         }
       ],
       "tabIcon": "databases",
-      "updatedAt": "2026-11-15T11:36:50.953Z"
+      "updatedAt": "2026-11-20T15:31:53.958Z"
     },
     {
       "id": "skill-tools",
@@ -615,7 +601,7 @@
         }
       ],
       "tabIcon": "tools",
-      "updatedAt": "2026-11-15T11:36:50.953Z"
+      "updatedAt": "2026-11-20T15:31:53.958Z"
     },
     {
       "id": "skill-dsa",
@@ -630,10 +616,29 @@
         }
       ],
       "tabIcon": "dsa",
-      "updatedAt": "2026-11-15T11:36:50.953Z"
+      "updatedAt": "2026-11-20T15:31:53.958Z"
     }
   ],
-  "certificates": [],
+  "certificates": [
+    {
+      "id": "cert-apna-college-delta",
+      "title": "Delta Full Stack Web Development",
+      "issuer": "Apna College",
+      "issueDate": "2024",
+      "credentialId": "DELTA-FSWD-2024",
+      "credentialUrl": "",
+      "skillsCovered": "React JS, Node.js, Express.js, MongoDB, JavaScript, REST APIs, Git & GitHub",
+      "imageUrl": "",
+      "featured": true,
+      "createdAt": "2024-06-15T00:00:00.000Z",
+      "skills": "React JS, Node.js, Express.js, MongoDB, JavaScript, REST APIs, Git & GitHub",
+      "badgeText": "Certified MERN Developer",
+      "status": "verified",
+      "published": true,
+      "displayOrder": 1,
+      "updatedAt": "2026-11-20T15:51:20.049Z"
+    }
+  ],
   "media": [],
   "messages": [],
   "settings": {
@@ -657,7 +662,7 @@
     "maintenanceMode": false,
     "particlesEnabled": true,
     "robotsIndex": "index, follow",
-    "updatedAt": "2026-11-15T11:36:51.971Z",
+    "updatedAt": "2026-11-20T15:31:55.324Z",
     "fontHeading": "'Plus Jakarta Sans', sans-serif",
     "fontBody": "'Inter', sans-serif",
     "seoKeywords": "Ayush Prajapati, Full-Stack Developer, MERN Stack, React.js, Node.js, SISTec Bhopal, Software Engineer, Portfolio",
@@ -671,10 +676,10 @@
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-20T09:36:42.558Z",
+      "lastLoginAt": "2026-11-20T15:31:53.890Z",
       "passwordHash": "scrypt$16384$8$1$4239cdd5ea09a3af47a1ef70e7251af9$a879a3326e425702bfceff0e6670507b88b6bf5e0db1daed20ac3c15adf277ad33fad93c85fd3e8afdbbe88859afba4b254129a99d4137ee3770075f29dd77d6",
       "role": "admin",
-      "updatedAt": "2026-11-15T11:36:51.793Z"
+      "updatedAt": "2026-11-20T15:31:55.070Z"
     },
     {
       "username": "ayush",
@@ -683,7 +688,7 @@
       "lastLoginAt": "2026-11-14T18:09:37.910Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-15T11:36:51.793Z"
+      "updatedAt": "2026-11-20T15:31:55.070Z"
     },
     {
       "createdAt": "2026-11-05T12:05:07.107Z",
@@ -691,7 +696,7 @@
       "lastLoginAt": "2026-11-15T04:40:09.843Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-15T11:36:51.793Z",
+      "updatedAt": "2026-11-20T15:31:55.070Z",
       "username": "admin"
     },
     {
@@ -700,7 +705,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-15T11:36:51.793Z",
+      "updatedAt": "2026-11-20T15:31:55.070Z",
       "username": "Ayush7162"
     }
   ],
