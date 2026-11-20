@@ -1577,3 +1577,35 @@
   padding: 0 clamp(20px, 5vw, 64px) !important;
   box-sizing: border-box !important;
 }
+
+@media (max-width: 640px) {
+  .about-page {
+    padding-top: 96px !important;
+    padding-bottom: 60px !important;
+  }
+  .about-page .page-header {
+    margin-bottom: 28px !important;
+    padding: 0 16px !important;
+  }
+  .about-page .top-section,
+  .about-page .bottom-section,
+  .about-page .education-section {
+    padding: 0 16px !important;
+    margin-bottom: 28px !important;
+  }
+  .about-page .about-card {
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+  }
+  .about-page .avatar-ring {
+    width: 110px !important;
+    height: 110px !important;
+    min-width: 110px !important;
+    min-height: 110px !important;
+  }
+  .about-page .contact-item {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+}
+

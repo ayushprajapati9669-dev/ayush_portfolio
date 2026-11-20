@@ -303,6 +303,13 @@ img {
 /* =========================================================================
    Mobile Touch Experience & Micro-Interactions Foundation
    ========================================================================= */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+
 button,
 a,
 input,
@@ -311,6 +318,24 @@ textarea,
 [role="button"] {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent !important;
+}
+
+@media (max-width: 768px) {
+  /* Prevent automatic iOS Safari zooming on focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Universal overscroll containment on mobile drawers and modals */
+  .modal-box,
+  .mobile-drawer,
+  .admin-sidebar,
+  [data-lenis-prevent="true"] {
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 @media (hover: none) and (pointer: coarse) {
