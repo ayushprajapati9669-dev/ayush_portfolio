@@ -1991,11 +1991,46 @@ a.btn-primary:hover {
   }
 
   /* Admin-specific desktop controls hidden on mobile */
+  .nav-search-btn,
+  .btn-admin-cms,
+  .admin-tools-popover,
+  .btn-icon,
+  .admin-tools-wrapper,
+  .nav-v-divider,
   body.has-admin-sidebar .nav-search-btn,
   body.has-admin-sidebar .btn-admin-cms,
   body.has-admin-sidebar .admin-tools-popover,
-  body.has-admin-sidebar .btn-icon {
+  body.has-admin-sidebar .btn-icon,
+  #navWrapper .nav-search-btn,
+  #navWrapper .btn-admin-cms,
+  #navWrapper .admin-tools-popover,
+  #navWrapper .btn-icon,
+  #navWrapper .admin-tools-wrapper,
+  #navWrapper .nav-v-divider {
     display: none !important;
+  }
+
+  .nav-right,
+  #navWrapper .nav-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-left: auto !important;
+    position: relative !important;
+  }
+
+  .notif-btn,
+  #navWrapper .notif-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
   }
 
   /* Mobile Hamburger Toggle */
@@ -2016,7 +2051,8 @@ a.btn-primary:hover {
     cursor: pointer !important;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     flex-shrink: 0 !important;
-    margin-left: auto !important;
+    margin-left: 0 !important;
+    position: relative !important;
     z-index: 2 !important;
     padding: 0 !important;
   }

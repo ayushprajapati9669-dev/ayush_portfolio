@@ -997,7 +997,7 @@ export function Header() {
 
               {/* Admin Quick Settings & Tools Dropdown */}
               {isAdmin && (
-                <div className="flex items-center gap-1.5 flex-nowrap shrink-0">
+                <div className="admin-tools-wrapper hidden lg:flex items-center gap-1.5 flex-nowrap shrink-0">
                   <div className="relative" ref={toolsMenuRef}>
                     <button
                       type="button"
@@ -1076,7 +1076,7 @@ export function Header() {
 
               {/* Command Palette Trigger (Search ⌘K) (Positioned with safe right padding) */}
               {isAdmin && (
-                <div className="magnetic mr-1 shrink-0">
+                <div className="magnetic mr-1 shrink-0 hidden lg:inline-block">
                   <button
                     type="button"
                     className="btn-outline nav-search-btn"
@@ -1093,7 +1093,7 @@ export function Header() {
               )}
 
               {/* Subtle divider before CTA (matching reference image) */}
-              {isAdmin && <span className="nav-v-divider" aria-hidden="true" />}
+              {isAdmin && <span className="nav-v-divider hidden lg:inline-block" aria-hidden="true" />}
 
               {/* Developer CLI Terminal Trigger (Retro Cyberpunk >_ Terminal) */}
               {!isAdmin && (
@@ -1152,7 +1152,7 @@ export function Header() {
 
               {/* Admin CMS Button (Visible when on Admin Dashboard) */}
               {isAdmin && (
-                <div className="magnetic">
+                <div className="magnetic hidden lg:inline-block">
                   <Link
                     to="/admin"
                     className={`btn-admin-cms ${isAdmin ? 'active' : ''}`}

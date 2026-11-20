@@ -818,7 +818,7 @@ export function AdminHeroPortrait({
                   <span>Redo</span>
                 </button>
 
-                <div style={{ flex: 1 }} />
+                <div className="hero-toolbar-spacer" style={{ flex: 1 }} />
 
                 <button
                   type="button"
@@ -839,7 +839,7 @@ export function AdminHeroPortrait({
                   <span className="text-[11px] font-mono text-slate-500">1:1 Square recommended</span>
                 </label>
 
-                <div className="flex flex-wrap gap-2.5">
+                <div className="hero-image-actions-row flex flex-wrap gap-2.5">
                   <div className="hero-file-upload-wrapper flex-1 min-w-[150px]">
                     <button type="button" className="hero-file-upload-btn" onClick={() => { playTick(); directCutoutInputRef.current?.click(); }} title="Upload raw photo and automatically remove background at 100% full original resolution">
                       <i className="fa-solid fa-wand-magic-sparkles text-yellow-400" />

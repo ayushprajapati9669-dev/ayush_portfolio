@@ -2763,7 +2763,26 @@
 
 @media (max-width: 600px) {
   .hero-stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .hero-stat-card {
+    padding: 12px 10px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+  .hero-stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+  .hero-stat-info h4 {
+    font-size: 10.5px;
+  }
+  .hero-stat-info h3 {
+    font-size: 16px;
   }
 }
 
@@ -3442,10 +3461,216 @@
 }
 
 
-
 /* ==========================================================================
-   Modern SaaS Dark UI Enhancements (From nice-background-theme.html)
+   Hero Studio Mobile & Small Screen Adaptations (320px - 768px)
    ========================================================================== */
+@media (max-width: 768px) {
+  .hero-preview-column {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: static !important;
+  }
+
+  .hero-mockup-wrapper {
+    padding: 12px !important;
+    border-radius: 14px !important;
+    background: rgba(8, 12, 22, 0.9) !important;
+  }
+
+  .hero-mockup-container {
+    height: auto !important;
+    min-height: 440px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  .hero-mockup-container.mobile {
+    width: 100% !important;
+    max-width: 320px !important;
+    margin: 0 auto !important;
+    border-radius: 28px !important;
+    border-width: 6px !important;
+  }
+
+  .hero-mockup-stage {
+    flex-direction: column-reverse !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 18px !important;
+    padding: 24px 14px 28px !important;
+  }
+
+  .hero-mockup-text {
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .hero-mockup-status-badge {
+    margin-bottom: 10px !important;
+    font-size: 11px !important;
+    padding: 3px 10px !important;
+  }
+
+  .hero-mockup-title {
+    font-size: clamp(16px, 4.5vw, 20px) !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
+    margin-bottom: 14px !important;
+    word-break: normal !important;
+  }
+
+  .hero-mockup-title span {
+    display: inline !important;
+  }
+
+  .hero-mockup-cta-wrap {
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .hero-mockup-btn-primary,
+  .hero-mockup-btn-secondary {
+    padding: 8px 14px !important;
+    font-size: 11px !important;
+    flex: 1 1 auto !important;
+    max-width: 145px !important;
+    text-align: center !important;
+  }
+
+  .hero-mockup-avatar-wrap {
+    width: clamp(100px, 28vw, 120px) !important;
+    height: clamp(100px, 28vw, 120px) !important;
+    margin: 0 auto !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Prevent duplicate banner and redundant elements on mobile */
+  .hero-top-navbar {
+    padding: 10px 14px !important;
+    margin-bottom: 16px !important;
+    border-radius: 14px !important;
+    gap: 8px !important;
+    justify-content: space-between !important;
+  }
+
+  .hero-top-navbar .hero-top-left {
+    display: none !important; /* Title & autosave pill are already in top action banner */
+  }
+
+  .hero-top-navbar .hero-top-right {
+    width: 100% !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+
+  .hero-top-navbar .hero-top-right .btn-hero-primary {
+    display: none !important; /* Hide duplicate save button; main Save Changes button is in banner */
+  }
+
+  .hero-top-navbar .hero-toggle-label {
+    font-size: 11.5px !important;
+  }
+
+  .hero-top-navbar .btn-hero-action {
+    padding: 6px 12px !important;
+    font-size: 11.5px !important;
+  }
+
+  /* Toolbar: Undo, Redo, AI Generate */
+  .hero-toolbar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    padding: 8px 10px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .hero-toolbar .hero-toolbar-spacer {
+    display: none !important;
+  }
+
+  .hero-toolbar .btn-hero-action {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+
+  .hero-toolbar .btn-ai-gen {
+    padding: 7px 12px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Image Action Buttons Row */
+  .hero-image-actions-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .hero-image-actions-row .hero-file-upload-wrapper {
+    grid-column: span 3 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-image-actions-row .hero-file-upload-btn {
+    padding: 9px 12px !important;
+    font-size: 11.5px !important;
+  }
+
+  .hero-image-actions-row .btn-hero-action {
+    padding: 8px 4px !important;
+    font-size: 11px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    width: 100% !important;
+  }
+
+  /* SEO Meter */
+  .hero-seo-meter {
+    padding: 10px 14px !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .hero-seo-circle {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .hero-seo-circle::before {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .hero-seo-circle span {
+    font-size: 12px !important;
+  }
+
+  .hero-seo-text h4 {
+    font-size: 12.5px !important;
+  }
+
+  .hero-seo-text p {
+    font-size: 10.5px !important;
+  }
+}
+
+
 .admin-sidebar {
   background-color: var(--bg-base) !important;
   border-right: 1px solid var(--border-subtle) !important;
