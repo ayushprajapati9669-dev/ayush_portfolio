@@ -299,3 +299,38 @@ img {
   width: 0 !important;
   height: 0 !important;
 }
+
+/* =========================================================================
+   Mobile Touch Experience & Micro-Interactions Foundation
+   ========================================================================= */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  a:active,
+  [role="button"]:active {
+    transform: scale(0.97);
+    transition: transform 0.12s ease-out;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-title {
+    font-size: clamp(2rem, 7.5vw, 2.75rem) !important;
+    line-height: 1.1 !important;
+    margin-bottom: 14px !important;
+  }
+  .page-desc {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+  }
+}
+

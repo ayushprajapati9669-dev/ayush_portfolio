@@ -491,3 +491,41 @@ textarea.form-control {
   color: #d4af37 !important;
   box-shadow: 0 6px 20px rgba(212, 175, 55, 0.15) !important;
 }
+
+@media (max-width: 640px) {
+  .contact-page {
+    padding-top: 100px !important;
+    padding-bottom: 60px !important;
+  }
+  .contact-page .page-header {
+    padding: 0 16px 28px !important;
+  }
+  .contact-page .contact-content {
+    padding: 0 16px 60px !important;
+  }
+  .contact-page .glass-card {
+    padding: 22px 18px !important;
+    border-radius: 16px !important;
+  }
+  .form-control {
+    font-size: 16px !important;
+    min-height: 48px !important;
+    padding: 12px 14px !important;
+  }
+  .btn-send {
+    min-height: 50px !important;
+    font-size: 15px !important;
+    border-radius: 14px !important;
+  }
+  .btn-send:active {
+    transform: scale(0.98) !important;
+    filter: brightness(1.1) !important;
+  }
+  .social-btn {
+    width: 46px !important;
+    height: 46px !important;
+  }
+  .social-btn:active {
+    transform: scale(0.94) !important;
+  }
+}

@@ -1025,6 +1025,26 @@
 }
 
 @media (max-width: 640px) {
+  .journey-page {
+    padding-top: 100px !important;
+    padding-bottom: 60px !important;
+  }
+  .journey-page .page-header {
+    padding: 0 16px 28px !important;
+  }
+  .journey-page > .spotlight-section,
+  .journey-page > .journey-split-wrapper,
+  .journey-page > .leetcode-section,
+  .journey-page > .bottom-section {
+    padding: 0 16px !important;
+  }
+  .journey-split-wrapper .about-card {
+    padding: 20px 16px !important;
+  }
+  .journey-split-wrapper .timeline-list {
+    max-height: 440px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
   .leetcode-mastery-card {
     padding: 1.15rem 1rem;
   }
@@ -1038,5 +1058,6 @@
   .lmc-btn-inspect {
     width: 100%;
     justify-content: center;
+    min-height: 44px;
   }
 }

@@ -4413,3 +4413,32 @@ select option.admin-select-option {
 .admin-voice-backdrop {
   z-index: 10000000 !important;
 }
+
+/* =========================================================================
+   Admin Mobile Touch & Form Input Polish
+   ========================================================================= */
+@media (max-width: 640px) {
+  .admin-sidebar .nav-item {
+    min-height: 44px !important;
+    transition: transform 0.15s ease, background 0.15s ease !important;
+  }
+  .admin-sidebar .nav-item:active {
+    transform: scale(0.98) !important;
+    background: rgba(212, 175, 55, 0.12) !important;
+  }
+  .admin-content-area input[type="text"],
+  .admin-content-area input[type="email"],
+  .admin-content-area input[type="password"],
+  .admin-content-area input[type="search"],
+  .admin-content-area textarea,
+  .admin-content-area select,
+  .admin-select-field {
+    font-size: 16px !important;
+  }
+  .admin-content-area button {
+    touch-action: manipulation;
+  }
+  .admin-content-area button:active {
+    transform: scale(0.98);
+  }
+}

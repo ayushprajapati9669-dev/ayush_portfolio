@@ -1964,6 +1964,12 @@ a.btn-primary:hover {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
+    background: rgba(9, 10, 15, 0.88) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid rgba(223, 183, 64, 0.22) !important;
+    border-radius: 9999px !important;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.85), 0 0 18px rgba(223, 183, 64, 0.12) !important;
   }
 
   /* Center Desktop Navigation Links MUST BE HIDDEN on <= 1024px */
@@ -2393,8 +2399,9 @@ a.btn-primary:hover {
 .mobile-drawer .nav a[aria-current="page"] {
   color: #ffffff !important;
   font-weight: 600 !important;
-  border-color: transparent !important;
-  background: transparent !important;
+  border-color: rgba(223, 183, 64, 0.4) !important;
+  background: linear-gradient(90deg, rgba(223, 183, 64, 0.16) 0%, rgba(223, 183, 64, 0.04) 100%) !important;
+  box-shadow: 0 4px 18px -4px rgba(223, 183, 64, 0.25) !important;
 }
 
 .mobile-drawer .nav a.active svg.ic,
@@ -2546,6 +2553,13 @@ a.btn-primary:hover {
   gap: 10px !important;
   width: 100% !important;
   box-sizing: border-box !important;
+}
+
+@media (max-width: 360px) {
+  .mobile-drawer .drawer-actions {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
 }
 
 /* Base Button Styles */

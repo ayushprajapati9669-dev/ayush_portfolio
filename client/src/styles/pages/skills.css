@@ -739,10 +739,20 @@
   .skills-page .skills-content-wrap {
     padding: 0 16px !important;
   }
+  .filter-scroll {
+    touch-action: pan-x !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
   .flow-pill {
-    padding: 5px 9px !important;
-    font-size: 11.5px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
     gap: 6px !important;
+    min-height: 38px !important;
+    transition: transform 0.15s ease, background 0.15s ease !important;
+  }
+  .flow-pill:active {
+    transform: scale(0.96) !important;
+    background: rgba(223, 183, 64, 0.12) !important;
   }
   .skill-level-dot,
   .flow-pill .level-dot {

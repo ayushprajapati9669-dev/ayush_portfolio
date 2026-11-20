@@ -448,8 +448,14 @@ input::placeholder, textarea::placeholder {
   .project-actions .btn-code {
     flex: 1 1 calc(50% - 4px) !important;
     justify-content: center !important;
+    min-height: 42px !important;
     padding: 8px 10px !important;
     font-size: 12px !important;
+    transition: transform 0.15s ease !important;
+  }
+  .project-actions .btn-demo:active,
+  .project-actions .btn-code:active {
+    transform: scale(0.96) !important;
   }
 }
 
