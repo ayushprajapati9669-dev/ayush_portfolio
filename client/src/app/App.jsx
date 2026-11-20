@@ -93,7 +93,12 @@ function LazyModals() {
 
 function LazyFooter() {
   const [showFooter, setShowFooter] = useState(() => {
-    if (typeof window !== 'undefined' && (window.location.hash || window.scrollY > 50 || window.__earlyUserInteraction)) {
+    if (typeof window !== 'undefined' && (
+      window.location.pathname.startsWith('/admin') ||
+      window.location.hash ||
+      window.scrollY > 50 ||
+      window.__earlyUserInteraction
+    )) {
       return true;
     }
     return false;
@@ -102,7 +107,11 @@ function LazyFooter() {
   useEffect(() => {
     if (showFooter) return;
 
-    if (typeof window !== 'undefined' && (window.scrollY > 50 || window.__earlyUserInteraction)) {
+    if (typeof window !== 'undefined' && (
+      window.location.pathname.startsWith('/admin') ||
+      window.scrollY > 50 ||
+      window.__earlyUserInteraction
+    )) {
       setShowFooter(true);
       return;
     }

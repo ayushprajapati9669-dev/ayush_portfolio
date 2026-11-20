@@ -2057,13 +2057,51 @@ a.btn-primary:hover {
     padding: 0 !important;
   }
 
+  /* Admin Mobile Toggle Button: perfectly centered FontAwesome icon with zero background lines */
+  .mobile-nav-toggle.admin-sidebar-toggle,
+  body.has-admin-sidebar .mobile-nav-toggle {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+  }
+
+  .mobile-nav-toggle.admin-sidebar-toggle i,
+  body.has-admin-sidebar #navWrapper .mobile-nav-toggle i,
+  body.has-admin-sidebar .mobile-nav-toggle i {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+  }
+
   .mobile-nav-toggle:hover,
   .mobile-nav-toggle:active,
-  #navWrapper .mobile-nav-toggle:hover {
+  #navWrapper .mobile-nav-toggle:hover,
+  .mobile-nav-toggle.admin-sidebar-toggle:hover,
+  .mobile-nav-toggle.admin-sidebar-toggle:active {
     background: rgba(255, 255, 255, 0.16) !important;
     border-color: rgba(252, 211, 77, 0.6) !important;
     color: #fcd34d !important;
     transform: scale(1.05) !important;
+  }
+
+  .mobile-nav-toggle.admin-sidebar-toggle:hover i,
+  .mobile-nav-toggle.admin-sidebar-toggle:active i {
+    color: #fcd34d !important;
   }
 
   .mobile-nav-toggle i.fa-bars:empty::before {
@@ -2750,8 +2788,16 @@ a.btn-primary:hover {
   .mobile-drawer .socials { display: none !important; }
 }
 
+@media (min-width: 1025px) {
+  .mobile-nav-toggle.admin-sidebar-toggle {
+    display: none !important;
+  }
+}
+
 @media (min-width: 1181px) {
   .mobile-nav-toggle.burger,
+  .mobile-nav-toggle.admin-sidebar-toggle,
+  .mobile-nav-toggle,
   .mobile-drawer,
   .mobile-menu-backdrop {
     display: none !important;

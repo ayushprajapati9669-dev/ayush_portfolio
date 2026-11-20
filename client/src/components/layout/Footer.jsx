@@ -142,8 +142,12 @@ export function Footer() {
 
   const handleScrollToTop = (e) => {
     if (e) e.preventDefault();
-    playTick();
+    playTick('click');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.scrollTo({ top: 0, behavior: 'smooth' });
+    const contentArea = document.querySelector('.admin-content-area, .admin-main-wrapper, .admin-workspace');
+    if (contentArea) contentArea.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNav = (path) => {
@@ -152,52 +156,37 @@ export function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // ── Render Admin Footer when in Admin CMS ──
+  // ── Render Fixed Floating Controls on Admin CMS (replaces bulky static footer) ──
   if (isAdmin) {
     return (
-      <footer ref={footerRef} className="dashboard-footer admin-footer" id="adminFooter">
-        <div className="admin-footer-bar">
-          <div className="admin-footer-left">
-            <div className="footer-monogram" style={{ width: '30px', height: '30px', fontSize: '13px' }}>
-              {p.monogram || 'AP'}
-            </div>
-            <div>
-              <span className="font-semibold text-xs text-white">
-                {p.displayName || p.name || 'Ayush Prajapati'}
-              </span>
-              <span className="text-[11px] text-stone-500 ml-2 font-mono">
-                CMS Studio v9.4 · Production
-              </span>
-            </div>
-          </div>
+      <aside
+        id="adminFloatingActions"
+        aria-label="Admin quick actions"
+        className="fixed bottom-4 sm:bottom-6 right-3 sm:right-6 z-[990] flex items-center gap-2 sm:gap-2.5 pointer-events-auto"
+      >
+        {/* Live Site Fixed Button */}
+        <Link
+          to="/"
+          onClick={() => playTick()}
+          className="group relative flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 text-xs font-mono font-semibold"
+          title="View Live Portfolio Site"
+          aria-label="View Live Portfolio Site"
+        >
+          <i className="fa-solid fa-arrow-up-right-from-square text-xs text-yellow-400 group-hover:rotate-12 transition-transform" />
+          <span className="font-mono text-xs font-semibold tracking-wide">Live Site</span>
+        </Link>
 
-          <div className="admin-footer-badges">
-            <span className="admin-footer-badge" title="Database status">
-              <span className="admin-dot admin-dot-green" />
-              <span>MongoDB Atlas Connected</span>
-            </span>
-            <span className="admin-footer-badge" title="API Gateway">
-              <span className="admin-dot admin-dot-green" />
-              <span>REST API: Port 6000</span>
-            </span>
-            <span className="admin-footer-badge" title="Authentication status">
-              <span className="admin-dot admin-dot-gold" />
-              <span>HttpOnly Session Active</span>
-            </span>
-          </div>
-
-          <div className="admin-footer-actions">
-            <Link to="/" className="admin-footer-btn" onClick={() => playTick()}>
-              <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '9px' }} />
-              <span>Live Site</span>
-            </Link>
-            <button type="button" className="admin-footer-btn" onClick={handleScrollToTop}>
-              <i className="fa-solid fa-arrow-up" style={{ fontSize: '9px' }} />
-              <span>Top</span>
-            </button>
-          </div>
-        </div>
-      </footer>
+        {/* Back to Top Fixed Button */}
+        <button
+          type="button"
+          onClick={handleScrollToTop}
+          className="group relative flex items-center justify-center w-10 sm:w-11 h-10 sm:h-11 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-yellow-400 hover:text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95"
+          title="Back to Top"
+          aria-label="Back to top"
+        >
+          <i className="fa-solid fa-arrow-up text-xs transition-transform duration-300 group-hover:-translate-y-0.5" />
+        </button>
+      </aside>
     );
   }
 

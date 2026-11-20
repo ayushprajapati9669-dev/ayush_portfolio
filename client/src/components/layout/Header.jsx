@@ -1167,7 +1167,7 @@ export function Header() {
               {/* Mobile Drawer Toggle with ARIA Semantics */}
               <button
                 type="button"
-                className={`mobile-nav-toggle burger ${mobileMenuOpen ? 'open' : ''}`}
+                className={`mobile-nav-toggle ${isAdmin ? 'admin-sidebar-toggle' : 'burger'} ${mobileMenuOpen ? 'open' : ''}`}
                 onClick={() => {
                   playTick();
                   if (isAdmin) {
