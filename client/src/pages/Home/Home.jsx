@@ -427,7 +427,6 @@ export function HomePage() {
 
         {/* Hero Right-Side Portrait with Scroll-Reactive Particle Dissolve Engine (Razorpay AI Builders Inspired) */}
         <div ref={heroPhotoBoxRef} className="hero-photo-container">
-          <div className="hero-photo-ambient-aura" aria-hidden="true" />
           <ScrollReactivePortraitParticles
             imageUrl={heroPortraitUrl}
             alt={p.portrait?.alt || p.name || 'Ayush Prajapati'}

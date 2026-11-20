@@ -40,13 +40,6 @@ const COSMIC_STARS = [
 export function BackgroundLayers() {
   const location = useLocation();
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [show3dFx, setShow3dFx] = useState(false);
-  const [showLandscape, setShowLandscape] = useState(() => {
-    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
-      return true;
-    }
-    return false;
-  });
   const isHome = location.pathname === '/';
 
   // Detect admin or login pages — no public background effects
@@ -55,43 +48,17 @@ export function BackgroundLayers() {
     (location.pathname.startsWith('/admin') || location.pathname.startsWith('/login'))
   );
 
+  const [show3dFx, setShow3dFx] = useState(!isAdmin);
+  const [showLandscape, setShowLandscape] = useState(!isAdmin);
+
   useEffect(() => {
-    if (isAdmin) return;
-
-    let cancelled = false;
-    let idleHandle = null;
-
-    const activate = () => {
-      if (cancelled) return;
+    if (isAdmin) {
+      setShow3dFx(false);
+      setShowLandscape(false);
+    } else {
       setShow3dFx(true);
       setShowLandscape(true);
-      window.removeEventListener('scroll', activate);
-      window.removeEventListener('pointerdown', activate);
-      window.removeEventListener('touchstart', activate);
-      window.removeEventListener('mousemove', activate);
-    };
-
-    window.addEventListener('scroll', activate, { passive: true, once: true });
-    window.addEventListener('pointerdown', activate, { passive: true, once: true });
-    window.addEventListener('touchstart', activate, { passive: true, once: true });
-    window.addEventListener('mousemove', activate, { passive: true, once: true });
-
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const initialDelay = isMobile ? 8000 : 6000;
-
-    const timer = setTimeout(() => {
-      idleHandle = runOnIdle(activate, { timeout: 3000 });
-    }, initialDelay);
-
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-      cancelIdle(idleHandle);
-      window.removeEventListener('scroll', activate);
-      window.removeEventListener('pointerdown', activate);
-      window.removeEventListener('touchstart', activate);
-      window.removeEventListener('mousemove', activate);
-    };
+    }
   }, [isAdmin]);
 
   const lenis = useSmoothScroll();

@@ -667,7 +667,7 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
       renderer.setClearColor(0x000000, 0);
       container.appendChild(renderer.domElement);
 
-      idleHandleStep2 = runOnIdle(step2, { timeout: 1200, minBudget: 10 });
+      step2();
     };
 
     const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -677,14 +677,14 @@ export function VantaBirdsBackground({ scrollProgress = 0 }) {
       window.removeEventListener('touchstart', startVanta);
       window.removeEventListener('pointerdown', startVanta);
       if (idleHandle) cancelIdle(idleHandle);
-      idleHandle = runOnIdle(step1, { timeout: 1500, minBudget: 10 });
+      step1();
     };
 
     window.addEventListener('scroll', startVanta, { passive: true, once: true });
     window.addEventListener('touchstart', startVanta, { passive: true, once: true });
     window.addEventListener('pointerdown', startVanta, { passive: true, once: true });
 
-    const initTimer = setTimeout(startVanta, isMobileScreen ? 6500 : 800);
+    const initTimer = setTimeout(startVanta, isMobileScreen ? 1200 : 50);
 
     // ── Memory & Resource Disposal Lifecycle ─────────────────────────────────
     return () => {

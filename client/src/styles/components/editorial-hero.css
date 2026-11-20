@@ -1169,36 +1169,9 @@
   border: none !important;
 }
 
-/* Ambient Backlight Glow Aura behind subject */
+/* Ambient Backlight Glow Aura behind subject (Disabled per user request) */
 .hero-photo-ambient-aura {
-  position: absolute;
-  right: 14%;
-  bottom: 24%;
-  width: min(520px, 44vw);
-  height: min(520px, 44vw);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(245, 158, 11, 0.32) 0%,
-    rgba(217, 119, 6, 0.16) 36%,
-    rgba(180, 83, 9, 0.04) 62%,
-    transparent 78%
-  );
-  filter: blur(52px);
-  pointer-events: none;
-  z-index: 0;
-  animation: heroAuraBreath 7s ease-in-out infinite alternate;
-}
-
-@keyframes heroAuraBreath {
-  0% {
-    transform: scale(0.94);
-    opacity: 0.75;
-  }
-  100% {
-    transform: scale(1.08);
-    opacity: 1;
-  }
+  display: none !important;
 }
 
 /* Floating Status Pill */

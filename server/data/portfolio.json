@@ -413,34 +413,6 @@
       "updatedAt": "2026-11-15T11:36:50.943Z"
     },
     {
-      "id": "proj-1792669669594",
-      "approachArchitecture": "",
-      "category": "AI & Machine Learning",
-      "createdAt": "2026-10-31T08:13:37.316Z",
-      "disclaimer": "",
-      "displayOrder": 5,
-      "featured": true,
-      "galleryImages": [],
-      "githubUrl": "https://github.com/ayushprajapati9669-dev",
-      "implementedFeatures": [],
-      "lessonsLearned": "",
-      "liveDemoUrl": "https://agentic-workspace.onrender.com",
-      "problemContext": "",
-      "shortDescription": "An advanced AI agentic workspace built with cutting-edge tools.",
-      "slug": "ai-agentic-workspace",
-      "status": "published",
-      "technologies": [
-        "React JS",
-        "Node.js",
-        "Express.js",
-        "MongoDB"
-      ],
-      "thumbnailType": "image",
-      "thumbnailUrl": "/images/ai-agentic-preview.webp",
-      "title": "AI Agentic Workspace",
-      "updatedAt": "2026-11-15T11:36:50.943Z"
-    },
-    {
       "id": "proj-1792781601076",
       "approachArchitecture": "",
       "category": "Full-Stack Web App",
@@ -466,6 +438,34 @@
       "thumbnailType": "image",
       "thumbnailUrl": "/images/airbnb-clone-preview.jpg",
       "title": "airbnb clone",
+      "updatedAt": "2026-11-15T11:36:50.943Z"
+    },
+    {
+      "id": "proj-1792669669594",
+      "approachArchitecture": "",
+      "category": "AI & Machine Learning",
+      "createdAt": "2026-10-31T08:13:37.316Z",
+      "disclaimer": "",
+      "displayOrder": 5,
+      "featured": true,
+      "galleryImages": [],
+      "githubUrl": "https://github.com/ayushprajapati9669-dev",
+      "implementedFeatures": [],
+      "lessonsLearned": "",
+      "liveDemoUrl": "https://agentic-workspace.onrender.com",
+      "problemContext": "",
+      "shortDescription": "An advanced AI agentic workspace built with cutting-edge tools.",
+      "slug": "ai-agentic-workspace",
+      "status": "published",
+      "technologies": [
+        "React JS",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "thumbnailType": "image",
+      "thumbnailUrl": "/images/ai-agentic-preview.webp",
+      "title": "AI Agentic Workspace",
       "updatedAt": "2026-11-15T11:36:50.943Z"
     }
   ],
@@ -671,7 +671,7 @@
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-15T11:36:50.807Z",
+      "lastLoginAt": "2026-11-20T09:36:42.558Z",
       "passwordHash": "scrypt$16384$8$1$4239cdd5ea09a3af47a1ef70e7251af9$a879a3326e425702bfceff0e6670507b88b6bf5e0db1daed20ac3c15adf277ad33fad93c85fd3e8afdbbe88859afba4b254129a99d4137ee3770075f29dd77d6",
       "role": "admin",
       "updatedAt": "2026-11-15T11:36:51.793Z"
