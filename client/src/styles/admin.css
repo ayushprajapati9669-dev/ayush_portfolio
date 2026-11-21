@@ -4754,3 +4754,269 @@ body.has-modal-open #adminFloatingActions {
   transform: translateY(24px) scale(0.92) !important;
 }
 
+/* =========================================================================
+   Unified Admin Modal & Wizard Design System
+   Matches Enterprise Milestone Wizard (Photo 1) across Projects & Certificates
+   ========================================================================= */
+:root {
+  --bg-modal: #0d1526;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.16);
+  --border-focus: rgba(34, 211, 238, 0.6);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-primary: #d4af37;
+  --accent-secondary: #3b82f6;
+  --accent-emerald: #10b981;
+  --bg-input: rgba(0, 0, 0, 0.35);
+}
+
+.modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  z-index: 1000000 !important;
+  padding: 85px 16px 24px 16px !important;
+  overflow-y: auto !important;
+}
+
+.modal-content {
+  background: #0d1526 !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 18px !important;
+  width: 100% !important;
+  max-width: 780px !important;
+  max-height: calc(100vh - 120px) !important;
+  overflow: hidden !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 0, 0, 0.8) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 auto !important;
+  animation: adminModalScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes adminModalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 16px 20px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  background: #0b1120 !important;
+}
+
+.modal-header h2 {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #f8fafc !important;
+  margin: 0 !important;
+}
+
+.modal-close {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #94a3b8 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease !important;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+}
+
+.wizard-progress {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 20px !important;
+  background: rgba(128, 128, 128, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.wizard-step {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex: 1 !important;
+  position: relative !important;
+}
+
+.wizard-step:not(:last-child)::after {
+  content: '' !important;
+  position: absolute !important;
+  right: -6px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 12px !important;
+  height: 2px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  z-index: 0 !important;
+}
+
+.wizard-step.completed:not(:last-child)::after {
+  background: #10b981 !important;
+}
+
+.wizard-step-circle {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 2px solid rgba(255, 255, 255, 0.12) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  flex-shrink: 0 !important;
+  z-index: 1 !important;
+  transition: all 0.2s ease !important;
+}
+
+.wizard-step.active .wizard-step-circle {
+  background: #0284c7 !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2) !important;
+}
+
+.wizard-step.completed .wizard-step-circle {
+  background: #10b981 !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+.wizard-step-label {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  white-space: nowrap !important;
+}
+
+.wizard-step.active .wizard-step-label {
+  color: #f8fafc !important;
+}
+
+.wizard-step.completed .wizard-step-label {
+  color: #10b981 !important;
+}
+
+.wizard-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.wizard-panel-intro {
+  padding: 10px 14px !important;
+  background: rgba(128, 128, 128, 0.05) !important;
+  border-radius: 10px !important;
+  border-left: 3px solid #d4af37 !important;
+  font-size: 0.78rem !important;
+  color: #94a3b8 !important;
+  line-height: 1.5 !important;
+}
+
+.wizard-panel-intro strong {
+  color: #f8fafc !important;
+}
+
+.wizard-footer {
+  padding: 12px 20px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  background: #090e1a !important;
+  flex-shrink: 0 !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.wizard-footer-left {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+}
+
+.wizard-footer-right {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+}
+
+.wizard-autosave {
+  font-size: 0.72rem !important;
+  color: #64748b !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 72px 10px 20px 10px !important;
+  }
+  .modal-content {
+    max-height: calc(100dvh - 88px) !important;
+    border-radius: 16px !important;
+  }
+  .wizard-progress {
+    padding: 10px 12px !important;
+    gap: 4px !important;
+  }
+  .wizard-step-label {
+    display: none !important;
+  }
+  .wizard-step-circle {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.7rem !important;
+  }
+  .wizard-body {
+    padding: 14px 12px !important;
+    gap: 12px !important;
+  }
+  .wizard-footer {
+    padding: 10px 14px !important;
+  }
+}
+
+

@@ -859,6 +859,29 @@ export function AdminCertificates({
     };
   }, [certificates]);
 
+  // Suppress background floating actions and support Escape to close modal
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (isFormOpen) {
+        document.body.classList.add('has-modal-open');
+      } else {
+        document.body.classList.remove('has-modal-open');
+      }
+    }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isFormOpen) {
+        handleCancelEdit();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('has-modal-open');
+      }
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isFormOpen]);
+
   // Metrics
   const totalCount = certificates.length;
   const featuredCount = certificates.filter((c) => Boolean(c.featured)).length;
@@ -1065,107 +1088,78 @@ export function AdminCertificates({
         )}
       </div>
 
-      {/* ========================================================
-          3. MULTI-STAGE WIZARD FORM (TOP 1% EXPERIENCE)
-         ======================================================== */}
-      {isFormOpen && (
-        <div className="glass-card-admin rounded-3xl border border-yellow-500/40 p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden animate-in fade-in duration-300">
-          {/* Subtle Ambient Radial Glow */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-yellow-500/10 blur-[100px] pointer-events-none rounded-full" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/10 blur-[100px] pointer-events-none rounded-full" />
-
-          {/* Form Top Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-yellow-400/40 bg-yellow-500/10 text-yellow-400 shadow-md shadow-cyan-500/20">
-                <i className={editingId ? 'fa-solid fa-pen-nib' : 'fa-solid fa-certificate'} />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-white">
-                    {editingId ? `Edit Certificate: ${form.title || 'Untitled'}` : 'Add New Certificate'}
-                  </h2>
-                  {form.featured && (
-                    <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-300">
-                      ★ Flagship
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-slate-400">
-                  Step {currentStep} of 4 · Follow the wizard to publish a high-impact verified credential.
-                </p>
-              </div>
+      {/* Certificate Form Modal (Matching Milestones Studio Reference Photo 1) */}
+      {isFormOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="modal-overlay active"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleCancelEdit();
+          }}
+        >
+          <div className="modal-content" style={{ maxWidth: '820px' }}>
+            {/* Modal Header */}
+            <div className="modal-header">
+              <h2>
+                <i className={editingId ? 'fa-solid fa-pen-nib text-amber-400' : 'fa-solid fa-award text-yellow-400'} />
+                <span>{editingId ? `Edit Certificate: ${form.title || 'Untitled'}` : 'Add New Certificate'}</span>
+              </h2>
+              <button
+                type="button"
+                className="modal-close"
+                onClick={handleCancelEdit}
+                aria-label="Close certificate modal"
+              >
+                <i className="fa-solid fa-xmark" />
+              </button>
             </div>
 
-            <button
-              type="button"
-              onClick={handleCancelEdit}
-              className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-xs text-slate-300 hover:border-white/20 hover:text-white transition-all"
-            >
-              <i className="fa-solid fa-xmark" />
-              <span>Cancel</span>
-            </button>
-          </div>
-
-          {/* Stepper Progress Bar & Stage Indicator */}
-          <div className="space-y-3">
-            {/* Visual Step Progress Bar */}
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full bg-gradient-to-r from-yellow-400 via-indigo-400 to-purple-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
-                style={{ width: `${(currentStep / 4) * 100}%` }}
-              />
-            </div>
-
-            {/* Stepper Buttons */}
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {/* 4-Step Wizard Progress Tabs */}
+            <div className="wizard-progress">
               {[
-                { step: 1, title: 'Core Details', icon: 'fa-id-card', desc: 'Title, Issuer & Date' },
-                { step: 2, title: 'Verification', icon: 'fa-shield-halved', desc: 'ID, Links & Status' },
-                { step: 3, title: 'Skills & Tags', icon: 'fa-tags', desc: 'Tech & Highlights' },
-                { step: 4, title: 'Media & 3D Preview', icon: 'fa-cube', desc: 'Image & Live Card' }
-              ].map((item) => {
-                const isActive = currentStep === item.step;
-                const isPassed = currentStep > item.step;
-                return (
-                  <button
-                    key={item.step}
-                    type="button"
-                    onClick={() => handleJumpToStep(item.step)}
-                    className={`flex items-center gap-3 rounded-2xl border p-3 text-left transition-all ${
-                      isActive
-                        ? 'border-yellow-400 bg-yellow-500/10 text-white shadow-md shadow-cyan-500/15'
-                        : isPassed
-                        ? 'border-emerald-500/30 bg-emerald-500/5 text-slate-300 hover:border-emerald-500/50'
-                        : 'border-white/10 bg-black/40 text-slate-400 hover:border-white/20'
-                    }`}
-                  >
-                    <div
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl font-mono text-xs font-bold transition-all ${
-                        isActive
-                          ? 'bg-yellow-400 text-black shadow-md shadow-cyan-400/40'
-                          : isPassed
-                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                          : 'bg-white/10 text-slate-400'
-                      }`}
-                    >
-                      {isPassed ? <i className="fa-solid fa-check text-xs" /> : `0${item.step}`}
-                    </div>
-                    <div className="min-w-0">
-                      <p className={`text-xs font-bold truncate ${isActive ? 'text-white' : 'text-slate-300'}`}>
-                        {item.title}
-                      </p>
-                      <p className="text-[10px] text-slate-400 truncate">{item.desc}</p>
-                    </div>
-                  </button>
-                );
-              })}
+                { step: 1, label: 'Core Details' },
+                { step: 2, label: 'Verification' },
+                { step: 3, label: 'Skills & Tags' },
+                { step: 4, label: 'Media & Preview' }
+              ].map((item) => (
+                <div
+                  key={item.step}
+                  onClick={() => handleJumpToStep(item.step)}
+                  className={`wizard-step cursor-pointer ${
+                    currentStep === item.step ? 'active' : currentStep > item.step ? 'completed' : ''
+                  }`}
+                >
+                  <div className="wizard-step-circle">{item.step}</div>
+                  <div className="wizard-step-label">{item.label}</div>
+                </div>
+              ))}
             </div>
-          </div>
 
-          {/* ==========================================
-              STAGE 1: CORE INFORMATION
-             ========================================== */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (currentStep !== 4) {
+                  handleNextStep();
+                  return;
+                }
+                handleSave();
+              }}
+              noValidate
+              className="flex flex-col flex-1 overflow-hidden"
+            >
+              <div className="wizard-body">
+                <div className="wizard-panel-intro">
+                  <strong>Step {currentStep} of 4:</strong>{' '}
+                  {currentStep === 1 && 'Specify certificate title, issuing organization, and credential issue date.'}
+                  {currentStep === 2 && 'Set verification credential ID, verification URL, and public publication status.'}
+                  {currentStep === 3 && 'Tag acquired skills, key competencies, and highlight summary.'}
+                  {currentStep === 4 && 'Upload certificate badge/image and inspect live 3D certificate card preview.'}
+                </div>
+
+                {/* ==========================================
+                    STAGE 1: CORE INFORMATION
+                   ========================================== */}
           {currentStep === 1 && (
             <div className="space-y-5 animate-in fade-in duration-200">
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -1897,61 +1891,71 @@ export function AdminCertificates({
             </div>
           )}
 
-          {/* ==========================================
-              WIZARD CONTROLS / NAVIGATION FOOTER
-             ========================================== */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5">
-            <div>
-              {currentStep > 1 ? (
-                <button
-                  type="button"
-                  onClick={handlePrevStep}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 font-mono text-xs font-semibold text-slate-300 hover:border-white/30 hover:text-white transition-all"
-                >
-                  <i className="fa-solid fa-arrow-left" />
-                  <span>Back</span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  className="font-mono text-xs text-slate-400 hover:text-white"
-                >
-                  Cancel Edit
-                </button>
-              )}
-            </div>
+              </div>
 
-            <div className="flex items-center gap-2.5">
-              {currentStep < 4 ? (
-                <button
-                  type="button"
-                  onClick={handleNextStep}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-yellow-400 to-indigo-500 px-5 py-2.5 font-mono text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-cyan-400/20"
-                >
-                  <span>
-                    Next:{' '}
-                    {currentStep === 1
-                      ? 'Credentials'
-                      : currentStep === 2
-                      ? 'Skills & Tags'
-                      : 'Media & Preview'}
+              {/* Wizard Footer (Matching Reference Photo 1) */}
+              <div className="wizard-footer">
+                <div className="wizard-footer-left">
+                  <span className="wizard-autosave">
+                    <i className="fa-solid fa-circle-check text-emerald-400" />
+                    <span>Draft mode ready</span>
                   </span>
-                  <i className="fa-solid fa-arrow-right" />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-yellow-400 via-emerald-400 to-yellow-400 px-6 py-2.5 font-mono text-xs font-extrabold text-black hover:opacity-90 transition-all shadow-lg shadow-emerald-400/30"
-                >
-                  <i className="fa-solid fa-cloud-arrow-up" />
-                  <span>{editingId ? 'Update Certificate' : 'Publish Certificate'}</span>
-                </button>
-              )}
-            </div>
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 text-slate-400 hover:text-white text-xs font-mono transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+                <div className="wizard-footer-right">
+                  {currentStep > 1 && (
+                    <button
+                      type="button"
+                      onClick={handlePrevStep}
+                      className="wizard-btn-prev px-4 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-semibold transition-all flex items-center gap-1.5"
+                    >
+                      <i className="fa-solid fa-chevron-left text-xs" />
+                      <span>Back</span>
+                    </button>
+                  )}
+
+                  {currentStep < 4 ? (
+                    <button
+                      type="button"
+                      onClick={handleNextStep}
+                      className="wizard-btn-next px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-emerald-500/20 flex items-center gap-1.5"
+                    >
+                      <span>Next</span>
+                      <i className="fa-solid fa-chevron-right text-xs" />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      disabled={isUploading}
+                      className="wizard-btn-submit px-6 py-2 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:opacity-95 text-slate-950 font-bold text-xs transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {isUploading ? (
+                        <>
+                          <i className="fa-solid fa-circle-notch fa-spin" />
+                          <span>Uploading Image...</span>
+                        </>
+                      ) : (
+                        <>
+                          <i className={editingId ? 'fa-solid fa-floppy-disk' : 'fa-solid fa-award'} />
+                          <span>{editingId ? 'Save Changes' : 'Publish Certificate'}</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ========================================================

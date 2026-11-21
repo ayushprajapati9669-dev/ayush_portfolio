@@ -300,6 +300,29 @@ export function AdminProjects({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Suppress background floating actions and support Escape to close modal
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (isFormOpen) {
+        document.body.classList.add('has-modal-open');
+      } else {
+        document.body.classList.remove('has-modal-open');
+      }
+    }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isFormOpen) {
+        handleCancelEdit();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('has-modal-open');
+      }
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isFormOpen]);
+
   // Compute status counts
   const counts = useMemo(() => {
     return {
@@ -959,98 +982,70 @@ export function AdminProjects({
         )}
       </div>
 
-      {/* Project Form (Toggled via Create Button / Edit Click) */}
-      {isFormOpen && (
-        <form
-          ref={formRef}
-          onSubmit={handleSave}
-          noValidate
-          className="glass-card-admin p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200 border-yellow-500/30"
+      {/* Project Form Modal (Matching Milestones Studio Reference Photo 1) */}
+      {isFormOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="modal-overlay active"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleCancelEdit();
+          }}
         >
-          {/* Header */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400">
-                <i className={editingId ? 'fa-solid fa-pen-to-square' : 'fa-solid fa-plus'}></i>
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-white">
-                    {editingId ? 'Edit Project' : 'Create New Live Project'}
-                  </h2>
-                  <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/30">
-                    Step {currentStep} of 4
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400">
-                  {editingId
-                    ? 'Update project details across 4 organized steps.'
-                    : 'Complete the 4 quick steps below to showcase a new live project with repository and demo links.'}
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={handleCancelEdit}
-              className="font-mono text-xs text-slate-400 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 transition-all hover:bg-white/5"
-            >
-              <i className="fa-solid fa-xmark"></i>
-              <span>{editingId ? 'Cancel Edit' : 'Close Form'}</span>
-            </button>
-          </div>
-
-          {/* Stepper Progress Bar & Stage Indicator */}
-          <div className="space-y-3">
-            {/* Visual Step Progress Slider */}
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full bg-gradient-to-r from-yellow-400 via-indigo-400 to-purple-500 transition-all duration-300 ease-out shadow-sm shadow-cyan-400"
-                style={{ width: `${(currentStep / 4) * 100}%` }}
-              />
+          <div className="modal-content" style={{ maxWidth: '820px' }}>
+            {/* Modal Header */}
+            <div className="modal-header">
+              <h2>
+                <i className={editingId ? 'fa-solid fa-pen-to-square text-amber-400' : 'fa-solid fa-rocket text-yellow-400'} />
+                <span>{editingId ? 'Edit Project' : 'Create New Live Project'}</span>
+              </h2>
+              <button
+                type="button"
+                className="modal-close"
+                onClick={handleCancelEdit}
+                aria-label="Close project modal"
+              >
+                <i className="fa-solid fa-xmark" />
+              </button>
             </div>
 
-            {/* Stepper Buttons (5 steps) */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {/* 4-Step Wizard Progress Tabs */}
+            <div className="wizard-progress">
               {[
-                { num: 1, title: 'Core Info', desc: 'Title & Category' },
-                { num: 2, title: 'Description', desc: 'Project Overview' },
-                { num: 3, title: 'Tech Stack', desc: 'Tags & Links' },
-                { num: 4, title: 'Media & Status', desc: 'Cover & Publish' }].map((s) => (
-                <button
+                { num: 1, label: 'Core Info' },
+                { num: 2, label: 'Description' },
+                { num: 3, label: 'Tech & Links' },
+                { num: 4, label: 'Media & Status' }
+              ].map((s) => (
+                <div
                   key={s.num}
-                  type="button"
                   onClick={() => handleJumpToStep(s.num)}
-                  className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-left transition-all ${
-                    currentStep === s.num
-                      ? 'border-yellow-400 bg-yellow-500/10 text-white shadow-md shadow-cyan-500/15'
-                      : currentStep > s.num
-                      ? 'border-emerald-500/30 bg-emerald-500/5 text-slate-300 hover:border-emerald-500/50'
-                      : 'border-white/10 bg-black/40 text-slate-400 hover:border-white/20'
+                  className={`wizard-step cursor-pointer ${
+                    currentStep === s.num ? 'active' : currentStep > s.num ? 'completed' : ''
                   }`}
                 >
-                  <div
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-all ${
-                      currentStep === s.num
-                        ? 'bg-yellow-400 text-black shadow-md shadow-cyan-400/40'
-                        : currentStep > s.num
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                        : 'bg-white/10 text-slate-400'
-                    }`}
-                  >
-                    {currentStep > s.num ? <i className="fa-solid fa-check text-[10px]"></i> : `0${s.num}`}
-                  </div>
-                  <div className="min-w-0">
-                    <p className={`text-xs font-bold truncate ${currentStep === s.num ? 'text-white' : 'text-slate-300'}`}>
-                      {s.title}
-                    </p>
-                    <p className="text-[10px] text-slate-400 truncate">{s.desc}</p>
-                  </div>
-                </button>
+                  <div className="wizard-step-circle">{s.num}</div>
+                  <div className="wizard-step-label">{s.label}</div>
+                </div>
               ))}
             </div>
-          </div>
 
-          {/* STEP 1: Core Information */}
+            <form
+              ref={formRef}
+              onSubmit={handleSave}
+              noValidate
+              className="flex flex-col flex-1 overflow-hidden"
+            >
+              <div className="wizard-body">
+                <div className="wizard-panel-intro">
+                  <strong>Step {currentStep} of 4:</strong>{' '}
+                  {currentStep === 1 && 'Start with essentials. Provide a clear title, category, and publication status.'}
+                  {currentStep === 2 && 'Write a compelling project overview and description for portfolio visitors.'}
+                  {currentStep === 3 && 'Specify technologies, live deployment URL, and GitHub repository links.'}
+                  {currentStep === 4 && 'Upload project cover media, preview live interactive card, and publish.'}
+                </div>
+
+                {/* STEP 1: Core Information */}
           {currentStep === 1 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-200">
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
@@ -1613,65 +1608,70 @@ export function AdminProjects({
             </div>
           )}
 
-          {/* Stepper Navigation Actions */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-5 border-t border-white/10">
-            <button
-              type="button"
-              onClick={handleCancelEdit}
-              className="text-xs text-slate-400 hover:text-white font-mono flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/5 transition-all"
-            >
-              <i className="fa-solid fa-xmark"></i>
-              <span>Cancel</span>
-            </button>
+              </div>
 
-            <div className="flex flex-wrap items-center gap-2.5">
-              {/* Back Button */}
-              {currentStep > 1 && (
-                <button
-                  type="button"
-                  onClick={handlePrevStep}
-                  className="font-mono text-xs px-4 py-2.5 rounded-xl border border-white/15 bg-black/40 text-slate-300 hover:text-white hover:border-white/30 transition-all flex items-center gap-2"
-                >
-                  <i className="fa-solid fa-arrow-left"></i>
-                  <span>Back to Step 0{currentStep - 1}</span>
-                </button>
-              )}
+              {/* Wizard Footer (Matching Reference Photo 1) */}
+              <div className="wizard-footer">
+                <div className="wizard-footer-left">
+                  <span className="wizard-autosave">
+                    <i className="fa-solid fa-circle-check text-emerald-400" />
+                    <span>Draft mode ready</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 text-slate-400 hover:text-white text-xs font-mono transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
 
-              {/* Continue to Next Step (Steps 1 to 3) */}
-              {currentStep < 4 && (
-                <button
-                  type="button"
-                  onClick={handleNextStep}
-                  className="btn-save flex items-center gap-2 px-6 py-2.5 text-xs font-bold shadow-lg shadow-cyan-500/20"
-                >
-                  <span>Continue to Step 0{currentStep + 1}</span>
-                  <i className="fa-solid fa-arrow-right"></i>
-                </button>
-              )}
-
-              {/* Step 4 Save / Publish Button */}
-              {currentStep === 4 && (
-                <button
-                  type="submit"
-                  disabled={isUploading}
-                  className="btn-save flex items-center gap-2 px-7 py-2.5 text-xs font-bold shadow-lg shadow-cyan-500/20 disabled:opacity-50"
-                >
-                  {isUploading ? (
-                    <>
-                      <i className="fa-solid fa-circle-notch fa-spin"></i>
-                      <span>Uploading Media...</span>
-                    </>
-                  ) : (
-                    <>
-                      <i className={editingId ? 'fa-solid fa-check' : 'fa-solid fa-rocket'}></i>
-                      <span>{editingId ? 'Update & Save Changes' : 'Publish New Project'}</span>
-                    </>
+                <div className="wizard-footer-right">
+                  {currentStep > 1 && (
+                    <button
+                      type="button"
+                      onClick={handlePrevStep}
+                      className="wizard-btn-prev px-4 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-semibold transition-all flex items-center gap-1.5"
+                    >
+                      <i className="fa-solid fa-chevron-left text-xs" />
+                      <span>Back</span>
+                    </button>
                   )}
-                </button>
-              )}
-            </div>
+
+                  {currentStep < 4 ? (
+                    <button
+                      type="button"
+                      onClick={handleNextStep}
+                      className="wizard-btn-next px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-emerald-500/20 flex items-center gap-1.5"
+                    >
+                      <span>Next</span>
+                      <i className="fa-solid fa-chevron-right text-xs" />
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={isUploading}
+                      className="wizard-btn-submit px-6 py-2 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:opacity-95 text-slate-950 font-bold text-xs transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {isUploading ? (
+                        <>
+                          <i className="fa-solid fa-circle-notch fa-spin" />
+                          <span>Uploading Media...</span>
+                        </>
+                      ) : (
+                        <>
+                          <i className={editingId ? 'fa-solid fa-floppy-disk' : 'fa-solid fa-rocket'} />
+                          <span>{editingId ? 'Update Project' : 'Publish Project'}</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>,
+        document.body
       )}
 
       {/* =========================================================================
