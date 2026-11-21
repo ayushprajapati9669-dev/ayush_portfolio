@@ -4736,18 +4736,47 @@ select option.admin-select-option {
 }
 
 /* =========================================================================
-   Admin Floating Quick Actions Isolation (Hide when modals/drawers open)
+   Admin Floating Quick Actions (Split Left & Right)
    ========================================================================= */
 #adminFloatingActions {
   transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s !important;
 }
 
+/* Sidebar Offset on Desktop so Live Site never sits behind left sidebar */
+@media (min-width: 1024px) {
+  body.has-admin-sidebar #adminFloatingActions .admin-floating-left {
+    margin-left: 260px !important;
+    transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  body.has-admin-sidebar.sidebar-collapsed #adminFloatingActions .admin-floating-left {
+    margin-left: 80px !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  body.has-admin-sidebar #adminFloatingActions .admin-floating-left,
+  body.has-admin-sidebar.sidebar-collapsed #adminFloatingActions .admin-floating-left {
+    margin-left: 0 !important;
+  }
+}
+
+/* Back to Top Smooth Appearance Transition */
+#adminFloatingActions .admin-floating-right button {
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+/* Suppress all floating controls whenever any modal, drawer, or palette is active */
 body:has(.modal-overlay.active) #adminFloatingActions,
-body:has(.modal-overlay) #adminFloatingActions,
-body:has([role="dialog"]) #adminFloatingActions,
-body:has(.terminal-drawer-panel) #adminFloatingActions,
+body:has(.modal-content) #adminFloatingActions,
+body:has([role="dialog"].open) #adminFloatingActions,
+body:has([role="dialog"].active) #adminFloatingActions,
+body:has(.mobile-drawer.open) #adminFloatingActions,
+body:has(.terminal-drawer-panel.open) #adminFloatingActions,
+body:has(.terminal-drawer-panel.active) #adminFloatingActions,
 body:has(.cmd-palette.active) #adminFloatingActions,
-body.has-modal-open #adminFloatingActions {
+body.has-modal-open #adminFloatingActions,
+body.admin-sidebar-open #adminFloatingActions {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;

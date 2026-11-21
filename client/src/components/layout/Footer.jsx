@@ -14,6 +14,7 @@ export function Footer() {
   const [timeFormat, setTimeFormat] = useState('IST');
   const [liveTimeString, setLiveTimeString] = useState('');
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   const footerRef = useRef(null);
 
@@ -124,6 +125,29 @@ export function Footer() {
     };
   }, [timeFormat]);
 
+  // Track scroll position on Admin CMS to reveal Back to Top button dynamically
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const checkScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      const contentArea = document.querySelector('.admin-content-area, .admin-main-wrapper, .admin-workspace');
+      const innerScrollY = contentArea ? contentArea.scrollTop : 0;
+      const currentScroll = Math.max(scrollY, innerScrollY);
+      setShowBackToTop(currentScroll > 120);
+    };
+
+    checkScroll();
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    const contentArea = document.querySelector('.admin-content-area, .admin-main-wrapper, .admin-workspace');
+    if (contentArea) contentArea.addEventListener('scroll', checkScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', checkScroll);
+      if (contentArea) contentArea.removeEventListener('scroll', checkScroll);
+    };
+  }, [isAdmin, location.pathname]);
+
   const handleToggleClock = () => {
     playTick();
     setTimeFormat((prev) => (prev === 'IST' ? 'UTC' : prev === 'UTC' ? 'LOCAL' : 'IST'));
@@ -156,36 +180,42 @@ export function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // ── Render Fixed Floating Controls on Admin CMS (replaces bulky static footer) ──
+  // ── Render Fixed Floating Controls on Admin CMS (Split Left & Right) ──
   if (isAdmin) {
     return (
       <aside
         id="adminFloatingActions"
         aria-label="Admin quick actions"
-        className="fixed bottom-4 sm:bottom-6 right-3 sm:right-6 z-[990] flex items-center gap-2 sm:gap-2.5 pointer-events-auto"
+        className="fixed inset-x-0 bottom-4 sm:bottom-6 px-3.5 sm:px-6 z-[990] pointer-events-none flex items-center justify-between"
       >
-        {/* Live Site Fixed Button */}
-        <Link
-          to="/"
-          onClick={() => playTick()}
-          className="group relative flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 text-xs font-mono font-semibold"
-          title="View Live Portfolio Site"
-          aria-label="View Live Portfolio Site"
-        >
-          <i className="fa-solid fa-arrow-up-right-from-square text-xs text-yellow-400 group-hover:rotate-12 transition-transform" />
-          <span className="font-mono text-xs font-semibold tracking-wide">Live Site</span>
-        </Link>
+        {/* Bottom-Left: Live Site Button */}
+        <div className="admin-floating-left pointer-events-auto">
+          <Link
+            to="/"
+            onClick={() => playTick()}
+            className="group relative flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-[#080e1a]/92 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,0,0,0.6),0_0_15px_rgba(212,175,55,0.1)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 text-xs font-mono font-semibold"
+            title="View Live Portfolio Site"
+            aria-label="View Live Portfolio Site"
+          >
+            <i className="fa-solid fa-arrow-up-right-from-square text-xs text-yellow-400 group-hover:rotate-12 transition-transform" />
+            <span className="font-mono text-xs font-semibold tracking-wide">Live Site</span>
+          </Link>
+        </div>
 
-        {/* Back to Top Fixed Button */}
-        <button
-          type="button"
-          onClick={handleScrollToTop}
-          className="group relative flex items-center justify-center w-10 sm:w-11 h-10 sm:h-11 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-yellow-400 hover:text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95"
-          title="Back to Top"
-          aria-label="Back to top"
-        >
-          <i className="fa-solid fa-arrow-up text-xs transition-transform duration-300 group-hover:-translate-y-0.5" />
-        </button>
+        {/* Bottom-Right: Back to Top Button (Scroll-Triggered) */}
+        <div className="admin-floating-right pointer-events-auto">
+          <button
+            type="button"
+            onClick={handleScrollToTop}
+            className={`group relative flex items-center justify-center w-10 sm:w-11 h-10 sm:h-11 rounded-full bg-[#080e1a]/92 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-yellow-400 hover:text-white shadow-[0_10px_35px_rgba(0,0,0,0.6),0_0_15px_rgba(212,175,55,0.1)] backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 ${
+              showBackToTop ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto' : 'opacity-0 translate-y-4 scale-75 pointer-events-none'
+            }`}
+            title="Back to Top"
+            aria-label="Back to top"
+          >
+            <i className="fa-solid fa-arrow-up text-xs transition-transform duration-300 group-hover:-translate-y-0.5" />
+          </button>
+        </div>
       </aside>
     );
   }
