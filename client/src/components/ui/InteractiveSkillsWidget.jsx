@@ -16,12 +16,13 @@ try {
    using the bidirectional useInView IntersectionObserver hook.
    All mouse-move hover props are forwarded from the parent.
 ───────────────────────────────────────────────────────────────────────────── */
-function LayerCard({ style, onMouseMove, onMouseLeave, children, className = '' }) {
+function LayerCard({ id, style, onMouseMove, onMouseLeave, children, className = '' }) {
   const ref = useRef(null);
   const inView = useInView(ref);
 
   return (
     <section
+      id={id}
       ref={ref}
       className={`flow-layer${inView ? ' in' : ''}${className ? ` ${className}` : ''}`}
       style={style}
@@ -287,6 +288,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
   const boardRef = useRef(null);
   const [activePillId, setActivePillId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
 
   // Extract real categories & skills dynamically from Admin CMS (appState.skills)
   const categorizedData = useMemo(() => {
@@ -448,6 +450,71 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
     };
   }, [appState?.skills]);
 
+  // Compute 100% dynamic categories & live counts from CMS categorizedData
+  const filterCategories = useMemo(() => {
+    const list = [];
+    let grandTotal = 0;
+
+    const core = [
+      categorizedData.frontendCat,
+      categorizedData.backendCat,
+      categorizedData.databasesCat,
+      categorizedData.languagesCat,
+      categorizedData.toolsCat,
+      categorizedData.problemSolvingCat
+    ];
+
+    core.forEach((cat) => {
+      if (cat && Array.isArray(cat.items) && cat.items.length > 0) {
+        grandTotal += cat.items.length;
+        list.push({
+          id: cat.id,
+          name: cat.name,
+          count: cat.items.length,
+          color: cat.color
+        });
+      }
+    });
+
+    (categorizedData.extraCategories || []).forEach((cat) => {
+      if (cat && Array.isArray(cat.items) && cat.items.length > 0) {
+        grandTotal += cat.items.length;
+        list.push({
+          id: cat.id,
+          name: cat.name,
+          count: cat.items.length,
+          color: cat.color || '#38bdf8'
+        });
+      }
+    });
+
+    return [
+      { id: 'all', name: 'All', count: grandTotal, color: '#dfb740' },
+      ...list
+    ];
+  }, [categorizedData]);
+
+  const handleCategoryClick = (catId) => {
+    setActiveCategory(catId);
+    playTick('click');
+    if (catId === 'all') {
+      if (boardRef.current) {
+        const yOffset = -90;
+        const y = boardRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      }
+      return;
+    }
+    const el = document.getElementById(`flow-layer-${catId}`);
+    if (el) {
+      const yOffset = -90;
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      el.classList.add('spotlight-target');
+      setTimeout(() => el.classList.remove('spotlight-target'), 1500);
+    }
+  };
+
   // Pointer subtle spotlight lighting on cards (rock-solid, user-friendly, no 3D wobble)
   const handleLayerMouseMove = (e) => {
     const layer = e.currentTarget;
@@ -589,26 +656,49 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
         ref={boardRef}
         className={`skills-flow-board ${isBoardFocused ? 'focus' : ''}`}
       >
-        {/* Subtle Live Search / Filter bar */}
-        <div className="flow-search-wrap">
-          <div className="flow-search-box">
-            <i className="fa-solid fa-magnifying-glass" />
-            <input
-              type="text"
-              placeholder="Search stack..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="text-[#9a9aa8] hover:text-white transition-colors"
-                aria-label="Clear search"
-              >
-                <i className="fa-solid fa-xmark text-xs" />
-              </button>
-            )}
+        {/* Dynamic Category Quick-Filter Strip & Live Search Station */}
+        <div className="flow-controls-station">
+          <div className="flow-category-filter-scroll" role="tablist" aria-label="Skill categories">
+            {filterCategories.map((cat) => {
+              const isActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`flow-category-chip ${isActive ? 'active' : ''}`}
+                  style={{ '--chip-color': cat.color || '#dfb740' }}
+                  onClick={() => handleCategoryClick(cat.id)}
+                >
+                  <span className="cat-name">{cat.name}</span>
+                  <span className="cat-count">{cat.count}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flow-search-wrap">
+            <div className="flow-search-box">
+              <i className="fa-solid fa-magnifying-glass" />
+              <input
+                type="text"
+                placeholder="Search stack..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search technical skills"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="text-[#9a9aa8] hover:text-white transition-colors"
+                  aria-label="Clear search"
+                >
+                  <i className="fa-solid fa-xmark text-xs" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -617,6 +707,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
           {/* Layer 1: Frontend */}
           {frontendCat && (
             <LayerCard
+              id="flow-layer-frontend"
               style={{ '--c': frontendCat.color || '#38bdf8' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -626,7 +717,6 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                   {frontendCat.name}
                   <span className="flow-count">{frontendCat.items.length}</span>
                 </h2>
-                <p>{frontendCat.subtitle}</p>
               </div>
               <div className="flow-pills">
                 {frontendCat.items.map((skill, idx) => renderPill(skill, frontendCat.color || '#38bdf8', idx))}
@@ -635,11 +725,18 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
           )}
 
           {/* Link 1: sends requests */}
-          <FlowLink className="link-1">sends requests</FlowLink>
+          <FlowLink className="link-1">
+            <span className="flow-link-pill">
+              <span className="flow-link-icon">⚡</span>
+              <span>sends requests</span>
+              <span className="flow-link-proto">REST API</span>
+            </span>
+          </FlowLink>
 
           {/* Layer 2: Backend */}
           {backendCat && (
             <LayerCard
+              id="flow-layer-backend"
               style={{ '--c': backendCat.color || '#4ade80' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -649,7 +746,6 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                   {backendCat.name}
                   <span className="flow-count">{backendCat.items.length}</span>
                 </h2>
-                <p>{backendCat.subtitle}</p>
               </div>
               <div className="flow-pills">
                 {backendCat.items.map((skill, idx) => renderPill(skill, backendCat.color || '#4ade80', idx))}
@@ -658,11 +754,18 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
           )}
 
           {/* Link 2: reads and writes */}
-          <FlowLink className="link-2">reads and writes</FlowLink>
+          <FlowLink className="link-2">
+            <span className="flow-link-pill">
+              <span className="flow-link-icon">⇄</span>
+              <span>reads and writes</span>
+              <span className="flow-link-proto">DB DRIVER</span>
+            </span>
+          </FlowLink>
 
           {/* Layer 3: Databases */}
           {databasesCat && (
             <LayerCard
+              id="flow-layer-databases"
               style={{ '--c': databasesCat.color || '#22c55e' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -672,7 +775,6 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                   {databasesCat.name}
                   <span className="flow-count">{databasesCat.items.length}</span>
                 </h2>
-                <p>{databasesCat.subtitle}</p>
               </div>
               <div className="flow-pills">
                 {databasesCat.items.map((skill, idx) => renderPill(skill, databasesCat.color || '#22c55e', idx))}
@@ -689,6 +791,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
           {/* Base Card 1: Languages */}
           {languagesCat && (
             <LayerCard
+              id="flow-layer-languages"
               style={{ '--c': languagesCat.color || '#818cf8' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -698,7 +801,6 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                   {languagesCat.name}
                   <span className="flow-count">{languagesCat.items.length}</span>
                 </h2>
-                <p>{languagesCat.subtitle}</p>
               </div>
               <div className="flow-pills">
                 {languagesCat.items.map((skill, idx) => renderPill(skill, languagesCat.color || '#818cf8', idx))}
@@ -709,6 +811,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
           {/* Base Card 2: Tools */}
           {toolsCat && (
             <LayerCard
+              id="flow-layer-tools"
               style={{ '--c': toolsCat.color || '#f05133' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -718,7 +821,6 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                   {toolsCat.name}
                   <span className="flow-count">{toolsCat.items.length}</span>
                 </h2>
-                <p>{toolsCat.subtitle}</p>
               </div>
               <div className="flow-pills">
                 {toolsCat.items.map((skill, idx) => renderPill(skill, toolsCat.color || '#f05133', idx))}
@@ -729,6 +831,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
           {/* Base Card 3: Problem Solving */}
           {problemSolvingCat && (
             <LayerCard
+              id="flow-layer-dsa"
               style={{ '--c': problemSolvingCat.color || '#a78bfa' }}
               onMouseMove={handleLayerMouseMove}
               onMouseLeave={handleLayerMouseLeave}
@@ -738,7 +841,6 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                   {problemSolvingCat.name}
                   <span className="flow-count">{problemSolvingCat.items.length}</span>
                 </h2>
-                <p>{problemSolvingCat.subtitle}</p>
               </div>
               <div className="flow-pills">
                 {problemSolvingCat.items.map((skill, idx) => renderPill(skill, problemSolvingCat.color || '#a78bfa', idx))}
@@ -752,6 +854,7 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
             return (
               <LayerCard
                 key={cat.id || idx}
+                id={`flow-layer-${cat.id}`}
                 style={{ '--c': catColor }}
                 onMouseMove={handleLayerMouseMove}
                 onMouseLeave={handleLayerMouseLeave}
@@ -761,7 +864,6 @@ export function SkillsSection({ isStandalonePage = false, showCta = false, onCta
                     {cat.name}
                     <span className="flow-count">{cat.items.length}</span>
                   </h2>
-                  <p>{cat.subtitle || 'Supporting technologies'}</p>
                 </div>
                 <div className="flow-pills">
                   {cat.items.map((skill, sIdx) => renderPill(skill, catColor, sIdx))}

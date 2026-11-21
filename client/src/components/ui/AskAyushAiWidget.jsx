@@ -152,10 +152,10 @@ export function AskAyushAiWidget() {
 
   return (
     <>
-      {/* Floating Trigger Controls (Bottom-Right: Ask Ayush AI + Back to Top) */}
+      {/* Floating Trigger Control (Bottom Center: Ask Ayush AI) */}
       {!isOpen && (
         <div
-          className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[990] flex items-center gap-2 sm:gap-2.5 transition-all duration-300 ease-out ${
+          className={`fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[990] flex items-center transition-all duration-300 ease-out ${
             isScrollingDown ? 'translate-y-20 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100 pointer-events-auto'
           }`}
         >
@@ -164,7 +164,7 @@ export function AskAyushAiWidget() {
               playTick('click');
               setIsOpen(true);
             }}
-            className="group relative flex items-center gap-2 sm:gap-2.5 px-3 py-2 sm:px-4 sm:py-3 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95"
+            className="group relative flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full bg-[#080e1a]/92 hover:bg-[#0c1526] border border-yellow-500/35 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,0,0,0.6),0_0_15px_rgba(212,175,55,0.1)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95"
             aria-label="Open Ask Ayush AI Assistant"
           >
             {/* Pulsing indicator */}
@@ -175,24 +175,33 @@ export function AskAyushAiWidget() {
 
             <div className="flex items-center gap-1.5 sm:gap-2">
               <i className="fa-solid fa-wand-magic-sparkles text-xs text-yellow-400 group-hover:rotate-12 transition-transform" />
-              <span className="font-mono text-xs font-semibold tracking-wide hidden sm:inline">Ask Ayush AI</span>
+              <span className="font-mono text-xs font-semibold tracking-wide whitespace-nowrap">
+                <span className="inline sm:hidden">Ask AI</span>
+                <span className="hidden sm:inline">Ask Ayush AI</span>
+              </span>
             </div>
-          </button>
-
-          {/* Back to Top Button to the right of Ask Ayush AI */}
-          <button
-            type="button"
-            onClick={scrollToTop}
-            className={`group relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-yellow-400 hover:text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 ${
-              showScrollTop ? 'opacity-100 shadow-[0_0_20px_rgba(234,179,8,0.25)]' : 'opacity-85'
-            }`}
-            title="Back to Top"
-            aria-label="Back to top"
-          >
-            <i className="fa-solid fa-arrow-up text-xs transition-transform duration-300 group-hover:-translate-y-0.5" />
           </button>
         </div>
       )}
+
+      {/* Floating Back to Top Button (Right Side: bottom-right corner) */}
+      <div
+        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[990] transition-all duration-300 ease-out ${
+          isScrollingDown ? 'translate-y-20 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100 pointer-events-auto'
+        }`}
+      >
+        <button
+          type="button"
+          onClick={scrollToTop}
+          className={`group relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#080e1a]/92 hover:bg-[#0c1526] border border-yellow-500/35 hover:border-yellow-400 text-yellow-400 hover:text-white shadow-[0_10px_35px_rgba(0,0,0,0.6),0_0_15px_rgba(212,175,55,0.1)] backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 ${
+            showScrollTop ? 'opacity-100 shadow-[0_0_20px_rgba(234,179,8,0.25)]' : 'opacity-85'
+          }`}
+          title="Back to Top"
+          aria-label="Back to top"
+        >
+          <i className="fa-solid fa-arrow-up text-xs transition-transform duration-300 group-hover:-translate-y-0.5" />
+        </button>
+      </div>
 
       {/* Floating Chat Drawer */}
       {isOpen && (

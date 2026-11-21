@@ -6,7 +6,7 @@
   min-height: 100vh;
   background: transparent !important;
   padding-top: 120px;
-  padding-bottom: 80px;
+  padding-bottom: clamp(100px, 18vw, 150px) !important;
 }
 
 /* Page Header - 100% Unified with Projects, Certificates, About, and Contact pages */
@@ -372,11 +372,140 @@
   flex-direction: column;
 }
 
+/* Dynamic Controls Station: Category Navigation Strip + Live Search */
+.flow-controls-station {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.flow-category-filter-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  padding: 4px 2px;
+  max-width: 100%;
+}
+
+.flow-category-filter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.flow-category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  background: rgba(18, 18, 23, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94949e;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  user-select: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.flow-category-chip:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(28, 28, 36, 0.9);
+}
+
+.flow-category-chip.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(245, 215, 127, 0.16) 0%, rgba(223, 183, 64, 0.08) 100%);
+  border-color: #dfb740;
+  box-shadow: 0 0 16px -2px rgba(223, 183, 64, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+
+.flow-category-chip .cat-name {
+  letter-spacing: -0.01em;
+}
+
+.flow-category-chip .cat-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+  transition: all 0.25s ease;
+}
+
+.flow-category-chip.active .cat-count {
+  background: rgba(223, 183, 64, 0.25);
+  color: #f5d77f;
+}
+
+/* Spotlight target animation on layer when scrolled to via category */
+@keyframes layerSpotlight {
+  0% {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  30% {
+    border-color: var(--c, #dfb740);
+    box-shadow: 0 0 28px 4px color-mix(in srgb, var(--c, #dfb740) 40%, transparent);
+  }
+  100% {
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.flow-layer.spotlight-target {
+  animation: layerSpotlight 1.4s ease-out;
+}
+
+/* Architecture Connector Micro-Pill */
+.flow-link-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 18, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 4px 14px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  transition: all 0.25s ease;
+}
+
+.flow-link-icon {
+  font-size: 0.85rem;
+  color: #fcd34d;
+}
+
+.flow-link-proto {
+  font-size: 0.68rem;
+  color: #71717a;
+  padding-left: 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  letter-spacing: 0.04em;
+}
+
 /* Subtle Live Search / Filter bar above the board */
 .flow-search-wrap {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 .flow-search-box {
@@ -627,6 +756,21 @@
 }
 
 @media (max-width: 840px) {
+  .flow-controls-station {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .flow-category-filter-scroll {
+    width: 100%;
+    padding-bottom: 6px;
+  }
+  .flow-search-wrap {
+    width: 100%;
+  }
+  .flow-search-box {
+    width: 100%;
+  }
   .flow-layer {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -636,7 +780,7 @@
     grid-template-columns: 1fr;
   }
   .flow-link {
-    margin-left: 20px;
+    margin-left: 12px;
   }
 }
 
@@ -742,6 +886,15 @@
   .filter-scroll {
     touch-action: pan-x !important;
     -webkit-overflow-scrolling: touch !important;
+  }
+  .flow-category-chip {
+    padding: 6px 11px !important;
+    font-size: 0.78rem !important;
+    gap: 6px !important;
+  }
+  .flow-category-chip .cat-count {
+    font-size: 0.7rem !important;
+    padding: 1px 5px !important;
   }
   .flow-pill {
     padding: 6px 10px !important;

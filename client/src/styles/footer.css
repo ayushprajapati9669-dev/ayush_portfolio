@@ -49,7 +49,7 @@
 .footer-container {
   max-width: 1280px !important;
   margin: 0 auto !important;
-  padding: 64px clamp(20px, 5vw, 64px) 36px !important;
+  padding: 64px clamp(20px, 5vw, 64px) clamp(56px, 6vw, 76px) !important;
   position: relative !important;
   z-index: 1 !important;
 }

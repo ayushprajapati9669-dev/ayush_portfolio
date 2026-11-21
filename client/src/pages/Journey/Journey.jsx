@@ -371,12 +371,14 @@ export function JourneyPage() {
                         {showYear && <span> · {item.yearBadge}</span>}
                         {item.status && (
                           <span
+                            className="timeline-status-badge"
                             style={{
                               fontSize: '12px',
                               fontWeight: '600',
                               padding: '3px 10px',
                               borderRadius: '9999px',
                               marginLeft: 'auto',
+                              whiteSpace: 'nowrap',
                               background:
                                 item.status === 'completed'
                                   ? 'rgba(16, 185, 129, 0.15)'
@@ -405,10 +407,11 @@ export function JourneyPage() {
                           </span>
                         )}
                       </div>
-                      <div className="timeline-title flex items-center justify-between gap-2">
+                      <div className="timeline-title">
                         <span>{item.title}</span>
                         {item.metric && (
                           <span
+                            className="timeline-metric-chip"
                             style={{
                               fontSize: '12.5px',
                               fontFamily: 'JetBrains Mono, monospace',

@@ -65,7 +65,7 @@ export function Toast() {
       ref={toastRef}
       role="status"
       aria-live="polite"
-      className={`fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md rounded-2xl border ${currentCfg.borderClass} bg-charcoal/95 px-4 py-3.5 text-alabaster shadow-2xl backdrop-blur-xl`}
+      className={`fixed bottom-20 sm:bottom-20 right-4 sm:right-6 left-4 sm:left-auto z-[9999] max-w-sm sm:max-w-md rounded-2xl border ${currentCfg.borderClass} bg-charcoal/95 px-4 py-3.5 text-alabaster shadow-2xl backdrop-blur-xl`}
     >
       <div className="flex items-start gap-3">
         <div className="shrink-0 mt-0.5">{currentCfg.icon}</div>
