@@ -278,7 +278,7 @@ export function Footer() {
               </button>
               <button type="button" className="footer-nav-link" onClick={() => handleNav('/about')}>
                 <i className="fa-solid fa-chevron-right" />
-                <span>About & Milestones</span>
+                <span>About & Background</span>
               </button>
               <button type="button" className="footer-nav-link" onClick={() => handleNav('/journey')}>
                 <i className="fa-solid fa-chevron-right" />
@@ -316,7 +316,7 @@ export function Footer() {
                 }}
               >
                 <i className="fa-solid fa-terminal text-yellow-400" />
-                <span>&gt;_ Retro CLI Terminal</span>
+                <span>Retro CLI Terminal</span>
               </button>
               <button
                 type="button"

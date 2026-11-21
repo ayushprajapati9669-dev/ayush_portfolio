@@ -14,15 +14,40 @@ export function AskAyushAiWidget() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
   const lenis = useSmoothScroll();
+  const [isOpen, setIsOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
 
   useEffect(() => {
+    let lastY = window.scrollY || 0;
+    let ticking = false;
+
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 80);
+      const currentScroll = window.scrollY || 0;
+      setShowScrollTop(currentScroll > 80);
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const diff = currentScroll - lastY;
+          if (window.innerWidth < 768 && !isOpen) {
+            if (diff > 12 && currentScroll > 80) {
+              setIsScrollingDown(true);
+            } else if (diff < -8 || currentScroll <= 80) {
+              setIsScrollingDown(false);
+            }
+          } else {
+            setIsScrollingDown(false);
+          }
+          lastY = Math.max(0, currentScroll);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isOpen]);
 
   const scrollToTop = () => {
     playTick('click');
@@ -35,7 +60,6 @@ export function AskAyushAiWidget() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleOpenAi = () => {
@@ -130,22 +154,26 @@ export function AskAyushAiWidget() {
     <>
       {/* Floating Trigger Controls (Bottom-Right: Ask Ayush AI + Back to Top) */}
       {!isOpen && (
-        <div className="fixed bottom-6 right-6 z-[990] flex items-center gap-2.5">
+        <div
+          className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[990] flex items-center gap-2 sm:gap-2.5 transition-all duration-300 ease-out ${
+            isScrollingDown ? 'translate-y-20 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100 pointer-events-auto'
+          }`}
+        >
           <button
             onClick={() => {
               playTick('click');
               setIsOpen(true);
             }}
-            className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95"
+            className="group relative flex items-center gap-2 sm:gap-2.5 px-3 py-2 sm:px-4 sm:py-3 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95"
             aria-label="Open Ask Ayush AI Assistant"
           >
             {/* Pulsing indicator */}
-            <span className="relative flex h-2.5 w-2.5">
+            <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-500" />
+              <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-yellow-500" />
             </span>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <i className="fa-solid fa-wand-magic-sparkles text-xs text-yellow-400 group-hover:rotate-12 transition-transform" />
               <span className="font-mono text-xs font-semibold tracking-wide hidden sm:inline">Ask Ayush AI</span>
             </div>
@@ -155,7 +183,7 @@ export function AskAyushAiWidget() {
           <button
             type="button"
             onClick={scrollToTop}
-            className={`group relative flex items-center justify-center w-11 h-11 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-yellow-400 hover:text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 ${
+            className={`group relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#080e1a]/90 hover:bg-[#0c1526] border border-yellow-500/30 hover:border-yellow-400 text-yellow-400 hover:text-white shadow-[0_10px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-110 active:scale-95 ${
               showScrollTop ? 'opacity-100 shadow-[0_0_20px_rgba(234,179,8,0.25)]' : 'opacity-85'
             }`}
             title="Back to Top"

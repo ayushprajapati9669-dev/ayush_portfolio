@@ -69,6 +69,9 @@
 }
 
 @media (max-width: 680px) {
+  .footer-container {
+    padding-bottom: clamp(72px, 18vw, 96px) !important;
+  }
   .footer-main-grid {
     grid-template-columns: 1fr !important;
     gap: 32px !important;

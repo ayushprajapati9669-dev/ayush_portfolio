@@ -277,6 +277,15 @@ export function Header() {
     }
   ];
 
+  // Dynamic metrics for public mobile drawer badges (strictly from CMS state, zero hardcoding)
+  const mobileDynamicCounts = {
+    '/skills': Array.isArray(appState.skills) ? appState.skills.length : 0,
+    '/projects': Array.isArray(appState.projects)
+      ? appState.projects.filter((pr) => pr && pr.status === 'published').length || appState.projects.length
+      : 0,
+    '/certificates': Array.isArray(appState.certificates) ? appState.certificates.length : 0
+  };
+
   // Outside click listener for tools popover
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -1297,35 +1306,74 @@ export function Header() {
         <div className="drawer-body mobile-drawer-links">
           <p className="status" style={{ '--i': 0 }}>
             <span className="pulse" />
-            Available for opportunities
+            <span>{p.availabilityLabel || 'Available for opportunities'}</span>
           </p>
 
           <div className="navwrap">
             <span ref={mobilePillRef} className="pill" aria-hidden="true" />
             <ul className="nav" ref={mobileNavRef} onPointerDown={handleNavPointerDown}>
-              {navItems.map((item, index) => (
-                <li key={item.path} style={{ '--i': index + 1 }}>
-                  <NavLink
-                    to={item.path}
-                    end={item.path === '/'}
-                    className={({ isActive }) => (isActive ? 'active' : '')}
-                    onClick={() => {
-                      playTick();
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    <svg className="ic" viewBox="0 0 24 24" aria-hidden="true">
-                      {item.svg}
-                    </svg>
-                    <span>{item.name}</span>
-                    <svg className="chev" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M9 6l6 6-6 6" />
-                    </svg>
-                  </NavLink>
-                </li>
-              ))}
+              {navItems.map((item, index) => {
+                const count = mobileDynamicCounts[item.path];
+                const itemIndex = String(index + 1).padStart(2, '0');
+                return (
+                  <li key={item.path} style={{ '--i': index + 1 }}>
+                    <NavLink
+                      to={item.path}
+                      end={item.path === '/'}
+                      className={({ isActive }) => (isActive ? 'active' : '')}
+                      onClick={() => {
+                        playTick();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <span className="nav-index" aria-hidden="true">{itemIndex}</span>
+                      <svg className="ic" viewBox="0 0 24 24" aria-hidden="true">
+                        {item.svg}
+                      </svg>
+                      <span className="nav-name flex-1">{item.name}</span>
+                      {count > 0 && (
+                        <span className="nav-badge font-mono" aria-label={`${count} items`}>
+                          {count}
+                        </span>
+                      )}
+                      <svg className="chev" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9 6l6 6-6 6" />
+                      </svg>
+                    </NavLink>
+                  </li>
+                );
+              })}
             </ul>
           </div>
+
+          {/* Dynamic Profile Snapshot (100% dynamic from CMS state, zero hardcoding) */}
+          {(p.headline || p.role || p.location) && (
+            <div className="drawer-profile-strip" style={{ '--i': navItems.length + 0.5 }}>
+              <div className="drawer-profile-info">
+                {(p.headline || p.role) && (
+                  <span className="drawer-profile-headline">{p.headline || p.role}</span>
+                )}
+                {p.location && (
+                  <span className="drawer-profile-sub">
+                    <span className="drawer-profile-loc">
+                      <i className="fa-solid fa-location-dot" /> {p.location}
+                    </span>
+                  </span>
+                )}
+              </div>
+              {p.email && (
+                <a
+                  href={`mailto:${p.email}`}
+                  onClick={() => playTick()}
+                  className="drawer-profile-mail-btn"
+                  title="Direct Email"
+                  aria-label="Direct Email"
+                >
+                  <i className="fa-regular fa-envelope" />
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Drawer Foot */}
@@ -1427,7 +1475,7 @@ export function Header() {
 
             <Link
               to="/contact"
-              className="btn btn-solid"
+              className="btn btn-solid btn-hire-full col-span-2"
               onClick={() => {
                 playTick();
                 setMobileMenuOpen(false);

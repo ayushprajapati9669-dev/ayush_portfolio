@@ -221,6 +221,7 @@ export function HomePage() {
       c.published === true &&
       ['verified', 'accredited', 'published'].includes(String(c.status || '').toLowerCase())
   );
+  const milestoneCount = (appState.milestones || []).length || (p.learningJourney || []).length || 5;
 
   const goTo = (route) => {
     playTick();
@@ -570,6 +571,7 @@ export function HomePage() {
               publishedProjects={publishedProjects}
               allSkillItems={allSkillItems}
               certificates={certificates}
+              milestoneCount={milestoneCount}
               goTo={goTo}
               handleCardMouseMove={handleCardMouseMove}
               handleCardMouseLeave={handleCardMouseLeave}

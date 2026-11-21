@@ -16,7 +16,38 @@ export function SoundscapeStudio() {
   const [isOpen, setIsOpen] = useState(false);
   const [settings, setSettings] = useState(getSoundSettings);
   const [isPlayingLofi, setIsPlayingLofi] = useState(isLofiPlaying);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
   const panelRef = useRef(null);
+
+  // Smart mobile scroll coordination: hide on downward reading scroll, restore on upward scroll or idle
+  useEffect(() => {
+    let lastY = window.scrollY || 0;
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentY = window.scrollY || 0;
+          const diff = currentY - lastY;
+          if (window.innerWidth < 768 && !isOpen) {
+            if (diff > 12 && currentY > 80) {
+              setIsScrollingDown(true);
+            } else if (diff < -8 || currentY <= 80) {
+              setIsScrollingDown(false);
+            }
+          } else {
+            setIsScrollingDown(false);
+          }
+          lastY = Math.max(0, currentY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isOpen]);
 
   useEffect(() => {
     const handleSettingsChange = (e) => {
@@ -79,7 +110,12 @@ export function SoundscapeStudio() {
   if (isAdmin) return null;
 
   return (
-    <div className="soundscape-studio-floating fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[9990] font-sans" ref={panelRef}>
+    <div
+      className={`soundscape-studio-floating fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[9990] font-sans transition-all duration-300 ease-out ${
+        isScrollingDown ? 'translate-y-20 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100 pointer-events-auto'
+      }`}
+      ref={panelRef}
+    >
       {/* Studio Popover Panel */}
       {isOpen && (
         <div className="mb-3 w-80 max-w-[calc(100vw-28px)] rounded-2xl border border-white/10 bg-[#090e1a]/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_40px_rgba(212,175,55,0.15)] backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-3 duration-200 text-white">

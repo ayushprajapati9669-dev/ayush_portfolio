@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../../../styles/components/home-below-the-fold.css';
 import { LazyInView } from '../../../components/common/LazyInView';
 import { TiltCard } from '../../../components/ui/TiltCard';
@@ -24,6 +24,7 @@ export function HomeBelowTheFold({
   publishedProjects = [],
   allSkillItems = [],
   certificates = [],
+  milestoneCount = 5,
   goTo,
   handleCardMouseMove,
   handleCardMouseLeave,
@@ -33,6 +34,13 @@ export function HomeBelowTheFold({
   handleMagneticMouseLeave
 }) {
   const foldRef = useRef(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    }
+  }, []);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -155,7 +163,7 @@ export function HomeBelowTheFold({
   }, []);
 
   return (
-    <div ref={foldRef} className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8 space-y-24 mt-12 sm:mt-16">
+    <div ref={foldRef} className="mx-auto max-w-7xl px-4 pb-32 sm:pb-24 space-y-24 mt-12 sm:mt-16">
       {/* =========================================================================
           SECTION 01: Bento Introduction & Focus Areas
           ========================================================================= */}
@@ -189,7 +197,7 @@ export function HomeBelowTheFold({
               aria-hidden="true"
             />
             <div className="absolute bottom-3 right-4 z-10 font-mono text-xs text-slate-400 pointer-events-none">
-              Hover to ripple
+              {isTouchDevice ? 'Touch to ripple' : 'Hover to ripple'}
             </div>
             <LazyInView minHeight="270px" className="absolute inset-0">
               <InteractiveMeshWave className="absolute inset-0" />
@@ -208,9 +216,23 @@ export function HomeBelowTheFold({
                 <p key={i} className="text-sm sm:text-base leading-relaxed">{para}</p>
               ))}
             </div>
-            <div className="pt-4 border-t hairline-border flex flex-wrap gap-4 text-xs font-mono text-cyanglow">
-              <span>✉ {p.email || 'ayushprajapati9669@gmail.com'}</span>
-              <span>☎ {p.phone || '(+91) 9669802554'}</span>
+            <div className="pt-4 border-t hairline-border flex flex-wrap items-center gap-2.5 text-xs font-mono">
+              <a
+                href={`mailto:${p.email || 'ayushprajapati9669@gmail.com'}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 hover:border-amber-400/40 text-amber-300 hover:text-amber-200 transition-all text-xs"
+                title="Email Ayush"
+              >
+                <i className="fa-regular fa-envelope text-amber-400" />
+                <span>{p.email || 'ayushprajapati9669@gmail.com'}</span>
+              </a>
+              <a
+                href={`tel:${p.phone || '(+91) 9669802554'}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 hover:border-amber-400/40 text-slate-300 hover:text-white transition-all text-xs"
+                title="Call Ayush"
+              >
+                <i className="fa-solid fa-phone text-amber-400" />
+                <span>{p.phone || '(+91) 9669802554'}</span>
+              </a>
             </div>
           </TiltCard>
 
@@ -416,6 +438,7 @@ export function HomeBelowTheFold({
             </div>
 
             <div className="count-pill">
+              <span>{milestoneCount}</span>
               <span className="arrow">→</span>
             </div>
           </button>
@@ -475,7 +498,7 @@ export function HomeBelowTheFold({
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="px-5 py-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.1] text-xs font-mono text-white font-medium transition-all flex items-center justify-center gap-2 group cursor-pointer"
+            className="px-5 py-3 rounded-full border border-white/15 bg-white/[0.05] hover:bg-white/[0.1] text-xs font-mono text-white font-medium transition-all flex items-center justify-center gap-2 group cursor-pointer shadow-lg backdrop-blur-md active:scale-95"
             title="Copy Ayush's email address"
           >
             <i className={`fa-regular ${copiedEmail ? 'fa-circle-check text-emerald-400' : 'fa-copy text-amber-300'}`} />
@@ -487,9 +510,10 @@ export function HomeBelowTheFold({
             onClick={() => goTo('/contact')}
             onMouseMove={handleMagneticMouseMove}
             onMouseLeave={handleMagneticMouseLeave}
-            className="btn-primary"
+            className="px-6 py-3 rounded-full bg-gradient-to-r from-[#f5d77f] to-[#dfb740] hover:from-[#fae092] hover:to-[#ebc453] text-[#0a0a0f] font-sans font-bold text-xs sm:text-sm tracking-wide shadow-[0_4px_20px_rgba(212,175,55,0.32),inset_0_1px_0_rgba(255,255,255,0.4)] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-95 hover:shadow-[0_6px_25px_rgba(212,175,55,0.45)] hover:-translate-y-0.5"
           >
-            Contact Me ↗
+            <span>Contact Me</span>
+            <span className="font-mono text-sm" aria-hidden="true">↗</span>
           </button>
         </div>
       </section>
