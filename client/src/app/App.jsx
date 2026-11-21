@@ -32,7 +32,27 @@ const SoundscapeStudio = React.lazy(() =>
 
 function LazyModals() {
   const { resumeModalOpen, activeCertLightbox } = usePortfolio();
-  const [loadIdleOverlays, setLoadIdleOverlays] = useState(false);
+  const [loadIdleOverlays, setLoadIdleOverlays] = useState(() => {
+    if (typeof window !== 'undefined' && (
+      window.location.pathname.startsWith('/admin') ||
+      window.__earlyUserInteraction
+    )) {
+      return true;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleImmediateOverlays = () => setLoadIdleOverlays(true);
+    window.addEventListener('ams-open-terminal', handleImmediateOverlays);
+    window.addEventListener('ams-open-shortcuts', handleImmediateOverlays);
+    window.addEventListener('ams-open-ask-ai', handleImmediateOverlays);
+    return () => {
+      window.removeEventListener('ams-open-terminal', handleImmediateOverlays);
+      window.removeEventListener('ams-open-shortcuts', handleImmediateOverlays);
+      window.removeEventListener('ams-open-ask-ai', handleImmediateOverlays);
+    };
+  }, []);
 
   useEffect(() => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;

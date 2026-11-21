@@ -1966,4 +1966,38 @@ body.focus-mode .admin-main-wrapper {
     width: calc(100% - 32px) !important;
     right: 16px !important;
   }
+
+  .admin-milestones-root .modal-overlay,
+  .modal-overlay {
+    padding: 72px 10px 20px 10px !important;
+  }
+
+  .admin-milestones-root .modal-content,
+  .modal-content {
+    max-height: calc(100dvh - 88px) !important;
+    border-radius: 16px !important;
+  }
+
+  .admin-milestones-root .wizard-footer,
+  .wizard-footer {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+    background: #0d121d !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+
+  .admin-milestones-root .wizard-footer-right,
+  .wizard-footer-right {
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  .admin-milestones-root .wizard-footer-right .btn,
+  .wizard-footer-right .btn {
+    min-height: 38px !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
 }

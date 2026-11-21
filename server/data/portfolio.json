@@ -265,7 +265,7 @@
       "instagram": "https://www.instagram.com/ayush7162/"
     },
     "supportingHeadline": "From blank screen to live product. That’s Ayush Prajapati.",
-    "updatedAt": "2026-11-20T15:31:55.218Z",
+    "updatedAt": "2026-11-20T19:02:39.405Z",
     "academicProjects": [
       {
         "title": "Stock Trading Platform",
@@ -350,9 +350,9 @@
       "liveDemoUrl": "https://airbnbclone2-8519.onrender.com",
       "featured": true,
       "status": "published",
-      "displayOrder": 1,
+      "displayOrder": 2,
       "createdAt": "2026-10-31T08:13:37.186Z",
-      "updatedAt": "2026-11-20T15:51:19.328Z"
+      "updatedAt": "2026-11-20T19:02:38.757Z"
     },
     {
       "id": "proj-ai-agentic-workspace",
@@ -383,9 +383,9 @@
       "liveDemoUrl": "https://agentic-workspace.onrender.com",
       "featured": true,
       "status": "published",
-      "displayOrder": 2,
+      "displayOrder": 1,
       "createdAt": "2026-10-31T08:13:37.316Z",
-      "updatedAt": "2026-11-20T15:51:19.328Z"
+      "updatedAt": "2026-11-20T19:02:38.757Z"
     },
     {
       "id": "proj-ai-chat-assistant",
@@ -419,7 +419,7 @@
       "status": "published",
       "displayOrder": 3,
       "createdAt": "2026-10-31T08:13:37.247Z",
-      "updatedAt": "2026-11-20T15:51:19.328Z"
+      "updatedAt": "2026-11-20T19:02:38.757Z"
     },
     {
       "id": "proj-stock-trading-sim",
@@ -452,7 +452,7 @@
       "status": "published",
       "displayOrder": 4,
       "createdAt": "2026-10-31T08:13:37.348Z",
-      "updatedAt": "2026-11-20T15:51:19.328Z"
+      "updatedAt": "2026-11-20T19:02:38.757Z"
     }
   ],
   "skills": [
@@ -485,7 +485,7 @@
         }
       ],
       "tabIcon": "languages",
-      "updatedAt": "2026-11-20T15:31:53.958Z"
+      "updatedAt": "2026-11-20T19:02:38.758Z"
     },
     {
       "id": "skill-backend",
@@ -508,7 +508,7 @@
         }
       ],
       "tabIcon": "backend",
-      "updatedAt": "2026-11-20T15:31:53.958Z"
+      "updatedAt": "2026-11-20T19:02:38.758Z"
     },
     {
       "id": "skill-frontend",
@@ -551,7 +551,7 @@
         }
       ],
       "tabIcon": "frontend",
-      "updatedAt": "2026-11-20T15:31:53.958Z"
+      "updatedAt": "2026-11-20T19:02:38.758Z"
     },
     {
       "id": "skill-databases",
@@ -570,7 +570,7 @@
         }
       ],
       "tabIcon": "databases",
-      "updatedAt": "2026-11-20T15:31:53.958Z"
+      "updatedAt": "2026-11-20T19:02:38.758Z"
     },
     {
       "id": "skill-tools",
@@ -601,7 +601,7 @@
         }
       ],
       "tabIcon": "tools",
-      "updatedAt": "2026-11-20T15:31:53.958Z"
+      "updatedAt": "2026-11-20T19:02:38.758Z"
     },
     {
       "id": "skill-dsa",
@@ -616,7 +616,7 @@
         }
       ],
       "tabIcon": "dsa",
-      "updatedAt": "2026-11-20T15:31:53.958Z"
+      "updatedAt": "2026-11-20T19:02:38.758Z"
     }
   ],
   "certificates": [
@@ -636,7 +636,7 @@
       "status": "verified",
       "published": true,
       "displayOrder": 1,
-      "updatedAt": "2026-11-20T15:51:20.049Z"
+      "updatedAt": "2026-11-20T19:02:38.757Z"
     }
   ],
   "media": [],
@@ -662,7 +662,7 @@
     "maintenanceMode": false,
     "particlesEnabled": true,
     "robotsIndex": "index, follow",
-    "updatedAt": "2026-11-20T15:31:55.324Z",
+    "updatedAt": "2026-11-20T19:02:39.468Z",
     "fontHeading": "'Plus Jakarta Sans', sans-serif",
     "fontBody": "'Inter', sans-serif",
     "seoKeywords": "Ayush Prajapati, Full-Stack Developer, MERN Stack, React.js, Node.js, SISTec Bhopal, Software Engineer, Portfolio",
@@ -676,10 +676,10 @@
       "username": "ayushprajapati9669@gmail.com",
       "createdAt": "2026-10-31T08:52:17.811Z",
       "id": "usr-1d2682326313",
-      "lastLoginAt": "2026-11-20T15:31:53.890Z",
+      "lastLoginAt": "2026-11-20T19:02:38.715Z",
       "passwordHash": "scrypt$16384$8$1$4239cdd5ea09a3af47a1ef70e7251af9$a879a3326e425702bfceff0e6670507b88b6bf5e0db1daed20ac3c15adf277ad33fad93c85fd3e8afdbbe88859afba4b254129a99d4137ee3770075f29dd77d6",
       "role": "admin",
-      "updatedAt": "2026-11-20T15:31:55.070Z"
+      "updatedAt": "2026-11-20T19:02:39.337Z"
     },
     {
       "username": "ayush",
@@ -688,7 +688,7 @@
       "lastLoginAt": "2026-11-14T18:09:37.910Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-20T15:31:55.070Z"
+      "updatedAt": "2026-11-20T19:02:39.337Z"
     },
     {
       "createdAt": "2026-11-05T12:05:07.107Z",
@@ -696,7 +696,7 @@
       "lastLoginAt": "2026-11-15T04:40:09.843Z",
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-20T15:31:55.070Z",
+      "updatedAt": "2026-11-20T19:02:39.337Z",
       "username": "admin"
     },
     {
@@ -705,7 +705,7 @@
       "lastLoginAt": null,
       "passwordHash": "scrypt$16384$8$1$41539aa71df252238e2a4dcf7afc213b$a92581f60f952c24be2c06f2a1f273bfa4b74a3d011cc2c99cd7652192cffb6e6f98a9791dc132227fee908d492b9a072febacb830522cd933e59c45b17492bc",
       "role": "admin",
-      "updatedAt": "2026-11-20T15:31:55.070Z",
+      "updatedAt": "2026-11-20T19:02:39.337Z",
       "username": "Ayush7162"
     }
   ],

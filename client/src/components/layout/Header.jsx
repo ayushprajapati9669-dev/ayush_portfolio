@@ -192,11 +192,14 @@ export function Header() {
     window.addEventListener('ams-open-shortcuts', onShortcuts);
     window.addEventListener('ams-toggle-voice', onVoice);
     window.addEventListener('ams-voice-active', onVoiceActive);
+    const onOpenCmd = () => setCmdOpen(true);
+    window.addEventListener('ams-open-cmd', onOpenCmd);
 
     return () => {
       window.removeEventListener('ams-open-shortcuts', onShortcuts);
       window.removeEventListener('ams-toggle-voice', onVoice);
       window.removeEventListener('ams-voice-active', onVoiceActive);
+      window.removeEventListener('ams-open-cmd', onOpenCmd);
     };
   }, []);
 
@@ -892,6 +895,7 @@ export function Header() {
                     className={`notif-btn ${notifOpen ? 'open' : ''}`}
                     onClick={() => {
                       playTick();
+                      setToolsMenuOpen(false);
                       setNotifOpen((prev) => !prev);
                     }}
                     aria-label="Toggle notifications"
@@ -902,16 +906,44 @@ export function Header() {
                     )}
                   </button>
 
+                  {/* Mobile Backdrop for Notifications */}
+                  {notifOpen && (
+                    <div
+                      className="notif-backdrop sm:hidden fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm transition-opacity"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        playTick();
+                        setNotifOpen(false);
+                      }}
+                      aria-hidden="true"
+                    />
+                  )}
+
                   <div className={`notif-dropdown ${notifOpen ? 'open' : ''}`}>
-                    <div className="notif-head flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <h4 className="flex items-center gap-1.5 m-0 font-bold text-sm">
-                          <i className="fa-solid fa-bell text-yellow-400" />
-                          Notifications
-                        </h4>
-                        <span className="count-pill">{unreadCount} new</span>
+                    <div className="notif-head">
+                      <div className="flex items-center justify-between w-full pb-2 mb-2 border-b border-white/5 sm:border-none sm:pb-0 sm:mb-0">
+                        <div className="flex items-center gap-2">
+                          <h4 className="flex items-center gap-1.5 m-0 font-bold text-sm text-white">
+                            <i className="fa-solid fa-bell text-yellow-400" />
+                            Notifications
+                          </h4>
+                          <span className="count-pill">{unreadCount} new</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="notif-close-btn sm:hidden w-7 h-7 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            playTick();
+                            setNotifOpen(false);
+                          }}
+                          aria-label="Close notifications"
+                        >
+                          <i className="fa-solid fa-xmark text-xs" />
+                        </button>
                       </div>
-                      <div className="flex items-center gap-1.5">
+
+                      <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                         <div className="flex rounded-md border border-white/10 p-0.5 bg-black/40 text-[10px] font-mono">
                           <button
                             type="button"
@@ -995,15 +1027,16 @@ export function Header() {
                 </div>
               )}
 
-              {/* Admin Quick Settings & Tools Dropdown */}
+              {/* Admin Quick Settings & Tools Dropdown (Accessible on all viewports) */}
               {isAdmin && (
-                <div className="admin-tools-wrapper hidden lg:flex items-center gap-1.5 flex-nowrap shrink-0">
+                <div className="admin-tools-wrapper flex items-center gap-1.5 flex-nowrap shrink-0">
                   <div className="relative" ref={toolsMenuRef}>
                     <button
                       type="button"
                       className={`btn-icon relative ${toolsMenuOpen ? 'active' : ''} ${isVoiceActive ? 'text-emerald-400 border-emerald-500/50' : ''}`}
                       onClick={() => {
                         playTick();
+                        setNotifOpen(false);
                         setToolsMenuOpen((prev) => !prev);
                       }}
                       title="Quick Settings & Tools"
@@ -1067,6 +1100,19 @@ export function Header() {
                           <i className="fa-solid fa-keyboard text-xs text-sky-400" />
                           <span>Keyboard Shortcuts</span>
                           <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">?</kbd>
+                        </button>
+                        <button
+                          type="button"
+                          className="popover-item"
+                          onClick={() => {
+                            playTick();
+                            setCmdOpen(true);
+                            setToolsMenuOpen(false);
+                          }}
+                        >
+                          <i className="fa-solid fa-magnifying-glass text-xs text-amber-400" />
+                          <span>Command Palette</span>
+                          <kbd className="ml-auto text-[9px] bg-white/10 px-1 py-0.5 rounded font-mono">⌘K</kbd>
                         </button>
                       </div>
                     )}
@@ -1280,26 +1326,10 @@ export function Header() {
               ))}
             </ul>
           </div>
-
-          {/* Executive Context Badge (Top 1% Polish) */}
-          <div className="drawer-context-card" style={{ '--i': navItems.length + 1 }}>
-            <div className="dcc-header">
-              <span className="dcc-dot" />
-              <span className="dcc-title">ENGINEERING CRAFT</span>
-              <span className="dcc-badge">PRO</span>
-            </div>
-            <div className="dcc-body">
-              <span>Full-Stack &amp; Scalable Cloud Systems</span>
-            </div>
-            <div className="dcc-foot">
-              <span>Bhopal, India · IST</span>
-              <span>SISTec · 8.42 CGPA</span>
-            </div>
-          </div>
         </div>
 
         {/* Drawer Foot */}
-        <div className="drawer-foot mobile-drawer-footer" style={{ '--i': navItems.length + 2 }}>
+        <div className="drawer-foot mobile-drawer-footer" style={{ '--i': navItems.length + 1 }}>
           <div className="socials">
             <a
               href={p.githubUrl || 'https://github.com/ayushprajapati9669-dev'}
@@ -1350,22 +1380,37 @@ export function Header() {
 
           <div className="drawer-actions">
             {!isAdmin ? (
-              <button
-                type="button"
-                className="btn btn-ghost"
-                onClick={() => {
-                  playTick();
-                  setMobileMenuOpen(false);
-                  if (openResumeModal) {
-                    openResumeModal();
-                  } else {
-                    showToast('Opening Resume...');
-                  }
-                }}
-              >
-                <span>Resume</span>
-                <span className="btn-arrow" aria-hidden="true">↗</span>
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => {
+                    playTick();
+                    setMobileMenuOpen(false);
+                    if (openResumeModal) {
+                      openResumeModal();
+                    } else {
+                      showToast('Opening Resume...');
+                    }
+                  }}
+                >
+                  <span>Resume</span>
+                  <span className="btn-arrow" aria-hidden="true">↗</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-ghost font-mono"
+                  onClick={() => {
+                    playTick('click');
+                    setMobileMenuOpen(false);
+                    window.dispatchEvent(new CustomEvent('ams-open-terminal'));
+                  }}
+                  title="Open Developer Terminal"
+                >
+                  <i className="fa-solid fa-terminal text-yellow-400 mr-1.5" />
+                  <span>Terminal</span>
+                </button>
+              </>
             ) : (
               <button
                 type="button"

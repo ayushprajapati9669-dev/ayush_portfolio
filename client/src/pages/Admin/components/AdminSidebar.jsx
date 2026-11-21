@@ -70,6 +70,14 @@ export function AdminSidebar({
       ]
     },
     {
+      title: 'Tools & Utilities',
+      items: [
+        { id: 'tool-terminal', label: 'Developer Terminal', icon: 'fa-terminal', badge: 'CLI', isAction: true, modalType: 'terminal' },
+        { id: 'tool-search', label: 'Command Palette', icon: 'fa-magnifying-glass', badge: '⌘K', isAction: true, modalType: 'commandPalette' },
+        { id: 'tool-shortcuts', label: 'Keyboard Shortcuts', icon: 'fa-keyboard', badge: '?', isAction: true, modalType: 'shortcuts' }
+      ]
+    },
+    {
       title: 'Resources',
       items: [
         { id: 'guide', label: 'User Guide', icon: 'fa-book-open', badge: null, route: '/admin/guide' },
@@ -253,10 +261,21 @@ export function AdminSidebar({
                     onClick={(e) => {
                       playTick();
                       if (item.isAction) {
-                        onSelectTab('milestones');
-                        setTimeout(() => {
-                          window.dispatchEvent(new CustomEvent('ams-open-modal', { detail: { modal: item.modalType } }));
-                        }, 120);
+                        if (item.modalType === 'terminal') {
+                          window.dispatchEvent(new CustomEvent('ams-open-terminal'));
+                          if (isMobileOpen) window.dispatchEvent(new CustomEvent('admin-sidebar-toggle'));
+                        } else if (item.modalType === 'commandPalette') {
+                          window.dispatchEvent(new CustomEvent('ams-open-cmd'));
+                          if (isMobileOpen) window.dispatchEvent(new CustomEvent('admin-sidebar-toggle'));
+                        } else if (item.modalType === 'shortcuts') {
+                          window.dispatchEvent(new CustomEvent('ams-open-shortcuts'));
+                          if (isMobileOpen) window.dispatchEvent(new CustomEvent('admin-sidebar-toggle'));
+                        } else {
+                          onSelectTab('milestones');
+                          setTimeout(() => {
+                            window.dispatchEvent(new CustomEvent('ams-open-modal', { detail: { modal: item.modalType } }));
+                          }, 120);
+                        }
                       } else {
                         onSelectTab(item.id, item.route);
                       }

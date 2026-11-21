@@ -1276,6 +1276,23 @@ export function AdminMilestones({
     }
   }, [initialOpenWizard, onResetWizard]);
 
+  // Suppress floating actions and mark body when any modal is open
+  useEffect(() => {
+    const hasModal = isWizardOpen || isTemplatesOpen || isDeleteModalOpen || isBulkDeleteModalOpen || isShortcutsOpen || isCommandPaletteOpen;
+    if (typeof document !== 'undefined') {
+      if (hasModal) {
+        document.body.classList.add('has-modal-open');
+      } else {
+        document.body.classList.remove('has-modal-open');
+      }
+    }
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('has-modal-open');
+      }
+    };
+  }, [isWizardOpen, isTemplatesOpen, isDeleteModalOpen, isBulkDeleteModalOpen, isShortcutsOpen, isCommandPaletteOpen]);
+
   // Duplicate Check logic
   const checkDuplicate = (titleInput) => {
     if (duplicateOverride) return false;
@@ -2622,7 +2639,7 @@ export function AdminMilestones({
       )}
 
       {/* 4-STEP WIZARD MODAL */}
-      {isWizardOpen && (
+      {isWizardOpen && typeof document !== 'undefined' && createPortal(
         <div className="modal-overlay active" role="dialog" aria-modal="true">
           <div className="modal-content">
             {/* Wizard Header */}
@@ -3589,7 +3606,8 @@ export function AdminMilestones({
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* TEMPLATES LIBRARY MODAL */}

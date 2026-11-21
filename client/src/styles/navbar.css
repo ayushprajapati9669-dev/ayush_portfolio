@@ -91,13 +91,16 @@ body.has-admin-sidebar.sidebar-collapsed .nav-wrapper {
 }
 
 /* Admin-friendly stabilization: no 3D tilting, jitter, or distracting wobbles */
-body.has-admin-sidebar .navbar {
+body.has-admin-sidebar .navbar,
+body.has-admin-sidebar .nav-wrapper,
+body.has-admin-sidebar #navWrapper,
+body.has-admin-sidebar .nav-right,
+body.has-admin-sidebar .notif-wrap {
   transform: none !important;
   perspective: none !important;
 }
 
 body.has-admin-sidebar .notif-dropdown {
-  transform: none !important;
   transition: opacity 0.15s ease-out !important;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
 }
@@ -1952,6 +1955,8 @@ a.btn-primary:hover {
     width: calc(100% - 24px) !important;
     max-width: calc(100% - 24px) !important;
     z-index: 99990 !important;
+    perspective: none !important;
+    transform: none !important;
   }
 
   .navbar,
@@ -1993,21 +1998,122 @@ a.btn-primary:hover {
   /* Admin-specific desktop controls hidden on mobile */
   .nav-search-btn,
   .btn-admin-cms,
-  .admin-tools-popover,
-  .btn-icon,
-  .admin-tools-wrapper,
   .nav-v-divider,
   body.has-admin-sidebar .nav-search-btn,
   body.has-admin-sidebar .btn-admin-cms,
-  body.has-admin-sidebar .admin-tools-popover,
-  body.has-admin-sidebar .btn-icon,
+  body.has-admin-sidebar .nav-v-divider,
   #navWrapper .nav-search-btn,
   #navWrapper .btn-admin-cms,
-  #navWrapper .admin-tools-popover,
-  #navWrapper .btn-icon,
-  #navWrapper .admin-tools-wrapper,
   #navWrapper .nav-v-divider {
     display: none !important;
+  }
+
+  /* Admin Tools Wrapper & Sliders Button (Quick Settings & Tools on Mobile) */
+  .admin-tools-wrapper,
+  #navWrapper .admin-tools-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+  }
+
+  .btn-icon,
+  #navWrapper .btn-icon {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    padding: 0 !important;
+  }
+
+  .btn-icon:hover,
+  .btn-icon:active,
+  .btn-icon.active,
+  #navWrapper .btn-icon:hover,
+  #navWrapper .btn-icon:active,
+  #navWrapper .btn-icon.active {
+    background: rgba(255, 255, 255, 0.16) !important;
+    border-color: rgba(252, 211, 77, 0.6) !important;
+    color: #fcd34d !important;
+    transform: scale(1.05) !important;
+  }
+
+  /* Quick Settings & Tools Popover on Mobile Screens */
+  .admin-tools-popover,
+  #navWrapper .admin-tools-popover {
+    display: flex !important;
+    position: absolute !important;
+    top: calc(100% + 10px) !important;
+    right: -42px !important;
+    min-width: 224px !important;
+    max-width: calc(100vw - 32px) !important;
+    background: rgba(10, 15, 26, 0.96) !important;
+    border: 1px solid rgba(212, 175, 55, 0.25) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(212, 175, 55, 0.15) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border-radius: 14px !important;
+    padding: 8px !important;
+    z-index: 9999 !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    animation: toolsFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  @keyframes toolsFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .admin-tools-popover .popover-title {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    color: #94a3b8 !important;
+    padding: 6px 8px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    margin-bottom: 4px !important;
+  }
+
+  .admin-tools-popover .popover-item {
+    min-height: 38px !important;
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    color: #e2e8f0 !important;
+    cursor: pointer !important;
+    text-align: left !important;
+    transition: background 0.15s ease, color 0.15s ease !important;
+    touch-action: manipulation !important;
+  }
+
+  .admin-tools-popover .popover-item:hover,
+  .admin-tools-popover .popover-item:active {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #fcd34d !important;
   }
 
   .nav-right,
@@ -2017,6 +2123,14 @@ a.btn-primary:hover {
     gap: 8px !important;
     margin-left: auto !important;
     position: relative !important;
+    transform: none !important;
+    perspective: none !important;
+  }
+
+  .notif-wrap,
+  #navWrapper .notif-wrap {
+    transform: none !important;
+    perspective: none !important;
   }
 
   .notif-btn,
@@ -2031,6 +2145,134 @@ a.btn-primary:hover {
     justify-content: center !important;
     flex-shrink: 0 !important;
     position: relative !important;
+  }
+
+  /* Responsive Mobile Notification Dropdown / Modal */
+  .notif-dropdown,
+  #navWrapper .notif-dropdown {
+    position: fixed !important;
+    top: 68px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 0 auto !important;
+    max-height: calc(85vh - 70px) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(212, 175, 55, 0.15) !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    background: rgba(10, 14, 22, 0.98) !important;
+    backdrop-filter: blur(30px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(190%) !important;
+    z-index: 100000 !important;
+    transform: none !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .notif-dropdown.open,
+  #navWrapper .notif-dropdown.open {
+    opacity: 1 !important;
+    pointer-events: all !important;
+    transform: translateY(0) !important;
+  }
+
+  .notif-head,
+  #navWrapper .notif-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 12px 14px !important;
+    gap: 8px !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .notif-list,
+  #navWrapper .notif-list {
+    max-height: calc(65vh - 110px) !important;
+    padding: 8px 10px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .notif-item,
+  #navWrapper .notif-item {
+    display: flex !important;
+    align-items: flex-start !important;
+    padding: 10px !important;
+    gap: 12px !important;
+    border-radius: 12px !important;
+    margin-bottom: 4px !important;
+    border: 1px solid transparent !important;
+    transition: background 0.15s ease, border-color 0.15s ease !important;
+  }
+
+  .notif-item:active,
+  #navWrapper .notif-item:active {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    transform: scale(0.99) !important;
+  }
+
+  .notif-item.unread,
+  #navWrapper .notif-item.unread {
+    background: rgba(212, 175, 55, 0.08) !important;
+    border-color: rgba(212, 175, 55, 0.2) !important;
+  }
+
+  .notif-ico,
+  #navWrapper .notif-ico {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    font-size: 13px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  .notif-body,
+  #navWrapper .notif-body {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .notif-title,
+  #navWrapper .notif-title {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #f1f5f9 !important;
+    line-height: 1.35 !important;
+    word-break: break-word !important;
+  }
+
+  .notif-desc,
+  #navWrapper .notif-desc {
+    font-size: 12px !important;
+    color: #94a3b8 !important;
+    line-height: 1.4 !important;
+    margin-top: 2px !important;
+    word-break: break-word !important;
+  }
+
+  .notif-time,
+  #navWrapper .notif-time {
+    font-size: 11px !important;
+    color: #64748b !important;
+    margin-top: 4px !important;
+  }
+
+  .notif-foot,
+  #navWrapper .notif-foot {
+    padding: 10px 14px !important;
+    background: rgba(0, 0, 0, 0.35) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+    text-align: center !important;
   }
 
   /* Mobile Hamburger Toggle */
